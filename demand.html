@@ -792,9 +792,26 @@
   }
 
   // ---- new demand ----
-  function field(id, label, type, val){
+  function field(id, label, type, val, min){
+    var minAttr = (type === 'number' && min !== undefined) ? ' min="'+min+'"' : '';
     return '<label style="display:block;font-size:11.5px;font-weight:600;color:#5A6474;margin-bottom:4px">'+esc(label)+'</label>'
-      + '<input id="'+id+'" type="'+type+'" value="'+esc(val)+'" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;margin-bottom:12px;box-sizing:border-box">';
+      + '<input id="'+id+'" type="'+type+'"'+minAttr+' value="'+esc(val)+'" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;margin-bottom:12px;box-sizing:border-box">';
+  }
+  // Friendly, non-technical validation for the two numeric intake fields — these
+  // represent order volume and dollar value, neither of which can be negative.
+  // Catches it client-side with a plain-English message instead of letting a raw
+  // Postgres "invalid input syntax for type integer" error reach the user.
+  function validateEstFields(volRaw, valRaw){
+    if (volRaw !== ''){
+      var v = Number(volRaw);
+      if (isNaN(v) || v < 0) return 'Est. monthly volume can’t be negative.';
+      if (!Number.isInteger(v)) return 'Est. monthly volume must be a whole number (no decimals).';
+    }
+    if (valRaw !== ''){
+      var val = Number(valRaw);
+      if (isNaN(val) || val < 0) return 'Est. annual value can’t be negative.';
+    }
+    return null;
   }
   function selectField(id, label, opts, selected){
     return '<label style="display:block;font-size:11.5px;font-weight:600;color:#5A6474;margin-bottom:4px">'+esc(label)+'</label>'
@@ -810,8 +827,8 @@
       + selectField('dm-nd-segment','Segment', SEGMENTS)
       + selectField('dm-nd-source','Source', SOURCES)
       + field('dm-nd-owner','Owner', 'text', CURRENT_USER)
-      + field('dm-nd-volume','Est. monthly volume', 'number', '')
-      + field('dm-nd-value','Est. annual value ($)', 'number', '')
+      + field('dm-nd-volume','Est. monthly volume', 'number', '', 0)
+      + field('dm-nd-value','Est. annual value ($)', 'number', '', 0)
       + '<label style="display:block;font-size:11.5px;font-weight:600;color:#5A6474;margin-bottom:4px">Requirement summary</label>'
       + '<textarea id="dm-nd-summary" rows="3" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;font-family:inherit;margin-bottom:14px;box-sizing:border-box"></textarea>'
       + '<div id="dm-nd-error" style="display:none;color:#C4472C;font-size:12.5px;margin-bottom:10px"></div>'
@@ -831,8 +848,12 @@
     var segment = $('dm-nd-segment').value;
     var source = $('dm-nd-source').value;
     var owner = ($('dm-nd-owner').value || '').trim();
-    var volume = $('dm-nd-volume').value === '' ? null : Number($('dm-nd-volume').value);
-    var value = $('dm-nd-value').value === '' ? null : Number($('dm-nd-value').value);
+    var volRaw = $('dm-nd-volume').value;
+    var valRaw = $('dm-nd-value').value;
+    var estError = validateEstFields(volRaw, valRaw);
+    if (estError){ errEl.textContent = estError; errEl.style.display = 'block'; return; }
+    var volume = volRaw === '' ? null : Number(volRaw);
+    var value = valRaw === '' ? null : Number(valRaw);
     var summary = ($('dm-nd-summary').value || '').trim();
     var submitBtn = $('dm-nd-submit');
     submitBtn.disabled = true;
@@ -877,8 +898,8 @@
       + selectField('dm-ed-segment','Segment', SEGMENTS, c ? c.segment : '')
       + selectField('dm-ed-source','Source', SOURCES, d.source)
       + field('dm-ed-owner','Owner', 'text', d.owner_name || '')
-      + field('dm-ed-volume','Est. monthly volume', 'number', d.est_monthly_volume == null ? '' : d.est_monthly_volume)
-      + field('dm-ed-value','Est. annual value ($)', 'number', d.est_annual_value == null ? '' : d.est_annual_value)
+      + field('dm-ed-volume','Est. monthly volume', 'number', d.est_monthly_volume == null ? '' : d.est_monthly_volume, 0)
+      + field('dm-ed-value','Est. annual value ($)', 'number', d.est_annual_value == null ? '' : d.est_annual_value, 0)
       + '<label style="display:block;font-size:11.5px;font-weight:600;color:#5A6474;margin-bottom:4px">Requirement summary</label>'
       + '<textarea id="dm-ed-summary" rows="3" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;font-family:inherit;margin-bottom:14px;box-sizing:border-box">'+esc(d.requirement_summary||'')+'</textarea>'
       + '<div id="dm-ed-error" style="display:none;color:#C4472C;font-size:12.5px;margin-bottom:10px"></div>'
@@ -903,11 +924,10 @@
     var newOwner = ($('dm-ed-owner').value || '').trim();
     var volRaw = $('dm-ed-volume').value;
     var valRaw = $('dm-ed-value').value;
+    var estError = validateEstFields(volRaw, valRaw);
+    if (estError){ errEl.textContent = estError; errEl.style.display = 'block'; return; }
     var newVolume = volRaw === '' ? null : Number(volRaw);
     var newValue = valRaw === '' ? null : Number(valRaw);
-    if ((volRaw !== '' && isNaN(newVolume)) || (valRaw !== '' && isNaN(newValue))){
-      errEl.textContent = 'Volume and value must be numbers.'; errEl.style.display = 'block'; return;
-    }
     var newSummary = ($('dm-ed-summary').value || '').trim();
 
     var demandPatch = {};
