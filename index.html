@@ -22,6 +22,11 @@
   .right-col{display:flex;flex-direction:column;min-width:0;min-height:0;background:#F4F6FA;height:100%;overflow:hidden}
   .content-viewport{flex:1;min-height:0;overflow-y:auto;position:relative}
   .app-shell > div:first-child{min-height:0;overflow:hidden}
+  .info-icon{ display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px; border-radius:50%; background:#DCE2EC; color:#6B7686; font-size:10px; font-weight:700; font-style:italic; font-family:Georgia,'Times New Roman',serif; cursor:help; position:relative; margin-left:5px; vertical-align:middle; }
+  .info-icon:hover, .info-icon:focus{ background:#013E90; color:#fff; outline:none; }
+  .info-icon .tooltip{ display:none; position:absolute; left:50%; transform:translateX(-50%); bottom:135%; width:230px; background:#01285E; color:#fff; font-size:11px; font-weight:400; font-style:normal; font-family:'Barlow',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; padding:8px 10px; border-radius:8px; line-height:1.45; z-index:30; box-shadow:0 4px 12px rgba(0,0,0,.18); text-align:left; }
+  .info-icon .tooltip::after{ content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:#01285E; }
+  .info-icon:hover .tooltip, .info-icon:focus .tooltip{ display:block; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="supabase-config.js"></script>
@@ -3146,11 +3151,16 @@
     rejected:  {label:'REJECTED',  bg:'#FBEAEA', fg:'#A8392B'}
   };
   var CRITERIA = [
-    {key:'score_volume_potential', label:'Volume potential'},
-    {key:'score_segment_fit', label:'Segment strategy fit'},
-    {key:'score_integration_effort', label:'Integration effort (inverse)'},
-    {key:'score_margin_potential', label:'Margin potential'},
-    {key:'score_competitive_position', label:'Competitive position'}
+    {key:'score_volume_potential', label:'Volume potential',
+      desc:'How much monthly order volume this client could realistically bring. Weigh the volume they’ve stated against how firm that number is (a verified LOS export vs. a rough guess), their current AMC/vendor spend, and their growth trajectory.'},
+    {key:'score_segment_fit', label:'Segment strategy fit',
+      desc:'How well this fits where the business wants to grow. Weigh whether the client’s segment (banking, credit union, wholesale/TPO, etc.) is a current priority, geographic overlap with existing panel coverage, and whether winning it strengthens a reference case in that segment.'},
+    {key:'score_integration_effort', label:'Integration effort (inverse)',
+      desc:'Higher score = less effort. Weigh whether their LOS/order platform is already supported, how much custom API or SSO work would be needed, and how much lift Integration Studio would need to stand this up.'},
+    {key:'score_margin_potential', label:'Margin potential',
+      desc:'Expected profitability once qualified. Weigh the pricing model being asked for (e.g. Guaranteed Pricing compresses margin), competitive rate pressure, product mix (traditional vs. digital vs. hybrid), and any custom terms on the table.'},
+    {key:'score_competitive_position', label:'Competitive position',
+      desc:'Your likelihood of winning this deal. Weigh the incumbent vendor and their contract status, how strong the relationship or referral is, urgency driving the client’s timeline, and how differentiated the offer is for this specific need.'}
   ];
   var CURRENT_USER = 'Dana Mercer'; // placeholder display name until Roles & permissions / real auth exists
 
@@ -3375,9 +3385,10 @@
     var meta = STAGE_META[d.stage] || STAGE_META.unscored;
     var scoreRows = CRITERIA.map(function(c){
       var v = d[c.key];
+      var iconHtml = c.desc ? '<span class="info-icon" tabindex="0">i<span class="tooltip">'+esc(c.desc)+'</span></span>' : '';
       return '<div style="margin-bottom:9px">'
-        + '<div style="display:flex;justify-content:space-between;font-size:12.5px;color:#5A6474;margin-bottom:4px">'
-          + '<span>'+esc(c.label)+'</span>'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:#5A6474;margin-bottom:4px">'
+          + '<span>'+esc(c.label)+iconHtml+'</span>'
           + '<input type="number" min="0" max="100" data-score="'+c.key+'" value="'+(v==null?'':v)+'" placeholder="—" style="width:52px;text-align:right;font-family:\'IBM Plex Mono\',monospace;border:1px solid #DCE2EC;border-radius:5px;padding:2px 4px;font-size:11.5px">'
         + '</div>'
         + '<div style="height:6px;border-radius:99px;background:#EDF0F6;overflow:hidden"><div style="height:100%;width:'+(v||0)+'%;background:#013E90;border-radius:99px"></div></div>'
