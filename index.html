@@ -164,7 +164,7 @@
         <div style="width: 34px; height: 34px; border: 1px solid rgb(220, 226, 236); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: rgb(255, 255, 255); font-size: 14px;" class="scp0">☰</div>
       </div>
     </div>
-<div style="position:sticky;top:0;z-index:50;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:11.5px;padding:7px 20px;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em">STATIC DESIGN PREVIEW, EXCEPT PLAN BUILDER AND DEMAND MANAGEMENT — CPQ, Integration Studio, Delivery, Reporting, Engagement, Roles, and System states are non-functional mockups. Plan Builder and Demand Management are real, backed by a live database when this site is deployed with Supabase configured (see supabase-config.js).</div>
+<div id="previewBanner" style="position:sticky;top:0;z-index:50;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:11.5px;padding:7px 20px;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em">STATIC DESIGN PREVIEW — Value CPQ, Integration Studio, Delivery, Status Reporting, Engagement Management, Roles &amp; permissions, and System states are non-functional mockups with sample data.</div>
     <div class="content-viewport" id="contentViewport">
 <div class="view" id="view-home" style="display:none"><div style="padding: 24px 28px 44px; max-width: 1420px;">
           <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
@@ -421,7 +421,7 @@
   <div style="padding:18px 28px 44px;display:grid;grid-template-columns:1fr 372px;gap:16px;align-items:start;max-width:1520px">
     <div style="min-width:0;display:flex;flex-direction:column;gap:12px">
       <div id="dm-filters" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"></div>
-      <div id="dm-portfolio-chart" style="display:none;background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px"></div>
+      <div id="dm-portfolio-chart" style="display:none;position:relative;background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px"></div>
       <div id="dm-table-wrap" style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;overflow:hidden">
         <div style="display:grid;grid-template-columns:1.5fr 1fr .55fr .55fr .8fr .8fr .5fr;gap:10px;padding:10px 16px;background:#FAFBFD;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#8B95A6">
           <div>DEMAND / CLIENT</div><div>SEGMENT</div><div style="text-align:right">ORD/MO</div><div style="text-align:right">VALUE</div><div>SCORE</div><div>STAGE</div><div style="text-align:right">AGE</div>
@@ -3100,6 +3100,8 @@
     }
     var vp = document.getElementById('contentViewport');
     if (vp) vp.scrollTop = 0;
+    var banner = document.getElementById('previewBanner');
+    if (banner) banner.style.display = (id === 'plan' || id === 'demand') ? 'none' : '';
     if (id === 'demand' && window.DemandModule) window.DemandModule.onShow();
   }
 
@@ -3170,7 +3172,7 @@
     demands: [],
     weights: null,
     activeTab: 'my',
-    filters: { segment:'', source:'', owner:'', minScore:'', created:'' },
+    filters: { segment:'', source:'', owner:'', minScore:'', created:'', stage:'' },
     selectedId: null,
     showPortfolio: false,
     initialized: false
@@ -3280,7 +3282,7 @@
         + '</div>';
     }).join('');
     Array.prototype.forEach.call($('dm-tabs').children, function(el){
-      el.addEventListener('click', function(){ state.activeTab = el.getAttribute('data-tab'); renderTabs(); renderTable(); });
+      el.addEventListener('click', function(){ state.activeTab = el.getAttribute('data-tab'); renderTabs(); renderTable(); renderPortfolio(); });
     });
   }
 
@@ -3296,14 +3298,22 @@
       + opts.map(function(o){ return '<option value="'+esc(o)+'"'+(val===o?' selected':'')+'>'+esc(o)+'</option>'; }).join('')
       + '</select>';
   }
+  var STAGE_ORDER = ['unscored','open','decision','converted','parked','rejected'];
+
   function renderFilters(){
     var segOpts = distinctVals(function(d){ return d._segment; });
     var srcOpts = distinctVals(function(d){ return d.source; });
     var ownerOpts = distinctVals(function(d){ return d.owner_name; });
+    var stageOptionsHtml = '<option value=""'+(state.filters.stage===''?' selected':'')+'>Stage — any</option>'
+      + STAGE_ORDER.map(function(s){
+          var label = (STAGE_META[s] || {label:s}).label;
+          return '<option value="'+s+'"'+(state.filters.stage===s?' selected':'')+'>'+esc(label)+'</option>';
+        }).join('');
     $('dm-filters').innerHTML =
       selectHtml('dm-f-segment','Segment', segOpts, state.filters.segment)
       + selectHtml('dm-f-source','Source', srcOpts, state.filters.source)
       + selectHtml('dm-f-owner','Owner', ownerOpts, state.filters.owner)
+      + '<select id="dm-f-stage" style="height:32px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;background:#fff;font-size:13px;color:#4E5866;cursor:pointer">'+stageOptionsHtml+'</select>'
       + '<input id="dm-f-minscore" type="number" min="0" max="100" placeholder="Min score" value="'+esc(state.filters.minScore)+'" style="height:32px;width:96px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;font-size:13px;box-sizing:border-box">'
       + '<select id="dm-f-created" style="height:32px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;background:#fff;font-size:13px;color:#4E5866;cursor:pointer">'
         + '<option value="">Created — any time</option>'
@@ -3312,11 +3322,12 @@
         + '<option value="90"'+(state.filters.created==='90'?' selected':'')+'>This quarter</option>'
       + '</select>'
       + '<span id="dm-shown-count" style="margin-left:auto;font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:.12em;color:#8B95A6"></span>';
-    $('dm-f-segment').addEventListener('change', function(e){ state.filters.segment = e.target.value; renderTable(); });
-    $('dm-f-source').addEventListener('change', function(e){ state.filters.source = e.target.value; renderTable(); });
-    $('dm-f-owner').addEventListener('change', function(e){ state.filters.owner = e.target.value; renderTable(); });
-    $('dm-f-minscore').addEventListener('input', function(e){ state.filters.minScore = e.target.value; renderTable(); });
-    $('dm-f-created').addEventListener('change', function(e){ state.filters.created = e.target.value; renderTable(); });
+    $('dm-f-segment').addEventListener('change', function(e){ state.filters.segment = e.target.value; renderTable(); renderPortfolio(); });
+    $('dm-f-source').addEventListener('change', function(e){ state.filters.source = e.target.value; renderTable(); renderPortfolio(); });
+    $('dm-f-owner').addEventListener('change', function(e){ state.filters.owner = e.target.value; renderTable(); renderPortfolio(); });
+    $('dm-f-stage').addEventListener('change', function(e){ state.filters.stage = e.target.value; renderTable(); renderPortfolio(); });
+    $('dm-f-minscore').addEventListener('input', function(e){ state.filters.minScore = e.target.value; renderTable(); renderPortfolio(); });
+    $('dm-f-created').addEventListener('change', function(e){ state.filters.created = e.target.value; renderTable(); renderPortfolio(); });
   }
 
   function getFilteredList(){
@@ -3328,6 +3339,7 @@
     if (state.filters.segment) list = list.filter(function(d){ return d._segment === state.filters.segment; });
     if (state.filters.source) list = list.filter(function(d){ return d.source === state.filters.source; });
     if (state.filters.owner) list = list.filter(function(d){ return d.owner_name === state.filters.owner; });
+    if (state.filters.stage) list = list.filter(function(d){ return d.stage === state.filters.stage; });
     if (state.filters.minScore !== '' && state.filters.minScore != null){
       var min = Number(state.filters.minScore);
       list = list.filter(function(d){ return d._score != null && d._score >= min; });
@@ -3365,7 +3377,7 @@
           + '</div>';
       }).join('');
       Array.prototype.forEach.call(document.querySelectorAll('.dm-row'), function(el){
-        el.addEventListener('click', function(){ state.selectedId = el.getAttribute('data-id'); renderTable(); renderDetail(); });
+        el.addEventListener('click', function(){ state.selectedId = el.getAttribute('data-id'); renderTable(); renderDetail(); renderPortfolio(); });
       });
     }
     var openList = state.demands.filter(function(d){ return ['unscored','open','decision'].indexOf(d.stage) !== -1; });
@@ -3458,7 +3470,7 @@
         Object.assign(d, r.data);
         return db.from('demand_activity').insert({ demand_id: demandId, kind:'stage_change', body: 'Reopened (was ' + fromStage + ')', author_name: CURRENT_USER });
       })
-      .then(function(){ renderTabs(); renderTable(); renderDetail(); })
+      .then(function(){ renderTabs(); renderTable(); renderDetail(); renderPortfolio(); })
       .catch(function(e){ openInfoModal('Couldn’t reopen the demand', e.message || String(e)); });
   }
 
@@ -3510,7 +3522,7 @@
         if (r.error) throw r.error;
         Object.assign(d, r.data);
         d._score = computeScore(d, state.weights);
-        renderTabs(); renderTable(); renderDetail();
+        renderTabs(); renderTable(); renderDetail(); renderPortfolio();
       })
       .catch(function(e){ openInfoModal('Couldn’t save score', e.message || String(e)); });
   }
@@ -3523,7 +3535,7 @@
         Object.assign(d, r.data);
         return db.from('demand_activity').insert({ demand_id: demandId, kind:'stage_change', body: 'Moved to ' + newStage + ': ' + reason, author_name: CURRENT_USER });
       })
-      .then(function(){ renderTabs(); renderTable(); renderDetail(); })
+      .then(function(){ renderTabs(); renderTable(); renderDetail(); renderPortfolio(); })
       .catch(function(e){ openInfoModal('Couldn’t update the demand', e.message || String(e)); });
   }
 
@@ -3634,33 +3646,74 @@
   }
 
   // ---- portfolio matrix ----
+  function portfolioTooltipHtml(d){
+    var meta = STAGE_META[d.stage] || STAGE_META.unscored;
+    return '<div style="font-weight:600;margin-bottom:3px">'+esc(d._clientName)+'</div>'
+      + '<div style="opacity:.8">'+esc(d._segment||'—')+' · <span style="font-family:\'IBM Plex Mono\',monospace">'+meta.label+'</span></div>'
+      + '<div style="margin-top:5px">Est. annual value: <b>'+fmtMoney(d.est_annual_value)+'</b></div>'
+      + '<div>Monthly volume: <b>'+(d.est_monthly_volume!=null?d.est_monthly_volume:'—')+'</b></div>'
+      + '<div>Strategic fit score: <b>'+(d._score!=null?d._score:'not scored')+'</b></div>'
+      + '<div style="margin-top:4px;opacity:.7;font-size:10.5px">Click to select</div>';
+  }
+
   function renderPortfolio(){
+    var btn = $('dm-portfolio-btn');
+    if (btn){
+      btn.style.background = state.showPortfolio ? '#013E90' : '#fff';
+      btn.style.color = state.showPortfolio ? '#fff' : '#131A26';
+      btn.style.borderColor = state.showPortfolio ? '#013E90' : '#DCE2EC';
+    }
     var box = $('dm-portfolio-chart');
+    if (!box) return;
     if (!state.showPortfolio){ box.style.display = 'none'; return; }
     box.style.display = 'block';
-    var pts = state.demands.filter(function(d){ return d.est_annual_value != null; });
-    if (!pts.length){ box.innerHTML = '<div style="font-size:13px;color:#97A1B2">No demands with an estimated value yet.</div>'; return; }
+    var pts = getFilteredList().filter(function(d){ return d.est_annual_value != null; });
+    if (!pts.length){ box.innerHTML = '<div style="font-size:15.5px;font-weight:600;margin-bottom:4px">Portfolio matrix</div><div style="font-size:13px;color:#97A1B2">No demands with an estimated value match the current filters.</div>'; return; }
     var maxVal = Math.max.apply(null, pts.map(function(d){ return Number(d.est_annual_value) || 0; }));
     var maxVol = Math.max.apply(null, pts.map(function(d){ return Number(d.est_monthly_volume) || 1; }));
     var W = 760, H = 260, PAD = 40;
-    var dots = pts.map(function(d){
+    // draw the selected point last so it renders on top of any overlapping neighbors
+    var ordered = pts.slice().sort(function(a,b){
+      return (a.id === state.selectedId ? 1 : 0) - (b.id === state.selectedId ? 1 : 0);
+    });
+    var dots = ordered.map(function(d){
       var effort = d.score_integration_effort != null ? (100 - d.score_integration_effort) : 50;
       var x = PAD + (effort/100) * (W - PAD*2);
       var y = H - PAD - ((Number(d.est_annual_value) || 0) / maxVal) * (H - PAD*2);
       var r = 5 + 14 * ((Number(d.est_monthly_volume) || 0) / maxVol);
       var color = (STAGE_META[d.stage] || STAGE_META.unscored).fg;
-      return '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r.toFixed(1)+'" fill="'+color+'" fill-opacity="0.55" stroke="'+color+'" stroke-width="1.2"><title>'+esc(d._clientName)+' — '+fmtMoney(d.est_annual_value)+'</title></circle>';
+      var selected = d.id === state.selectedId;
+      return '<circle data-id="'+d.id+'" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r.toFixed(1)+'" fill="'+color+'" fill-opacity="'+(selected?0.85:0.5)+'" stroke="'+(selected?'#85C341':color)+'" stroke-width="'+(selected?3:1.2)+'" style="cursor:pointer"></circle>';
     }).join('');
     box.innerHTML =
       '<div style="font-size:15.5px;font-weight:600;margin-bottom:4px">Portfolio matrix</div>'
-      + '<div style="font-size:12px;color:#8B95A6;margin-bottom:10px">Estimated value vs. integration effort. Bubble size is monthly volume — same data as the list, different lens.</div>'
+      + '<div style="font-size:12px;color:#8B95A6;margin-bottom:10px">Estimated value vs. integration effort. Bubble size is monthly volume — same data as the list, different lens. Hover a bubble for details, click to select.</div>'
       + '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:260px">'
         + '<line x1="'+PAD+'" y1="'+(H-PAD)+'" x2="'+(W-PAD)+'" y2="'+(H-PAD)+'" stroke="#DCE2EC"/>'
         + '<line x1="'+PAD+'" y1="'+PAD+'" x2="'+PAD+'" y2="'+(H-PAD)+'" stroke="#DCE2EC"/>'
         + '<text x="'+(W/2)+'" y="'+(H-8)+'" text-anchor="middle" font-size="10.5" fill="#8B95A6">Integration effort →</text>'
         + '<text x="14" y="'+(H/2)+'" text-anchor="middle" font-size="10.5" fill="#8B95A6" transform="rotate(-90 14 '+(H/2)+')">Estimated value →</text>'
         + dots
-      + '</svg>';
+      + '</svg>'
+      + '<div id="dm-portfolio-tooltip" style="display:none;position:absolute;pointer-events:none;background:#01285E;color:#fff;font-size:11.5px;line-height:1.5;padding:8px 10px;border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.22);z-index:20;max-width:220px"></div>';
+
+    var tooltip = $('dm-portfolio-tooltip');
+    Array.prototype.forEach.call(box.querySelectorAll('circle'), function(circle){
+      var demandId = circle.getAttribute('data-id');
+      var d = ordered.filter(function(x){ return x.id === demandId; })[0];
+      if (!d || !tooltip) return;
+      circle.addEventListener('mouseenter', function(){
+        tooltip.innerHTML = portfolioTooltipHtml(d);
+        tooltip.style.display = 'block';
+      });
+      circle.addEventListener('mousemove', function(e){
+        var rect = box.getBoundingClientRect();
+        tooltip.style.left = (e.clientX - rect.left + 14) + 'px';
+        tooltip.style.top = (e.clientY - rect.top + 14) + 'px';
+      });
+      circle.addEventListener('mouseleave', function(){ tooltip.style.display = 'none'; });
+      circle.addEventListener('click', function(){ state.selectedId = d.id; renderTable(); renderDetail(); renderPortfolio(); });
+    });
   }
 
   function renderAll(){ renderTabs(); renderFilters(); renderTable(); renderDetail(); renderPortfolio(); }
