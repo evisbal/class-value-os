@@ -17,3 +17,27 @@ input,button,select,textarea{font-family:inherit}
 .info-icon .tooltip{ display:none; position:absolute; left:50%; transform:translateX(-50%); bottom:135%; width:230px; background:#01285E; color:#fff; font-size:11px; font-weight:400; font-style:normal; font-family:'Barlow',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; padding:8px 10px; border-radius:8px; line-height:1.45; z-index:30; box-shadow:0 4px 12px rgba(0,0,0,.18); text-align:left; }
 .info-icon .tooltip::after{ content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:#01285E; }
 .info-icon:hover .tooltip, .info-icon:focus .tooltip{ display:block; }
+
+/* ---- Responsive shell: sidebar becomes an off-canvas drawer under 900px,
+   opened by the hamburger button that's otherwise decorative on desktop.
+   Below 860px, every fr-based grid layout in the content area (there are no
+   fixed-pixel-track grids anywhere in this app — every one was already built
+   with proportional fr columns) collapses to a single column, and the page
+   can scroll horizontally as a last-resort safety net for anything that
+   still doesn't fit, since .right-col clips overflow by design. ---- */
+.sidebar-backdrop{ display:none; position:fixed; inset:0; background:rgba(1,20,50,.5); z-index:39; }
+.topbar-hamburger{ display:none; }
+@media (max-width:900px){
+  .app-shell{ grid-template-columns:1fr; }
+  .app-sidebar{ position:fixed; top:0; left:0; bottom:0; width:236px; max-width:82vw; z-index:40; transform:translateX(-100%); transition:transform .22s ease; }
+  .app-sidebar.open{ transform:translateX(0); box-shadow:2px 0 24px rgba(0,0,0,.28); }
+  .sidebar-backdrop.open{ display:block; }
+  .topbar-hamburger{ display:flex; align-items:center; justify-content:center; }
+  #topbarSearch{ display:none !important; }
+}
+@media (max-width:860px){
+  .content-viewport{ overflow-x:auto; }
+  .content-viewport [style*="grid-template-columns"]{ grid-template-columns:1fr !important; }
+  #dm-list-header{ display:none !important; }
+  #dm-detail{ position:static !important; }
+}

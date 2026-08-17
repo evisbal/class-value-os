@@ -234,6 +234,20 @@
   .modal-actions{ display:flex; justify-content:flex-end; gap:8px; }
 
   .print-only{ position:absolute; left:-9999px; top:0; width:800px; }
+
+  /* ---- Mobile safety net. Same idea as Class Value OS's shell: below 640px,
+     every multi-column grid in the tool collapses to one column (all of them
+     are either fr-based or have a fixed left rail that's fine to give up on
+     a phone), and the tab bar scrolls horizontally instead of overflowing —
+     wrapping would break the numbered-tab look. ---- */
+  @media (max-width:640px){
+    header{ padding:16px 18px; }
+    header .actions{ width:100%; }
+    .project-bar, details.quickref, .tabs, .tab-content{ padding-left:16px; padding-right:16px; }
+    .tabs{ overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch; }
+    .tab-btn{ flex:0 0 auto; }
+    .grid, .plan-row, .gantt-row, .risk-row, .stakeholder-row, .comms-row-grid{ grid-template-columns:1fr !important; }
+  }
   @media print{
     body *{ visibility:hidden; }
     #printArea, #printArea *{ visibility:visible; }

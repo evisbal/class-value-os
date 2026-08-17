@@ -16,6 +16,20 @@ a common sidebar/top bar (`shared.css`). This means:
 - The only file every module depends on is `shared.css` (sidebar/top bar/layout styling). Changing that
   affects the shell's look everywhere, same as before, but still doesn't touch any module's own logic.
 
+## Responsive / mobile
+
+Every page works down to phone width. Below 900px the sidebar becomes a drawer — tap the ☰ button (top
+right) to open it, tap the dimmed backdrop or ☰ again to close it; above 900px it's just always there like
+before. Below 860px, list/detail and multi-column layouts stack into a single column so nothing gets cut
+off — this includes Demand Management's table, which becomes a stack of cards (its column-header row hides
+itself there since it stops meaning anything once stacked) and its detail panel, which moves below the list
+instead of sitting beside it. Value CPQ's step tabs scroll horizontally on narrow screens instead of
+wrapping, since wrapping would break the numbered stepper look. Plan Builder's own tool got the same
+treatment (tab bar scrolls, its internal grids stack) since it's a real, separately-built tool embedded via
+iframe, not generated from this shell. The six static preview modules got the same stacking treatment as a
+baseline — they'll likely want a closer pass once they're built out for real, same as everything else about
+them.
+
 ## Files
 
 - `index.html` — My work (home).
@@ -63,9 +77,11 @@ automatically, since Value CPQ has no backend of its own yet to trigger it:
 - **Open → Decision** — manual, via the "Change stage" control on the demand. You name who owns the call
   (an internal teammate, or the client — with a stakeholder name and contact info if so) and what's actually
   being decided. That context stays visible on the demand afterward.
-- **Decision → Converted** — manual, one click, once a demand meets all criteria and is ready to be quoted.
-  This is the real trigger that makes it appear on Value CPQ's Client & demand list — not the "Configure
-  quote in CPQ" button, which stays informational until CPQ itself is built.
+- **Open → Converted** — manual, one click, whenever a demand meets all criteria and is ready to be quoted
+  with no open questions. Decision isn't a required gate — most demands won't need it.
+- **Decision → Converted** — the same one-click action, once whatever was pending in Decision is resolved.
+  Either path is the real trigger that makes a demand appear on Value CPQ's Client & demand list — not the
+  "Configure quote in CPQ" button, which stays informational until CPQ itself is built.
 - **Park / Reject (with a reason)** — available from Unscored, Open, or Decision. Never deletes the record.
 - **Reopen** — brings a parked or rejected demand back to Open at any time.
 - **Archive** — only ever offered once a demand is Rejected. It's a visibility flag, not a stage: archived

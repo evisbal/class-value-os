@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="app-shell">
-<div style="background:#01285E;display:flex;flex-direction:column;overflow:hidden">
+<div id="appSidebar" class="app-sidebar" style="background:#01285E;display:flex;flex-direction:column;overflow:hidden">
     <div style="padding:18px 18px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.08)">
       <div style="width:26px;height:26px;border-radius:6px;background:#85C341;flex:0 0 auto"></div>
       <div>
@@ -112,13 +112,14 @@
       <div title="Sign out" style="margin-left:auto;color:#7E97BD;font-size:15px;cursor:pointer;padding:0 2px">&#9211;</div>
     </div>
   </div>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
   <div class="right-col">
 <div style="height:56px;flex:0 0 auto;background:#fff;border-bottom:1px solid #DCE2EC;display:flex;align-items:center;gap:14px;padding:0 20px">
       <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#6B7686">
         <span id="crumbGroup">Delivery</span><span style="color:#C4CBD8">/</span>
         <span style="color:#131A26;font-weight:600" id="crumbScreen">Plan Builder</span>
       </div>
-      <div style="margin-left:18px;flex:1 1 0;max-width:420px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;gap:9px;padding:0 11px;color:#97A1B2;font-size:13.5px;cursor:pointer;background:#FAFBFD">
+      <div id="topbarSearch" style="margin-left:18px;flex:1 1 0;max-width:420px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;gap:9px;padding:0 11px;color:#97A1B2;font-size:13.5px;cursor:pointer;background:#FAFBFD">
         <span style="font-size:13px">&#8981;</span><span>Search clients, demands, quotes&hellip;</span>
         <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;border:1px solid #DCE2EC;border-radius:4px;padding:1px 5px;background:#fff">&#8984;K</span>
       </div>
@@ -126,7 +127,7 @@
         <div style="position:relative;width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">
           &#9684;<span style="position:absolute;top:-5px;right:-5px;min-width:16px;height:16px;border-radius:99px;background:#C4472C;color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;padding:0 4px">3</span>
         </div>
-        <div style="width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">&#9776;</div>
+        <div id="hamburgerBtn" class="topbar-hamburger" style="width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">&#9776;</div>
       </div>
     </div>
 
@@ -139,6 +140,19 @@
     </div>
   </div>
 </div>
+<script>
+(function(){
+  var sb = document.getElementById('appSidebar');
+  var bd = document.getElementById('sidebarBackdrop');
+  var hb = document.getElementById('hamburgerBtn');
+  function setOpen(open){
+    if (sb) sb.classList.toggle('open', open);
+    if (bd) bd.classList.toggle('open', open);
+  }
+  if (hb) hb.addEventListener('click', function(){ setOpen(!(sb && sb.classList.contains('open'))); });
+  if (bd) bd.addEventListener('click', function(){ setOpen(false); });
+})();
+</script>
 
 </body>
 </html>
