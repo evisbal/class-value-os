@@ -526,7 +526,7 @@
     }
     var opts = [];
     if (d.stage === 'open') opts.push({value:'decision', label:'Move to Decision'});
-    if (d.stage === 'decision') opts.push({value:'converted', label:'Mark Converted'});
+    if (d.stage === 'open' || d.stage === 'decision') opts.push({value:'converted', label:'Mark Converted'});
     opts.push({value:'park', label:'Park'});
     opts.push({value:'reject', label:'Reject with reason'});
     return opts;
