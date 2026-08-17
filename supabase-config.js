@@ -9,6 +9,6 @@
 // the app will run with Demand Management showing a "not connected" state instead
 // of failing.
 window.SUPABASE_CONFIG = {
-  url: 'https://vqdryzwudpcilhyusorz.supabase.co/rest/v1/',
+  url: 'https://vqdryzwudpcilhyusorz.supabase.co',
   anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxZHJ5end1ZHBjaWxoeXVzb3J6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5NzQyMDMsImV4cCI6MjEwMjU1MDIwM30.t8fuwXIA08-xFK7EUozZbZG0z3Q_BEy2-351WY8jwGc'
 };
