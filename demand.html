@@ -446,7 +446,7 @@
       return '<div style="margin-bottom:9px">'
         + '<div style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:#5A6474;margin-bottom:4px">'
           + '<span>'+esc(c.label)+iconHtml+'</span>'
-          + '<input type="number" min="0" max="100" data-score="'+c.key+'" value="'+(v==null?'':v)+'" placeholder="—" style="width:52px;text-align:right;font-family:\'IBM Plex Mono\',monospace;border:1px solid #DCE2EC;border-radius:5px;padding:2px 4px;font-size:11.5px">'
+          + '<input type="number" min="0" max="100" step="1" data-score="'+c.key+'" value="'+(v==null?'':v)+'" placeholder="—" style="width:52px;text-align:right;font-family:\'IBM Plex Mono\',monospace;border:1px solid #DCE2EC;border-radius:5px;padding:2px 4px;font-size:11.5px">'
         + '</div>'
         + '<div style="height:6px;border-radius:99px;background:#EDF0F6;overflow:hidden"><div style="height:100%;width:'+(v||0)+'%;background:#013E90;border-radius:99px"></div></div>'
         + '</div>';
@@ -457,6 +457,7 @@
         + '<div style="display:flex;align-items:center;gap:9px">'
           + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10.5px;color:#97A1B2">'+esc(d._code)+'</div>'
           + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.1em;padding:2px 7px;border-radius:5px;background:'+meta.bg+';color:'+meta.fg+'">'+meta.label+'</div>'
+          + '<button id="dm-edit-btn" style="margin-left:auto;height:26px;padding:0 10px;border-radius:6px;border:1px solid #DCE2EC;background:#fff;font-size:11.5px;font-weight:600;color:#4E5866;cursor:pointer">Edit</button>'
         + '</div>'
         + '<div style="margin-top:7px;font-size:18px;font-weight:600;letter-spacing:-.01em">'+esc(d._clientName)+'</div>'
         + '<div style="margin-top:4px;font-size:13px;color:#6B7686">'+esc(d._segment||'—')+' · '+(d.est_monthly_volume!=null?d.est_monthly_volume:'—')+' orders / month · '+fmtMoney(d.est_annual_value)+' est. annual</div>'
@@ -494,7 +495,21 @@
       + '</div>';
 
     $('dm-save-score-btn').addEventListener('click', function(){ saveScore(d.id); });
+    $('dm-edit-btn').addEventListener('click', function(){ openEditDemandModal(d.id); });
     $('dm-note-btn').addEventListener('click', function(){ addNote(d.id); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-score]'), function(el){
+      el.addEventListener('blur', function(){
+        if (el.value === '') return;
+        var n = Number(el.value);
+        if (isNaN(n)){ el.value = ''; return; }
+        var clamped = Math.max(0, Math.min(100, Math.round(n)));
+        if (String(clamped) !== el.value){
+          el.value = clamped;
+          el.style.borderColor = '#C4472C';
+          setTimeout(function(){ el.style.borderColor = '#DCE2EC'; }, 900);
+        }
+      });
+    });
     $('dm-cpq-btn').addEventListener('click', function(){
       if (d.stage !== 'converted'){
         openInfoModal('Value CPQ isn’t built yet', 'Once this demand is marked Converted (from the Change stage menu below), it appears on Value CPQ’s Client & Demand list automatically — that’s the real trigger, not this button. Full quote configuration still isn’t built.');
@@ -590,8 +605,10 @@
     var patch = {};
     CRITERIA.forEach(function(c){
       var el = document.querySelector('[data-score="'+c.key+'"]');
-      var v = el ? el.value : '';
-      patch[c.key] = (v === '' ? null : Math.max(0, Math.min(100, Number(v))));
+      var raw = el ? el.value : '';
+      var n = raw === '' ? null : Number(raw);
+      if (n != null && isNaN(n)) n = null;
+      patch[c.key] = (n == null) ? null : Math.max(0, Math.min(100, Math.round(n)));
     });
     var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
     var willHaveAll = CRITERIA.every(function(c){ return patch[c.key] != null; });
@@ -779,10 +796,10 @@
     return '<label style="display:block;font-size:11.5px;font-weight:600;color:#5A6474;margin-bottom:4px">'+esc(label)+'</label>'
       + '<input id="'+id+'" type="'+type+'" value="'+esc(val)+'" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;margin-bottom:12px;box-sizing:border-box">';
   }
-  function selectField(id, label, opts){
+  function selectField(id, label, opts, selected){
     return '<label style="display:block;font-size:11.5px;font-weight:600;color:#5A6474;margin-bottom:4px">'+esc(label)+'</label>'
       + '<select id="'+id+'" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;margin-bottom:12px;background:#fff;box-sizing:border-box">'
-      + opts.map(function(o){ return '<option value="'+esc(o)+'">'+esc(o)+'</option>'; }).join('')
+      + opts.map(function(o){ return '<option value="'+esc(o)+'"'+(selected===o?' selected':'')+'>'+esc(o)+'</option>'; }).join('')
       + '</select>';
   }
 
@@ -843,6 +860,73 @@
         closeModal();
         state.selectedId = d.id;
         renderTabs(); renderFilters(); renderTable(); renderDetail();
+      })
+      .catch(function(e){ errEl.textContent = e.message || String(e); errEl.style.display = 'block'; })
+      .then(function(){ if (submitBtn) submitBtn.disabled = false; });
+  }
+
+  // ---- edit an existing demand's intake fields ----
+  function openEditDemandModal(demandId){
+    var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
+    if (!d) return;
+    $('dm-modal-box').innerHTML =
+      '<div style="font-size:15px;font-weight:600;color:#131A26;margin-bottom:12px">Edit demand</div>'
+      + selectField('dm-ed-source','Source', SOURCES, d.source)
+      + field('dm-ed-owner','Owner', 'text', d.owner_name || '')
+      + field('dm-ed-volume','Est. monthly volume', 'number', d.est_monthly_volume == null ? '' : d.est_monthly_volume)
+      + field('dm-ed-value','Est. annual value ($)', 'number', d.est_annual_value == null ? '' : d.est_annual_value)
+      + '<label style="display:block;font-size:11.5px;font-weight:600;color:#5A6474;margin-bottom:4px">Requirement summary</label>'
+      + '<textarea id="dm-ed-summary" rows="3" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;font-family:inherit;margin-bottom:14px;box-sizing:border-box">'+esc(d.requirement_summary||'')+'</textarea>'
+      + '<div id="dm-ed-error" style="display:none;color:#C4472C;font-size:12.5px;margin-bottom:10px"></div>'
+      + '<div style="display:flex;justify-content:flex-end;gap:8px">'
+        + '<button id="dm-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+        + '<button id="dm-ed-submit" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Save changes</button>'
+      + '</div>';
+    $('dm-modal-overlay').style.display = 'flex';
+    $('dm-modal-cancel').addEventListener('click', closeModal);
+    $('dm-ed-submit').addEventListener('click', function(){ submitEditDemand(demandId); });
+  }
+
+  function submitEditDemand(demandId){
+    var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
+    if (!d) return;
+    var errEl = $('dm-ed-error');
+    var newSource = $('dm-ed-source').value;
+    var newOwner = ($('dm-ed-owner').value || '').trim();
+    var volRaw = $('dm-ed-volume').value;
+    var valRaw = $('dm-ed-value').value;
+    var newVolume = volRaw === '' ? null : Number(volRaw);
+    var newValue = valRaw === '' ? null : Number(valRaw);
+    if ((volRaw !== '' && isNaN(newVolume)) || (valRaw !== '' && isNaN(newValue))){
+      errEl.textContent = 'Volume and value must be numbers.'; errEl.style.display = 'block'; return;
+    }
+    var newSummary = ($('dm-ed-summary').value || '').trim();
+
+    var patch = {};
+    var changes = [];
+    var oldOwner = d.owner_name || '';
+    var oldSummary = d.requirement_summary || '';
+    function trunc(s){ s = s || '—'; return s.length > 50 ? s.slice(0, 50) + '…' : s; }
+
+    if (newSource !== d.source){ patch.source = newSource; changes.push('Source: ' + (d.source||'—') + ' → ' + newSource); }
+    if (newOwner !== oldOwner){ patch.owner_name = newOwner || null; changes.push('Owner: ' + (oldOwner||'—') + ' → ' + (newOwner||'—')); }
+    if (newVolume !== d.est_monthly_volume){ patch.est_monthly_volume = newVolume; changes.push('Est. monthly volume: ' + (d.est_monthly_volume!=null?d.est_monthly_volume:'—') + ' → ' + (newVolume!=null?newVolume:'—')); }
+    if (newValue !== d.est_annual_value){ patch.est_annual_value = newValue; changes.push('Est. annual value: ' + fmtMoney(d.est_annual_value) + ' → ' + fmtMoney(newValue)); }
+    if (newSummary !== oldSummary){ patch.requirement_summary = newSummary || null; changes.push('Requirement summary: "' + trunc(oldSummary) + '" → "' + trunc(newSummary) + '"'); }
+
+    if (!changes.length){ closeModal(); return; }
+    var submitBtn = $('dm-ed-submit');
+    submitBtn.disabled = true;
+    return Promise.resolve(db.from('demands').update(patch).eq('id', demandId).select().single())
+      .then(function(r){
+        if (r.error) throw r.error;
+        Object.assign(d, r.data);
+        d._score = computeScore(d, state.weights);
+        return db.from('demand_activity').insert({ demand_id: demandId, kind:'stage_change', body: 'Edited — ' + changes.join('; '), author_name: CURRENT_USER });
+      })
+      .then(function(){
+        closeModal();
+        renderTable(); renderDetail(); renderPortfolio();
       })
       .catch(function(e){ errEl.textContent = e.message || String(e); errEl.style.display = 'block'; })
       .then(function(){ if (submitBtn) submitBtn.disabled = false; });
