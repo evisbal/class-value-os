@@ -3414,10 +3414,13 @@
       + '</div>'
       + '<div style="padding:16px 18px;display:flex;flex-direction:column;gap:9px">'
         + '<button id="dm-cpq-btn" '+(d.stage==='converted'?'disabled':'')+' style="height:40px;border-radius:8px;border:none;background:'+(d.stage==='converted'?'#B9C6DA':'#013E90')+';color:#fff;font-size:14px;font-weight:600;cursor:'+(d.stage==='converted'?'default':'pointer')+'">'+(d.stage==='converted'?'Already converted':'Configure quote in CPQ')+'</button>'
-        + '<div style="display:flex;gap:8px">'
-          + '<button id="dm-park-btn" style="flex:1;height:34px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Park</button>'
-          + '<button id="dm-reject-btn" style="flex:1;height:34px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Reject with reason</button>'
-        + '</div>'
+        + (d.stage === 'parked' || d.stage === 'rejected'
+            ? '<button id="dm-reopen-btn" style="height:34px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Reopen</button>'
+            : d.stage === 'converted' ? ''
+            : '<div style="display:flex;gap:8px">'
+                + '<button id="dm-park-btn" style="flex:1;height:34px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Park</button>'
+                + '<button id="dm-reject-btn" style="flex:1;height:34px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Reject with reason</button>'
+              + '</div>')
         + '<div style="font-size:11.5px;color:#97A1B2;line-height:1.45">Demands are never deleted — the decision and its reason stay on the investment record.</div>'
       + '</div>';
 
@@ -3428,10 +3431,24 @@
         openInfoModal('Value CPQ isn’t built yet', 'This button will hand the demand’s context (client, segment, volume) straight into the CPQ module once it exists. There’s nothing to configure a quote in yet.');
       }
     });
-    $('dm-park-btn').addEventListener('click', function(){ openReasonModal('Park this demand', 'parked', d.id); });
-    $('dm-reject-btn').addEventListener('click', function(){ openReasonModal('Reject this demand', 'rejected', d.id); });
+    var parkBtn = $('dm-park-btn'); if (parkBtn) parkBtn.addEventListener('click', function(){ openReasonModal('Park this demand', 'parked', d.id); });
+    var rejectBtn = $('dm-reject-btn'); if (rejectBtn) rejectBtn.addEventListener('click', function(){ openReasonModal('Reject this demand', 'rejected', d.id); });
+    var reopenBtn = $('dm-reopen-btn'); if (reopenBtn) reopenBtn.addEventListener('click', function(){ reopenDemand(d.id); });
 
     loadActivity(d.id);
+  }
+
+  function reopenDemand(demandId){
+    var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
+    var fromStage = d.stage;
+    return Promise.resolve(db.from('demands').update({ stage:'open', decision_reason:null }).eq('id', demandId).select().single())
+      .then(function(r){
+        if (r.error) throw r.error;
+        Object.assign(d, r.data);
+        return db.from('demand_activity').insert({ demand_id: demandId, kind:'stage_change', body: 'Reopened (was ' + fromStage + ')', author_name: CURRENT_USER });
+      })
+      .then(function(){ renderTabs(); renderTable(); renderDetail(); })
+      .catch(function(e){ openInfoModal('Couldn’t reopen the demand', e.message || String(e)); });
   }
 
   function loadActivity(demandId){
