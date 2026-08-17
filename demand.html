@@ -226,8 +226,12 @@
     clients: [],
     demands: [],
     weights: null,
-    activeTab: 'my',
-    filters: { segment:'', source:'', owner:'', minScore:'', created:'', stage:'', showArchived:false },
+    activeTab: 'all',
+    // mineOnly and owner are the same underlying dimension (owner_name) and
+    // are kept mutually exclusive on purpose — see renderFilters(). Stage
+    // used to have its own dropdown here too, redundant with the tabs below;
+    // removed in favor of the tabs being the single place stage is filtered.
+    filters: { segment:'', source:'', owner:'', minScore:'', created:'', mineOnly:false, showArchived:false },
     selectedId: null,
     showPortfolio: false,
     initialized: false
@@ -320,22 +324,24 @@
   }
 
   // ---- tabs ----
+  // Stage lives in exactly one place: these tabs. (It used to also have its
+  // own dropdown in the filter row, which could silently intersect with an
+  // active tab and produce a confusing empty list — e.g. "Unscored" tab +
+  // "Rejected" in the dropdown. One dimension, one control.)
+  var STAGE_TAB_LABEL = { unscored:'Unscored', open:'Open', decision:'Decision', parked:'Parked', rejected:'Rejected', converted:'Converted' };
   function tabCounts(){
     var active = state.demands.filter(function(d){ return !d.archived; });
-    var mine = active.filter(function(d){ return d.owner_name === CURRENT_USER; });
-    var unscored = active.filter(function(d){ return d.stage === 'unscored'; });
-    var decision = active.filter(function(d){ return d.stage === 'decision'; });
-    var open = active.filter(function(d){ return ['unscored','open','decision'].indexOf(d.stage) !== -1; });
-    return { my: mine.length, unscored: unscored.length, decision: decision.length, all: open.length };
+    var counts = { all: active.length };
+    STAGE_ORDER.forEach(function(s){
+      counts[s] = active.filter(function(d){ return d.stage === s; }).length;
+    });
+    return counts;
   }
   function renderTabs(){
     var c = tabCounts();
-    var tabs = [
-      {id:'my', label:'My demands', count:c.my},
-      {id:'unscored', label:'Unscored', count:c.unscored},
-      {id:'decision', label:'Awaiting decision', count:c.decision},
-      {id:'all', label:'All open', count:c.all}
-    ];
+    var tabs = [{id:'all', label:'All', count:c.all}].concat(
+      STAGE_ORDER.map(function(s){ return {id:s, label:STAGE_TAB_LABEL[s], count:c[s]}; })
+    );
     $('dm-tabs').innerHTML = tabs.map(function(t){
       var active = state.activeTab === t.id;
       return '<div data-tab="'+t.id+'" style="display:flex;align-items:center;gap:7px;padding:10px 14px 11px;border-bottom:2px solid '+(active?'#013E90':'transparent')+';cursor:pointer">'
@@ -354,28 +360,27 @@
     state.demands.forEach(function(d){ var v = getter(d); if (v) set[v] = true; });
     return Object.keys(set).sort();
   }
-  function selectHtml(id, label, opts, val){
-    return '<select id="'+id+'" style="height:32px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;background:#fff;font-size:13px;color:#4E5866;cursor:pointer">'
+  function selectHtml(id, label, opts, val, disabled){
+    return '<select id="'+id+'"'+(disabled?' disabled':'')+' style="height:32px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;background:'+(disabled?'#F4F6FA':'#fff')+';font-size:13px;color:#4E5866;cursor:'+(disabled?'not-allowed':'pointer')+'">'
       + '<option value=""'+(val===''?' selected':'')+'>'+esc(label)+' — any</option>'
       + opts.map(function(o){ return '<option value="'+esc(o)+'"'+(val===o?' selected':'')+'>'+esc(o)+'</option>'; }).join('')
       + '</select>';
   }
-  var STAGE_ORDER = ['unscored','open','decision','converted','parked','rejected'];
+  var STAGE_ORDER = ['unscored','open','decision','parked','rejected','converted'];
 
   function renderFilters(){
     var segOpts = distinctVals(function(d){ return d._segment; });
     var srcOpts = distinctVals(function(d){ return d.source; });
     var ownerOpts = distinctVals(function(d){ return d.owner_name; });
-    var stageOptionsHtml = '<option value=""'+(state.filters.stage===''?' selected':'')+'>Stage — any</option>'
-      + STAGE_ORDER.map(function(s){
-          var label = (STAGE_META[s] || {label:s}).label;
-          return '<option value="'+s+'"'+(state.filters.stage===s?' selected':'')+'>'+esc(label)+'</option>';
-        }).join('');
+    var mineOnly = state.filters.mineOnly;
     $('dm-filters').innerHTML =
-      selectHtml('dm-f-segment','Segment', segOpts, state.filters.segment)
+      '<label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:#5A6474;cursor:pointer;height:32px"><input type="checkbox" id="dm-f-mine" '+(mineOnly?'checked':'')+'> My demands only</label>'
+      + selectHtml('dm-f-segment','Segment', segOpts, state.filters.segment)
       + selectHtml('dm-f-source','Source', srcOpts, state.filters.source)
-      + selectHtml('dm-f-owner','Owner', ownerOpts, state.filters.owner)
-      + '<select id="dm-f-stage" style="height:32px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;background:#fff;font-size:13px;color:#4E5866;cursor:pointer">'+stageOptionsHtml+'</select>'
+      // Owner and "My demands only" are the same field (owner_name) — disabling
+      // this while mineOnly is checked keeps them from contradicting each
+      // other the way stage's tab+dropdown pair used to.
+      + selectHtml('dm-f-owner','Owner', ownerOpts, state.filters.owner, mineOnly)
       + '<input id="dm-f-minscore" type="number" min="0" max="100" placeholder="Min score" value="'+esc(state.filters.minScore)+'" style="height:32px;width:96px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;font-size:13px;box-sizing:border-box">'
       + '<select id="dm-f-created" style="height:32px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;background:#fff;font-size:13px;color:#4E5866;cursor:pointer">'
         + '<option value="">Created — any time</option>'
@@ -385,10 +390,14 @@
       + '</select>'
       + '<label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:#5A6474;cursor:pointer;height:32px"><input type="checkbox" id="dm-f-archived" '+(state.filters.showArchived?'checked':'')+'> Show archived</label>'
       + '<span id="dm-shown-count" style="margin-left:auto;font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:.12em;color:#8B95A6"></span>';
+    $('dm-f-mine').addEventListener('change', function(e){
+      state.filters.mineOnly = e.target.checked;
+      if (state.filters.mineOnly) state.filters.owner = '';
+      renderFilters(); renderTable(); renderPortfolio();
+    });
     $('dm-f-segment').addEventListener('change', function(e){ state.filters.segment = e.target.value; renderTable(); renderPortfolio(); });
     $('dm-f-source').addEventListener('change', function(e){ state.filters.source = e.target.value; renderTable(); renderPortfolio(); });
     $('dm-f-owner').addEventListener('change', function(e){ state.filters.owner = e.target.value; renderTable(); renderPortfolio(); });
-    $('dm-f-stage').addEventListener('change', function(e){ state.filters.stage = e.target.value; renderTable(); renderPortfolio(); });
     $('dm-f-minscore').addEventListener('input', function(e){ state.filters.minScore = e.target.value; renderTable(); renderPortfolio(); });
     $('dm-f-created').addEventListener('change', function(e){ state.filters.created = e.target.value; renderTable(); renderPortfolio(); });
     $('dm-f-archived').addEventListener('change', function(e){ state.filters.showArchived = e.target.checked; renderTable(); renderPortfolio(); });
@@ -397,14 +406,11 @@
   function getFilteredList(){
     var list = state.demands.slice();
     if (!state.filters.showArchived) list = list.filter(function(d){ return !d.archived; });
-    if (state.activeTab === 'my') list = list.filter(function(d){ return d.owner_name === CURRENT_USER; });
-    else if (state.activeTab === 'unscored') list = list.filter(function(d){ return d.stage === 'unscored'; });
-    else if (state.activeTab === 'decision') list = list.filter(function(d){ return d.stage === 'decision'; });
-    else if (state.activeTab === 'all') list = list.filter(function(d){ return ['unscored','open','decision'].indexOf(d.stage) !== -1; });
+    if (state.activeTab !== 'all') list = list.filter(function(d){ return d.stage === state.activeTab; });
+    if (state.filters.mineOnly) list = list.filter(function(d){ return d.owner_name === CURRENT_USER; });
+    else if (state.filters.owner) list = list.filter(function(d){ return d.owner_name === state.filters.owner; });
     if (state.filters.segment) list = list.filter(function(d){ return d._segment === state.filters.segment; });
     if (state.filters.source) list = list.filter(function(d){ return d.source === state.filters.source; });
-    if (state.filters.owner) list = list.filter(function(d){ return d.owner_name === state.filters.owner; });
-    if (state.filters.stage) list = list.filter(function(d){ return d.stage === state.filters.stage; });
     if (state.filters.minScore !== '' && state.filters.minScore != null){
       var min = Number(state.filters.minScore);
       list = list.filter(function(d){ return d._score != null && d._score >= min; });
