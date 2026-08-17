@@ -865,12 +865,16 @@
       .then(function(){ if (submitBtn) submitBtn.disabled = false; });
   }
 
-  // ---- edit an existing demand's intake fields ----
+  // ---- edit an existing demand's intake fields (including its client's name/segment) ----
   function openEditDemandModal(demandId){
     var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
     if (!d) return;
+    var c = state.clients.filter(function(x){ return x.id === d.client_id; })[0];
     $('dm-modal-box').innerHTML =
       '<div style="font-size:15px;font-weight:600;color:#131A26;margin-bottom:12px">Edit demand</div>'
+      + field('dm-ed-client','Client name', 'text', c ? c.name : '')
+      + '<div style="font-size:11px;color:#97A1B2;margin:-9px 0 12px">Corrects the client record — updates every demand linked to this client, not just this one.</div>'
+      + selectField('dm-ed-segment','Segment', SEGMENTS, c ? c.segment : '')
       + selectField('dm-ed-source','Source', SOURCES, d.source)
       + field('dm-ed-owner','Owner', 'text', d.owner_name || '')
       + field('dm-ed-volume','Est. monthly volume', 'number', d.est_monthly_volume == null ? '' : d.est_monthly_volume)
@@ -890,7 +894,11 @@
   function submitEditDemand(demandId){
     var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
     if (!d) return;
+    var c = state.clients.filter(function(x){ return x.id === d.client_id; })[0];
     var errEl = $('dm-ed-error');
+    var newClientName = ($('dm-ed-client').value || '').trim();
+    if (!newClientName){ errEl.textContent = 'Client name is required.'; errEl.style.display = 'block'; return; }
+    var newSegment = $('dm-ed-segment').value;
     var newSource = $('dm-ed-source').value;
     var newOwner = ($('dm-ed-owner').value || '').trim();
     var volRaw = $('dm-ed-volume').value;
@@ -902,31 +910,52 @@
     }
     var newSummary = ($('dm-ed-summary').value || '').trim();
 
-    var patch = {};
+    var demandPatch = {};
+    var clientPatch = {};
     var changes = [];
     var oldOwner = d.owner_name || '';
     var oldSummary = d.requirement_summary || '';
+    var oldClientName = c ? c.name : '';
+    var oldSegment = c ? c.segment : '';
     function trunc(s){ s = s || '—'; return s.length > 50 ? s.slice(0, 50) + '…' : s; }
 
-    if (newSource !== d.source){ patch.source = newSource; changes.push('Source: ' + (d.source||'—') + ' → ' + newSource); }
-    if (newOwner !== oldOwner){ patch.owner_name = newOwner || null; changes.push('Owner: ' + (oldOwner||'—') + ' → ' + (newOwner||'—')); }
-    if (newVolume !== d.est_monthly_volume){ patch.est_monthly_volume = newVolume; changes.push('Est. monthly volume: ' + (d.est_monthly_volume!=null?d.est_monthly_volume:'—') + ' → ' + (newVolume!=null?newVolume:'—')); }
-    if (newValue !== d.est_annual_value){ patch.est_annual_value = newValue; changes.push('Est. annual value: ' + fmtMoney(d.est_annual_value) + ' → ' + fmtMoney(newValue)); }
-    if (newSummary !== oldSummary){ patch.requirement_summary = newSummary || null; changes.push('Requirement summary: "' + trunc(oldSummary) + '" → "' + trunc(newSummary) + '"'); }
+    if (c && newClientName !== oldClientName){ clientPatch.name = newClientName; changes.push('Client name: "' + oldClientName + '" → "' + newClientName + '"'); }
+    if (c && newSegment !== oldSegment){ clientPatch.segment = newSegment; changes.push('Segment: ' + (oldSegment||'—') + ' → ' + newSegment); }
+    if (newSource !== d.source){ demandPatch.source = newSource; changes.push('Source: ' + (d.source||'—') + ' → ' + newSource); }
+    if (newOwner !== oldOwner){ demandPatch.owner_name = newOwner || null; changes.push('Owner: ' + (oldOwner||'—') + ' → ' + (newOwner||'—')); }
+    if (newVolume !== d.est_monthly_volume){ demandPatch.est_monthly_volume = newVolume; changes.push('Est. monthly volume: ' + (d.est_monthly_volume!=null?d.est_monthly_volume:'—') + ' → ' + (newVolume!=null?newVolume:'—')); }
+    if (newValue !== d.est_annual_value){ demandPatch.est_annual_value = newValue; changes.push('Est. annual value: ' + fmtMoney(d.est_annual_value) + ' → ' + fmtMoney(newValue)); }
+    if (newSummary !== oldSummary){ demandPatch.requirement_summary = newSummary || null; changes.push('Requirement summary: "' + trunc(oldSummary) + '" → "' + trunc(newSummary) + '"'); }
 
     if (!changes.length){ closeModal(); return; }
     var submitBtn = $('dm-ed-submit');
     submitBtn.disabled = true;
-    return Promise.resolve(db.from('demands').update(patch).eq('id', demandId).select().single())
-      .then(function(r){
-        if (r.error) throw r.error;
-        Object.assign(d, r.data);
+
+    var clientPromise = Object.keys(clientPatch).length
+      ? Promise.resolve(db.from('clients').update(clientPatch).eq('id', d.client_id).select().single())
+      : Promise.resolve({ error: null, data: null });
+    var demandPromise = Object.keys(demandPatch).length
+      ? Promise.resolve(db.from('demands').update(demandPatch).eq('id', demandId).select().single())
+      : Promise.resolve({ error: null, data: null });
+
+    Promise.all([clientPromise, demandPromise])
+      .then(function(results){
+        var cr = results[0], dr = results[1];
+        if (cr.error) throw cr.error;
+        if (dr.error) throw dr.error;
+        if (cr.data && c){
+          Object.assign(c, cr.data);
+          // the client's name/segment is denormalized onto every demand at decorate() time —
+          // refresh it everywhere it's cached, not just on the demand being edited
+          state.demands.filter(function(x){ return x.client_id === c.id; }).forEach(decorate);
+        }
+        if (dr.data) Object.assign(d, dr.data);
         d._score = computeScore(d, state.weights);
         return db.from('demand_activity').insert({ demand_id: demandId, kind:'stage_change', body: 'Edited — ' + changes.join('; '), author_name: CURRENT_USER });
       })
       .then(function(){
         closeModal();
-        renderTable(); renderDetail(); renderPortfolio();
+        renderTabs(); renderFilters(); renderTable(); renderDetail(); renderPortfolio();
       })
       .catch(function(e){ errEl.textContent = e.message || String(e); errEl.style.display = 'block'; })
       .then(function(){ if (submitBtn) submitBtn.disabled = false; });
