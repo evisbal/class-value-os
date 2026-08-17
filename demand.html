@@ -227,11 +227,12 @@
     demands: [],
     weights: null,
     activeTab: 'all',
-    // mineOnly and owner are the same underlying dimension (owner_name) and
-    // are kept mutually exclusive on purpose — see renderFilters(). Stage
-    // used to have its own dropdown here too, redundant with the tabs below;
-    // removed in favor of the tabs being the single place stage is filtered.
-    filters: { segment:'', source:'', owner:'', minScore:'', created:'', mineOnly:false, showArchived:false },
+    // No "mine only" toggle: with a single real user today, everyone sees
+    // everything, and once Roles & permissions exists a standard user's view
+    // will be scoped to their own demands by the role itself, not a manual
+    // filter — an admin/dashboard-style role would use the Owner dropdown
+    // below to see across owners, same as it does today.
+    filters: { segment:'', source:'', owner:'', created:'', showArchived:false },
     selectedId: null,
     showPortfolio: false,
     initialized: false
@@ -372,16 +373,10 @@
     var segOpts = distinctVals(function(d){ return d._segment; });
     var srcOpts = distinctVals(function(d){ return d.source; });
     var ownerOpts = distinctVals(function(d){ return d.owner_name; });
-    var mineOnly = state.filters.mineOnly;
     $('dm-filters').innerHTML =
-      '<label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:#5A6474;cursor:pointer;height:32px"><input type="checkbox" id="dm-f-mine" '+(mineOnly?'checked':'')+'> My demands only</label>'
-      + selectHtml('dm-f-segment','Segment', segOpts, state.filters.segment)
+      selectHtml('dm-f-segment','Segment', segOpts, state.filters.segment)
       + selectHtml('dm-f-source','Source', srcOpts, state.filters.source)
-      // Owner and "My demands only" are the same field (owner_name) — disabling
-      // this while mineOnly is checked keeps them from contradicting each
-      // other the way stage's tab+dropdown pair used to.
-      + selectHtml('dm-f-owner','Owner', ownerOpts, state.filters.owner, mineOnly)
-      + '<input id="dm-f-minscore" type="number" min="0" max="100" placeholder="Min score" value="'+esc(state.filters.minScore)+'" style="height:32px;width:96px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;font-size:13px;box-sizing:border-box">'
+      + selectHtml('dm-f-owner','Owner', ownerOpts, state.filters.owner)
       + '<select id="dm-f-created" style="height:32px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;background:#fff;font-size:13px;color:#4E5866;cursor:pointer">'
         + '<option value="">Created — any time</option>'
         + '<option value="7"'+(state.filters.created==='7'?' selected':'')+'>Last 7 days</option>'
@@ -390,15 +385,9 @@
       + '</select>'
       + '<label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:#5A6474;cursor:pointer;height:32px"><input type="checkbox" id="dm-f-archived" '+(state.filters.showArchived?'checked':'')+'> Show archived</label>'
       + '<span id="dm-shown-count" style="margin-left:auto;font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:.12em;color:#8B95A6"></span>';
-    $('dm-f-mine').addEventListener('change', function(e){
-      state.filters.mineOnly = e.target.checked;
-      if (state.filters.mineOnly) state.filters.owner = '';
-      renderFilters(); renderTable(); renderPortfolio();
-    });
     $('dm-f-segment').addEventListener('change', function(e){ state.filters.segment = e.target.value; renderTable(); renderPortfolio(); });
     $('dm-f-source').addEventListener('change', function(e){ state.filters.source = e.target.value; renderTable(); renderPortfolio(); });
     $('dm-f-owner').addEventListener('change', function(e){ state.filters.owner = e.target.value; renderTable(); renderPortfolio(); });
-    $('dm-f-minscore').addEventListener('input', function(e){ state.filters.minScore = e.target.value; renderTable(); renderPortfolio(); });
     $('dm-f-created').addEventListener('change', function(e){ state.filters.created = e.target.value; renderTable(); renderPortfolio(); });
     $('dm-f-archived').addEventListener('change', function(e){ state.filters.showArchived = e.target.checked; renderTable(); renderPortfolio(); });
   }
@@ -407,14 +396,9 @@
     var list = state.demands.slice();
     if (!state.filters.showArchived) list = list.filter(function(d){ return !d.archived; });
     if (state.activeTab !== 'all') list = list.filter(function(d){ return d.stage === state.activeTab; });
-    if (state.filters.mineOnly) list = list.filter(function(d){ return d.owner_name === CURRENT_USER; });
-    else if (state.filters.owner) list = list.filter(function(d){ return d.owner_name === state.filters.owner; });
+    if (state.filters.owner) list = list.filter(function(d){ return d.owner_name === state.filters.owner; });
     if (state.filters.segment) list = list.filter(function(d){ return d._segment === state.filters.segment; });
     if (state.filters.source) list = list.filter(function(d){ return d.source === state.filters.source; });
-    if (state.filters.minScore !== '' && state.filters.minScore != null){
-      var min = Number(state.filters.minScore);
-      list = list.filter(function(d){ return d._score != null && d._score >= min; });
-    }
     if (state.filters.created){
       var cutoff = Date.now() - Number(state.filters.created) * 86400000;
       list = list.filter(function(d){ return new Date(d.created_at).getTime() >= cutoff; });
