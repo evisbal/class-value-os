@@ -236,6 +236,12 @@
     if (hrs < 24) return Math.max(1, Math.round(hrs)) + 'h';
     return Math.round(hrs/24) + 'd';
   }
+  function fmtDate(iso){
+    if (!iso) return '—';
+    var d2 = new Date(iso);
+    if (isNaN(d2.getTime())) return '—';
+    return d2.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+  }
   function computeScore(d, w){
     if (!w) return null;
     var have = CRITERIA.every(function(c){ return d[c.key] != null; });
@@ -418,7 +424,7 @@
           + '<div style="text-align:right;font-weight:600">'+fmtMoney(d.est_annual_value)+'</div>'
           + '<div style="display:flex;align-items:center;gap:7px">'+scoreHtml+'</div>'
           + '<div><span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.08em;padding:3px 6px;border-radius:5px;background:'+meta.bg+';color:'+meta.fg+'">'+meta.label+'</span>'+(d.archived?' <span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.08em;padding:3px 6px;border-radius:5px;background:#EDEFF3;color:#8B95A6">ARCHIVED</span>':'')+'</div>'
-          + '<div style="text-align:right;font-family:\'IBM Plex Mono\',monospace;font-size:10.5px;color:#97A1B2">'+fmtAge(d.created_at)+'</div>'
+          + '<div title="Created '+esc(fmtDate(d.created_at))+'" style="text-align:right;font-family:\'IBM Plex Mono\',monospace;font-size:10.5px;color:#97A1B2">'+fmtAge(d.created_at)+'</div>'
           + '</div>';
       }).join('');
       Array.prototype.forEach.call(document.querySelectorAll('.dm-row'), function(el){
@@ -461,6 +467,7 @@
         + '</div>'
         + '<div style="margin-top:7px;font-size:18px;font-weight:600;letter-spacing:-.01em">'+esc(d._clientName)+'</div>'
         + '<div style="margin-top:4px;font-size:13px;color:#6B7686">'+esc(d._segment||'—')+' · '+(d.est_monthly_volume!=null?d.est_monthly_volume:'—')+' orders / month · '+fmtMoney(d.est_annual_value)+' est. annual</div>'
+        + '<div style="margin-top:3px;font-size:11.5px;color:#97A1B2">Created '+fmtDate(d.created_at)+'</div>'
         + (d.requirement_summary ? '<div style="margin-top:9px;font-size:12.5px;color:#5A6474;line-height:1.5">'+esc(d.requirement_summary)+'</div>' : '')
         + (d.decision_reason ? '<div style="margin-top:9px;font-size:12px;color:#8B95A6;line-height:1.5"><b>Decision reason:</b> '+esc(d.decision_reason)+'</div>' : '')
         + (d.decision_owner_type ? '<div style="margin-top:9px;font-size:12px;color:#8B95A6;line-height:1.5"><b>Decision owner:</b> '
