@@ -34,7 +34,8 @@ them.
 
 - `index.html` — My work (home).
 - `demand.html` — Demand Management. Real, database-backed (see below).
-- `cpq.html` — Value CPQ (static design preview).
+- `cpq.html` — Value CPQ. Client & demand + Configure are real, database-backed (see below); Rules check,
+  Pricing & terms and Quote & approvals are still static design previews.
 - `plan.html` — Plan Builder. Real, fully-functional; embeds `class-plan-builder.html` via iframe.
 - `studio.html`, `delivery.html`, `reporting.html`, `engagement.html`, `roles.html`, `states.html` — static
   design previews with sample data, waiting to be built out the same way Demand Management was.
@@ -42,15 +43,15 @@ them.
 - `class-plan-builder.html` — the real, fully-functional Class Plan Builder application. Works standalone
   or embedded inside `plan.html`. Saves projects to the browser's `localStorage` under the key
   `classPlanBuilder.projects.v1` (per-browser, not shared across users yet).
-- `supabase-config.js` — where you paste your Supabase project's URL and anon key. Only `demand.html` reads
-  this file to connect. Ships blank; the module shows a clear "needs a database connection" state until
-  it's filled in, rather than failing silently.
-- `supabase/schema.sql` — the database schema for Demand Management. Paste it into your Supabase project's
-  SQL editor once, before the module will have anything to read or write.
+- `supabase-config.js` — where you paste your Supabase project's URL and anon key. Only `demand.html` and
+  `cpq.html` read this file to connect. Ships blank; both modules show a clear "needs a database connection"
+  state until it's filled in, rather than failing silently.
+- `supabase/schema.sql` — the database schema for Demand Management and Value CPQ. Paste it into your
+  Supabase project's SQL editor once, before either module will have anything to read or write.
 - `.nojekyll` — tells GitHub Pages to serve these files as-is, skipping Jekyll processing.
 
-No build step, no framework. `demand.html` loads the Supabase JS client from a CDN and talks to your
-database directly from the browser — the anon key is safe to expose this way because your Row Level
+No build step, no framework. `demand.html` and `cpq.html` load the Supabase JS client from a CDN and talk
+to your database directly from the browser — the anon key is safe to expose this way because your Row Level
 Security policies (in `schema.sql`) control what it's actually allowed to do. No other page loads Supabase
 at all, so they have nothing to configure and nothing that can fail to connect.
 
@@ -61,10 +62,15 @@ at all, so they have nothing to configure and nothing that can fail to connect.
   by segment/source/owner/score/created date/stage, saved-view tabs (My demands / Unscored / Awaiting
   decision / All open), a transparent 5-input weighted scoring model, an activity/notes thread per demand,
   and a portfolio matrix (value vs. integration effort). Demands are never hard-deleted.
-- **Value CPQ** — still a static design preview for actually building a quote, but its "Client & demand"
-  step now shows a real, live, read-only list of every Converted demand (client, segment, volume, value,
-  score, requirement summary), pulled from the same Supabase project as Demand Management. Nothing else in
-  CPQ is wired up yet.
+- **Value CPQ** — Phase 1 of 3 is real (see `CPQ_requirements_scope.md` for the full plan): every Converted
+  demand gets a "Configure quote" action that creates a real, versioned `quotes` record and opens a quote
+  editor. **Client & demand** shows the demand's real context (client, segment, source demand, est. monthly
+  volume) read-only from Demand Management, plus a guided-questions panel that saves to the quote.
+  **Configure** is a real product/add-on catalog (`cpq_products`) — selections and monthly volumes persist
+  to `quote_line_items`, eligibility is filtered live by the client's actual segment (no separate, redundant
+  segment question), and a live pricing panel totals it all up. **Rules check**, **Pricing & terms** and
+  **Quote & approvals** are still the original static mockup steps, shown with an inline "not built yet"
+  notice — later phases.
 - Everything else (Integration Studio, Delivery, Status Reporting, Engagement Management, Roles &
   permissions, System states) is still a static mockup with sample data, waiting to be built the same way.
 
@@ -90,18 +96,19 @@ automatically, since Value CPQ has no backend of its own yet to trigger it:
 
 ## Setting up Supabase for Demand Management
 
-**Already have a project running from before?** This update added new columns to `demands` (decision
-owner/pending-note fields, `archived`) — open **SQL Editor → New query**, paste in the current
-`supabase/schema.sql`, and click **Run** once. It's written to be safe against a project that already has
-data: it only adds what's missing and never touches existing rows.
+**Already have a project running from before?** This update adds Value CPQ's Phase 1 tables (`cpq_products`,
+`quotes`, `quote_line_items`, seeded with the product/add-on catalog) — open **SQL Editor → New query**,
+paste in the current `supabase/schema.sql`, and click **Run** once. It's written to be safe against a
+project that already has data: it only adds what's missing and never touches existing rows.
 
 1. Create a free account at [supabase.com](https://supabase.com) and click **New project**. Pick any name
    and a database password (Supabase asks you to set one — store it somewhere safe, you likely won't need
    it day-to-day since the app talks to Supabase through the API, not a direct Postgres connection).
 2. Once the project finishes provisioning, open **SQL Editor** in the left sidebar → **New query**, paste
    in the entire contents of `supabase/schema.sql` from this folder, and click **Run**. This creates the
-   tables (`clients`, `demands`, `demand_activity`, `demand_attachments`, `demand_scoring_weights`), their
-   constraints, and starter Row Level Security policies. It's safe to re-run if you ever need to.
+   tables (`clients`, `demands`, `demand_activity`, `demand_attachments`, `demand_scoring_weights`,
+   `cpq_products`, `quotes`, `quote_line_items`), their constraints, starter Row Level Security policies, and
+   the CPQ product/add-on catalog. It's safe to re-run if you ever need to.
 3. Open **Project Settings → API**. Copy the **Project URL** and the **`anon` `public`** key (not the
    `service_role` key — that one must never go into client-side code).
 4. Open `supabase-config.js` and fill in both values:

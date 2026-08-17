@@ -132,575 +132,10 @@
         <div id="hamburgerBtn" class="topbar-hamburger" style="width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">&#9776;</div>
       </div>
     </div>
-<div id="previewBanner" style="position:sticky;top:0;z-index:50;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:11.5px;padding:7px 20px;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em">STATIC DESIGN PREVIEW — this module is a non-functional mockup with sample data.</div>
+
     <div class="content-viewport" id="contentViewport">
-<div style="background: rgb(255, 255, 255); border-bottom: 1px solid rgb(220, 226, 236); padding: 18px 28px 0px;">
-            <div style="display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
-              <div>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                  <div style="font-size: 22px; font-weight: 600; letter-spacing: -0.01em;">Summit Ridge Bank — Origination bundle</div>
-                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; letter-spacing: 0.1em; background: rgb(253, 243, 224); color: rgb(138, 90, 18); border: 1px solid rgb(241, 223, 188); padding: 3px 8px; border-radius: 5px;">DRAFT · NEEDS PRICING APPROVAL</div>
-                </div>
-                <div style="margin-top: 7px; display: flex; align-items: center; gap: 14px; font-size: 12.5px; color: rgb(107, 118, 134); flex-wrap: wrap;">
-                  <span style="font-family: &quot;IBM Plex Mono&quot;, monospace;">Q-2026-0481</span>
-                  <span style="color: rgb(196, 203, 216);">|</span>
-                  <span>from demand <a href="#">DMD-1174</a></span>
-                  <span style="color: rgb(196, 203, 216);">|</span>
-                  <span>owner Dana Mercer</span>
-                  <span style="color: rgb(196, 203, 216);">|</span>
-                  <span>updated 8 min ago</span>
-                  <span style="color: rgb(1, 62, 144); font-weight: 600; cursor: pointer;">version 7 · history</span>
-                </div>
-              </div>
-              <div style="margin-left: auto; display: flex; gap: 8px;">
-                <button style="height: 36px; padding: 0px 14px; border-radius: 8px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 13.5px; font-weight: 600; cursor: pointer;" class="scp4">Save draft</button>
-                <button style="height: 36px; padding: 0px 14px; border-radius: 8px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 13.5px; font-weight: 600; cursor: pointer;" class="scp4">Preview PDF</button>
-                <button style="height: 36px; padding: 0px 16px; border-radius: 8px; border: medium; background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 13.5px; font-weight: 600; cursor: pointer;" class="scp1"><span class="sc-interp">Continue</span></button>
-              </div>
-            </div>
-            <div style="margin-top: 16px; display: flex; gap: 2px; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-              
-                <div style="display: flex; align-items: center; gap: 9px; padding: 11px 16px 12px; border-bottom: 2px solid transparent; cursor: pointer;" onclick="showCpqStep('client_demand')" id="cpqstep-tab-client_demand">
-                  <span style="width: 20px; height: 20px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; background: rgb(234, 241, 251); color: rgb(1, 46, 107); border: 1px solid rgb(201, 220, 242);"><span class="sc-interp">✓</span></span>
-                  <span style="font-size: 13.5px; font-weight: 500; color: rgb(107, 118, 134); white-space: nowrap;"><span class="sc-interp">Client &amp; demand</span></span>
-                </div>
-              
-                <div style="display: flex; align-items: center; gap: 9px; padding: 11px 16px 12px; border-bottom: 2px solid rgb(1, 62, 144); cursor: pointer;" onclick="showCpqStep('configure')" id="cpqstep-tab-configure">
-                  <span style="width: 20px; height: 20px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; background: rgb(1, 62, 144); color: rgb(255, 255, 255); border: 1px solid rgb(1, 62, 144);"><span class="sc-interp">2</span></span>
-                  <span style="font-size: 13.5px; font-weight: 600; color: rgb(19, 26, 38); white-space: nowrap;"><span class="sc-interp">Configure</span></span>
-                </div>
-              
-                <div style="display: flex; align-items: center; gap: 9px; padding: 11px 16px 12px; border-bottom: 2px solid transparent; cursor: pointer;" onclick="showCpqStep('rules_check')" id="cpqstep-tab-rules_check">
-                  <span style="width: 20px; height: 20px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; background: rgb(255, 255, 255); color: rgb(151, 161, 178); border: 1px solid rgb(220, 226, 236);"><span class="sc-interp">3</span></span>
-                  <span style="font-size: 13.5px; font-weight: 500; color: rgb(107, 118, 134); white-space: nowrap;"><span class="sc-interp">Rules check</span></span>
-                </div>
-              
-                <div style="display: flex; align-items: center; gap: 9px; padding: 11px 16px 12px; border-bottom: 2px solid transparent; cursor: pointer;" onclick="showCpqStep('pricing_terms')" id="cpqstep-tab-pricing_terms">
-                  <span style="width: 20px; height: 20px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; background: rgb(255, 255, 255); color: rgb(151, 161, 178); border: 1px solid rgb(220, 226, 236);"><span class="sc-interp">4</span></span>
-                  <span style="font-size: 13.5px; font-weight: 500; color: rgb(107, 118, 134); white-space: nowrap;"><span class="sc-interp">Pricing &amp; terms</span></span>
-                </div>
-              
-                <div style="display: flex; align-items: center; gap: 9px; padding: 11px 16px 12px; border-bottom: 2px solid transparent; cursor: pointer;" onclick="showCpqStep('quote_approvals')" id="cpqstep-tab-quote_approvals">
-                  <span style="width: 20px; height: 20px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; background: rgb(255, 255, 255); color: rgb(151, 161, 178); border: 1px solid rgb(220, 226, 236);"><span class="sc-interp">5</span></span>
-                  <span style="font-size: 13.5px; font-weight: 500; color: rgb(107, 118, 134); white-space: nowrap;"><span class="sc-interp">Quote &amp; approvals</span></span>
-                </div>
-              
-            </div>
-          </div>
-<div style="padding:20px 28px 48px;max-width:1520px"><div id="cpqstep-client_demand" style="display:none"><div id="cpq-converted-list-mount"></div>
-<div style="display: grid; grid-template-columns: 1fr 336px; gap: 18px; padding: 20px 28px 48px; align-items: start; max-width: 1520px;">
-            <div style="min-width: 0px; display: flex; flex-direction: column; gap: 14px;">
-
-              
-                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 20px 22px;">
-                  <div style="font-size: 16px; font-weight: 600;">Client &amp; demand context</div>
-                  <div style="margin-top: 4px; font-size: 13px; color: rgb(107, 118, 134);">Pulled from Demand Management. Read-only fields stay in sync with the demand record.</div>
-                  <div style="margin-top: 18px; display: grid; grid-template-columns: repeat(3,1fr); gap: 14px;">
-                    
-                      <div>
-                        <div style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.02em; color: rgb(139, 149, 166); text-transform: uppercase;"><span class="sc-interp">Client</span></div>
-                        <div style="margin-top: 5px; height: 40px; border: 1px solid rgb(227, 232, 240); background: rgb(250, 251, 253); border-radius: 8px; display: flex; align-items: center; padding: 0px 12px; font-size: 14px; color: rgb(19, 26, 38);"><span class="sc-interp">Summit Ridge Bank</span></div>
-                      </div>
-                    
-                      <div>
-                        <div style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.02em; color: rgb(139, 149, 166); text-transform: uppercase;"><span class="sc-interp">Segment</span></div>
-                        <div style="margin-top: 5px; height: 40px; border: 1px solid rgb(227, 232, 240); background: rgb(250, 251, 253); border-radius: 8px; display: flex; align-items: center; padding: 0px 12px; font-size: 14px; color: rgb(19, 26, 38);"><span class="sc-interp">Centralized banking</span></div>
-                      </div>
-                    
-                      <div>
-                        <div style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.02em; color: rgb(139, 149, 166); text-transform: uppercase;"><span class="sc-interp">Source demand</span></div>
-                        <div style="margin-top: 5px; height: 40px; border: 1px solid rgb(227, 232, 240); background: rgb(250, 251, 253); border-radius: 8px; display: flex; align-items: center; padding: 0px 12px; font-size: 14px; color: rgb(19, 26, 38);"><span class="sc-interp">DMD-1174 · score 82</span></div>
-                      </div>
-                    
-                      <div>
-                        <div style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.02em; color: rgb(139, 149, 166); text-transform: uppercase;"><span class="sc-interp">Est. monthly orders</span></div>
-                        <div style="margin-top: 5px; height: 40px; border: 1px solid rgb(227, 232, 240); background: rgb(250, 251, 253); border-radius: 8px; display: flex; align-items: center; padding: 0px 12px; font-size: 14px; color: rgb(19, 26, 38);"><span class="sc-interp">740</span></div>
-                      </div>
-                    
-                      <div>
-                        <div style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.02em; color: rgb(139, 149, 166); text-transform: uppercase;"><span class="sc-interp">Term</span></div>
-                        <div style="margin-top: 5px; height: 40px; border: 1px solid rgb(227, 232, 240); background: rgb(250, 251, 253); border-radius: 8px; display: flex; align-items: center; padding: 0px 12px; font-size: 14px; color: rgb(19, 26, 38);"><span class="sc-interp">3 years</span></div>
-                      </div>
-                    
-                      <div>
-                        <div style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.02em; color: rgb(139, 149, 166); text-transform: uppercase;"><span class="sc-interp">Target first order</span></div>
-                        <div style="margin-top: 5px; height: 40px; border: 1px solid rgb(227, 232, 240); background: rgb(250, 251, 253); border-radius: 8px; display: flex; align-items: center; padding: 0px 12px; font-size: 14px; color: rgb(19, 26, 38);"><span class="sc-interp">90 days</span></div>
-                      </div>
-                    
-                  </div>
-                  <div style="margin-top: 18px; padding: 14px 16px; background: rgb(234, 241, 251); border: 1px solid rgb(216, 229, 245); border-radius: 10px; display: flex; gap: 12px; align-items: flex-start;">
-                    <div style="width: 18px; height: 18px; border-radius: 99px; background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; margin-top: 1px;">i</div>
-                    <div style="font-size: 13px; line-height: 1.55; color: rgb(62, 74, 92); text-wrap: pretty;">Guided selling is on. Answers here filter the product catalog in step 2 and lock incompatible options before pricing runs — engineering rules, not sales memory.</div>
-                  </div>
-                </div>
-                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 20px 22px;">
-                  <div style="font-size: 16px; font-weight: 600;">Guided questions</div>
-                  <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 12px;">
-                    
-                      <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 13px 15px;">
-                        <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Which market segment does this client sit in?</span></div>
-                        <div style="margin-top: 9px; display: flex; gap: 8px; flex-wrap: wrap;">
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(1, 62, 144); background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-weight: 600;"><span class="sc-interp">Centralized banking</span></div>
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Wholesale / TPO</span></div>
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Credit union</span></div>
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Private lending</span></div>
-                          
-                        </div>
-                      </div>
-                    
-                      <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 13px 15px;">
-                        <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Primary use case</span></div>
-                        <div style="margin-top: 9px; display: flex; gap: 8px; flex-wrap: wrap;">
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(1, 62, 144); background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-weight: 600;"><span class="sc-interp">Origination</span></div>
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Home equity</span></div>
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Servicing</span></div>
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">New construction</span></div>
-                          
-                        </div>
-                      </div>
-                    
-                      <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 13px 15px;">
-                        <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Loan origination system to integrate with</span></div>
-                        <div style="margin-top: 9px; display: flex; gap: 8px; flex-wrap: wrap;">
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(1, 62, 144); background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-weight: 600;"><span class="sc-interp">Encompass</span></div>
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Empower</span></div>
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">MeridianLink</span></div>
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Custom API</span></div>
-                          
-                        </div>
-                      </div>
-                    
-                      <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 13px 15px;">
-                        <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Target time to first order</span></div>
-                        <div style="margin-top: 9px; display: flex; gap: 8px; flex-wrap: wrap;">
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">30 days</span></div>
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">60 days</span></div>
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(1, 62, 144); background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-weight: 600;"><span class="sc-interp">90 days</span></div>
-                          
-                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Flexible</span></div>
-                          
-                        </div>
-                      </div>
-                    
-                  </div>
-                </div>
-              
-
-              
-
-              
-
-              
-
-              
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 12px; position: sticky; top: 0px;">
-              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; overflow: hidden;">
-                <div style="padding: 14px 16px; border-bottom: 1px solid rgb(237, 240, 246); display: flex; align-items: center; justify-content: space-between;">
-                  <div style="font-size: 14px; font-weight: 600;">Live pricing</div>
-                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; letter-spacing: 0.1em; color: rgb(1, 62, 144);">RECALCULATED</div>
-                </div>
-                <div style="padding: 16px;">
-                  <div style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em;"><span class="sc-interp">$205,674</span></div>
-                  <div style="font-size: 12.5px; color: rgb(107, 118, 134); margin-top: 2px;">estimated monthly · <span class="sc-interp">$2,468,088</span> annual</div>
-                  <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
-                    
-                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
-                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Products (3)</span></div>
-                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$201,474</span></div>
-                      </div>
-                    
-                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
-                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Add-ons</span></div>
-                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$4,200</span></div>
-                      </div>
-                    
-                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
-                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Blended discount</span></div>
-                        <div style="font-weight: 600; color: rgb(197, 138, 28);"><span class="sc-interp">−18%</span></div>
-                      </div>
-                    
-                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
-                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Gross margin</span></div>
-                        <div style="font-weight: 600; color: rgb(196, 71, 44);"><span class="sc-interp">38%</span></div>
-                      </div>
-                    
-                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
-                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Pricing model</span></div>
-                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">Tiered</span></div>
-                      </div>
-                    
-                  </div>
-                  <div style="margin-top: 14px; padding-top: 14px; border-top: 1px dashed rgb(227, 232, 240); display: flex; flex-direction: column; gap: 9px;">
-                    
-                      <div style="display: flex; gap: 10px; padding: 11px 12px; background: rgb(253, 243, 224); border: 1px solid rgb(241, 223, 188); border-radius: 9px;">
-                        <div style="color: rgb(138, 90, 18); font-weight: 700; font-size: 12px;">!</div>
-                        <div style="font-size: 12.5px; line-height: 1.45; color: rgb(110, 74, 17);">Discount above the 12% auto-approve cap — pricing &amp; finance sign-off required before the quote can be sent.</div>
-                      </div>
-                    
-                    <div style="font-size: 12px; color: rgb(139, 149, 166); line-height: 1.5;">Margin, discount and approval state are computed on every change so nobody negotiates against stale numbers.</div>
-                  </div>
-                </div>
-              </div>
-              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 14px 16px;">
-                <div style="font-size: 14px; font-weight: 600;">Stakeholders on this quote</div>
-                <div style="margin-top: 11px; display: flex; flex-direction: column; gap: 10px;">
-                  
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">DM</span></div>
-                      <div style="min-width: 0px;">
-                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Dana Mercer</span></div>
-                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Solutions engineer · owner</span></div>
-                      </div>
-                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">EDITING</span></div>
-                    </div>
-                  
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">RT</span></div>
-                      <div style="min-width: 0px;">
-                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Ray Tolbert</span></div>
-                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Account executive</span></div>
-                      </div>
-                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">VIEWED</span></div>
-                    </div>
-                  
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">PF</span></div>
-                      <div style="min-width: 0px;">
-                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Priya Fenwick</span></div>
-                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Pricing &amp; finance</span></div>
-                      </div>
-                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">PENDING</span></div>
-                    </div>
-                  
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">JO</span></div>
-                      <div style="min-width: 0px;">
-                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Jon Okafor</span></div>
-                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Implementation PM</span></div>
-                      </div>
-                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">CC</span></div>
-                    </div>
-                  
-                </div>
-              </div>
-              <div style="background: rgb(234, 241, 251); border: 1px solid rgb(216, 229, 245); border-radius: 12px; padding: 14px 16px;">
-                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(1, 46, 107);">UX RATIONALE</div>
-                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.55; color: rgb(62, 74, 92); text-wrap: pretty;">The wizard reduces cognitive load for AEs, but the pricing rail is always visible — the number is the negotiation. Engineering owns rules, finance owns the floor, sales owns the story.</div>
-              </div>
-            </div>
-          </div></div>
-<div id="cpqstep-configure" style="display:block"><div style="display: grid; grid-template-columns: 1fr 336px; gap: 18px; padding: 20px 28px 48px; align-items: start; max-width: 1520px;">
-            <div style="min-width: 0px; display: flex; flex-direction: column; gap: 14px;">
-
-              
-
-              
-                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 20px 22px;">
-                  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
-                    <div>
-                      <div style="font-size: 16px; font-weight: 600;">Configure the offering</div>
-                      <div style="margin-top: 4px; font-size: 13px; color: rgb(107, 118, 134);">Catalog filtered by guided answers · monthly order volume drives tiered pricing.</div>
-                    </div>
-                    <div style="display: flex; gap: 8px;">
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; letter-spacing: 0.1em; border: 1px solid rgb(220, 226, 236); border-radius: 6px; padding: 5px 9px; color: rgb(107, 118, 134);">3 OF 6 SELECTED</div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; letter-spacing: 0.1em; border: 1px solid rgb(216, 229, 245); background: rgb(234, 241, 251); border-radius: 6px; padding: 5px 9px; color: rgb(1, 46, 107);">BUNDLE ELIGIBLE</div>
-                    </div>
-                  </div>
-                  <div style="margin-top: 16px; display: grid; grid-template-columns: repeat(2,1fr); gap: 12px;">
-                    
-                      <div style="border: 1px solid rgb(184, 219, 146); background: rgb(248, 251, 255); border-radius: 11px; padding: 14px 15px 13px; display: flex; flex-direction: column; gap: 10px; opacity: 1;">
-                        <div style="display: flex; align-items: flex-start; gap: 11px;">
-                          <div style="width: 19px; height: 19px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; cursor: pointer; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 12px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
-                          <div style="min-width: 0px; flex: 1 1 0%;">
-                            <div style="font-size: 14.5px; font-weight: 600; cursor: pointer; letter-spacing: -0.005em;"><span class="sc-interp">Traditional Appraisal</span></div>
-                            <div style="margin-top: 3px; font-size: 12.5px; color: rgb(107, 118, 134); line-height: 1.45;"><span class="sc-interp">Full interior/exterior, 1004 / 1073</span></div>
-                          </div>
-                          <div style="text-align: right; flex: 0 0 auto;">
-                            <div style="font-size: 15px; font-weight: 600;"><span class="sc-interp">$545</span></div>
-                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(139, 149, 166); letter-spacing: 0.08em;"><span class="sc-interp">PER ORDER</span></div>
-                          </div>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 10px; padding-top: 9px; border-top: 1px dashed rgb(227, 232, 240);">
-                          <div style="font-size: 12px; color: rgb(107, 118, 134);">Monthly volume</div>
-                          <input style="width: 86px; height: 32px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; padding: 0px 9px; font-size: 13.5px; background: rgb(255, 255, 255); outline: none;" value="180">
-                          <div style="margin-left: auto; font-size: 13px; font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$80,442 / mo</span></div>
-                        </div>
-                        
-                      </div>
-                    
-                      <div style="border: 1px solid rgb(184, 219, 146); background: rgb(248, 251, 255); border-radius: 11px; padding: 14px 15px 13px; display: flex; flex-direction: column; gap: 10px; opacity: 1;">
-                        <div style="display: flex; align-items: flex-start; gap: 11px;">
-                          <div style="width: 19px; height: 19px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; cursor: pointer; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 12px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
-                          <div style="min-width: 0px; flex: 1 1 0%;">
-                            <div style="font-size: 14.5px; font-weight: 600; cursor: pointer; letter-spacing: -0.005em;"><span class="sc-interp">Hybrid Appraisal</span></div>
-                            <div style="margin-top: 3px; font-size: 12.5px; color: rgb(107, 118, 134); line-height: 1.45;"><span class="sc-interp">Third-party data collection + desktop appraisal</span></div>
-                          </div>
-                          <div style="text-align: right; flex: 0 0 auto;">
-                            <div style="font-size: 15px; font-weight: 600;"><span class="sc-interp">$395</span></div>
-                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(139, 149, 166); letter-spacing: 0.08em;"><span class="sc-interp">PER ORDER</span></div>
-                          </div>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 10px; padding-top: 9px; border-top: 1px dashed rgb(227, 232, 240);">
-                          <div style="font-size: 12px; color: rgb(107, 118, 134);">Monthly volume</div>
-                          <input style="width: 86px; height: 32px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; padding: 0px 9px; font-size: 13.5px; background: rgb(255, 255, 255); outline: none;" value="240">
-                          <div style="margin-left: auto; font-size: 13px; font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$77,736 / mo</span></div>
-                        </div>
-                        
-                      </div>
-                    
-                      <div style="border: 1px solid rgb(184, 219, 146); background: rgb(248, 251, 255); border-radius: 11px; padding: 14px 15px 13px; display: flex; flex-direction: column; gap: 10px; opacity: 1;">
-                        <div style="display: flex; align-items: flex-start; gap: 11px;">
-                          <div style="width: 19px; height: 19px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; cursor: pointer; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 12px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
-                          <div style="min-width: 0px; flex: 1 1 0%;">
-                            <div style="font-size: 14.5px; font-weight: 600; cursor: pointer; letter-spacing: -0.005em;"><span class="sc-interp">Property Data Advantage</span></div>
-                            <div style="margin-top: 3px; font-size: 12.5px; color: rgb(107, 118, 134); line-height: 1.45;"><span class="sc-interp">PDC capture, UAD 3.6 ready dataset</span></div>
-                          </div>
-                          <div style="text-align: right; flex: 0 0 auto;">
-                            <div style="font-size: 15px; font-weight: 600;"><span class="sc-interp">$165</span></div>
-                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(139, 149, 166); letter-spacing: 0.08em;"><span class="sc-interp">PER ORDER</span></div>
-                          </div>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 10px; padding-top: 9px; border-top: 1px dashed rgb(227, 232, 240);">
-                          <div style="font-size: 12px; color: rgb(107, 118, 134);">Monthly volume</div>
-                          <input style="width: 86px; height: 32px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; padding: 0px 9px; font-size: 13.5px; background: rgb(255, 255, 255); outline: none;" value="320">
-                          <div style="margin-left: auto; font-size: 13px; font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$43,296 / mo</span></div>
-                        </div>
-                        
-                      </div>
-                    
-                      <div style="border: 1px solid rgb(227, 232, 240); background: rgb(255, 255, 255); border-radius: 11px; padding: 14px 15px 13px; display: flex; flex-direction: column; gap: 10px; opacity: 1;">
-                        <div style="display: flex; align-items: flex-start; gap: 11px;">
-                          <div style="width: 19px; height: 19px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; cursor: pointer; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 12px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
-                          <div style="min-width: 0px; flex: 1 1 0%;">
-                            <div style="font-size: 14.5px; font-weight: 600; cursor: pointer; letter-spacing: -0.005em;"><span class="sc-interp">Inspection-Based Waiver</span></div>
-                            <div style="margin-top: 3px; font-size: 12.5px; color: rgb(107, 118, 134); line-height: 1.45;"><span class="sc-interp">Waiver-eligible inspection workflow</span></div>
-                          </div>
-                          <div style="text-align: right; flex: 0 0 auto;">
-                            <div style="font-size: 15px; font-weight: 600;"><span class="sc-interp">$145</span></div>
-                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(139, 149, 166); letter-spacing: 0.08em;"><span class="sc-interp">PER ORDER</span></div>
-                          </div>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 10px; padding-top: 9px; border-top: 1px dashed rgb(227, 232, 240);">
-                          <div style="font-size: 12px; color: rgb(107, 118, 134);">Monthly volume</div>
-                          <input style="width: 86px; height: 32px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; padding: 0px 9px; font-size: 13.5px; background: rgb(255, 255, 255); outline: none;" value="0">
-                          <div style="margin-left: auto; font-size: 13px; font-weight: 600; color: rgb(151, 161, 178);"><span class="sc-interp">not included</span></div>
-                        </div>
-                        
-                      </div>
-                    
-                      <div style="border: 1px solid rgb(227, 232, 240); background: rgb(255, 255, 255); border-radius: 11px; padding: 14px 15px 13px; display: flex; flex-direction: column; gap: 10px; opacity: 0.55;">
-                        <div style="display: flex; align-items: flex-start; gap: 11px;">
-                          <div style="width: 19px; height: 19px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; cursor: pointer; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 12px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
-                          <div style="min-width: 0px; flex: 1 1 0%;">
-                            <div style="font-size: 14.5px; font-weight: 600; cursor: pointer; letter-spacing: -0.005em;"><span class="sc-interp">AVM + PCR</span></div>
-                            <div style="margin-top: 3px; font-size: 12.5px; color: rgb(107, 118, 134); line-height: 1.45;"><span class="sc-interp">Automated valuation with property condition report</span></div>
-                          </div>
-                          <div style="text-align: right; flex: 0 0 auto;">
-                            <div style="font-size: 15px; font-weight: 600;"><span class="sc-interp">$95</span></div>
-                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(139, 149, 166); letter-spacing: 0.08em;"><span class="sc-interp">PER ORDER</span></div>
-                          </div>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 10px; padding-top: 9px; border-top: 1px dashed rgb(227, 232, 240);">
-                          <div style="font-size: 12px; color: rgb(107, 118, 134);">Monthly volume</div>
-                          <input style="width: 86px; height: 32px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; padding: 0px 9px; font-size: 13.5px; background: rgb(255, 255, 255); outline: none;" value="0">
-                          <div style="margin-left: auto; font-size: 13px; font-weight: 600; color: rgb(151, 161, 178);"><span class="sc-interp">not included</span></div>
-                        </div>
-                        
-                          <div style="font-size: 12px; color: rgb(138, 90, 18); background: rgb(253, 243, 224); border: 1px solid rgb(241, 223, 188); border-radius: 7px; padding: 7px 9px; line-height: 1.4;"><span class="sc-interp">Requires alternative-valuation eligibility — not enabled for this segment yet.</span></div>
-                        
-                      </div>
-                    
-                      <div style="border: 1px solid rgb(227, 232, 240); background: rgb(255, 255, 255); border-radius: 11px; padding: 14px 15px 13px; display: flex; flex-direction: column; gap: 10px; opacity: 1;">
-                        <div style="display: flex; align-items: flex-start; gap: 11px;">
-                          <div style="width: 19px; height: 19px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; cursor: pointer; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 12px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
-                          <div style="min-width: 0px; flex: 1 1 0%;">
-                            <div style="font-size: 14.5px; font-weight: 600; cursor: pointer; letter-spacing: -0.005em;"><span class="sc-interp">Class Evaluation</span></div>
-                            <div style="margin-top: 3px; font-size: 12.5px; color: rgb(107, 118, 134); line-height: 1.45;"><span class="sc-interp">Evaluation product for portfolio &amp; home equity</span></div>
-                          </div>
-                          <div style="text-align: right; flex: 0 0 auto;">
-                            <div style="font-size: 15px; font-weight: 600;"><span class="sc-interp">$210</span></div>
-                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(139, 149, 166); letter-spacing: 0.08em;"><span class="sc-interp">PER ORDER</span></div>
-                          </div>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 10px; padding-top: 9px; border-top: 1px dashed rgb(227, 232, 240);">
-                          <div style="font-size: 12px; color: rgb(107, 118, 134);">Monthly volume</div>
-                          <input style="width: 86px; height: 32px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; padding: 0px 9px; font-size: 13.5px; background: rgb(255, 255, 255); outline: none;" value="0">
-                          <div style="margin-left: auto; font-size: 13px; font-weight: 600; color: rgb(151, 161, 178);"><span class="sc-interp">not included</span></div>
-                        </div>
-                        
-                      </div>
-                    
-                  </div>
-                </div>
-                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 20px 22px;">
-                  <div style="font-size: 16px; font-weight: 600;">Add-ons &amp; service levels</div>
-                  <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 1px; background: rgb(237, 240, 246); border-radius: 9px; overflow: hidden;">
-                    
-                      <div style="display: grid; grid-template-columns: 22px 1.6fr 1fr .8fr; gap: 12px; align-items: center; background: rgb(255, 255, 255); padding: 11px 13px;">
-                        <div style="width: 17px; height: 17px; border-radius: 5px; cursor: pointer; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
-                        <div>
-                          <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Rush turn-time tier</span></div>
-                          <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">24h expedite on eligible orders</span></div>
-                        </div>
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(107, 118, 134);"><span class="sc-interp">MAX 15% OF VOLUME</span></div>
-                        <div style="text-align: right; font-size: 13.5px; font-weight: 600;"><span class="sc-interp">$1,800 / mo</span></div>
-                      </div>
-                    
-                      <div style="display: grid; grid-template-columns: 22px 1.6fr 1fr .8fr; gap: 12px; align-items: center; background: rgb(255, 255, 255); padding: 11px 13px;">
-                        <div style="width: 17px; height: 17px; border-radius: 5px; cursor: pointer; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
-                        <div>
-                          <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Guaranteed Pricing</span></div>
-                          <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">Fixed fee regardless of complexity</span></div>
-                        </div>
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(107, 118, 134);"><span class="sc-interp">REQUIRES 12MO TERM</span></div>
-                        <div style="text-align: right; font-size: 13.5px; font-weight: 600;"><span class="sc-interp">$2,400 / mo</span></div>
-                      </div>
-                    
-                      <div style="display: grid; grid-template-columns: 22px 1.6fr 1fr .8fr; gap: 12px; align-items: center; background: rgb(255, 255, 255); padding: 11px 13px;">
-                        <div style="width: 17px; height: 17px; border-radius: 5px; cursor: pointer; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
-                        <div>
-                          <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Order API + webhooks</span></div>
-                          <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">Direct LOS integration, status callbacks</span></div>
-                        </div>
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(107, 118, 134);"><span class="sc-interp">ENG EFFORT: 3 WKS</span></div>
-                        <div style="text-align: right; font-size: 13.5px; font-weight: 600;"><span class="sc-interp">$1,200 / mo</span></div>
-                      </div>
-                    
-                      <div style="display: grid; grid-template-columns: 22px 1.6fr 1fr .8fr; gap: 12px; align-items: center; background: rgb(255, 255, 255); padding: 11px 13px;">
-                        <div style="width: 17px; height: 17px; border-radius: 5px; cursor: pointer; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
-                        <div>
-                          <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Client analytics portal</span></div>
-                          <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">Volume &amp; turn-time dashboards for the lender</span></div>
-                        </div>
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(107, 118, 134);"><span class="sc-interp">SEATS UNLIMITED</span></div>
-                        <div style="text-align: right; font-size: 13.5px; font-weight: 600;"><span class="sc-interp">$900 / mo</span></div>
-                      </div>
-                    
-                  </div>
-                </div>
-              
-
-              
-
-              
-
-              
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 12px; position: sticky; top: 0px;">
-              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; overflow: hidden;">
-                <div style="padding: 14px 16px; border-bottom: 1px solid rgb(237, 240, 246); display: flex; align-items: center; justify-content: space-between;">
-                  <div style="font-size: 14px; font-weight: 600;">Live pricing</div>
-                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; letter-spacing: 0.1em; color: rgb(1, 62, 144);">RECALCULATED</div>
-                </div>
-                <div style="padding: 16px;">
-                  <div style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em;"><span class="sc-interp">$205,674</span></div>
-                  <div style="font-size: 12.5px; color: rgb(107, 118, 134); margin-top: 2px;">estimated monthly · <span class="sc-interp">$2,468,088</span> annual</div>
-                  <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
-                    
-                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
-                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Products (3)</span></div>
-                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$201,474</span></div>
-                      </div>
-                    
-                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
-                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Add-ons</span></div>
-                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$4,200</span></div>
-                      </div>
-                    
-                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
-                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Blended discount</span></div>
-                        <div style="font-weight: 600; color: rgb(197, 138, 28);"><span class="sc-interp">−18%</span></div>
-                      </div>
-                    
-                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
-                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Gross margin</span></div>
-                        <div style="font-weight: 600; color: rgb(196, 71, 44);"><span class="sc-interp">38%</span></div>
-                      </div>
-                    
-                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
-                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Pricing model</span></div>
-                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">Tiered</span></div>
-                      </div>
-                    
-                  </div>
-                  <div style="margin-top: 14px; padding-top: 14px; border-top: 1px dashed rgb(227, 232, 240); display: flex; flex-direction: column; gap: 9px;">
-                    
-                      <div style="display: flex; gap: 10px; padding: 11px 12px; background: rgb(253, 243, 224); border: 1px solid rgb(241, 223, 188); border-radius: 9px;">
-                        <div style="color: rgb(138, 90, 18); font-weight: 700; font-size: 12px;">!</div>
-                        <div style="font-size: 12.5px; line-height: 1.45; color: rgb(110, 74, 17);">Discount above the 12% auto-approve cap — pricing &amp; finance sign-off required before the quote can be sent.</div>
-                      </div>
-                    
-                    <div style="font-size: 12px; color: rgb(139, 149, 166); line-height: 1.5;">Margin, discount and approval state are computed on every change so nobody negotiates against stale numbers.</div>
-                  </div>
-                </div>
-              </div>
-              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 14px 16px;">
-                <div style="font-size: 14px; font-weight: 600;">Stakeholders on this quote</div>
-                <div style="margin-top: 11px; display: flex; flex-direction: column; gap: 10px;">
-                  
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">DM</span></div>
-                      <div style="min-width: 0px;">
-                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Dana Mercer</span></div>
-                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Solutions engineer · owner</span></div>
-                      </div>
-                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">EDITING</span></div>
-                    </div>
-                  
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">RT</span></div>
-                      <div style="min-width: 0px;">
-                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Ray Tolbert</span></div>
-                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Account executive</span></div>
-                      </div>
-                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">VIEWED</span></div>
-                    </div>
-                  
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">PF</span></div>
-                      <div style="min-width: 0px;">
-                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Priya Fenwick</span></div>
-                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Pricing &amp; finance</span></div>
-                      </div>
-                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">PENDING</span></div>
-                    </div>
-                  
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">JO</span></div>
-                      <div style="min-width: 0px;">
-                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Jon Okafor</span></div>
-                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Implementation PM</span></div>
-                      </div>
-                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">CC</span></div>
-                    </div>
-                  
-                </div>
-              </div>
-              <div style="background: rgb(234, 241, 251); border: 1px solid rgb(216, 229, 245); border-radius: 12px; padding: 14px 16px;">
-                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(1, 46, 107);">UX RATIONALE</div>
-                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.55; color: rgb(62, 74, 92); text-wrap: pretty;">The wizard reduces cognitive load for AEs, but the pricing rail is always visible — the number is the negotiation. Engineering owns rules, finance owns the floor, sales owns the story.</div>
-              </div>
-            </div>
-          </div></div>
-<div id="cpqstep-rules_check" style="display:none"><div style="display: grid; grid-template-columns: 1fr 336px; gap: 18px; padding: 20px 28px 48px; align-items: start; max-width: 1520px;">
+<div id="cpq-app-mount"></div>
+<template id="cpq-static-rules_check"><div style="display: grid; grid-template-columns: 1fr 336px; gap: 18px; padding: 20px 28px 48px; align-items: start; max-width: 1520px;">
             <div style="min-width: 0px; display: flex; flex-direction: column; gap: 14px;">
 
               
@@ -876,8 +311,8 @@
                 <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.55; color: rgb(62, 74, 92); text-wrap: pretty;">The wizard reduces cognitive load for AEs, but the pricing rail is always visible — the number is the negotiation. Engineering owns rules, finance owns the floor, sales owns the story.</div>
               </div>
             </div>
-          </div></div>
-<div id="cpqstep-pricing_terms" style="display:none"><div style="display: grid; grid-template-columns: 1fr 336px; gap: 18px; padding: 20px 28px 48px; align-items: start; max-width: 1520px;">
+          </div></template>
+<template id="cpq-static-pricing_terms"><div style="display: grid; grid-template-columns: 1fr 336px; gap: 18px; padding: 20px 28px 48px; align-items: start; max-width: 1520px;">
             <div style="min-width: 0px; display: flex; flex-direction: column; gap: 14px;">
 
               
@@ -1092,8 +527,8 @@
                 <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.55; color: rgb(62, 74, 92); text-wrap: pretty;">The wizard reduces cognitive load for AEs, but the pricing rail is always visible — the number is the negotiation. Engineering owns rules, finance owns the floor, sales owns the story.</div>
               </div>
             </div>
-          </div></div>
-<div id="cpqstep-quote_approvals" style="display:none"><div style="display: grid; grid-template-columns: 1fr 336px; gap: 18px; padding: 20px 28px 48px; align-items: start; max-width: 1520px;">
+          </div></template>
+<template id="cpq-static-quote_approvals"><div style="display: grid; grid-template-columns: 1fr 336px; gap: 18px; padding: 20px 28px 48px; align-items: start; max-width: 1520px;">
             <div style="min-width: 0px; display: flex; flex-direction: column; gap: 14px;">
 
               
@@ -1330,7 +765,7 @@
                 <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.55; color: rgb(62, 74, 92); text-wrap: pretty;">The wizard reduces cognitive load for AEs, but the pricing rail is always visible — the number is the negotiation. Engineering owns rules, finance owns the floor, sales owns the story.</div>
               </div>
             </div>
-          </div></div></div>
+          </div></template>
     </div>
   </div>
 </div>
@@ -1348,133 +783,614 @@
 })();
 </script>
 <script>
-  var CPQ_STEPS = ["client_demand","configure","rules_check","pricing_terms","quote_approvals"];
-  function showCpqStep(id){
-    var idx = CPQ_STEPS.indexOf(id);
-    CPQ_STEPS.forEach(function(s){
-      var body = document.getElementById('cpqstep-' + s);
-      if (body) body.style.display = (s === id) ? 'block' : 'none';
-    });
-    CPQ_STEPS.forEach(function(s, i){
-      var tab = document.getElementById('cpqstep-tab-' + s);
-      if (!tab) return;
-      var marker = tab.querySelector('span');
-      var markerText = marker ? marker.querySelector('span') : null;
-      var label = tab.querySelectorAll('span')[1];
-      var labelText = label ? label.querySelector('span') : null;
-      if (i < idx){
-        tab.style.borderBottom = '2px solid transparent';
-        if (marker){ marker.style.background = '#EAF1FB'; marker.style.color = '#012E6B'; marker.style.border = '1px solid #C9DCF2'; }
-        if (markerText) markerText.textContent = '✓';
-        if (label){ label.style.color = '#6B7686'; label.style.fontWeight = '500'; }
-      } else if (i === idx){
-        tab.style.borderBottom = '2px solid #013E90';
-        if (marker){ marker.style.background = '#013E90'; marker.style.color = '#fff'; marker.style.border = '1px solid #013E90'; }
-        if (markerText) markerText.textContent = String(i + 1);
-        if (label){ label.style.color = '#131A26'; label.style.fontWeight = '600'; }
-      } else {
-        tab.style.borderBottom = '2px solid transparent';
-        if (marker){ marker.style.background = '#fff'; marker.style.color = '#97A1B2'; marker.style.border = '1px solid #DCE2EC'; }
-        if (markerText) markerText.textContent = String(i + 1);
-        if (label){ label.style.color = '#6B7686'; label.style.fontWeight = '500'; }
-      }
-    });
-  }
-</script>
-<script>
-// Read-only handoff list: once a demand is marked Converted in Demand
-// Management, it's meant to become visible here — the "Client & demand"
-// step's assembled payload for whichever quote gets configured against it.
-// Value CPQ itself has no backend yet, so this is intentionally read-only:
-// it shows what WOULD be handed off, sourced live from the same Supabase
-// project as Demand Management, and gracefully explains itself when that
-// isn't configured (same pattern as Demand Management's own empty state).
+// Value CPQ — Phase 1 (real): Client & demand + Configure. See
+// CPQ_requirements_scope.md for the full module plan. Rules check, Pricing &
+// terms and Quote & approvals stay static mockups (rendered from <template>
+// fragments the build embeds) until their own phases — this file only owns
+// the quote list, quote lifecycle, and the first two real steps.
 (function(){
+  var CURRENT_USER = 'Dana Mercer';
+  var CPQ_STEPS = ['client_demand','configure','rules_check','pricing_terms','quote_approvals'];
+  var STEP_LABEL = { client_demand:'Client & demand', configure:'Configure', rules_check:'Rules check', pricing_terms:'Pricing & terms', quote_approvals:'Quote & approvals' };
+  var GUIDED_QUESTIONS = [
+    { key:'use_case', label:'Primary use case', options:['Origination','Home equity','Servicing','New construction'] },
+    { key:'los', label:'Loan origination system to integrate with', options:['Encompass','Empower','MeridianLink','Custom API'] },
+    { key:'target_days', label:'Target time to first order', options:['30 days','60 days','90 days','Flexible'] }
+  ];
+
   function $(id){ return document.getElementById(id); }
   function esc(s){
     s = (s == null ? '' : String(s));
     return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
   }
-  function fmtMoney(v){
+  function fmtUsd(v){
+    var n = Number(v || 0);
+    if (isNaN(n)) n = 0;
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+  function fmtMoneyM(v){
     if (v == null) return '—';
     var n = Number(v);
     if (isNaN(n)) return '—';
     return '$' + (n/1000000).toFixed(1) + 'M';
   }
+  function fmtAge(iso){
+    if (!iso) return '—';
+    var ms = Date.now() - new Date(iso).getTime();
+    var min = Math.floor(ms/60000);
+    if (min < 1) return 'just now';
+    if (min < 60) return min + ' min ago';
+    var hrs = Math.floor(min/60);
+    if (hrs < 24) return hrs + 'h ago';
+    var days = Math.floor(hrs/24);
+    return days + 'd ago';
+  }
+  function demandCode(d){ return 'DMD-' + (1100 + Number(d.demand_number)); }
+  function quoteCode(q){
+    var year = q.created_at ? new Date(q.created_at).getFullYear() : new Date().getFullYear();
+    return 'Q-' + year + '-' + (1000 + Number(q.quote_number));
+  }
+
+  var state = {
+    db: null,
+    demands: [],
+    clients: [],
+    products: [],
+    quotesByDemand: {},   // demand_id -> latest quote row
+    staticBodies: {},     // step id -> raw HTML string (from <template> fragments)
+    mode: 'list',         // 'list' | 'editor'
+    currentQuote: null,
+    currentDemand: null,
+    currentClient: null,
+    lineItems: {},         // product_id -> { id, selected, monthly_volume, unit_price_snapshot }
+    activeTab: 'client_demand',
+    templatesLoaded: false
+  };
+
   function available(){
     return typeof window.supabase !== 'undefined'
       && !!window.SUPABASE_CONFIG && !!window.SUPABASE_CONFIG.url && !!window.SUPABASE_CONFIG.anonKey;
   }
+  function mount(){ return $('cpq-app-mount'); }
 
-  function renderEmpty(){
-    var mount = $('cpq-converted-list-mount');
-    if (!mount) return;
-    mount.innerHTML = '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px;margin-bottom:18px">'
-      + '<div style="font-size:14px;font-weight:600;margin-bottom:4px">Converted demands ready to quote</div>'
-      + '<div style="font-size:12.5px;color:#97A1B2">None yet. Demands appear here automatically once marked Converted in Demand Management.</div>'
-      + '</div>';
-  }
+  function findClient(id){ return state.clients.filter(function(c){ return c.id === id; })[0] || null; }
 
+  // ---------------------------------------------------------------------
+  // list view
+  // ---------------------------------------------------------------------
   function renderNotConnected(){
-    var mount = $('cpq-converted-list-mount');
-    if (!mount) return;
-    mount.innerHTML = '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px;margin-bottom:18px">'
-      + '<div style="font-size:14px;font-weight:600;margin-bottom:4px">Converted demands ready to quote</div>'
-      + '<div style="font-size:12.5px;color:#97A1B2">Connect Supabase (see <code>supabase-config.js</code>) to show converted demands here — the same connection Demand Management uses.</div>'
+    var m = mount();
+    if (!m) return;
+    m.innerHTML = '<div style="padding:20px 28px 48px;max-width:1200px">'
+      + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px">'
+      + '<div style="font-size:14px;font-weight:600;margin-bottom:4px">Value CPQ</div>'
+      + '<div style="font-size:12.5px;color:#97A1B2">Connect Supabase (see <code>supabase-config.js</code>) to configure quotes here — the same connection Demand Management uses.</div>'
+      + '</div></div>';
+  }
+
+  function renderList(){
+    var m = mount();
+    if (!m) return;
+    var demands = state.demands;
+    var body;
+    if (!demands.length){
+      body = '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px">'
+        + '<div style="font-size:14px;font-weight:600;margin-bottom:4px">Converted demands ready to quote</div>'
+        + '<div style="font-size:12.5px;color:#97A1B2">None yet. Demands appear here automatically once marked Converted in Demand Management.</div>'
+        + '</div>';
+    } else {
+      var cols = '1.5fr 1fr .6fr .7fr .45fr 1.2fr 150px';
+      var rows = demands.map(function(d){
+        var c = findClient(d.client_id);
+        var name = c ? c.name : 'Unknown client';
+        var segment = c ? c.segment : '';
+        var code = demandCode(d);
+        var q = state.quotesByDemand[d.id];
+        var actionLabel = q ? ('Resume ' + quoteCode(q)) : 'Configure quote';
+        return '<div style="display:grid;grid-template-columns:' + cols + ';gap:10px;padding:11px 14px;border-top:1px solid #F1F4F9;font-size:12.5px;align-items:center">'
+          + '<div><div style="font-weight:600">' + esc(name) + '</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#97A1B2;margin-top:2px">' + esc(code) + ' &middot; owner ' + esc(d.owner_name||'—') + '</div></div>'
+          + '<div style="color:#5A6474">' + esc(segment||'—') + '</div>'
+          + '<div style="color:#5A6474">' + (d.est_monthly_volume!=null ? d.est_monthly_volume+'/mo' : '—') + '</div>'
+          + '<div style="font-weight:600">' + fmtMoneyM(d.est_annual_value) + '</div>'
+          + '<div style="font-family:\'IBM Plex Mono\',monospace">' + (d.score_overall!=null ? Math.round(d.score_overall) : '—') + '</div>'
+          + '<div style="color:#8B95A6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(d.requirement_summary||'—') + '</div>'
+          + '<div><button type="button" class="cpq-open-btn" data-demand="' + esc(d.id) + '" style="width:100%;height:32px;border-radius:7px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">' + esc(actionLabel) + ' &rarr;</button></div>'
+          + '</div>';
+      }).join('');
+      body = '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;overflow:hidden">'
+        + '<div style="padding:14px 18px;border-bottom:1px solid #F1F4F9">'
+        + '<div style="font-size:14px;font-weight:600">Converted demands ready to quote</div>'
+        + '<div style="font-size:12px;color:#8B95A6;margin-top:2px">Handed off from Demand Management. ' + demands.length + ' converted.</div>'
+        + '</div>'
+        + '<div style="display:grid;grid-template-columns:' + cols + ';gap:10px;padding:9px 14px;background:#FAFBFD;font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.1em;color:#8B95A6">'
+        + '<div>CLIENT / DEMAND</div><div>SEGMENT</div><div>VOLUME</div><div>EST. VALUE</div><div>SCORE</div><div>REQUIREMENT SUMMARY</div><div>QUOTE</div>'
+        + '</div>'
+        + rows
+        + '</div>';
+    }
+    m.innerHTML = '<div style="padding:20px 28px 48px;max-width:1400px">'
+      + '<div style="margin-bottom:14px">'
+      + '<div style="font-size:20px;font-weight:600">Value CPQ</div>'
+      + '<div style="font-size:13px;color:#6B7686;margin-top:2px">Configure &amp; quote Converted demands. Client &amp; demand and Configure are live below — Rules check, Pricing &amp; terms and Quote &amp; approvals are still design previews.</div>'
+      + '</div>'
+      + body
       + '</div>';
   }
 
-  function render(demands, clients){
-    var mount = $('cpq-converted-list-mount');
-    if (!mount) return;
-    if (!demands.length){ renderEmpty(); return; }
-    var rows = demands.map(function(d){
-      var c = clients.filter(function(x){ return x.id === d.client_id; })[0];
-      var name = c ? c.name : 'Unknown client';
-      var segment = c ? c.segment : '';
-      var code = 'DMD-' + (1100 + Number(d.demand_number));
-      return '<div class="cpq-handoff-row" data-id="'+esc(d.id)+'" style="display:grid;grid-template-columns:1.7fr 1.1fr .7fr .8fr .5fr 1.6fr;gap:10px;padding:11px 14px;border-top:1px solid #F1F4F9;font-size:12.5px;align-items:start">'
-        + '<div><div style="font-weight:600">'+esc(name)+'</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#97A1B2;margin-top:2px">'+esc(code)+' · owner '+esc(d.owner_name||'—')+'</div></div>'
-        + '<div style="color:#5A6474">'+esc(segment||'—')+'</div>'
-        + '<div style="color:#5A6474">'+(d.est_monthly_volume!=null?d.est_monthly_volume+'/mo':'—')+'</div>'
-        + '<div style="font-weight:600">'+fmtMoney(d.est_annual_value)+'</div>'
-        + '<div style="font-family:\'IBM Plex Mono\',monospace">'+(d.score_overall!=null?Math.round(d.score_overall):'—')+'</div>'
-        + '<div style="color:#8B95A6">'+esc(d.requirement_summary||'—')+'</div>'
+  // ---------------------------------------------------------------------
+  // quote lifecycle
+  // ---------------------------------------------------------------------
+  function ensureQuote(demandId){
+    var existing = state.quotesByDemand[demandId];
+    if (existing) return Promise.resolve(existing);
+    var demand = state.demands.filter(function(d){ return d.id === demandId; })[0];
+    return Promise.resolve(state.db.from('quotes').insert({
+      demand_id: demandId,
+      client_id: demand.client_id,
+      owner_name: demand.owner_name || CURRENT_USER
+    }).select().single()).then(function(r){
+      if (r.error) throw r.error;
+      state.quotesByDemand[demandId] = r.data;
+      return r.data;
+    });
+  }
+
+  function fetchLineItems(quoteId){
+    return Promise.resolve(state.db.from('quote_line_items').select('*').eq('quote_id', quoteId)).then(function(r){
+      if (r.error) throw r.error;
+      var map = {};
+      (r.data || []).forEach(function(row){ map[row.product_id] = row; });
+      return map;
+    });
+  }
+
+  function openQuote(demandId){
+    var demand = state.demands.filter(function(d){ return d.id === demandId; })[0];
+    if (!demand) return;
+    ensureQuote(demandId).then(function(quote){
+      state.currentQuote = quote;
+      state.currentDemand = demand;
+      state.currentClient = findClient(demand.client_id);
+      return fetchLineItems(quote.id);
+    }).then(function(map){
+      state.lineItems = map;
+      state.mode = 'editor';
+      state.activeTab = 'client_demand';
+      renderEditor();
+    }).catch(function(e){ console.error('CPQ: could not open quote', e); });
+  }
+
+  function backToList(){
+    state.mode = 'list';
+    state.currentQuote = null;
+    state.currentDemand = null;
+    state.currentClient = null;
+    state.lineItems = {};
+    renderList();
+  }
+
+  function upsertLineItem(productId, patch){
+    var product = state.products.filter(function(p){ return p.id === productId; })[0];
+    var existing = state.lineItems[productId];
+    var db = state.db;
+    var quoteId = state.currentQuote.id;
+    if (existing && existing.id){
+      return Promise.resolve(db.from('quote_line_items').update(patch).eq('id', existing.id).select().single())
+        .then(function(r){ if (r.error) throw r.error; state.lineItems[productId] = r.data; return r.data; });
+    }
+    var row = Object.assign({
+      quote_id: quoteId,
+      product_id: productId,
+      selected: false,
+      monthly_volume: null,
+      unit_price_snapshot: product ? product.unit_price : 0
+    }, patch);
+    return Promise.resolve(db.from('quote_line_items').insert(row).select().single())
+      .then(function(r){ if (r.error) throw r.error; state.lineItems[productId] = r.data; return r.data; });
+  }
+
+  function saveDraft(){
+    var q = state.currentQuote;
+    if (!q) return;
+    Promise.resolve(state.db.from('quotes').update({
+      guided_answers: q.guided_answers,
+      version: q.version + 1
+    }).eq('id', q.id).select().single()).then(function(r){
+      if (r.error) throw r.error;
+      state.currentQuote = r.data;
+      state.quotesByDemand[state.currentDemand.id] = r.data;
+      renderEditor();
+    }).catch(function(e){ console.error('CPQ: save draft failed', e); });
+  }
+
+  // ---------------------------------------------------------------------
+  // pricing
+  // ---------------------------------------------------------------------
+  function isEligible(product){
+    if (!state.currentClient) return true;
+    var seg = product.eligible_segments;
+    if (!seg || !seg.length) return true;
+    return seg.indexOf(state.currentClient.segment) !== -1;
+  }
+
+  function computeTotals(){
+    var productsSubtotal = 0, addonsSubtotal = 0, productsCount = 0, addonsCount = 0;
+    state.products.forEach(function(p){
+      var li = state.lineItems[p.id];
+      if (!li || !li.selected) return;
+      if (p.category === 'product'){
+        var vol = Number(li.monthly_volume || 0);
+        if (vol > 0){
+          productsSubtotal += Number(li.unit_price_snapshot) * vol;
+          productsCount++;
+        }
+      } else {
+        addonsSubtotal += Number(li.unit_price_snapshot);
+        addonsCount++;
+      }
+    });
+    var monthly = productsSubtotal + addonsSubtotal;
+    return { productsSubtotal:productsSubtotal, addonsSubtotal:addonsSubtotal, productsCount:productsCount, addonsCount:addonsCount, monthly:monthly, annual: monthly*12 };
+  }
+
+  function renderLivePricingPanel(){
+    var t = computeTotals();
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;overflow:hidden">'
+      + '<div style="padding:14px 16px;border-bottom:1px solid #EDF0F6"><div style="font-size:14px;font-weight:600">Live pricing</div></div>'
+      + '<div style="padding:16px">'
+      + '<div id="cpq-lp-monthly" style="font-size:28px;font-weight:600;letter-spacing:-.02em">' + fmtUsd(t.monthly) + '</div>'
+      + '<div style="font-size:12.5px;color:#6B7686;margin-top:2px">estimated monthly &middot; <span id="cpq-lp-annual">' + fmtUsd(t.annual) + '</span> annual</div>'
+      + '<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">'
+      + '<div style="display:flex;justify-content:space-between;gap:10px;font-size:13px"><div style="color:#5A6474">Products (<span id="cpq-lp-pcount">' + t.productsCount + '</span>)</div><div id="cpq-lp-products" style="font-weight:600">' + fmtUsd(t.productsSubtotal) + '</div></div>'
+      + '<div style="display:flex;justify-content:space-between;gap:10px;font-size:13px"><div style="color:#5A6474">Add-ons (<span id="cpq-lp-acount">' + t.addonsCount + '</span>)</div><div id="cpq-lp-addons" style="font-weight:600">' + fmtUsd(t.addonsSubtotal) + '</div></div>'
+      + '</div>'
+      + '<div style="margin-top:14px;padding-top:14px;border-top:1px dashed #E3E8F0;font-size:12px;color:#8B95A6;line-height:1.5">Discounts, margin floor and pricing model are configured in Pricing &amp; terms (step 4) — not built yet in this phase.</div>'
+      + '</div></div>';
+  }
+
+  function updateLiveNumbers(){
+    var t = computeTotals();
+    if ($('cpq-lp-monthly')) $('cpq-lp-monthly').textContent = fmtUsd(t.monthly);
+    if ($('cpq-lp-annual')) $('cpq-lp-annual').textContent = fmtUsd(t.annual);
+    if ($('cpq-lp-products')) $('cpq-lp-products').textContent = fmtUsd(t.productsSubtotal);
+    if ($('cpq-lp-addons')) $('cpq-lp-addons').textContent = fmtUsd(t.addonsSubtotal);
+    if ($('cpq-lp-pcount')) $('cpq-lp-pcount').textContent = t.productsCount;
+    if ($('cpq-lp-acount')) $('cpq-lp-acount').textContent = t.addonsCount;
+  }
+
+  // ---------------------------------------------------------------------
+  // editor: header + tabs
+  // ---------------------------------------------------------------------
+  function renderHeader(){
+    var q = state.currentQuote, d = state.currentDemand, c = state.currentClient;
+    var idx = CPQ_STEPS.indexOf(state.activeTab);
+    var tabs = CPQ_STEPS.map(function(s, i){
+      var border = i === idx ? '2px solid #013E90' : '2px solid transparent';
+      var bg, color, borderC, labelColor, labelWeight, markerText;
+      if (i < idx){ bg='#EAF1FB'; color='#012E6B'; borderC='#C9DCF2'; labelColor='#6B7686'; labelWeight='500'; markerText='&check;'; }
+      else if (i === idx){ bg='#013E90'; color='#fff'; borderC='#013E90'; labelColor='#131A26'; labelWeight='600'; markerText=String(i+1); }
+      else { bg='#fff'; color='#97A1B2'; borderC='#DCE2EC'; labelColor='#6B7686'; labelWeight='500'; markerText=String(i+1); }
+      return '<div class="cpq-tab-btn" data-tab="' + s + '" style="display:flex;align-items:center;gap:9px;padding:11px 16px 12px;border-bottom:' + border + ';cursor:pointer">'
+        + '<span style="width:20px;height:20px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;background:' + bg + ';color:' + color + ';border:1px solid ' + borderC + '">' + markerText + '</span>'
+        + '<span style="font-size:13.5px;font-weight:' + labelWeight + ';color:' + labelColor + ';white-space:nowrap">' + esc(STEP_LABEL[s]) + '</span>'
         + '</div>';
     }).join('');
-    mount.innerHTML = '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;overflow:hidden;margin-bottom:18px">'
-      + '<div style="padding:14px 18px;border-bottom:1px solid #F1F4F9">'
-        + '<div style="font-size:14px;font-weight:600">Converted demands ready to quote</div>'
-        + '<div style="font-size:12px;color:#8B95A6;margin-top:2px">Handed off from Demand Management &mdash; read-only until quote configuration is built. '+demands.length+' converted.</div>'
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px 12px 0 0;padding:14px 24px 0">'
+      + '<div><span class="cpq-back-link" style="cursor:pointer;font-size:12.5px;color:#6B7686">&larr; All converted demands</span></div>'
+      + '<div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-top:10px">'
+      + '<div>'
+      + '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">'
+      + '<div style="font-size:20px;font-weight:600;letter-spacing:-.01em">' + esc(c ? c.name : 'Unknown client') + '</div>'
+      + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:.1em;background:#FDF3E0;color:#8A5A12;border:1px solid #F1DFBC;padding:3px 8px;border-radius:5px">DRAFT</div>'
       + '</div>'
-      + '<div style="display:grid;grid-template-columns:1.7fr 1.1fr .7fr .8fr .5fr 1.6fr;gap:10px;padding:9px 14px;background:#FAFBFD;font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.1em;color:#8B95A6">'
-        + '<div>CLIENT / DEMAND</div><div>SEGMENT</div><div>VOLUME</div><div>EST. VALUE</div><div>SCORE</div><div>REQUIREMENT SUMMARY</div>'
-      + '</div>'
-      + rows
+      + '<div style="margin-top:7px;display:flex;align-items:center;gap:12px;font-size:12.5px;color:#6B7686;flex-wrap:wrap">'
+      + '<span style="font-family:\'IBM Plex Mono\',monospace">' + esc(quoteCode(q)) + '</span>'
+      + '<span style="color:#C4CBD8">|</span><span>from demand ' + esc(demandCode(d)) + (d.score_overall!=null ? ' &middot; score ' + Math.round(d.score_overall) : '') + '</span>'
+      + '<span style="color:#C4CBD8">|</span><span>owner ' + esc(q.owner_name||'—') + '</span>'
+      + '<span style="color:#C4CBD8">|</span><span>updated ' + fmtAge(q.updated_at) + '</span>'
+      + '<span style="color:#C4CBD8">|</span><span>version ' + esc(q.version) + '</span>'
+      + '</div></div>'
+      + '<div style="margin-left:auto;display:flex;gap:8px">'
+      + '<button type="button" class="cpq-save-btn" style="height:34px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Save draft</button>'
+      + '<button type="button" class="cpq-pdf-btn" style="height:34px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Preview PDF</button>'
+      + '<button type="button" class="cpq-continue-btn" style="height:34px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13px;font-weight:600;cursor:pointer">Continue</button>'
+      + '</div></div>'
+      + '<div style="margin-top:14px;display:flex;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch">' + tabs + '</div>'
       + '</div>';
   }
 
-  function init(){
-    if (!available()){ renderNotConnected(); return; }
-    var db;
-    try { db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
-    catch(e){ renderNotConnected(); return; }
-    Promise.resolve(db.from('demands').select('*').eq('stage', 'converted').order('created_at', {ascending:false}))
-      .then(function(dr){
-        if (dr.error) throw dr.error;
-        var demands = dr.data || [];
-        return Promise.resolve(db.from('clients').select('*')).then(function(cr){
-          if (cr.error) throw cr.error;
-          render(demands, cr.data || []);
-        });
-      })
-      .catch(function(){ renderNotConnected(); });
+  function renderClientDemandTab(){
+    var d = state.currentDemand, c = state.currentClient, q = state.currentQuote;
+    var fields = [
+      ['Client', c ? c.name : '—'],
+      ['Segment', c ? c.segment : '—'],
+      ['Source demand', demandCode(d) + (d.score_overall!=null ? ' &middot; score ' + Math.round(d.score_overall) : '')],
+      ['Est. monthly volume', d.est_monthly_volume!=null ? d.est_monthly_volume + '/mo' : '—']
+    ];
+    var fieldsHtml = fields.map(function(f){
+      return '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase">' + esc(f[0]) + '</div>'
+        + '<div style="margin-top:5px;min-height:40px;border:1px solid #E3E8F0;background:#FAFBFD;border-radius:8px;display:flex;align-items:center;padding:8px 12px;font-size:14px;color:#131A26">' + f[1] + '</div></div>';
+    }).join('');
+    var questionsHtml = GUIDED_QUESTIONS.map(function(q2){
+      var current = (q.guided_answers || {})[q2.key];
+      var chips = q2.options.map(function(opt){
+        var on = current === opt;
+        var style = on
+          ? 'padding:7px 13px;border-radius:99px;font-size:13px;cursor:pointer;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-weight:600'
+          : 'padding:7px 13px;border-radius:99px;font-size:13px;cursor:pointer;border:1px solid #DCE2EC;background:#fff;color:#4E5866;font-weight:500';
+        return '<div class="cpq-chip" data-q="' + esc(q2.key) + '" data-val="' + esc(opt) + '" style="' + style + '">' + esc(opt) + '</div>';
+      }).join('');
+      return '<div style="border:1px solid #E3E8F0;border-radius:10px;padding:13px 15px">'
+        + '<div style="font-size:13.5px;font-weight:600">' + esc(q2.label) + '</div>'
+        + '<div style="margin-top:9px;display:flex;gap:8px;flex-wrap:wrap">' + chips + '</div></div>';
+    }).join('');
+    var left = '<div style="min-width:0;display:flex;flex-direction:column;gap:14px">'
+      + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
+      + '<div style="font-size:16px;font-weight:600">Client &amp; demand context</div>'
+      + '<div style="margin-top:4px;font-size:13px;color:#6B7686">Pulled from Demand Management. Read-only — edit the source demand there if it needs to change.</div>'
+      + '<div style="margin-top:18px;display:grid;grid-template-columns:repeat(2,1fr);gap:14px">' + fieldsHtml + '</div>'
+      + '<div style="margin-top:18px;padding:14px 16px;background:#EAF1FB;border:1px solid #D8E5F5;border-radius:10px;display:flex;gap:12px;align-items:flex-start">'
+      + '<div style="width:18px;height:18px;border-radius:99px;background:#013E90;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px">i</div>'
+      + '<div style="font-size:13px;line-height:1.55;color:#3E4A5C">The Configure catalog is filtered by this client’s segment (' + esc(c ? c.segment : '—') + '), pulled live from the client record. Guided answers below are captured for context but don’t change eligibility yet.</div>'
+      + '</div></div>'
+      + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
+      + '<div style="font-size:16px;font-weight:600">Guided questions</div>'
+      + '<div style="margin-top:14px;display:flex;flex-direction:column;gap:12px">' + questionsHtml + '</div>'
+      + '</div></div>';
+    var right = '<div style="display:flex;flex-direction:column;gap:12px">' + renderLivePricingPanel() + '</div>';
+    return '<div style="display:grid;grid-template-columns:1fr 336px;gap:18px;align-items:start">' + left + right + '</div>';
   }
 
-  window.CpqHandoff = { init: init };
+  function renderProductCard(p){
+    var li = state.lineItems[p.id];
+    var selected = !!(li && li.selected);
+    var eligible = isEligible(p);
+    var vol = li && li.monthly_volume != null ? li.monthly_volume : '';
+    var cost = (selected && li && Number(li.monthly_volume) > 0) ? fmtUsd(Number(p.unit_price) * Number(li.monthly_volume)) + ' / mo' : 'not included';
+    var borderColor = !eligible ? '#E3E8F0' : (selected ? '#B8DB92' : '#E3E8F0');
+    var opacity = eligible ? '1' : '.55';
+    var checkboxStyle = selected
+      ? 'border:1.5px solid #013E90;background:#013E90;color:#fff'
+      : 'border:1.5px solid #C4CBD8;background:#fff;color:#fff';
+    return '<div style="border:1px solid ' + borderColor + ';background:#F8FBFF;border-radius:11px;padding:14px 15px 13px;display:flex;flex-direction:column;gap:10px;opacity:' + opacity + '">'
+      + '<div style="display:flex;align-items:flex-start;gap:11px">'
+      + '<div class="cpq-product-check" data-product="' + esc(p.id) + '" style="width:19px;height:19px;border-radius:5px;flex:0 0 auto;margin-top:2px;cursor:' + (eligible?'pointer':'not-allowed') + ';font-size:12px;display:flex;align-items:center;justify-content:center;' + checkboxStyle + '">' + (selected ? '&check;' : '') + '</div>'
+      + '<div style="min-width:0;flex:1 1 0"><div style="font-size:14.5px;font-weight:600">' + esc(p.name) + '</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686;line-height:1.45">' + esc(p.description||'') + '</div></div>'
+      + '<div style="text-align:right;flex:0 0 auto"><div style="font-size:15px;font-weight:600">' + fmtUsd(p.unit_price) + '</div>'
+      + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#8B95A6;letter-spacing:.08em">PER ORDER</div></div>'
+      + '</div>'
+      + '<div style="display:flex;align-items:center;gap:10px;padding-top:9px;border-top:1px dashed #E3E8F0">'
+      + '<div style="font-size:12px;color:#6B7686">Monthly volume</div>'
+      + '<input type="number" min="0" class="cpq-vol-input" data-product="' + esc(p.id) + '" value="' + esc(vol) + '" ' + (eligible?'':'disabled') + ' style="width:86px;height:32px;border:1px solid #DCE2EC;border-radius:7px;padding:0 9px;font-size:13.5px;background:#fff;outline:none">'
+      + '<div id="cpq-cost-' + esc(p.id) + '" style="margin-left:auto;font-size:13px;font-weight:600;color:' + (selected?'#131A26':'#97A1B2') + '">' + cost + '</div>'
+      + '</div>'
+      + (!eligible && p.requires_note ? '<div style="font-size:12px;color:#8A5A12;background:#FDF3E0;border:1px solid #F1DFBC;border-radius:7px;padding:7px 9px;line-height:1.4">' + esc(p.requires_note) + '</div>' : '')
+      + '</div>';
+  }
+
+  function renderAddonRow(p){
+    var li = state.lineItems[p.id];
+    var selected = !!(li && li.selected);
+    var checkboxStyle = selected
+      ? 'border:1.5px solid #013E90;background:#013E90;color:#fff'
+      : 'border:1.5px solid #C4CBD8;background:#fff;color:#fff';
+    return '<div style="display:grid;grid-template-columns:22px 1.6fr 1fr .8fr;gap:12px;align-items:center;background:#fff;padding:11px 13px">'
+      + '<div class="cpq-addon-check" data-product="' + esc(p.id) + '" style="width:17px;height:17px;border-radius:5px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;' + checkboxStyle + '">' + (selected ? '&check;' : '') + '</div>'
+      + '<div><div style="font-size:13.5px;font-weight:600">' + esc(p.name) + '</div><div style="font-size:12px;color:#8B95A6;margin-top:2px">' + esc(p.description||'') + '</div></div>'
+      + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:#6B7686">' + esc((p.requires_note||'').toUpperCase()) + '</div>'
+      + '<div style="text-align:right;font-size:13.5px;font-weight:600">' + fmtUsd(p.unit_price) + ' / mo</div>'
+      + '</div>';
+  }
+
+  function renderConfigureTab(){
+    var products = state.products.filter(function(p){ return p.category === 'product'; });
+    var addons = state.products.filter(function(p){ return p.category === 'addon'; });
+    var selectedCount = products.filter(function(p){ var li = state.lineItems[p.id]; return li && li.selected; }).length;
+    var left = '<div style="min-width:0;display:flex;flex-direction:column;gap:14px">'
+      + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
+      + '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">'
+      + '<div><div style="font-size:16px;font-weight:600">Configure the offering</div>'
+      + '<div style="margin-top:4px;font-size:13px;color:#6B7686">Eligibility is filtered by this client’s segment &middot; monthly order volume drives the cost per product.</div></div>'
+      + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10.5px;letter-spacing:.1em;border:1px solid #DCE2EC;border-radius:6px;padding:5px 9px;color:#6B7686">' + selectedCount + ' OF ' + products.length + ' SELECTED</div>'
+      + '</div>'
+      + '<div style="margin-top:16px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px">' + products.map(renderProductCard).join('') + '</div>'
+      + '</div>'
+      + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
+      + '<div style="font-size:16px;font-weight:600">Add-ons &amp; service levels</div>'
+      + '<div style="margin-top:12px;display:flex;flex-direction:column;gap:1px;background:#EDF0F6;border-radius:9px;overflow:hidden">' + addons.map(renderAddonRow).join('') + '</div>'
+      + '</div></div>';
+    var right = '<div style="display:flex;flex-direction:column;gap:12px">' + renderLivePricingPanel() + '</div>';
+    return '<div style="display:grid;grid-template-columns:1fr 336px;gap:18px;align-items:start">' + left + right + '</div>';
+  }
+
+  function renderStaticTab(step){
+    var body = state.staticBodies[step] || '<div style="color:#97A1B2;font-size:13px">Not available.</div>';
+    return '<div style="background:#FDF3E0;border:1px solid #F1DFBC;color:#8A5A12;font-size:12px;padding:10px 14px;border-radius:8px;margin-bottom:16px;font-family:\'IBM Plex Mono\',monospace;letter-spacing:.02em">STATIC DESIGN PREVIEW &mdash; this step isn’t built yet. Shown with sample data from the original mockup for design reference.</div>'
+      + body;
+  }
+
+  function renderTabBody(){
+    switch (state.activeTab){
+      case 'client_demand': return renderClientDemandTab();
+      case 'configure': return renderConfigureTab();
+      default: return renderStaticTab(state.activeTab);
+    }
+  }
+
+  function renderEditor(){
+    var m = mount();
+    if (!m) return;
+    m.innerHTML = renderHeader() + '<div style="padding:20px 24px 48px;max-width:1520px">' + renderTabBody() + '</div>';
+  }
+
+  // ---------------------------------------------------------------------
+  // events (delegated once on the persistent mount container)
+  // ---------------------------------------------------------------------
+  function wireEvents(){
+    var m = mount();
+    if (!m || m.__cpqWired) return;
+    m.__cpqWired = true;
+
+    m.addEventListener('click', function(e){
+      var openBtn = e.target.closest && e.target.closest('.cpq-open-btn');
+      if (openBtn){ openQuote(openBtn.getAttribute('data-demand')); return; }
+
+      var back = e.target.closest && e.target.closest('.cpq-back-link');
+      if (back){ backToList(); return; }
+
+      var tab = e.target.closest && e.target.closest('.cpq-tab-btn');
+      if (tab){ state.activeTab = tab.getAttribute('data-tab'); renderEditor(); return; }
+
+      var save = e.target.closest && e.target.closest('.cpq-save-btn');
+      if (save){ saveDraft(); return; }
+
+      var pdf = e.target.closest && e.target.closest('.cpq-pdf-btn');
+      if (pdf){ showToast('PDF generation is part of a later CPQ phase (Quote & approvals) — not built yet.'); return; }
+
+      var cont = e.target.closest && e.target.closest('.cpq-continue-btn');
+      if (cont){
+        var idx = CPQ_STEPS.indexOf(state.activeTab);
+        if (idx < CPQ_STEPS.length - 1){ state.activeTab = CPQ_STEPS[idx+1]; renderEditor(); }
+        return;
+      }
+
+      var chip = e.target.closest && e.target.closest('.cpq-chip');
+      if (chip){
+        var qKey = chip.getAttribute('data-q'), val = chip.getAttribute('data-val');
+        var current = (state.currentQuote.guided_answers || {});
+        current[qKey] = current[qKey] === val ? null : val;
+        state.currentQuote.guided_answers = current;
+        Promise.resolve(state.db.from('quotes').update({ guided_answers: current }).eq('id', state.currentQuote.id))
+          .catch(function(err){ console.error('CPQ: could not save guided answer', err); });
+        renderEditor();
+        return;
+      }
+
+      var pcheck = e.target.closest && e.target.closest('.cpq-product-check');
+      if (pcheck){
+        var pid = pcheck.getAttribute('data-product');
+        var product = state.products.filter(function(p){ return p.id === pid; })[0];
+        if (!product || !isEligible(product)) return;
+        var li = state.lineItems[pid];
+        var nowSelected = !(li && li.selected);
+        var vol = li && li.monthly_volume != null ? li.monthly_volume : (state.currentDemand.est_monthly_volume || 0);
+        upsertLineItem(pid, { selected: nowSelected, monthly_volume: vol, unit_price_snapshot: product.unit_price })
+          .then(renderEditor)
+          .catch(function(err){ console.error('CPQ: could not update line item', err); });
+        return;
+      }
+
+      var acheck = e.target.closest && e.target.closest('.cpq-addon-check');
+      if (acheck){
+        var aid = acheck.getAttribute('data-product');
+        var aproduct = state.products.filter(function(p){ return p.id === aid; })[0];
+        var ali = state.lineItems[aid];
+        var aNowSelected = !(ali && ali.selected);
+        upsertLineItem(aid, { selected: aNowSelected, unit_price_snapshot: aproduct.unit_price })
+          .then(renderEditor)
+          .catch(function(err){ console.error('CPQ: could not update line item', err); });
+        return;
+      }
+    });
+
+    m.addEventListener('input', function(e){
+      if (!e.target.classList || !e.target.classList.contains('cpq-vol-input')) return;
+      var pid = e.target.getAttribute('data-product');
+      var vol = Number(e.target.value) || 0;
+      state.lineItems[pid] = state.lineItems[pid] || { selected: false };
+      state.lineItems[pid].monthly_volume = vol;
+      var product = state.products.filter(function(p){ return p.id === pid; })[0];
+      var costEl = $('cpq-cost-' + pid);
+      if (costEl){
+        var selected = state.lineItems[pid].selected;
+        costEl.textContent = (selected && vol > 0) ? fmtUsd(Number(product.unit_price) * vol) + ' / mo' : 'not included';
+        costEl.style.color = selected ? '#131A26' : '#97A1B2';
+      }
+      updateLiveNumbers();
+    });
+
+    m.addEventListener('change', function(e){
+      if (!e.target.classList || !e.target.classList.contains('cpq-vol-input')) return;
+      var pid = e.target.getAttribute('data-product');
+      var vol = Number(e.target.value) || 0;
+      var product = state.products.filter(function(p){ return p.id === pid; })[0];
+      upsertLineItem(pid, { monthly_volume: vol, unit_price_snapshot: product.unit_price })
+        .catch(function(err){ console.error('CPQ: could not save volume', err); });
+    });
+  }
+
+  function showToast(msg){
+    var existing = document.getElementById('cpq-toast');
+    if (existing) existing.parentNode.removeChild(existing);
+    var el = document.createElement('div');
+    el.id = 'cpq-toast';
+    el.textContent = msg;
+    el.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#131A26;color:#fff;font-size:13px;padding:10px 16px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:999;max-width:90vw;text-align:center';
+    document.body.appendChild(el);
+    setTimeout(function(){ if (el.parentNode) el.parentNode.removeChild(el); }, 3500);
+  }
+
+  // ---------------------------------------------------------------------
+  // init
+  // ---------------------------------------------------------------------
+  function loadStaticTemplates(){
+    CPQ_STEPS.forEach(function(s){
+      var tpl = document.getElementById('cpq-static-' + s);
+      if (tpl) state.staticBodies[s] = tpl.innerHTML;
+    });
+  }
+
+  function loadData(){
+    return Promise.all([
+      Promise.resolve(state.db.from('demands').select('*').eq('stage', 'converted').order('created_at', {ascending:false})),
+      Promise.resolve(state.db.from('clients').select('*')),
+      Promise.resolve(state.db.from('cpq_products').select('*').eq('active', true).order('sort_order')),
+      Promise.resolve(state.db.from('quotes').select('*').order('created_at', {ascending:false}))
+    ]).then(function(results){
+      var dr = results[0], cr = results[1], pr = results[2], qr = results[3];
+      if (dr.error) throw dr.error;
+      if (cr.error) throw cr.error;
+      if (pr.error) throw pr.error;
+      if (qr.error) throw qr.error;
+      state.demands = dr.data || [];
+      state.clients = cr.data || [];
+      state.products = pr.data || [];
+      state.quotesByDemand = {};
+      (qr.data || []).forEach(function(q){
+        if (!state.quotesByDemand[q.demand_id]) state.quotesByDemand[q.demand_id] = q; // already newest-first
+      });
+      renderList();
+    }).catch(function(e){ console.error('CPQ: could not load', e); renderNotConnected(); });
+  }
+
+  // Called every time the CPQ view is shown (nav click, or on page load for the
+  // real per-module deploy). Templates only need loading once. Connecting to
+  // Supabase is retried on every call until it succeeds, same as Demand
+  // Management's onShow() — this module can auto-init before supabase-config.js
+  // has anything in it (e.g. this page's very first paint), so a later call
+  // (once configured) needs to actually (re)try connecting, not just bail
+  // because an earlier attempt already ran. Once connected, re-entering the
+  // view refreshes the list — e.g. a demand converted in Demand Management
+  // since the last visit should show up without a full page reload — unless a
+  // quote is already open (editor mode), which is left alone.
+  function init(){
+    if (!state.templatesLoaded){ state.templatesLoaded = true; loadStaticTemplates(); }
+    if (!state.db){
+      if (!available()){ renderNotConnected(); return; }
+      try { state.db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
+      catch(e){ renderNotConnected(); return; }
+      wireEvents();
+      loadData();
+      return;
+    }
+    if (state.mode === 'list') loadData();
+  }
+
+  window.CpqModule = { init: init };
 })();
 
-window.CpqHandoff.init();
+window.CpqModule.init();
 </script>
 </body>
 </html>
