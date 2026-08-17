@@ -23,6 +23,8 @@
   .content-viewport{flex:1;min-height:0;overflow-y:auto;position:relative}
   .app-shell > div:first-child{min-height:0;overflow:hidden}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -39,12 +41,7 @@
         <div style="margin-bottom: 16px;">
           <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.18em; color: rgb(93, 124, 170); padding: 0px 8px 7px;"><span class="sc-interp">PIPELINE</span></div>
           
-            <div style="position: relative; display: flex; align-items: center; gap: 9px; padding: 8px 9px; border-radius: 7px; cursor: pointer; margin-bottom: 2px; color: rgb(154, 172, 198); background: transparent;" class="nav-item" id="nav-map" data-view="map" onclick="showView('map')">
-              <span style="width: 5px; height: 5px; border-radius: 99px; flex: 0 0 auto; background: rgb(18, 62, 119);" class="nav-dot"></span>
-              <span style="font-size: 13.5px; font-weight: 500; letter-spacing: -0.005em;" class="nav-label"><span class="sc-interp">System map</span></span>
-              
-              
-            </div>
+            
           
             <div style="position: relative; display: flex; align-items: center; gap: 9px; padding: 8px 9px; border-radius: 7px; cursor: pointer; margin-bottom: 2px; background: transparent; color: rgb(154, 172, 198);" class="nav-item" id="nav-home" data-view="home" onclick="showView('home')">
               <span style="width: 5px; height: 5px; border-radius: 99px; flex: 0 0 auto; background: rgb(18, 62, 119);" class="nav-dot"></span>
@@ -162,162 +159,8 @@
         <div style="width: 34px; height: 34px; border: 1px solid rgb(220, 226, 236); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: rgb(255, 255, 255); font-size: 14px;" class="scp0">☰</div>
       </div>
     </div>
-<div style="position:sticky;top:0;z-index:50;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:11.5px;padding:7px 20px;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em">STATIC DESIGN PREVIEW, EXCEPT PLAN BUILDER — Home, Demand, CPQ, Integration Studio, Delivery, Reporting, Engagement, Roles, and System states are non-functional mockups. The Plan Builder tool tab (under Plan Builder in the sidebar) is the real, live application — it saves your work.</div>
+<div style="position:sticky;top:0;z-index:50;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:11.5px;padding:7px 20px;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em">STATIC DESIGN PREVIEW, EXCEPT PLAN BUILDER AND DEMAND MANAGEMENT — CPQ, Integration Studio, Delivery, Reporting, Engagement, Roles, and System states are non-functional mockups. Plan Builder and Demand Management are real, backed by a live database when this site is deployed with Supabase configured (see supabase-config.js).</div>
     <div class="content-viewport" id="contentViewport">
-<div class="view" id="view-map" style="display:none"><div style="padding: 26px 28px 44px; max-width: 1420px;">
-          <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
-            <div style="max-width: 640px;">
-              <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; letter-spacing: 0.2em; color: rgb(1, 62, 144);">SYSTEM MAP</div>
-              <div style="font-size: 30px; font-weight: 600; letter-spacing: -0.02em; margin-top: 8px;">One pipeline, seven modules</div>
-              <div style="margin-top: 8px; color: rgb(90, 100, 116); font-size: 15px; line-height: 1.55; text-wrap: pretty;">Every object has one home and one owner. Demand creates the client record; CPQ prices it; Plan Builder schedules it; Integration Studio specifies it; Delivery executes it; Status Reporting proves it; Engagement Management keeps it.</div>
-            </div>
-            <div style="display: flex; gap: 10px;">
-              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 10px; padding: 12px 16px;">
-                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(139, 149, 166);">HI-FI SCREENS</div>
-                <div style="font-size: 15px; font-weight: 600; margin-top: 4px;">11 including admin</div>
-              </div>
-              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 10px; padding: 12px 16px;">
-                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(139, 149, 166);">BLUEPRINT OVERLAY</div>
-                <div style="font-size: 15px; font-weight: 600; margin-top: 4px;">Tweaks → wireframe + notes</div>
-              </div>
-            </div>
-          </div>
-
-          <div style="margin-top: 26px; display: grid; grid-template-columns: repeat(7,1fr); gap: 10px; align-items: stretch;">
-            
-              <div style="position: relative; background: rgb(255, 255, 255); border-width: 3px 1px 1px; border-style: solid; border-color: rgb(133, 195, 65) rgb(220, 226, 236) rgb(220, 226, 236); border-image: none; border-radius: 10px; padding: 14px 13px 16px; cursor: pointer; display: flex; flex-direction: column; min-height: 186px;" class="scp0">
-                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(139, 149, 166);"><span class="sc-interp">01</span></div>
-                <div style="font-size: 15px; font-weight: 600; margin-top: 6px; letter-spacing: -0.01em; line-height: 1.2;"><span class="sc-interp">Demand Management</span></div>
-                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.45; color: rgb(90, 100, 116); text-wrap: pretty;"><span class="sc-interp">Intake and score every strategic request; the client record is born here.</span></div>
-                <div style="margin-top: auto; padding-top: 12px; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; color: rgb(1, 62, 144);"><span class="sc-interp">DEMAND</span></div>
-              </div>
-            
-              <div style="position: relative; background: rgb(255, 255, 255); border-width: 3px 1px 1px; border-style: solid; border-color: rgb(1, 62, 144) rgb(220, 226, 236) rgb(220, 226, 236); border-image: none; border-radius: 10px; padding: 14px 13px 16px; cursor: pointer; display: flex; flex-direction: column; min-height: 186px;" class="scp0">
-                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(139, 149, 166);"><span class="sc-interp">02</span></div>
-                <div style="font-size: 15px; font-weight: 600; margin-top: 6px; letter-spacing: -0.01em; line-height: 1.2;"><span class="sc-interp">Value CPQ</span></div>
-                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.45; color: rgb(90, 100, 116); text-wrap: pretty;"><span class="sc-interp">Guided configuration, rules, pricing, quote PDF and approvals.</span></div>
-                <div style="margin-top: auto; padding-top: 12px; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; color: rgb(1, 62, 144);"><span class="sc-interp">QUOTE</span></div>
-              </div>
-            
-              <div style="position: relative; background: rgb(255, 255, 255); border-width: 3px 1px 1px; border-style: solid; border-color: rgb(1, 62, 144) rgb(220, 226, 236) rgb(220, 226, 236); border-image: none; border-radius: 10px; padding: 14px 13px 16px; cursor: pointer; display: flex; flex-direction: column; min-height: 186px;" class="scp0">
-                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(139, 149, 166);"><span class="sc-interp">03</span></div>
-                <div style="font-size: 15px; font-weight: 600; margin-top: 6px; letter-spacing: -0.01em; line-height: 1.2;"><span class="sc-interp">Plan Builder</span></div>
-                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.45; color: rgb(90, 100, 116); text-wrap: pretty;"><span class="sc-interp">Approved quote becomes a phased, baselined implementation plan.</span></div>
-                <div style="margin-top: auto; padding-top: 12px; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; color: rgb(1, 62, 144);"><span class="sc-interp">PLAN</span></div>
-              </div>
-            
-              <div style="position: relative; background: rgb(255, 255, 255); border-width: 3px 1px 1px; border-style: solid; border-color: rgb(1, 62, 144) rgb(220, 226, 236) rgb(220, 226, 236); border-image: none; border-radius: 10px; padding: 14px 13px 16px; cursor: pointer; display: flex; flex-direction: column; min-height: 186px;" class="scp0">
-                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(139, 149, 166);"><span class="sc-interp">04</span></div>
-                <div style="font-size: 15px; font-weight: 600; margin-top: 6px; letter-spacing: -0.01em; line-height: 1.2;"><span class="sc-interp">Integration Studio</span></div>
-                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.45; color: rgb(90, 100, 116); text-wrap: pretty;"><span class="sc-interp">Standard plus custom requirements, estimated and pushed to JIRA.</span></div>
-                <div style="margin-top: auto; padding-top: 12px; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; color: rgb(1, 62, 144);"><span class="sc-interp">SPEC</span></div>
-              </div>
-            
-              <div style="position: relative; background: rgb(255, 255, 255); border-width: 3px 1px 1px; border-style: solid; border-color: rgb(1, 62, 144) rgb(220, 226, 236) rgb(220, 226, 236); border-image: none; border-radius: 10px; padding: 14px 13px 16px; cursor: pointer; display: flex; flex-direction: column; min-height: 186px;" class="scp0">
-                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(139, 149, 166);"><span class="sc-interp">05</span></div>
-                <div style="font-size: 15px; font-weight: 600; margin-top: 6px; letter-spacing: -0.01em; line-height: 1.2;"><span class="sc-interp">Delivery</span></div>
-                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.45; color: rgb(90, 100, 116); text-wrap: pretty;"><span class="sc-interp">Live JIRA progress, blockers, go-live checklist, mark complete.</span></div>
-                <div style="margin-top: auto; padding-top: 12px; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; color: rgb(1, 62, 144);"><span class="sc-interp">PROJECT</span></div>
-              </div>
-            
-              <div style="position: relative; background: rgb(255, 255, 255); border-width: 3px 1px 1px; border-style: solid; border-color: rgb(1, 62, 144) rgb(220, 226, 236) rgb(220, 226, 236); border-image: none; border-radius: 10px; padding: 14px 13px 16px; cursor: pointer; display: flex; flex-direction: column; min-height: 186px;" class="scp0">
-                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(139, 149, 166);"><span class="sc-interp">06</span></div>
-                <div style="font-size: 15px; font-weight: 600; margin-top: 6px; letter-spacing: -0.01em; line-height: 1.2;"><span class="sc-interp">Status Reporting</span></div>
-                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.45; color: rgb(90, 100, 116); text-wrap: pretty;"><span class="sc-interp">Baseline vs. actual KPIs in-app, Power BI for the deep dive.</span></div>
-                <div style="margin-top: auto; padding-top: 12px; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; color: rgb(1, 62, 144);"><span class="sc-interp">REPORT</span></div>
-              </div>
-            
-              <div style="position: relative; background: rgb(255, 255, 255); border-width: 3px 1px 1px; border-style: solid; border-color: rgb(133, 195, 65) rgb(220, 226, 236) rgb(220, 226, 236); border-image: none; border-radius: 10px; padding: 14px 13px 16px; cursor: pointer; display: flex; flex-direction: column; min-height: 186px;" class="scp0">
-                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(139, 149, 166);"><span class="sc-interp">07</span></div>
-                <div style="font-size: 15px; font-weight: 600; margin-top: 6px; letter-spacing: -0.01em; line-height: 1.2;"><span class="sc-interp">Engagement Mgmt</span></div>
-                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.45; color: rgb(90, 100, 116); text-wrap: pretty;"><span class="sc-interp">Volume vs. target, CSAT, requests and KPIs for a live client.</span></div>
-                <div style="margin-top: auto; padding-top: 12px; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; color: rgb(1, 62, 144);"><span class="sc-interp">ENGAGEMENT</span></div>
-              </div>
-            
-          </div>
-
-          <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
-            
-              <div style="flex: 1 1 260px; background: rgb(234, 241, 251); border: 1px solid rgb(216, 229, 245); border-radius: 10px; padding: 13px 15px;">
-                <div style="font-size: 13px; font-weight: 700; color: rgb(1, 46, 107);"><span class="sc-interp">One client id, seven modules</span></div>
-                <div style="margin-top: 5px; font-size: 12.5px; line-height: 1.5; color: rgb(78, 88, 102); text-wrap: pretty;"><span class="sc-interp">Created in Demand, referenced everywhere. No module invents its own client list.</span></div>
-              </div>
-            
-              <div style="flex: 1 1 260px; background: rgb(234, 241, 251); border: 1px solid rgb(216, 229, 245); border-radius: 10px; padding: 13px 15px;">
-                <div style="font-size: 13px; font-weight: 700; color: rgb(1, 46, 107);"><span class="sc-interp">Quote approval is the gate</span></div>
-                <div style="margin-top: 5px; font-size: 12.5px; line-height: 1.5; color: rgb(78, 88, 102); text-wrap: pretty;"><span class="sc-interp">Nothing enters Plan Builder or Integration Studio until pricing is approved and the quote is locked.</span></div>
-              </div>
-            
-              <div style="flex: 1 1 260px; background: rgb(234, 241, 251); border: 1px solid rgb(216, 229, 245); border-radius: 10px; padding: 13px 15px;">
-                <div style="font-size: 13px; font-weight: 700; color: rgb(1, 46, 107);"><span class="sc-interp">JIRA executes, Studio specifies</span></div>
-                <div style="margin-top: 5px; font-size: 12.5px; line-height: 1.5; color: rgb(78, 88, 102); text-wrap: pretty;"><span class="sc-interp">Intent is pushed once; progress flows back read-only. No two-way ticket editing.</span></div>
-              </div>
-            
-              <div style="flex: 1 1 260px; background: rgb(234, 241, 251); border: 1px solid rgb(216, 229, 245); border-radius: 10px; padding: 13px 15px;">
-                <div style="font-size: 13px; font-weight: 700; color: rgb(1, 46, 107);"><span class="sc-interp">Complete is a single event</span></div>
-                <div style="margin-top: 5px; font-size: 12.5px; line-height: 1.5; color: rgb(78, 88, 102); text-wrap: pretty;"><span class="sc-interp">Delivery marking complete is the only trigger that moves a client into Engagement Management.</span></div>
-              </div>
-            
-          </div>
-
-          <div style="margin-top: 28px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px;">
-            <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 18px 20px;">
-              <div style="font-size: 16px; font-weight: 600;">Roles &amp; the screens they land on</div>
-              <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 1px; background: rgb(237, 240, 246); border-radius: 8px; overflow: hidden;">
-                
-                  <div style="display: grid; grid-template-columns: 1.1fr 1fr 1.4fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; align-items: center;">
-                    <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Sales / AE</span></div>
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(1, 62, 144);"><span class="sc-interp">MY WORK</span></div>
-                    <div style="font-size: 12.5px; color: rgb(90, 100, 116);"><span class="sc-interp">Demands, quote progress, approval blockers</span></div>
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.1fr 1fr 1.4fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; align-items: center;">
-                    <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Solutions engineer</span></div>
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(1, 62, 144);"><span class="sc-interp">VALUE CPQ</span></div>
-                    <div style="font-size: 12.5px; color: rgb(90, 100, 116);"><span class="sc-interp">Configuration rules, custom integration effort</span></div>
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.1fr 1fr 1.4fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; align-items: center;">
-                    <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Pricing &amp; finance</span></div>
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(1, 62, 144);"><span class="sc-interp">APPROVAL QUEUE</span></div>
-                    <div style="font-size: 12.5px; color: rgb(90, 100, 116);"><span class="sc-interp">Discount depth, margin floor, terms</span></div>
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.1fr 1fr 1.4fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; align-items: center;">
-                    <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Implementation PM</span></div>
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(1, 62, 144);"><span class="sc-interp">DELIVERY</span></div>
-                    <div style="font-size: 12.5px; color: rgb(90, 100, 116);"><span class="sc-interp">Baseline vs. actual, blockers, go-live</span></div>
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.1fr 1fr 1.4fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; align-items: center;">
-                    <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Engagement manager</span></div>
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(1, 62, 144);"><span class="sc-interp">ENGAGEMENT</span></div>
-                    <div style="font-size: 12.5px; color: rgb(90, 100, 116);"><span class="sc-interp">Volume vs. target, CSAT, client requests</span></div>
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.1fr 1fr 1.4fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; align-items: center;">
-                    <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Exec / portfolio</span></div>
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(1, 62, 144);"><span class="sc-interp">STATUS REPORTING</span></div>
-                    <div style="font-size: 12.5px; color: rgb(90, 100, 116);"><span class="sc-interp">Portfolio value, at-risk clients, cycle time</span></div>
-                  </div>
-                
-              </div>
-            </div>
-            <div style="background: rgb(1, 40, 94); border-radius: 12px; padding: 18px 20px; color: rgb(255, 255, 255);">
-              <div style="font-size: 16px; font-weight: 600;">Naming decision</div>
-              <div style="margin-top: 10px; font-size: 13.5px; line-height: 1.55; color: rgb(175, 196, 226); text-wrap: pretty;">“Requirements” is renamed <strong style="color: rgb(255, 255, 255);">Integration Studio</strong> — it reads as a place you work, not a document you fill in, and it covers both out-of-box service offerings and custom configuration.</div>
-              <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px;">
-                
-                  <div style="display: flex; gap: 9px; font-size: 12.5px; color: rgb(203, 221, 242); line-height: 1.45;"><span style="color: rgb(133, 195, 65);">→</span><span><span class="sc-interp">Covers both inputs: out-of-box service offerings with known effort, and custom configuration gathered and estimated.</span></span></div>
-                
-                  <div style="display: flex; gap: 9px; font-size: 12.5px; color: rgb(203, 221, 242); line-height: 1.45;"><span style="color: rgb(133, 195, 65);">→</span><span><span class="sc-interp">Outputs stay explicit — JIRA epics and stories, plus a versioned requirement document.</span></span></div>
-                
-                  <div style="display: flex; gap: 9px; font-size: 12.5px; color: rgb(203, 221, 242); line-height: 1.45;"><span style="color: rgb(133, 195, 65);">→</span><span><span class="sc-interp">Alternatives considered: Scope Studio (too sales-flavoured), Solution Design (overlaps pre-sales), Blueprint (already used for plans).</span></span></div>
-                
-              </div>
-            </div>
-          </div>
-        </div></div>
 <div class="view" id="view-home" style="display:none"><div style="padding: 24px 28px 44px; max-width: 1420px;">
           <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
             <div>
@@ -545,246 +388,51 @@
             
           </div>
         </div></div>
-<div class="view" id="view-demand" style="display:none"><div>
-          <div style="background: rgb(255, 255, 255); border-bottom: 1px solid rgb(220, 226, 236); padding: 18px 28px 0px;">
-            <div style="display: flex; align-items: flex-start; gap: 18px; flex-wrap: wrap;">
-              <div>
-                <div style="font-size: 22px; font-weight: 600; letter-spacing: -0.01em;">Demand Management</div>
-                <div style="margin-top: 5px; font-size: 13px; color: rgb(107, 118, 134);">Every strategic request, scored on the same criteria. 23 open · $12.6M estimated annual value.</div>
-              </div>
-              <div style="margin-left: auto; display: flex; gap: 8px;">
-                <button style="height: 36px; padding: 0px 14px; border-radius: 8px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 13.5px; font-weight: 600; cursor: pointer;">Portfolio matrix</button>
-                <button style="height: 36px; padding: 0px 16px; border-radius: 8px; border: medium; background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 13.5px; font-weight: 600; cursor: pointer;">New demand</button>
-              </div>
-            </div>
-            <div style="margin-top: 15px; display: flex; gap: 4px;">
-              
-                <div style="display: flex; align-items: center; gap: 7px; padding: 10px 14px 11px; border-bottom: 2px solid rgb(1, 62, 144); cursor: pointer;">
-                  <span style="font-size: 13.5px; font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">My demands</span></span>
-                  <span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; background: rgb(241, 244, 249); color: rgb(107, 118, 134); padding: 1px 5px; border-radius: 4px;"><span class="sc-interp">9</span></span>
-                </div>
-              
-                <div style="display: flex; align-items: center; gap: 7px; padding: 10px 14px 11px; border-bottom: 2px solid transparent; cursor: pointer;">
-                  <span style="font-size: 13.5px; font-weight: 500; color: rgb(107, 118, 134);"><span class="sc-interp">Unscored</span></span>
-                  <span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; background: rgb(241, 244, 249); color: rgb(107, 118, 134); padding: 1px 5px; border-radius: 4px;"><span class="sc-interp">6</span></span>
-                </div>
-              
-                <div style="display: flex; align-items: center; gap: 7px; padding: 10px 14px 11px; border-bottom: 2px solid transparent; cursor: pointer;">
-                  <span style="font-size: 13.5px; font-weight: 500; color: rgb(107, 118, 134);"><span class="sc-interp">Awaiting decision</span></span>
-                  <span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; background: rgb(241, 244, 249); color: rgb(107, 118, 134); padding: 1px 5px; border-radius: 4px;"><span class="sc-interp">4</span></span>
-                </div>
-              
-                <div style="display: flex; align-items: center; gap: 7px; padding: 10px 14px 11px; border-bottom: 2px solid transparent; cursor: pointer;">
-                  <span style="font-size: 13.5px; font-weight: 500; color: rgb(107, 118, 134);"><span class="sc-interp">All open</span></span>
-                  <span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; background: rgb(241, 244, 249); color: rgb(107, 118, 134); padding: 1px 5px; border-radius: 4px;"><span class="sc-interp">23</span></span>
-                </div>
-              
-            </div>
-          </div>
-
-          <div style="padding: 18px 28px 44px; display: grid; grid-template-columns: 1fr 372px; gap: 16px; align-items: start; max-width: 1520px;">
-            <div style="min-width: 0px; display: flex; flex-direction: column; gap: 12px;">
-              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                
-                  <div style="height: 32px; display: flex; align-items: center; gap: 7px; padding: 0px 11px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; background: rgb(255, 255, 255); font-size: 13px; color: rgb(78, 88, 102); cursor: pointer;" class="scp4"><span class="sc-interp">Segment</span><span style="color: rgb(151, 161, 178); font-size: 10px;">▾</span></div>
-                
-                  <div style="height: 32px; display: flex; align-items: center; gap: 7px; padding: 0px 11px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; background: rgb(255, 255, 255); font-size: 13px; color: rgb(78, 88, 102); cursor: pointer;" class="scp4"><span class="sc-interp">Source</span><span style="color: rgb(151, 161, 178); font-size: 10px;">▾</span></div>
-                
-                  <div style="height: 32px; display: flex; align-items: center; gap: 7px; padding: 0px 11px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; background: rgb(255, 255, 255); font-size: 13px; color: rgb(78, 88, 102); cursor: pointer;" class="scp4"><span class="sc-interp">Owner</span><span style="color: rgb(151, 161, 178); font-size: 10px;">▾</span></div>
-                
-                  <div style="height: 32px; display: flex; align-items: center; gap: 7px; padding: 0px 11px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; background: rgb(255, 255, 255); font-size: 13px; color: rgb(78, 88, 102); cursor: pointer;" class="scp4"><span class="sc-interp">Score range</span><span style="color: rgb(151, 161, 178); font-size: 10px;">▾</span></div>
-                
-                  <div style="height: 32px; display: flex; align-items: center; gap: 7px; padding: 0px 11px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; background: rgb(255, 255, 255); font-size: 13px; color: rgb(78, 88, 102); cursor: pointer;" class="scp4"><span class="sc-interp">Created</span><span style="color: rgb(151, 161, 178); font-size: 10px;">▾</span></div>
-                
-                <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; letter-spacing: 0.12em; color: rgb(139, 149, 166); align-self: center;">7 OF 23 SHOWN</div>
-              </div>
-              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; overflow: hidden;">
-                <div style="display: grid; grid-template-columns: 1.5fr 1fr .55fr .55fr .8fr .8fr .5fr; gap: 10px; padding: 10px 16px; background: rgb(250, 251, 253); font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">
-                  <div>DEMAND / CLIENT</div><div>SEGMENT</div><div style="text-align: right;">ORD/MO</div><div style="text-align: right;">VALUE</div><div>SCORE</div><div>STAGE</div><div style="text-align: right;">AGE</div>
-                </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.5fr 1fr .55fr .55fr .8fr .8fr .5fr; gap: 10px; padding: 12px 16px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(255, 255, 255);" class="scp5">
-                    <div style="min-width: 0px;">
-                      <div style="font-weight: 600; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Cascade Credit Union</span></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178); margin-top: 2px;"><span class="sc-interp">DMD-1188</span></div>
-                    </div>
-                    <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Credit union</span></div>
-                    <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">210</span></div>
-                    <div style="text-align: right; font-weight: 600;"><span class="sc-interp">$0.6M</span></div>
-                    <div style="display: flex; align-items: center; gap: 7px;">
-                      <div style="flex: 1 1 0%; height: 5px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 74%; background: rgb(133, 195, 65); border-radius: 99px;"></div></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102);"><span class="sc-interp">74</span></div>
-                    </div>
-                    <div><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(244, 246, 250); color: rgb(107, 118, 134);"><span class="sc-interp">UNSCORED</span></span></div>
-                    <div style="text-align: right; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178);"><span class="sc-interp">3h</span></div>
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.5fr 1fr .55fr .55fr .8fr .8fr .5fr; gap: 10px; padding: 12px 16px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(245, 249, 255);" class="scp5">
-                    <div style="min-width: 0px;">
-                      <div style="font-weight: 600; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Summit Ridge Bank</span></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178); margin-top: 2px;"><span class="sc-interp">DMD-1174</span></div>
-                    </div>
-                    <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Centralized banking</span></div>
-                    <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">740</span></div>
-                    <div style="text-align: right; font-weight: 600;"><span class="sc-interp">$2.4M</span></div>
-                    <div style="display: flex; align-items: center; gap: 7px;">
-                      <div style="flex: 1 1 0%; height: 5px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 82%; background: rgb(1, 62, 144); border-radius: 99px;"></div></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102);"><span class="sc-interp">82</span></div>
-                    </div>
-                    <div><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(234, 241, 251); color: rgb(1, 46, 107);"><span class="sc-interp">CONVERTED</span></span></div>
-                    <div style="text-align: right; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178);"><span class="sc-interp">4d</span></div>
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.5fr 1fr .55fr .55fr .8fr .8fr .5fr; gap: 10px; padding: 12px 16px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(255, 255, 255);" class="scp5">
-                    <div style="min-width: 0px;">
-                      <div style="font-weight: 600; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Northgate Wholesale</span></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178); margin-top: 2px;"><span class="sc-interp">DMD-1169</span></div>
-                    </div>
-                    <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Wholesale / TPO</span></div>
-                    <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">1,150</span></div>
-                    <div style="text-align: right; font-weight: 600;"><span class="sc-interp">$3.1M</span></div>
-                    <div style="display: flex; align-items: center; gap: 7px;">
-                      <div style="flex: 1 1 0%; height: 5px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 88%; background: rgb(1, 62, 144); border-radius: 99px;"></div></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102);"><span class="sc-interp">88</span></div>
-                    </div>
-                    <div><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(253, 243, 224); color: rgb(138, 90, 18);"><span class="sc-interp">DECISION</span></span></div>
-                    <div style="text-align: right; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178);"><span class="sc-interp">6d</span></div>
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.5fr 1fr .55fr .55fr .8fr .8fr .5fr; gap: 10px; padding: 12px 16px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(255, 255, 255);" class="scp5">
-                    <div style="min-width: 0px;">
-                      <div style="font-weight: 600; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Anchor Mutual</span></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178); margin-top: 2px;"><span class="sc-interp">DMD-1162</span></div>
-                    </div>
-                    <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Centralized banking</span></div>
-                    <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">390</span></div>
-                    <div style="text-align: right; font-weight: 600;"><span class="sc-interp">$1.2M</span></div>
-                    <div style="display: flex; align-items: center; gap: 7px;">
-                      <div style="flex: 1 1 0%; height: 5px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 61%; background: rgb(133, 195, 65); border-radius: 99px;"></div></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102);"><span class="sc-interp">61</span></div>
-                    </div>
-                    <div><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(234, 240, 244); color: rgb(31, 85, 112);"><span class="sc-interp">OPEN</span></span></div>
-                    <div style="text-align: right; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178);"><span class="sc-interp">9d</span></div>
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.5fr 1fr .55fr .55fr .8fr .8fr .5fr; gap: 10px; padding: 12px 16px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(255, 255, 255);" class="scp5">
-                    <div style="min-width: 0px;">
-                      <div style="font-weight: 600; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Pinewood Private</span></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178); margin-top: 2px;"><span class="sc-interp">DMD-1157</span></div>
-                    </div>
-                    <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Private lending</span></div>
-                    <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">85</span></div>
-                    <div style="text-align: right; font-weight: 600;"><span class="sc-interp">$0.3M</span></div>
-                    <div style="display: flex; align-items: center; gap: 7px;">
-                      <div style="flex: 1 1 0%; height: 5px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 44%; background: rgb(196, 203, 216); border-radius: 99px;"></div></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102);"><span class="sc-interp">44</span></div>
-                    </div>
-                    <div><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(244, 246, 250); color: rgb(107, 118, 134);"><span class="sc-interp">PARKED</span></span></div>
-                    <div style="text-align: right; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178);"><span class="sc-interp">14d</span></div>
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.5fr 1fr .55fr .55fr .8fr .8fr .5fr; gap: 10px; padding: 12px 16px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(255, 255, 255);" class="scp5">
-                    <div style="min-width: 0px;">
-                      <div style="font-weight: 600; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Riverbend CU</span></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178); margin-top: 2px;"><span class="sc-interp">DMD-1151</span></div>
-                    </div>
-                    <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Credit union</span></div>
-                    <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">260</span></div>
-                    <div style="text-align: right; font-weight: 600;"><span class="sc-interp">$0.8M</span></div>
-                    <div style="display: flex; align-items: center; gap: 7px;">
-                      <div style="flex: 1 1 0%; height: 5px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 69%; background: rgb(133, 195, 65); border-radius: 99px;"></div></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102);"><span class="sc-interp">69</span></div>
-                    </div>
-                    <div><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(234, 241, 251); color: rgb(1, 46, 107);"><span class="sc-interp">CONVERTED</span></span></div>
-                    <div style="text-align: right; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178);"><span class="sc-interp">21d</span></div>
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.5fr 1fr .55fr .55fr .8fr .8fr .5fr; gap: 10px; padding: 12px 16px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(255, 255, 255);" class="scp5">
-                    <div style="min-width: 0px;">
-                      <div style="font-weight: 600; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Latitude Home Loans</span></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178); margin-top: 2px;"><span class="sc-interp">DMD-1144</span></div>
-                    </div>
-                    <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Distributed retail</span></div>
-                    <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">520</span></div>
-                    <div style="text-align: right; font-weight: 600;"><span class="sc-interp">$1.6M</span></div>
-                    <div style="display: flex; align-items: center; gap: 7px;">
-                      <div style="flex: 1 1 0%; height: 5px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 79%; background: rgb(133, 195, 65); border-radius: 99px;"></div></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102);"><span class="sc-interp">79</span></div>
-                    </div>
-                    <div><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(253, 243, 224); color: rgb(138, 90, 18);"><span class="sc-interp">DECISION</span></span></div>
-                    <div style="text-align: right; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178);"><span class="sc-interp">25d</span></div>
-                  </div>
-                
-              </div>
-            </div>
-
-            <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; overflow: hidden; position: sticky; top: 0px;">
-              <div style="padding: 16px 18px; border-bottom: 1px solid rgb(237, 240, 246);">
-                <div style="display: flex; align-items: center; gap: 9px;">
-                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178);"><span class="sc-interp">DMD-1174</span></div>
-                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 5px; background: rgb(234, 241, 251); color: rgb(1, 46, 107);"><span class="sc-interp">CONVERTED</span></div>
-                </div>
-                <div style="margin-top: 7px; font-size: 18px; font-weight: 600; letter-spacing: -0.01em;"><span class="sc-interp">Summit Ridge Bank</span></div>
-                <div style="margin-top: 4px; font-size: 13px; color: rgb(107, 118, 134);"><span class="sc-interp">Centralized banking</span> · <span class="sc-interp">740</span> orders / month · <span class="sc-interp">$2.4M</span> est. annual</div>
-              </div>
-              <div style="padding: 16px 18px; border-bottom: 1px solid rgb(237, 240, 246);">
-                <div style="display: flex; align-items: baseline; gap: 9px;">
-                  <div style="font-size: 13.5px; font-weight: 600;">Strategic fit score</div>
-                  <div style="margin-left: auto; font-size: 26px; font-weight: 600; letter-spacing: -0.02em;"><span class="sc-interp">82</span></div>
-                </div>
-                <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 9px;">
-                  
-                    <div>
-                      <div style="display: flex; justify-content: space-between; font-size: 12.5px; color: rgb(90, 100, 116);"><span><span class="sc-interp">Volume potential</span></span><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; color: rgb(78, 88, 102);"><span class="sc-interp">88</span></span></div>
-                      <div style="margin-top: 4px; height: 6px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 88%; background: rgb(1, 62, 144); border-radius: 99px;"></div></div>
-                    </div>
-                  
-                    <div>
-                      <div style="display: flex; justify-content: space-between; font-size: 12.5px; color: rgb(90, 100, 116);"><span><span class="sc-interp">Segment strategy fit</span></span><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; color: rgb(78, 88, 102);"><span class="sc-interp">92</span></span></div>
-                      <div style="margin-top: 4px; height: 6px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 92%; background: rgb(1, 62, 144); border-radius: 99px;"></div></div>
-                    </div>
-                  
-                    <div>
-                      <div style="display: flex; justify-content: space-between; font-size: 12.5px; color: rgb(90, 100, 116);"><span><span class="sc-interp">Integration effort (inverse)</span></span><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; color: rgb(78, 88, 102);"><span class="sc-interp">64</span></span></div>
-                      <div style="margin-top: 4px; height: 6px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 64%; background: rgb(1, 62, 144); border-radius: 99px;"></div></div>
-                    </div>
-                  
-                    <div>
-                      <div style="display: flex; justify-content: space-between; font-size: 12.5px; color: rgb(90, 100, 116);"><span><span class="sc-interp">Margin potential</span></span><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; color: rgb(78, 88, 102);"><span class="sc-interp">78</span></span></div>
-                      <div style="margin-top: 4px; height: 6px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 78%; background: rgb(1, 62, 144); border-radius: 99px;"></div></div>
-                    </div>
-                  
-                    <div>
-                      <div style="display: flex; justify-content: space-between; font-size: 12.5px; color: rgb(90, 100, 116);"><span><span class="sc-interp">Competitive position</span></span><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; color: rgb(78, 88, 102);"><span class="sc-interp">71</span></span></div>
-                      <div style="margin-top: 4px; height: 6px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 71%; background: rgb(1, 62, 144); border-radius: 99px;"></div></div>
-                    </div>
-                  
-                </div>
-                <div style="margin-top: 11px; font-size: 12px; color: rgb(139, 149, 166); line-height: 1.45;">Weights owned by the portfolio owner. Every input is visible — advisory, never automatic.</div>
-              </div>
-              <div style="padding: 16px 18px; border-bottom: 1px solid rgb(237, 240, 246);">
-                <div style="font-size: 13.5px; font-weight: 600;">Attachments</div>
-                <div style="margin-top: 9px; display: flex; flex-direction: column; gap: 7px;">
-                  
-                    <div style="display: flex; align-items: center; gap: 9px; font-size: 12.5px; color: rgb(78, 88, 102);"><span style="width: 16px; height: 16px; border-radius: 4px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 9px; display: flex; align-items: center; justify-content: center;">▤</span><span class="sc-interp">RFP_SummitRidge_2026.pdf</span></div>
-                  
-                    <div style="display: flex; align-items: center; gap: 9px; font-size: 12.5px; color: rgb(78, 88, 102);"><span style="width: 16px; height: 16px; border-radius: 4px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 9px; display: flex; align-items: center; justify-content: center;">▤</span><span class="sc-interp">Current-AMC-volumes.xlsx</span></div>
-                  
-                    <div style="display: flex; align-items: center; gap: 9px; font-size: 12.5px; color: rgb(78, 88, 102);"><span style="width: 16px; height: 16px; border-radius: 4px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 9px; display: flex; align-items: center; justify-content: center;">▤</span><span class="sc-interp">IT integration questionnaire</span></div>
-                  
-                </div>
-              </div>
-              <div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 9px;">
-                <button style="height: 40px; border-radius: 8px; border: medium; background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 14px; font-weight: 600; cursor: pointer;">Configure quote in CPQ</button>
-                <div style="display: flex; gap: 8px;">
-                  <button style="flex: 1 1 0%; height: 34px; border-radius: 8px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 13px; font-weight: 600; cursor: pointer;">Park</button>
-                  <button style="flex: 1 1 0%; height: 34px; border-radius: 8px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 13px; font-weight: 600; cursor: pointer;">Reject with reason</button>
-                </div>
-                <div style="font-size: 11.5px; color: rgb(151, 161, 178); line-height: 1.45;">Demands are never deleted — the decision and its reason stay on the investment record.</div>
-              </div>
-            </div>
-          </div>
-        </div></div>
+<div class="view" id="view-demand" style="display:none"><div id="dm-empty" style="display:none;padding:60px 28px;max-width:640px">
+  <div style="width:40px;height:40px;border-radius:10px;background:#EAF1FB;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px">&#128268;</div>
+  <div style="font-size:17px;font-weight:600;color:#131A26">Demand Management needs a database connection</div>
+  <div style="margin-top:8px;font-size:13.5px;color:#6B7686;line-height:1.6">This module reads and writes real records through Supabase, which isn't reachable from inside this Cowork preview. Open the deployed version of Class Value OS with <code>supabase-config.js</code> filled in (project URL + anon key) to use it — see <code>supabase/schema.sql</code> and the setup guide for how.</div>
+</div>
+<div id="dm-loaderr" style="display:none;padding:60px 28px;max-width:640px">
+  <div style="width:40px;height:40px;border-radius:10px;background:#FDECEC;color:#C4472C;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px">&#9888;</div>
+  <div style="font-size:17px;font-weight:600;color:#131A26">Couldn't reach the database</div>
+  <div id="dm-loaderr-detail" style="margin-top:8px;font-size:13.5px;color:#6B7686;line-height:1.6">—</div>
+  <button id="dm-retry-btn" style="margin-top:14px;height:36px;padding:0 16px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Retry</button>
+</div>
+<div id="dm-app" style="display:none">
+  <div style="background:#fff;border-bottom:1px solid #DCE2EC;padding:18px 28px 0">
+    <div style="display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:22px;font-weight:600;letter-spacing:-.01em">Demand Management</div>
+        <div id="dm-subtitle" style="margin-top:5px;font-size:13px;color:#6B7686">Loading&hellip;</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px">
+        <button id="dm-portfolio-btn" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Portfolio matrix</button>
+        <button id="dm-new-btn" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">New demand</button>
+      </div>
+    </div>
+    <div id="dm-tabs" style="margin-top:15px;display:flex;gap:4px;flex-wrap:wrap"></div>
+  </div>
+  <div style="padding:18px 28px 44px;display:grid;grid-template-columns:1fr 372px;gap:16px;align-items:start;max-width:1520px">
+    <div style="min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div id="dm-filters" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"></div>
+      <div id="dm-portfolio-chart" style="display:none;background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px"></div>
+      <div id="dm-table-wrap" style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;overflow:hidden">
+        <div style="display:grid;grid-template-columns:1.5fr 1fr .55fr .55fr .8fr .8fr .5fr;gap:10px;padding:10px 16px;background:#FAFBFD;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#8B95A6">
+          <div>DEMAND / CLIENT</div><div>SEGMENT</div><div style="text-align:right">ORD/MO</div><div style="text-align:right">VALUE</div><div>SCORE</div><div>STAGE</div><div style="text-align:right">AGE</div>
+        </div>
+        <div id="dm-rows"></div>
+      </div>
+    </div>
+    <div id="dm-detail" style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;overflow:hidden;position:sticky;top:0">
+      <div style="padding:40px 18px;text-align:center;font-size:13px;color:#97A1B2">Select a demand to see its detail.</div>
+    </div>
+  </div>
+</div>
+<div id="dm-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(1,30,72,.55);align-items:center;justify-content:center;z-index:300;padding:20px">
+  <div id="dm-modal-box" style="background:#fff;border-radius:12px;padding:22px;width:420px;max-width:100%;box-shadow:0 12px 40px rgba(0,0,0,.25)"></div>
+</div>
+</div>
 <div class="view" id="view-cpq" style="display:none"><div style="background: rgb(255, 255, 255); border-bottom: 1px solid rgb(220, 226, 236); padding: 18px 28px 0px;">
             <div style="display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
               <div>
@@ -3417,7 +3065,6 @@
 
 <script>
   var VIEW_META = {
-    map: { group: 'Overview', label: 'System map' },
     home: { group: 'Pipeline', label: 'My work' },
     demand: { group: 'Pipeline', label: 'Demand Management' },
     cpq: { group: 'Pipeline', label: 'Value CPQ' },
@@ -3448,6 +3095,7 @@
     }
     var vp = document.getElementById('contentViewport');
     if (vp) vp.scrollTop = 0;
+    if (id === 'demand' && window.DemandModule) window.DemandModule.onShow();
   }
 
   var CPQ_STEPS = ['client_demand','configure','rules_check','pricing_terms','quote_approvals'];
@@ -3483,7 +3131,541 @@
     });
   }
 
-  showView('map');
+  showView('home');
+</script>
+<script>
+(function(){
+  var SEGMENTS = ['Banking / Centralized Banking','Wholesale Lending / TPO','Distributed Retail Lending','Credit Union','Private Lending','Other'];
+  var SOURCES = ['RFP','Referral','Inbound','Outbound','Existing client','Other'];
+  var STAGE_META = {
+    unscored:  {label:'UNSCORED',  bg:'#F4F6FA', fg:'#6B7686'},
+    open:      {label:'OPEN',      bg:'#EAF0F4', fg:'#1F5570'},
+    decision:  {label:'DECISION',  bg:'#FDF3E0', fg:'#8A5A12'},
+    converted: {label:'CONVERTED', bg:'#EAF1FB', fg:'#012E6B'},
+    parked:    {label:'PARKED',    bg:'#F4F6FA', fg:'#6B7686'},
+    rejected:  {label:'REJECTED',  bg:'#FBEAEA', fg:'#A8392B'}
+  };
+  var CRITERIA = [
+    {key:'score_volume_potential', label:'Volume potential'},
+    {key:'score_segment_fit', label:'Segment strategy fit'},
+    {key:'score_integration_effort', label:'Integration effort (inverse)'},
+    {key:'score_margin_potential', label:'Margin potential'},
+    {key:'score_competitive_position', label:'Competitive position'}
+  ];
+  var CURRENT_USER = 'Dana Mercer'; // placeholder display name until Roles & permissions / real auth exists
+
+  var db = null;
+  var state = {
+    clients: [],
+    demands: [],
+    weights: null,
+    activeTab: 'my',
+    filters: { segment:'', source:'', owner:'', minScore:'', created:'' },
+    selectedId: null,
+    showPortfolio: false,
+    initialized: false
+  };
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){
+    s = (s == null ? '' : String(s));
+    return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+  function fmtMoney(v){
+    if (v == null) return '—';
+    var n = Number(v);
+    if (isNaN(n)) return '—';
+    return '$' + (n/1000000).toFixed(1) + 'M';
+  }
+  function fmtAge(iso){
+    if (!iso) return '—';
+    var hrs = (Date.now() - new Date(iso).getTime()) / 3600000;
+    if (hrs < 24) return Math.max(1, Math.round(hrs)) + 'h';
+    return Math.round(hrs/24) + 'd';
+  }
+  function computeScore(d, w){
+    if (!w) return null;
+    var have = CRITERIA.every(function(c){ return d[c.key] != null; });
+    if (!have) return null;
+    var s = d.score_volume_potential * w.w_volume_potential
+      + d.score_segment_fit * w.w_segment_fit
+      + d.score_integration_effort * w.w_integration_effort
+      + d.score_margin_potential * w.w_margin_potential
+      + d.score_competitive_position * w.w_competitive_position;
+    return Math.round(s);
+  }
+  function scoreColor(score){
+    if (score == null) return '#C4CBD8';
+    if (score >= 75) return '#013E90';
+    if (score >= 45) return '#85C341';
+    return '#C4CBD8';
+  }
+
+  function available(){
+    return typeof window.supabase !== 'undefined'
+      && !!window.SUPABASE_CONFIG && !!window.SUPABASE_CONFIG.url && !!window.SUPABASE_CONFIG.anonKey;
+  }
+
+  function showState(which, detail){
+    ['dm-empty','dm-loaderr','dm-app'].forEach(function(id){ var el = $(id); if (el) el.style.display = 'none'; });
+    if (which === 'app'){ $('dm-app').style.display = 'block'; }
+    else if (which === 'error'){ $('dm-loaderr').style.display = 'block'; $('dm-loaderr-detail').textContent = detail || 'Unknown error.'; }
+    else { $('dm-empty').style.display = 'block'; }
+  }
+
+  function decorate(d){
+    var c = state.clients.filter(function(x){ return x.id === d.client_id; })[0];
+    d._clientName = c ? c.name : 'Unknown client';
+    d._segment = c ? c.segment : '';
+    d._code = 'DMD-' + (1100 + Number(d.demand_number));
+    d._score = computeScore(d, state.weights);
+    return d;
+  }
+
+  function loadAll(){
+    return Promise.resolve()
+      .then(function(){ return db.from('demand_scoring_weights').select('*').eq('id', 1).single(); })
+      .then(function(wr){
+        if (wr.error) throw wr.error;
+        state.weights = wr.data;
+        return db.from('clients').select('*').order('name');
+      })
+      .then(function(cr){
+        if (cr.error) throw cr.error;
+        state.clients = cr.data || [];
+        return db.from('demands').select('*').order('created_at', {ascending:false});
+      })
+      .then(function(dr){
+        if (dr.error) throw dr.error;
+        state.demands = (dr.data || []).map(decorate);
+        showState('app');
+        renderAll();
+      })
+      .catch(function(e){
+        showState('error', (e && e.message) ? e.message : String(e));
+      });
+  }
+
+  // ---- tabs ----
+  function tabCounts(){
+    var mine = state.demands.filter(function(d){ return d.owner_name === CURRENT_USER; });
+    var unscored = state.demands.filter(function(d){ return d.stage === 'unscored'; });
+    var decision = state.demands.filter(function(d){ return d.stage === 'decision'; });
+    var open = state.demands.filter(function(d){ return ['unscored','open','decision'].indexOf(d.stage) !== -1; });
+    return { my: mine.length, unscored: unscored.length, decision: decision.length, all: open.length };
+  }
+  function renderTabs(){
+    var c = tabCounts();
+    var tabs = [
+      {id:'my', label:'My demands', count:c.my},
+      {id:'unscored', label:'Unscored', count:c.unscored},
+      {id:'decision', label:'Awaiting decision', count:c.decision},
+      {id:'all', label:'All open', count:c.all}
+    ];
+    $('dm-tabs').innerHTML = tabs.map(function(t){
+      var active = state.activeTab === t.id;
+      return '<div data-tab="'+t.id+'" style="display:flex;align-items:center;gap:7px;padding:10px 14px 11px;border-bottom:2px solid '+(active?'#013E90':'transparent')+';cursor:pointer">'
+        + '<span style="font-size:13.5px;font-weight:'+(active?'600':'500')+';color:'+(active?'#131A26':'#6B7686')+'">'+esc(t.label)+'</span>'
+        + '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;background:#F1F4F9;color:#6B7686;padding:1px 5px;border-radius:4px">'+t.count+'</span>'
+        + '</div>';
+    }).join('');
+    Array.prototype.forEach.call($('dm-tabs').children, function(el){
+      el.addEventListener('click', function(){ state.activeTab = el.getAttribute('data-tab'); renderTabs(); renderTable(); });
+    });
+  }
+
+  // ---- filters ----
+  function distinctVals(getter){
+    var set = {};
+    state.demands.forEach(function(d){ var v = getter(d); if (v) set[v] = true; });
+    return Object.keys(set).sort();
+  }
+  function selectHtml(id, label, opts, val){
+    return '<select id="'+id+'" style="height:32px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;background:#fff;font-size:13px;color:#4E5866;cursor:pointer">'
+      + '<option value=""'+(val===''?' selected':'')+'>'+esc(label)+' — any</option>'
+      + opts.map(function(o){ return '<option value="'+esc(o)+'"'+(val===o?' selected':'')+'>'+esc(o)+'</option>'; }).join('')
+      + '</select>';
+  }
+  function renderFilters(){
+    var segOpts = distinctVals(function(d){ return d._segment; });
+    var srcOpts = distinctVals(function(d){ return d.source; });
+    var ownerOpts = distinctVals(function(d){ return d.owner_name; });
+    $('dm-filters').innerHTML =
+      selectHtml('dm-f-segment','Segment', segOpts, state.filters.segment)
+      + selectHtml('dm-f-source','Source', srcOpts, state.filters.source)
+      + selectHtml('dm-f-owner','Owner', ownerOpts, state.filters.owner)
+      + '<input id="dm-f-minscore" type="number" min="0" max="100" placeholder="Min score" value="'+esc(state.filters.minScore)+'" style="height:32px;width:96px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;font-size:13px;box-sizing:border-box">'
+      + '<select id="dm-f-created" style="height:32px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;background:#fff;font-size:13px;color:#4E5866;cursor:pointer">'
+        + '<option value="">Created — any time</option>'
+        + '<option value="7"'+(state.filters.created==='7'?' selected':'')+'>Last 7 days</option>'
+        + '<option value="30"'+(state.filters.created==='30'?' selected':'')+'>Last 30 days</option>'
+        + '<option value="90"'+(state.filters.created==='90'?' selected':'')+'>This quarter</option>'
+      + '</select>'
+      + '<span id="dm-shown-count" style="margin-left:auto;font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:.12em;color:#8B95A6"></span>';
+    $('dm-f-segment').addEventListener('change', function(e){ state.filters.segment = e.target.value; renderTable(); });
+    $('dm-f-source').addEventListener('change', function(e){ state.filters.source = e.target.value; renderTable(); });
+    $('dm-f-owner').addEventListener('change', function(e){ state.filters.owner = e.target.value; renderTable(); });
+    $('dm-f-minscore').addEventListener('input', function(e){ state.filters.minScore = e.target.value; renderTable(); });
+    $('dm-f-created').addEventListener('change', function(e){ state.filters.created = e.target.value; renderTable(); });
+  }
+
+  function getFilteredList(){
+    var list = state.demands.slice();
+    if (state.activeTab === 'my') list = list.filter(function(d){ return d.owner_name === CURRENT_USER; });
+    else if (state.activeTab === 'unscored') list = list.filter(function(d){ return d.stage === 'unscored'; });
+    else if (state.activeTab === 'decision') list = list.filter(function(d){ return d.stage === 'decision'; });
+    else if (state.activeTab === 'all') list = list.filter(function(d){ return ['unscored','open','decision'].indexOf(d.stage) !== -1; });
+    if (state.filters.segment) list = list.filter(function(d){ return d._segment === state.filters.segment; });
+    if (state.filters.source) list = list.filter(function(d){ return d.source === state.filters.source; });
+    if (state.filters.owner) list = list.filter(function(d){ return d.owner_name === state.filters.owner; });
+    if (state.filters.minScore !== '' && state.filters.minScore != null){
+      var min = Number(state.filters.minScore);
+      list = list.filter(function(d){ return d._score != null && d._score >= min; });
+    }
+    if (state.filters.created){
+      var cutoff = Date.now() - Number(state.filters.created) * 86400000;
+      list = list.filter(function(d){ return new Date(d.created_at).getTime() >= cutoff; });
+    }
+    return list;
+  }
+
+  // ---- table ----
+  function renderTable(){
+    var list = getFilteredList();
+    var countEl = $('dm-shown-count');
+    if (countEl) countEl.textContent = list.length + ' OF ' + state.demands.length + ' SHOWN';
+    var rows = $('dm-rows');
+    if (!list.length){
+      rows.innerHTML = '<div style="padding:36px 16px;text-align:center;font-size:13px;color:#97A1B2">No demands match these filters.</div>';
+    } else {
+      rows.innerHTML = list.map(function(d){
+        var meta = STAGE_META[d.stage] || STAGE_META.unscored;
+        var scoreHtml = d._score != null
+          ? '<div style="flex:1;height:5px;border-radius:99px;background:#EDF0F6;overflow:hidden"><div style="height:100%;width:'+d._score+'%;background:'+scoreColor(d._score)+';border-radius:99px"></div></div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:#4E5866">'+d._score+'</div>'
+          : '<span style="font-size:11.5px;color:#97A1B2;font-style:italic">not scored</span>';
+        var selected = state.selectedId === d.id;
+        return '<div class="dm-row" data-id="'+d.id+'" style="display:grid;grid-template-columns:1.5fr 1fr .55fr .55fr .8fr .8fr .5fr;gap:10px;padding:12px 16px;border-top:1px solid #F1F4F9;align-items:center;font-size:13px;cursor:pointer;background:'+(selected?'#F5F9FF':'#fff')+'">'
+          + '<div style="min-width:0"><div style="font-weight:600;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(d._clientName)+'</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:10.5px;color:#97A1B2;margin-top:2px">'+esc(d._code)+'</div></div>'
+          + '<div style="color:#5A6474">'+esc(d._segment||'—')+'</div>'
+          + '<div style="text-align:right;color:#5A6474">'+(d.est_monthly_volume!=null?d.est_monthly_volume:'—')+'</div>'
+          + '<div style="text-align:right;font-weight:600">'+fmtMoney(d.est_annual_value)+'</div>'
+          + '<div style="display:flex;align-items:center;gap:7px">'+scoreHtml+'</div>'
+          + '<div><span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.08em;padding:3px 6px;border-radius:5px;background:'+meta.bg+';color:'+meta.fg+'">'+meta.label+'</span></div>'
+          + '<div style="text-align:right;font-family:\'IBM Plex Mono\',monospace;font-size:10.5px;color:#97A1B2">'+fmtAge(d.created_at)+'</div>'
+          + '</div>';
+      }).join('');
+      Array.prototype.forEach.call(document.querySelectorAll('.dm-row'), function(el){
+        el.addEventListener('click', function(){ state.selectedId = el.getAttribute('data-id'); renderTable(); renderDetail(); });
+      });
+    }
+    var openList = state.demands.filter(function(d){ return ['unscored','open','decision'].indexOf(d.stage) !== -1; });
+    var totalVal = openList.reduce(function(s,d){ return s + (Number(d.est_annual_value) || 0); }, 0);
+    var sub = $('dm-subtitle');
+    if (sub) sub.textContent = 'Every strategic request, scored on the same criteria. ' + openList.length + ' open · ' + fmtMoney(totalVal) + ' estimated annual value.';
+  }
+
+  // ---- detail panel ----
+  function renderDetail(){
+    var d = state.demands.filter(function(x){ return x.id === state.selectedId; })[0];
+    var panel = $('dm-detail');
+    if (!d){
+      panel.innerHTML = '<div style="padding:40px 18px;text-align:center;font-size:13px;color:#97A1B2">Select a demand to see its detail.</div>';
+      return;
+    }
+    var meta = STAGE_META[d.stage] || STAGE_META.unscored;
+    var scoreRows = CRITERIA.map(function(c){
+      var v = d[c.key];
+      return '<div style="margin-bottom:9px">'
+        + '<div style="display:flex;justify-content:space-between;font-size:12.5px;color:#5A6474;margin-bottom:4px">'
+          + '<span>'+esc(c.label)+'</span>'
+          + '<input type="number" min="0" max="100" data-score="'+c.key+'" value="'+(v==null?'':v)+'" placeholder="—" style="width:52px;text-align:right;font-family:\'IBM Plex Mono\',monospace;border:1px solid #DCE2EC;border-radius:5px;padding:2px 4px;font-size:11.5px">'
+        + '</div>'
+        + '<div style="height:6px;border-radius:99px;background:#EDF0F6;overflow:hidden"><div style="height:100%;width:'+(v||0)+'%;background:#013E90;border-radius:99px"></div></div>'
+        + '</div>';
+    }).join('');
+
+    panel.innerHTML =
+      '<div style="padding:16px 18px;border-bottom:1px solid #F1F4F9">'
+        + '<div style="display:flex;align-items:center;gap:9px">'
+          + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10.5px;color:#97A1B2">'+esc(d._code)+'</div>'
+          + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.1em;padding:2px 7px;border-radius:5px;background:'+meta.bg+';color:'+meta.fg+'">'+meta.label+'</div>'
+        + '</div>'
+        + '<div style="margin-top:7px;font-size:18px;font-weight:600;letter-spacing:-.01em">'+esc(d._clientName)+'</div>'
+        + '<div style="margin-top:4px;font-size:13px;color:#6B7686">'+esc(d._segment||'—')+' · '+(d.est_monthly_volume!=null?d.est_monthly_volume:'—')+' orders / month · '+fmtMoney(d.est_annual_value)+' est. annual</div>'
+        + (d.requirement_summary ? '<div style="margin-top:9px;font-size:12.5px;color:#5A6474;line-height:1.5">'+esc(d.requirement_summary)+'</div>' : '')
+        + (d.decision_reason ? '<div style="margin-top:9px;font-size:12px;color:#8B95A6;line-height:1.5"><b>Decision reason:</b> '+esc(d.decision_reason)+'</div>' : '')
+      + '</div>'
+      + '<div style="padding:16px 18px;border-bottom:1px solid #F1F4F9">'
+        + '<div style="display:flex;align-items:baseline;gap:9px">'
+          + '<div style="font-size:13.5px;font-weight:600">Strategic fit score</div>'
+          + '<div style="margin-left:auto;font-size:26px;font-weight:600;letter-spacing:-.02em">'+(d._score!=null?d._score:'—')+'</div>'
+        + '</div>'
+        + '<div style="margin-top:12px">'+scoreRows+'</div>'
+        + '<div style="margin-top:11px;font-size:12px;color:#8B95A6;line-height:1.45">Weights owned by the portfolio owner. Every input is visible — advisory, never automatic.</div>'
+        + '<button id="dm-save-score-btn" style="margin-top:10px;width:100%;height:34px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Save score</button>'
+      + '</div>'
+      + '<div style="padding:16px 18px;border-bottom:1px solid #F1F4F9">'
+        + '<div style="font-size:13.5px;font-weight:600">Activity</div>'
+        + '<div id="dm-activity-list" style="margin-top:9px;display:flex;flex-direction:column;gap:8px;max-height:180px;overflow-y:auto">Loading…</div>'
+        + '<div style="margin-top:9px;display:flex;gap:6px">'
+          + '<input id="dm-note-input" type="text" placeholder="Add a note…" style="flex:1;height:32px;padding:0 9px;border:1px solid #DCE2EC;border-radius:7px;font-size:12.5px;box-sizing:border-box">'
+          + '<button id="dm-note-btn" style="height:32px;padding:0 12px;border-radius:7px;border:none;background:#013E90;color:#fff;font-size:12.5px;font-weight:600;cursor:pointer">Add</button>'
+        + '</div>'
+      + '</div>'
+      + '<div style="padding:16px 18px;display:flex;flex-direction:column;gap:9px">'
+        + '<button id="dm-cpq-btn" '+(d.stage==='converted'?'disabled':'')+' style="height:40px;border-radius:8px;border:none;background:'+(d.stage==='converted'?'#B9C6DA':'#013E90')+';color:#fff;font-size:14px;font-weight:600;cursor:'+(d.stage==='converted'?'default':'pointer')+'">'+(d.stage==='converted'?'Already converted':'Configure quote in CPQ')+'</button>'
+        + '<div style="display:flex;gap:8px">'
+          + '<button id="dm-park-btn" style="flex:1;height:34px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Park</button>'
+          + '<button id="dm-reject-btn" style="flex:1;height:34px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Reject with reason</button>'
+        + '</div>'
+        + '<div style="font-size:11.5px;color:#97A1B2;line-height:1.45">Demands are never deleted — the decision and its reason stay on the investment record.</div>'
+      + '</div>';
+
+    $('dm-save-score-btn').addEventListener('click', function(){ saveScore(d.id); });
+    $('dm-note-btn').addEventListener('click', function(){ addNote(d.id); });
+    $('dm-cpq-btn').addEventListener('click', function(){
+      if (d.stage !== 'converted'){
+        openInfoModal('Value CPQ isn’t built yet', 'This button will hand the demand’s context (client, segment, volume) straight into the CPQ module once it exists. There’s nothing to configure a quote in yet.');
+      }
+    });
+    $('dm-park-btn').addEventListener('click', function(){ openReasonModal('Park this demand', 'parked', d.id); });
+    $('dm-reject-btn').addEventListener('click', function(){ openReasonModal('Reject this demand', 'rejected', d.id); });
+
+    loadActivity(d.id);
+  }
+
+  function loadActivity(demandId){
+    return Promise.resolve(db.from('demand_activity').select('*').eq('demand_id', demandId).order('created_at', {ascending:false}))
+      .then(function(r){
+        if (r.error) throw r.error;
+        var el = $('dm-activity-list');
+        if (!el) return;
+        var list = r.data || [];
+        if (!list.length){ el.innerHTML = '<div style="font-size:12px;color:#97A1B2;font-style:italic">No activity yet.</div>'; return; }
+        el.innerHTML = list.map(function(a){
+          return '<div style="font-size:12px;color:#5A6474;line-height:1.45"><b>'+esc(a.author_name||'—')+'</b> · <span style="color:#97A1B2">'+new Date(a.created_at).toLocaleString()+'</span><br>'+esc(a.body)+'</div>';
+        }).join('');
+      })
+      .catch(function(){
+        var el = $('dm-activity-list');
+        if (el) el.textContent = 'Couldn’t load activity.';
+      });
+  }
+
+  function addNote(demandId){
+    var input = $('dm-note-input');
+    var body = (input.value || '').trim();
+    if (!body) return;
+    input.disabled = true;
+    return Promise.resolve(db.from('demand_activity').insert({ demand_id: demandId, kind:'note', body: body, author_name: CURRENT_USER }))
+      .then(function(r){
+        if (r.error) throw r.error;
+        input.value = '';
+        return loadActivity(demandId);
+      })
+      .catch(function(e){ openInfoModal('Couldn’t save note', e.message || String(e)); })
+      .then(function(){ input.disabled = false; });
+  }
+
+  function saveScore(demandId){
+    var patch = {};
+    CRITERIA.forEach(function(c){
+      var el = document.querySelector('[data-score="'+c.key+'"]');
+      var v = el ? el.value : '';
+      patch[c.key] = (v === '' ? null : Math.max(0, Math.min(100, Number(v))));
+    });
+    var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
+    var willHaveAll = CRITERIA.every(function(c){ return patch[c.key] != null; });
+    if (willHaveAll && d.stage === 'unscored') patch.stage = 'open';
+    return Promise.resolve(db.from('demands').update(patch).eq('id', demandId).select().single())
+      .then(function(r){
+        if (r.error) throw r.error;
+        Object.assign(d, r.data);
+        d._score = computeScore(d, state.weights);
+        renderTabs(); renderTable(); renderDetail();
+      })
+      .catch(function(e){ openInfoModal('Couldn’t save score', e.message || String(e)); });
+  }
+
+  function changeStage(demandId, newStage, reason){
+    return Promise.resolve(db.from('demands').update({ stage:newStage, decision_reason:reason }).eq('id', demandId).select().single())
+      .then(function(r){
+        if (r.error) throw r.error;
+        var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
+        Object.assign(d, r.data);
+        return db.from('demand_activity').insert({ demand_id: demandId, kind:'stage_change', body: 'Moved to ' + newStage + ': ' + reason, author_name: CURRENT_USER });
+      })
+      .then(function(){ renderTabs(); renderTable(); renderDetail(); })
+      .catch(function(e){ openInfoModal('Couldn’t update the demand', e.message || String(e)); });
+  }
+
+  // ---- modals ----
+  function openInfoModal(title, body){
+    $('dm-modal-box').innerHTML =
+      '<div style="font-size:15px;font-weight:600;color:#131A26;margin-bottom:8px">'+esc(title)+'</div>'
+      + '<div style="font-size:13.5px;color:#5A6474;line-height:1.55;margin-bottom:16px">'+esc(body)+'</div>'
+      + '<div style="display:flex;justify-content:flex-end"><button id="dm-modal-ok" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">OK</button></div>';
+    $('dm-modal-overlay').style.display = 'flex';
+    $('dm-modal-ok').addEventListener('click', closeModal);
+  }
+
+  function openReasonModal(title, targetStage, demandId){
+    $('dm-modal-box').innerHTML =
+      '<div style="font-size:15px;font-weight:600;color:#131A26;margin-bottom:8px">'+esc(title)+'</div>'
+      + '<div style="font-size:12.5px;color:#8B95A6;margin-bottom:10px">The reason is kept on the record — demands are never deleted.</div>'
+      + '<textarea id="dm-modal-reason" rows="3" placeholder="Reason…" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;font-family:inherit;margin-bottom:14px;box-sizing:border-box"></textarea>'
+      + '<div style="display:flex;justify-content:flex-end;gap:8px">'
+        + '<button id="dm-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+        + '<button id="dm-modal-confirm" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Confirm</button>'
+      + '</div>';
+    $('dm-modal-overlay').style.display = 'flex';
+    $('dm-modal-cancel').addEventListener('click', closeModal);
+    $('dm-modal-confirm').addEventListener('click', function(){
+      var ta = $('dm-modal-reason');
+      var reason = (ta.value || '').trim();
+      if (!reason){ ta.style.borderColor = '#C4472C'; return; }
+      changeStage(demandId, targetStage, reason);
+      closeModal();
+    });
+  }
+
+  function closeModal(){ $('dm-modal-overlay').style.display = 'none'; $('dm-modal-box').innerHTML = ''; }
+
+  // ---- new demand ----
+  function field(id, label, type, val){
+    return '<label style="display:block;font-size:11.5px;font-weight:600;color:#5A6474;margin-bottom:4px">'+esc(label)+'</label>'
+      + '<input id="'+id+'" type="'+type+'" value="'+esc(val)+'" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;margin-bottom:12px;box-sizing:border-box">';
+  }
+  function selectField(id, label, opts){
+    return '<label style="display:block;font-size:11.5px;font-weight:600;color:#5A6474;margin-bottom:4px">'+esc(label)+'</label>'
+      + '<select id="'+id+'" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;margin-bottom:12px;background:#fff;box-sizing:border-box">'
+      + opts.map(function(o){ return '<option value="'+esc(o)+'">'+esc(o)+'</option>'; }).join('')
+      + '</select>';
+  }
+
+  function openNewDemandModal(){
+    $('dm-modal-box').innerHTML =
+      '<div style="font-size:15px;font-weight:600;color:#131A26;margin-bottom:12px">New demand</div>'
+      + field('dm-nd-client','Client name', 'text', '')
+      + selectField('dm-nd-segment','Segment', SEGMENTS)
+      + selectField('dm-nd-source','Source', SOURCES)
+      + field('dm-nd-owner','Owner', 'text', CURRENT_USER)
+      + field('dm-nd-volume','Est. monthly volume', 'number', '')
+      + field('dm-nd-value','Est. annual value ($)', 'number', '')
+      + '<label style="display:block;font-size:11.5px;font-weight:600;color:#5A6474;margin-bottom:4px">Requirement summary</label>'
+      + '<textarea id="dm-nd-summary" rows="3" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;font-family:inherit;margin-bottom:14px;box-sizing:border-box"></textarea>'
+      + '<div id="dm-nd-error" style="display:none;color:#C4472C;font-size:12.5px;margin-bottom:10px"></div>'
+      + '<div style="display:flex;justify-content:flex-end;gap:8px">'
+        + '<button id="dm-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+        + '<button id="dm-nd-submit" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Create demand</button>'
+      + '</div>';
+    $('dm-modal-overlay').style.display = 'flex';
+    $('dm-modal-cancel').addEventListener('click', closeModal);
+    $('dm-nd-submit').addEventListener('click', submitNewDemand);
+  }
+
+  function submitNewDemand(){
+    var name = ($('dm-nd-client').value || '').trim();
+    var errEl = $('dm-nd-error');
+    if (!name){ errEl.textContent = 'Client name is required.'; errEl.style.display = 'block'; return; }
+    var segment = $('dm-nd-segment').value;
+    var source = $('dm-nd-source').value;
+    var owner = ($('dm-nd-owner').value || '').trim();
+    var volume = $('dm-nd-volume').value === '' ? null : Number($('dm-nd-volume').value);
+    var value = $('dm-nd-value').value === '' ? null : Number($('dm-nd-value').value);
+    var summary = ($('dm-nd-summary').value || '').trim();
+    var submitBtn = $('dm-nd-submit');
+    submitBtn.disabled = true;
+
+    var existing = state.clients.filter(function(c){ return c.name.toLowerCase() === name.toLowerCase(); })[0];
+    var clientPromise = existing
+      ? Promise.resolve({ error:null, data: existing })
+      : Promise.resolve(db.from('clients').insert({ name: name, segment: segment }).select().single());
+
+    clientPromise
+      .then(function(cr){
+        if (cr.error) throw cr.error;
+        if (!existing) state.clients.push(cr.data);
+        var clientId = cr.data.id;
+        return Promise.resolve(db.from('demands').insert({
+          client_id: clientId, source: source, owner_name: owner || null,
+          est_monthly_volume: volume, est_annual_value: value,
+          requirement_summary: summary || null, stage: 'unscored'
+        }).select().single());
+      })
+      .then(function(dr){
+        if (dr.error) throw dr.error;
+        var d = decorate(dr.data);
+        state.demands.unshift(d);
+        closeModal();
+        state.selectedId = d.id;
+        renderTabs(); renderFilters(); renderTable(); renderDetail();
+      })
+      .catch(function(e){ errEl.textContent = e.message || String(e); errEl.style.display = 'block'; })
+      .then(function(){ if (submitBtn) submitBtn.disabled = false; });
+  }
+
+  // ---- portfolio matrix ----
+  function renderPortfolio(){
+    var box = $('dm-portfolio-chart');
+    if (!state.showPortfolio){ box.style.display = 'none'; return; }
+    box.style.display = 'block';
+    var pts = state.demands.filter(function(d){ return d.est_annual_value != null; });
+    if (!pts.length){ box.innerHTML = '<div style="font-size:13px;color:#97A1B2">No demands with an estimated value yet.</div>'; return; }
+    var maxVal = Math.max.apply(null, pts.map(function(d){ return Number(d.est_annual_value) || 0; }));
+    var maxVol = Math.max.apply(null, pts.map(function(d){ return Number(d.est_monthly_volume) || 1; }));
+    var W = 760, H = 260, PAD = 40;
+    var dots = pts.map(function(d){
+      var effort = d.score_integration_effort != null ? (100 - d.score_integration_effort) : 50;
+      var x = PAD + (effort/100) * (W - PAD*2);
+      var y = H - PAD - ((Number(d.est_annual_value) || 0) / maxVal) * (H - PAD*2);
+      var r = 5 + 14 * ((Number(d.est_monthly_volume) || 0) / maxVol);
+      var color = (STAGE_META[d.stage] || STAGE_META.unscored).fg;
+      return '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r.toFixed(1)+'" fill="'+color+'" fill-opacity="0.55" stroke="'+color+'" stroke-width="1.2"><title>'+esc(d._clientName)+' — '+fmtMoney(d.est_annual_value)+'</title></circle>';
+    }).join('');
+    box.innerHTML =
+      '<div style="font-size:15.5px;font-weight:600;margin-bottom:4px">Portfolio matrix</div>'
+      + '<div style="font-size:12px;color:#8B95A6;margin-bottom:10px">Estimated value vs. integration effort. Bubble size is monthly volume — same data as the list, different lens.</div>'
+      + '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:260px">'
+        + '<line x1="'+PAD+'" y1="'+(H-PAD)+'" x2="'+(W-PAD)+'" y2="'+(H-PAD)+'" stroke="#DCE2EC"/>'
+        + '<line x1="'+PAD+'" y1="'+PAD+'" x2="'+PAD+'" y2="'+(H-PAD)+'" stroke="#DCE2EC"/>'
+        + '<text x="'+(W/2)+'" y="'+(H-8)+'" text-anchor="middle" font-size="10.5" fill="#8B95A6">Integration effort →</text>'
+        + '<text x="14" y="'+(H/2)+'" text-anchor="middle" font-size="10.5" fill="#8B95A6" transform="rotate(-90 14 '+(H/2)+')">Estimated value →</text>'
+        + dots
+      + '</svg>';
+  }
+
+  function renderAll(){ renderTabs(); renderFilters(); renderTable(); renderDetail(); renderPortfolio(); }
+
+  function bindStaticHandlers(){
+    $('dm-new-btn').addEventListener('click', openNewDemandModal);
+    $('dm-portfolio-btn').addEventListener('click', function(){ state.showPortfolio = !state.showPortfolio; renderPortfolio(); });
+    $('dm-retry-btn').addEventListener('click', function(){ connectAndLoad(); });
+    $('dm-modal-overlay').addEventListener('click', function(e){ if (e.target.id === 'dm-modal-overlay') closeModal(); });
+  }
+
+  function connectAndLoad(){
+    if (!available()){ showState('empty'); return; }
+    if (!db){
+      try { db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
+      catch(e){ showState('error', e.message || String(e)); return; }
+    }
+    showState('app');
+    var sub = $('dm-subtitle');
+    if (sub) sub.textContent = 'Loading…';
+    loadAll();
+  }
+
+  window.DemandModule = {
+    onShow: function(){
+      if (!state.initialized){ state.initialized = true; bindStaticHandlers(); }
+      connectAndLoad();
+    },
+    // exposed for tests only
+    _state: state
+  };
+})();
+
 </script>
 </body>
 </html>
