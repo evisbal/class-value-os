@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delivery — Class Value OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app-shell">
+<div style="background:#01285E;display:flex;flex-direction:column;overflow:hidden">
+    <div style="padding:18px 18px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.08)">
+      <div style="width:26px;height:26px;border-radius:6px;background:#85C341;flex:0 0 auto"></div>
+      <div>
+        <div style="color:#fff;font-size:13.5px;font-weight:700;letter-spacing:.1em;line-height:1.1">VALUE OS</div>
+        <div style="color:#7E97BD;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;margin-top:2px">CLASS VALUATION</div>
+      </div>
+    </div>
+    <div style="flex:1 1 0;overflow-y:auto;padding:12px 10px 18px">
+      <div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">PIPELINE</div>
+          <a href="index.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-home">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">My work</span>
+              
+            </div>
+          </a>
+<a href="demand.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-demand">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Demand Management</span>
+              
+            </div>
+          </a>
+<a href="cpq.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-cpq">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Value CPQ</span>
+              
+            </div>
+          </a>
+        </div>
+<div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">DELIVERY</div>
+          <a href="plan.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-plan">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Plan Builder</span>
+              
+            </div>
+          </a>
+<a href="studio.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-studio">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Integration Studio</span>
+              
+            </div>
+          </a>
+<a href="delivery.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:rgba(133,195,65,.14);color:#FFFFFF" class="nav-item" id="nav-delivery">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#85C341" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:600;letter-spacing:-.005em" class="nav-label">Delivery</span>
+              <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9.5px;background:rgba(133,195,65,.16);color:#A8DB6E;padding:2px 6px;border-radius:5px">2</span>
+            </div>
+          </a>
+<a href="reporting.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-reporting">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Status Reporting</span>
+              
+            </div>
+          </a>
+        </div>
+<div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">CLIENT</div>
+          <a href="engagement.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-engagement">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Engagement Mgmt</span>
+              
+            </div>
+          </a>
+        </div>
+<div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">PLATFORM</div>
+          <a href="roles.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-roles">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Roles &amp; permissions</span>
+              
+            </div>
+          </a>
+<a href="states.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-states">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">System states</span>
+              
+            </div>
+          </a>
+        </div>
+    </div>
+    <div style="padding:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px">
+      <div style="width:30px;height:30px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">DM</div>
+      <div style="min-width:0">
+        <div style="color:#E8EEF8;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Dana Mercer</div>
+        <div style="color:#7E97BD;font-size:11px">Solutions Engineer</div>
+      </div>
+      <div title="Sign out" style="margin-left:auto;color:#7E97BD;font-size:15px;cursor:pointer;padding:0 2px">&#9211;</div>
+    </div>
+  </div>
+  <div class="right-col">
+<div style="height:56px;flex:0 0 auto;background:#fff;border-bottom:1px solid #DCE2EC;display:flex;align-items:center;gap:14px;padding:0 20px">
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#6B7686">
+        <span id="crumbGroup">Delivery</span><span style="color:#C4CBD8">/</span>
+        <span style="color:#131A26;font-weight:600" id="crumbScreen">Delivery</span>
+      </div>
+      <div style="margin-left:18px;flex:1 1 0;max-width:420px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;gap:9px;padding:0 11px;color:#97A1B2;font-size:13.5px;cursor:pointer;background:#FAFBFD">
+        <span style="font-size:13px">&#8981;</span><span>Search clients, demands, quotes&hellip;</span>
+        <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;border:1px solid #DCE2EC;border-radius:4px;padding:1px 5px;background:#fff">&#8984;K</span>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <div style="position:relative;width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">
+          &#9684;<span style="position:absolute;top:-5px;right:-5px;min-width:16px;height:16px;border-radius:99px;background:#C4472C;color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;padding:0 4px">3</span>
+        </div>
+        <div style="width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">&#9776;</div>
+      </div>
+    </div>
+<div id="previewBanner" style="position:sticky;top:0;z-index:50;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:11.5px;padding:7px 20px;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em">STATIC DESIGN PREVIEW — this module is a non-functional mockup with sample data.</div>
+    <div class="content-viewport" id="contentViewport">
+<div style="padding: 22px 28px 44px; max-width: 1460px;">
+          <div style="display: flex; align-items: flex-start; gap: 18px; flex-wrap: wrap;">
+            <div>
+              <div style="font-size: 22px; font-weight: 600; letter-spacing: -0.01em;">Delivery</div>
+              <div style="margin-top: 5px; font-size: 13px; color: rgb(107, 118, 134);">Read-mostly cockpit over live JIRA work. 20 implementations · 2 blocked · 3 go-lives this month.</div>
+            </div>
+            <div style="margin-left: auto; display: flex; gap: 8px;">
+              <button style="height: 36px; padding: 0px 14px; border-radius: 8px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 13.5px; font-weight: 600; cursor: pointer;">Sort by risk</button>
+              <button style="height: 36px; padding: 0px 14px; border-radius: 8px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 13.5px; font-weight: 600; cursor: pointer;">Open in JIRA</button>
+            </div>
+          </div>
+
+          <div style="margin-top: 16px; background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; overflow: hidden;">
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.3fr .5fr .5fr .6fr .7fr; gap: 12px; padding: 10px 18px; background: rgb(250, 251, 253); font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">
+              <div>CLIENT</div><div>PHASE</div><div>PROGRESS VS BASELINE</div><div style="text-align: right;">DAYS</div><div style="text-align: right;">BLOCK</div><div>PM</div><div style="text-align: right;">STATE</div>
+            </div>
+            
+              <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.3fr .5fr .5fr .6fr .7fr; gap: 12px; padding: 13px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(245, 249, 255);" class="scp5">
+                <div style="font-weight: 600; font-size: 13.5px;"><span class="sc-interp">Harbor Point Lending</span></div>
+                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Training &amp; pilot</span></div>
+                <div style="display: flex; align-items: center; gap: 9px;">
+                  <div style="flex: 1 1 0%; height: 7px; border-radius: 99px; background: rgb(237, 240, 246); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0px; bottom: 0px; left: 0px; width: 68%; background: rgb(197, 138, 28); border-radius: 99px;"></div>
+                    <div style="position: absolute; top: -2px; bottom: -2px; left: 74%; width: 2px; background: rgb(1, 40, 94);"></div>
+                  </div>
+                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102); width: 30px; text-align: right;"><span class="sc-interp">68%</span></div>
+                </div>
+                <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">27</span></div>
+                <div style="text-align: right; font-weight: 600; color: rgb(168, 57, 43);"><span class="sc-interp">2</span></div>
+                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">J. Okafor</span></div>
+                <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(253, 243, 224); color: rgb(138, 90, 18);"><span class="sc-interp">AT RISK</span></span></div>
+              </div>
+            
+              <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.3fr .5fr .5fr .6fr .7fr; gap: 12px; padding: 13px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(255, 255, 255);" class="scp5">
+                <div style="font-weight: 600; font-size: 13.5px;"><span class="sc-interp">Summit Ridge Bank</span></div>
+                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">LOS integration</span></div>
+                <div style="display: flex; align-items: center; gap: 9px;">
+                  <div style="flex: 1 1 0%; height: 7px; border-radius: 99px; background: rgb(237, 240, 246); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0px; bottom: 0px; left: 0px; width: 22%; background: rgb(1, 62, 144); border-radius: 99px;"></div>
+                    <div style="position: absolute; top: -2px; bottom: -2px; left: 20%; width: 2px; background: rgb(1, 40, 94);"></div>
+                  </div>
+                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102); width: 30px; text-align: right;"><span class="sc-interp">22%</span></div>
+                </div>
+                <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">75</span></div>
+                <div style="text-align: right; font-weight: 600; color: rgb(151, 161, 178);"><span class="sc-interp">0</span></div>
+                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">J. Okafor</span></div>
+                <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(234, 241, 251); color: rgb(1, 46, 107);"><span class="sc-interp">ON TRACK</span></span></div>
+              </div>
+            
+              <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.3fr .5fr .5fr .6fr .7fr; gap: 12px; padding: 13px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(255, 255, 255);" class="scp5">
+                <div style="font-weight: 600; font-size: 13.5px;"><span class="sc-interp">Meridian Trust</span></div>
+                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Product configuration</span></div>
+                <div style="display: flex; align-items: center; gap: 9px;">
+                  <div style="flex: 1 1 0%; height: 7px; border-radius: 99px; background: rgb(237, 240, 246); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0px; bottom: 0px; left: 0px; width: 41%; background: rgb(197, 138, 28); border-radius: 99px;"></div>
+                    <div style="position: absolute; top: -2px; bottom: -2px; left: 55%; width: 2px; background: rgb(1, 40, 94);"></div>
+                  </div>
+                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102); width: 30px; text-align: right;"><span class="sc-interp">41%</span></div>
+                </div>
+                <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">19</span></div>
+                <div style="text-align: right; font-weight: 600; color: rgb(168, 57, 43);"><span class="sc-interp">3</span></div>
+                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">L. Ruiz</span></div>
+                <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(253, 244, 242); color: rgb(168, 57, 43);"><span class="sc-interp">BLOCKED</span></span></div>
+              </div>
+            
+              <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.3fr .5fr .5fr .6fr .7fr; gap: 12px; padding: 13px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(255, 255, 255);" class="scp5">
+                <div style="font-weight: 600; font-size: 13.5px;"><span class="sc-interp">Riverbend CU</span></div>
+                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Go-live &amp; hypercare</span></div>
+                <div style="display: flex; align-items: center; gap: 9px;">
+                  <div style="flex: 1 1 0%; height: 7px; border-radius: 99px; background: rgb(237, 240, 246); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0px; bottom: 0px; left: 0px; width: 94%; background: rgb(1, 62, 144); border-radius: 99px;"></div>
+                    <div style="position: absolute; top: -2px; bottom: -2px; left: 92%; width: 2px; background: rgb(1, 40, 94);"></div>
+                  </div>
+                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102); width: 30px; text-align: right;"><span class="sc-interp">94%</span></div>
+                </div>
+                <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">4</span></div>
+                <div style="text-align: right; font-weight: 600; color: rgb(151, 161, 178);"><span class="sc-interp">0</span></div>
+                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">D. Vance</span></div>
+                <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(234, 241, 251); color: rgb(1, 46, 107);"><span class="sc-interp">ON TRACK</span></span></div>
+              </div>
+            
+              <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.3fr .5fr .5fr .6fr .7fr; gap: 12px; padding: 13px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(255, 255, 255);" class="scp5">
+                <div style="font-weight: 600; font-size: 13.5px;"><span class="sc-interp">Latitude Home Loans</span></div>
+                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Discovery</span></div>
+                <div style="display: flex; align-items: center; gap: 9px;">
+                  <div style="flex: 1 1 0%; height: 7px; border-radius: 99px; background: rgb(237, 240, 246); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0px; bottom: 0px; left: 0px; width: 8%; background: rgb(1, 62, 144); border-radius: 99px;"></div>
+                    <div style="position: absolute; top: -2px; bottom: -2px; left: 8%; width: 2px; background: rgb(1, 40, 94);"></div>
+                  </div>
+                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102); width: 30px; text-align: right;"><span class="sc-interp">8%</span></div>
+                </div>
+                <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">96</span></div>
+                <div style="text-align: right; font-weight: 600; color: rgb(168, 57, 43);"><span class="sc-interp">1</span></div>
+                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">L. Ruiz</span></div>
+                <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(234, 241, 251); color: rgb(1, 46, 107);"><span class="sc-interp">ON TRACK</span></span></div>
+              </div>
+            
+          </div>
+
+          <div style="margin-top: 14px; display: grid; grid-template-columns: 1.45fr 1fr; gap: 14px; align-items: start;">
+            <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 16px 18px;">
+              <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <div style="font-size: 15.5px; font-weight: 600;"><span class="sc-interp">Harbor Point Lending</span></div>
+                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 5px; background: rgb(253, 243, 224); color: rgb(138, 90, 18);"><span class="sc-interp">AT RISK</span></div>
+                <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(151, 161, 178);"><span class="sc-interp">SYNCED 2 MIN AGO</span></div>
+              </div>
+              <div style="margin-top: 14px; display: flex; align-items: flex-end; gap: 8px; height: 150px; padding: 0px 2px; border-bottom: 1px solid rgb(237, 240, 246);">
+                
+                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
+                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
+                      <div style="width: 42%; height: 12%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
+                      <div style="width: 42%; height: 10%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
+                    </div>
+                  </div>
+                
+                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
+                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
+                      <div style="width: 42%; height: 24%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
+                      <div style="width: 42%; height: 22%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
+                    </div>
+                  </div>
+                
+                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
+                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
+                      <div style="width: 42%; height: 33%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
+                      <div style="width: 42%; height: 36%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
+                    </div>
+                  </div>
+                
+                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
+                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
+                      <div style="width: 42%; height: 44%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
+                      <div style="width: 42%; height: 50%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
+                    </div>
+                  </div>
+                
+                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
+                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
+                      <div style="width: 42%; height: 52%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
+                      <div style="width: 42%; height: 62%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
+                    </div>
+                  </div>
+                
+                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
+                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
+                      <div style="width: 42%; height: 61%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
+                      <div style="width: 42%; height: 72%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
+                    </div>
+                  </div>
+                
+                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
+                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
+                      <div style="width: 42%; height: 68%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
+                      <div style="width: 42%; height: 84%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
+                    </div>
+                  </div>
+                
+                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
+                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
+                      <div style="width: 42%; height: 0%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
+                      <div style="width: 42%; height: 96%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
+                    </div>
+                  </div>
+                
+              </div>
+              <div style="display: flex; gap: 8px; margin-top: 6px;">
+                
+                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W1</span></div>
+                
+                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W2</span></div>
+                
+                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W3</span></div>
+                
+                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W4</span></div>
+                
+                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W5</span></div>
+                
+                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W6</span></div>
+                
+                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W7</span></div>
+                
+                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W8</span></div>
+                
+              </div>
+              <div style="margin-top: 10px; display: flex; gap: 16px; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; color: rgb(139, 149, 166);">
+                <div style="display: flex; align-items: center; gap: 5px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: rgb(1, 62, 144);"></span>ACTUAL</div>
+                <div style="display: flex; align-items: center; gap: 5px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: rgb(216, 229, 245);"></span>BASELINE PLAN</div>
+                <div style="margin-left: auto; color: rgb(168, 57, 43);">TRACKING 16 POINTS BEHIND</div>
+              </div>
+              <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 1px; background: rgb(237, 240, 246); border-radius: 9px; overflow: hidden;">
+                
+                  <div style="display: grid; grid-template-columns: 1.7fr .9fr .6fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; align-items: center;">
+                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(31, 85, 112);"><span class="sc-interp">SRB-12 Encompass integration</span></div>
+                    <div style="display: flex; align-items: center; gap: 9px;">
+                      <div style="flex: 1 1 0%; height: 6px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 78%; background: rgb(133, 195, 65); border-radius: 99px;"></div></div>
+                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(107, 118, 134);"><span class="sc-interp">14/18</span></div>
+                    </div>
+                    <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(234, 240, 244); color: rgb(31, 85, 112);"><span class="sc-interp">IN PROGRESS</span></span></div>
+                  </div>
+                
+                  <div style="display: grid; grid-template-columns: 1.7fr .9fr .6fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; align-items: center;">
+                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(31, 85, 112);"><span class="sc-interp">SRB-19 Product configuration</span></div>
+                    <div style="display: flex; align-items: center; gap: 9px;">
+                      <div style="flex: 1 1 0%; height: 6px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 100%; background: rgb(133, 195, 65); border-radius: 99px;"></div></div>
+                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(107, 118, 134);"><span class="sc-interp">9/9</span></div>
+                    </div>
+                    <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(234, 241, 251); color: rgb(1, 46, 107);"><span class="sc-interp">DONE</span></span></div>
+                  </div>
+                
+                  <div style="display: grid; grid-template-columns: 1.7fr .9fr .6fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; align-items: center;">
+                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(31, 85, 112);"><span class="sc-interp">SRB-24 Panel onboarding</span></div>
+                    <div style="display: flex; align-items: center; gap: 9px;">
+                      <div style="flex: 1 1 0%; height: 6px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 36%; background: rgb(133, 195, 65); border-radius: 99px;"></div></div>
+                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(107, 118, 134);"><span class="sc-interp">4/11</span></div>
+                    </div>
+                    <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(234, 240, 244); color: rgb(31, 85, 112);"><span class="sc-interp">IN PROGRESS</span></span></div>
+                  </div>
+                
+                  <div style="display: grid; grid-template-columns: 1.7fr .9fr .6fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; align-items: center;">
+                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(31, 85, 112);"><span class="sc-interp">SRB-31 Training &amp; pilot</span></div>
+                    <div style="display: flex; align-items: center; gap: 9px;">
+                      <div style="flex: 1 1 0%; height: 6px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 14%; background: rgb(133, 195, 65); border-radius: 99px;"></div></div>
+                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(107, 118, 134);"><span class="sc-interp">1/7</span></div>
+                    </div>
+                    <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(253, 244, 242); color: rgb(168, 57, 43);"><span class="sc-interp">BLOCKED</span></span></div>
+                  </div>
+                
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 15px 17px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <div style="font-size: 15.5px; font-weight: 600;">Blockers</div>
+                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">CLASS VS CLIENT SIDE</div>
+                </div>
+                <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px;">
+                  
+                    <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 11px 13px;">
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.1em; color: rgb(107, 118, 134); border: 1px solid rgb(227, 232, 240); border-radius: 4px; padding: 2px 5px;"><span class="sc-interp">CLIENT-SIDE</span></div>
+                        <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 6px; border-radius: 5px; background: rgb(253, 244, 242); color: rgb(168, 57, 43);"><span class="sc-interp">ESCALATED</span></div>
+                      </div>
+                      <div style="margin-top: 7px; font-size: 13px; font-weight: 600; line-height: 1.35;"><span class="sc-interp">Client has not returned UAT credentials</span></div>
+                      <div style="margin-top: 4px; font-size: 12px; color: rgb(139, 149, 166);"><span class="sc-interp">Client IT</span> · open <span class="sc-interp">9d</span></div>
+                    </div>
+                  
+                    <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 11px 13px;">
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.1em; color: rgb(107, 118, 134); border: 1px solid rgb(227, 232, 240); border-radius: 4px; padding: 2px 5px;"><span class="sc-interp">CLASS-SIDE</span></div>
+                        <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 6px; border-radius: 5px; background: rgb(253, 243, 224); color: rgb(138, 90, 18);"><span class="sc-interp">OPEN</span></div>
+                      </div>
+                      <div style="margin-top: 7px; font-size: 13px; font-weight: 600; line-height: 1.35;"><span class="sc-interp">Panel capacity short in Wayne County</span></div>
+                      <div style="margin-top: 4px; font-size: 12px; color: rgb(139, 149, 166);"><span class="sc-interp">Operations</span> · open <span class="sc-interp">4d</span></div>
+                    </div>
+                  
+                    <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 11px 13px;">
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.1em; color: rgb(107, 118, 134); border: 1px solid rgb(227, 232, 240); border-radius: 4px; padding: 2px 5px;"><span class="sc-interp">CLIENT-SIDE</span></div>
+                        <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 6px; border-radius: 5px; background: rgb(253, 243, 224); color: rgb(138, 90, 18);"><span class="sc-interp">OPEN</span></div>
+                      </div>
+                      <div style="margin-top: 7px; font-size: 13px; font-weight: 600; line-height: 1.35;"><span class="sc-interp">Fee routing AC awaiting compliance sign-off</span></div>
+                      <div style="margin-top: 4px; font-size: 12px; color: rgb(139, 149, 166);"><span class="sc-interp">Client compliance</span> · open <span class="sc-interp">3d</span></div>
+                    </div>
+                  
+                    <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 11px 13px;">
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.1em; color: rgb(107, 118, 134); border: 1px solid rgb(227, 232, 240); border-radius: 4px; padding: 2px 5px;"><span class="sc-interp">CLASS-SIDE</span></div>
+                        <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 6px; border-radius: 5px; background: rgb(234, 240, 244); color: rgb(31, 85, 112);"><span class="sc-interp">NEW</span></div>
+                      </div>
+                      <div style="margin-top: 7px; font-size: 13px; font-weight: 600; line-height: 1.35;"><span class="sc-interp">Imaging endpoint returns 502 on batch delivery</span></div>
+                      <div style="margin-top: 4px; font-size: 12px; color: rgb(139, 149, 166);"><span class="sc-interp">Engineering</span> · open <span class="sc-interp">1d</span></div>
+                    </div>
+                  
+                </div>
+              </div>
+              <div style="background: rgb(253, 244, 242); border: 1px solid rgb(239, 207, 199); border-radius: 12px; padding: 15px 17px;">
+                <div style="display: flex; align-items: center; gap: 9px;">
+                  <div style="width: 18px; height: 18px; border-radius: 99px; background: rgb(196, 71, 44); color: rgb(255, 255, 255); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;">!</div>
+                  <div style="font-size: 14.5px; font-weight: 600; color: rgb(138, 46, 31);">JIRA sync failed — Meridian Trust</div>
+                </div>
+                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.5; color: rgb(122, 53, 39);">Custom field “Effort (weeks)” missing on project MTB. 3 stories rejected. Last successful sync 09:14 — every % on this row is stale until resolved.</div>
+                <div style="margin-top: 11px; display: flex; gap: 8px; align-items: center;">
+                  <button style="height: 31px; padding: 0px 12px; border-radius: 7px; border: medium; background: rgb(168, 57, 43); color: rgb(255, 255, 255); font-size: 12.5px; font-weight: 600; cursor: pointer;">Retry sync</button>
+                  <button style="height: 31px; padding: 0px 12px; border-radius: 7px; border: 1px solid rgb(227, 190, 181); background: rgb(255, 255, 255); font-size: 12.5px; font-weight: 600; cursor: pointer;">View payload</button>
+                  <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(168, 57, 43);">TRACE 8F2C-41</div>
+                </div>
+              </div>
+              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 15px 17px;">
+                <div style="font-size: 15.5px; font-weight: 600;">Go-live checklist</div>
+                <div style="margin-top: 11px; display: flex; flex-direction: column; gap: 9px;">
+                  
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                      <div style="width: 16px; height: 16px; border-radius: 5px; flex: 0 0 auto; margin-top: 1px; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 10px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
+                      <div style="font-size: 12.5px; color: rgb(62, 74, 92); line-height: 1.4;"><span class="sc-interp">All epics closed or descoped with approval</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                      <div style="width: 16px; height: 16px; border-radius: 5px; flex: 0 0 auto; margin-top: 1px; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 10px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
+                      <div style="font-size: 12.5px; color: rgb(62, 74, 92); line-height: 1.4;"><span class="sc-interp">25 pilot orders completed end-to-end</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                      <div style="width: 16px; height: 16px; border-radius: 5px; flex: 0 0 auto; margin-top: 1px; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 10px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
+                      <div style="font-size: 12.5px; color: rgb(151, 161, 178); line-height: 1.4;"><span class="sc-interp">Client training attested by loan officers</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                      <div style="width: 16px; height: 16px; border-radius: 5px; flex: 0 0 auto; margin-top: 1px; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 10px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
+                      <div style="font-size: 12.5px; color: rgb(62, 74, 92); line-height: 1.4;"><span class="sc-interp">Panel capacity confirmed in all counties</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                      <div style="width: 16px; height: 16px; border-radius: 5px; flex: 0 0 auto; margin-top: 1px; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 10px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
+                      <div style="font-size: 12.5px; color: rgb(151, 161, 178); line-height: 1.4;"><span class="sc-interp">Invoicing and billing configuration verified</span></div>
+                    </div>
+                  
+                </div>
+                <button style="margin-top: 13px; width: 100%; height: 38px; border-radius: 8px; border: 1px solid rgb(220, 226, 236); background: rgb(244, 246, 250); color: rgb(151, 161, 178); font-size: 13.5px; font-weight: 600; cursor: not-allowed;">Mark complete → Engagement</button>
+                <div style="margin-top: 7px; font-size: 11.5px; color: rgb(151, 161, 178); line-height: 1.45;">Disabled until the checklist clears. This is the only trigger that changes a client’s lifecycle state.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

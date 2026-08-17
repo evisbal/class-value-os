@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demand Management — Class Value OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+</head>
+<body>
+<div class="app-shell">
+<div style="background:#01285E;display:flex;flex-direction:column;overflow:hidden">
+    <div style="padding:18px 18px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.08)">
+      <div style="width:26px;height:26px;border-radius:6px;background:#85C341;flex:0 0 auto"></div>
+      <div>
+        <div style="color:#fff;font-size:13.5px;font-weight:700;letter-spacing:.1em;line-height:1.1">VALUE OS</div>
+        <div style="color:#7E97BD;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;margin-top:2px">CLASS VALUATION</div>
+      </div>
+    </div>
+    <div style="flex:1 1 0;overflow-y:auto;padding:12px 10px 18px">
+      <div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">PIPELINE</div>
+          <a href="index.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-home">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">My work</span>
+              
+            </div>
+          </a>
+<a href="demand.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:rgba(133,195,65,.14);color:#FFFFFF" class="nav-item" id="nav-demand">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#85C341" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:600;letter-spacing:-.005em" class="nav-label">Demand Management</span>
+              
+            </div>
+          </a>
+<a href="cpq.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-cpq">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Value CPQ</span>
+              
+            </div>
+          </a>
+        </div>
+<div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">DELIVERY</div>
+          <a href="plan.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-plan">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Plan Builder</span>
+              
+            </div>
+          </a>
+<a href="studio.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-studio">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Integration Studio</span>
+              
+            </div>
+          </a>
+<a href="delivery.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-delivery">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Delivery</span>
+              <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9.5px;background:rgba(133,195,65,.16);color:#A8DB6E;padding:2px 6px;border-radius:5px">2</span>
+            </div>
+          </a>
+<a href="reporting.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-reporting">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Status Reporting</span>
+              
+            </div>
+          </a>
+        </div>
+<div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">CLIENT</div>
+          <a href="engagement.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-engagement">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Engagement Mgmt</span>
+              
+            </div>
+          </a>
+        </div>
+<div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">PLATFORM</div>
+          <a href="roles.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-roles">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Roles &amp; permissions</span>
+              
+            </div>
+          </a>
+<a href="states.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-states">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">System states</span>
+              
+            </div>
+          </a>
+        </div>
+    </div>
+    <div style="padding:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px">
+      <div style="width:30px;height:30px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">DM</div>
+      <div style="min-width:0">
+        <div style="color:#E8EEF8;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Dana Mercer</div>
+        <div style="color:#7E97BD;font-size:11px">Solutions Engineer</div>
+      </div>
+      <div title="Sign out" style="margin-left:auto;color:#7E97BD;font-size:15px;cursor:pointer;padding:0 2px">&#9211;</div>
+    </div>
+  </div>
+  <div class="right-col">
+<div style="height:56px;flex:0 0 auto;background:#fff;border-bottom:1px solid #DCE2EC;display:flex;align-items:center;gap:14px;padding:0 20px">
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#6B7686">
+        <span id="crumbGroup">Pipeline</span><span style="color:#C4CBD8">/</span>
+        <span style="color:#131A26;font-weight:600" id="crumbScreen">Demand Management</span>
+      </div>
+      <div style="margin-left:18px;flex:1 1 0;max-width:420px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;gap:9px;padding:0 11px;color:#97A1B2;font-size:13.5px;cursor:pointer;background:#FAFBFD">
+        <span style="font-size:13px">&#8981;</span><span>Search clients, demands, quotes&hellip;</span>
+        <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;border:1px solid #DCE2EC;border-radius:4px;padding:1px 5px;background:#fff">&#8984;K</span>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <div style="position:relative;width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">
+          &#9684;<span style="position:absolute;top:-5px;right:-5px;min-width:16px;height:16px;border-radius:99px;background:#C4472C;color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;padding:0 4px">3</span>
+        </div>
+        <div style="width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">&#9776;</div>
+      </div>
+    </div>
+
+    <div class="content-viewport" id="contentViewport">
+<div id="dm-empty" style="display:none;padding:60px 28px;max-width:640px">
+  <div style="width:40px;height:40px;border-radius:10px;background:#EAF1FB;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px">&#128268;</div>
+  <div style="font-size:17px;font-weight:600;color:#131A26">Demand Management needs a database connection</div>
+  <div style="margin-top:8px;font-size:13.5px;color:#6B7686;line-height:1.6">This module reads and writes real records through Supabase, which isn't reachable from inside this Cowork preview. Open the deployed version of Class Value OS with <code>supabase-config.js</code> filled in (project URL + anon key) to use it — see <code>supabase/schema.sql</code> and the setup guide for how.</div>
+</div>
+<div id="dm-loaderr" style="display:none;padding:60px 28px;max-width:640px">
+  <div style="width:40px;height:40px;border-radius:10px;background:#FDECEC;color:#C4472C;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px">&#9888;</div>
+  <div style="font-size:17px;font-weight:600;color:#131A26">Couldn't reach the database</div>
+  <div id="dm-loaderr-detail" style="margin-top:8px;font-size:13.5px;color:#6B7686;line-height:1.6">—</div>
+  <button id="dm-retry-btn" style="margin-top:14px;height:36px;padding:0 16px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Retry</button>
+</div>
+<div id="dm-app" style="display:none">
+  <div style="background:#fff;border-bottom:1px solid #DCE2EC;padding:18px 28px 0">
+    <div style="display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:22px;font-weight:600;letter-spacing:-.01em">Demand Management</div>
+        <div id="dm-subtitle" style="margin-top:5px;font-size:13px;color:#6B7686">Loading&hellip;</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px">
+        <button id="dm-portfolio-btn" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Portfolio matrix</button>
+        <button id="dm-new-btn" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">New demand</button>
+      </div>
+    </div>
+    <div id="dm-tabs" style="margin-top:15px;display:flex;gap:4px;flex-wrap:wrap"></div>
+  </div>
+  <div style="padding:18px 28px 44px;display:grid;grid-template-columns:1fr 372px;gap:16px;align-items:start;max-width:1520px">
+    <div style="min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div id="dm-filters" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"></div>
+      <div id="dm-portfolio-chart" style="display:none;position:relative;background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px"></div>
+      <div id="dm-table-wrap" style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;overflow:hidden">
+        <div style="display:grid;grid-template-columns:1.5fr 1fr .55fr .55fr .8fr .8fr .5fr;gap:10px;padding:10px 16px;background:#FAFBFD;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#8B95A6">
+          <div>DEMAND / CLIENT</div><div>SEGMENT</div><div style="text-align:right">ORD/MO</div><div style="text-align:right">VALUE</div><div>SCORE</div><div>STAGE</div><div style="text-align:right">AGE</div>
+        </div>
+        <div id="dm-rows"></div>
+      </div>
+    </div>
+    <div id="dm-detail" style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;overflow:hidden;position:sticky;top:0">
+      <div style="padding:40px 18px;text-align:center;font-size:13px;color:#97A1B2">Select a demand to see its detail.</div>
+    </div>
+  </div>
+</div>
+<div id="dm-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(1,30,72,.55);align-items:center;justify-content:center;z-index:300;padding:20px">
+  <div id="dm-modal-box" style="background:#fff;border-radius:12px;padding:22px;width:420px;max-width:100%;box-shadow:0 12px 40px rgba(0,0,0,.25)"></div>
+</div>
+
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var SEGMENTS = ['Banking / Centralized Banking','Wholesale Lending / TPO','Distributed Retail Lending','Credit Union','Private Lending','Other'];
+  var SOURCES = ['RFP','Referral','Inbound','Outbound','Existing client','Other'];
+  var STAGE_META = {
+    unscored:  {label:'UNSCORED',  bg:'#F4F6FA', fg:'#6B7686'},
+    open:      {label:'OPEN',      bg:'#EAF0F4', fg:'#1F5570'},
+    decision:  {label:'DECISION',  bg:'#FDF3E0', fg:'#8A5A12'},
+    converted: {label:'CONVERTED', bg:'#EAF1FB', fg:'#012E6B'},
+    parked:    {label:'PARKED',    bg:'#F4F6FA', fg:'#6B7686'},
+    rejected:  {label:'REJECTED',  bg:'#FBEAEA', fg:'#A8392B'}
+  };
+  var CRITERIA = [
+    {key:'score_volume_potential', label:'Volume potential',
+      desc:'How much monthly order volume this client could realistically bring. Weigh the volume they’ve stated against how firm that number is (a verified LOS export vs. a rough guess), their current AMC/vendor spend, and their growth trajectory.'},
+    {key:'score_segment_fit', label:'Segment strategy fit',
+      desc:'How well this fits where the business wants to grow. Weigh whether the client’s segment (banking, credit union, wholesale/TPO, etc.) is a current priority, geographic overlap with existing panel coverage, and whether winning it strengthens a reference case in that segment.'},
+    {key:'score_integration_effort', label:'Integration effort (inverse)',
+      desc:'Higher score = less effort. Weigh whether their LOS/order platform is already supported, how much custom API or SSO work would be needed, and how much lift Integration Studio would need to stand this up.'},
+    {key:'score_margin_potential', label:'Margin potential',
+      desc:'Expected profitability once qualified. Weigh the pricing model being asked for (e.g. Guaranteed Pricing compresses margin), competitive rate pressure, product mix (traditional vs. digital vs. hybrid), and any custom terms on the table.'},
+    {key:'score_competitive_position', label:'Competitive position',
+      desc:'Your likelihood of winning this deal. Weigh the incumbent vendor and their contract status, how strong the relationship or referral is, urgency driving the client’s timeline, and how differentiated the offer is for this specific need.'}
+  ];
+  var CURRENT_USER = 'Dana Mercer'; // placeholder display name until Roles & permissions / real auth exists
+
+  var db = null;
+  var state = {
+    clients: [],
+    demands: [],
+    weights: null,
+    activeTab: 'my',
+    filters: { segment:'', source:'', owner:'', minScore:'', created:'', stage:'' },
+    selectedId: null,
+    showPortfolio: false,
+    initialized: false
+  };
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){
+    s = (s == null ? '' : String(s));
+    return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+  function fmtMoney(v){
+    if (v == null) return '—';
+    var n = Number(v);
+    if (isNaN(n)) return '—';
+    return '$' + (n/1000000).toFixed(1) + 'M';
+  }
+  function fmtAge(iso){
+    if (!iso) return '—';
+    var hrs = (Date.now() - new Date(iso).getTime()) / 3600000;
+    if (hrs < 24) return Math.max(1, Math.round(hrs)) + 'h';
+    return Math.round(hrs/24) + 'd';
+  }
+  function computeScore(d, w){
+    if (!w) return null;
+    var have = CRITERIA.every(function(c){ return d[c.key] != null; });
+    if (!have) return null;
+    var s = d.score_volume_potential * w.w_volume_potential
+      + d.score_segment_fit * w.w_segment_fit
+      + d.score_integration_effort * w.w_integration_effort
+      + d.score_margin_potential * w.w_margin_potential
+      + d.score_competitive_position * w.w_competitive_position;
+    return Math.round(s);
+  }
+  function scoreColor(score){
+    if (score == null) return '#C4CBD8';
+    if (score >= 75) return '#013E90';
+    if (score >= 45) return '#85C341';
+    return '#C4CBD8';
+  }
+
+  function available(){
+    return typeof window.supabase !== 'undefined'
+      && !!window.SUPABASE_CONFIG && !!window.SUPABASE_CONFIG.url && !!window.SUPABASE_CONFIG.anonKey;
+  }
+
+  function showState(which, detail){
+    ['dm-empty','dm-loaderr','dm-app'].forEach(function(id){ var el = $(id); if (el) el.style.display = 'none'; });
+    if (which === 'app'){ $('dm-app').style.display = 'block'; }
+    else if (which === 'error'){ $('dm-loaderr').style.display = 'block'; $('dm-loaderr-detail').textContent = detail || 'Unknown error.'; }
+    else { $('dm-empty').style.display = 'block'; }
+  }
+
+  function decorate(d){
+    var c = state.clients.filter(function(x){ return x.id === d.client_id; })[0];
+    d._clientName = c ? c.name : 'Unknown client';
+    d._segment = c ? c.segment : '';
+    d._code = 'DMD-' + (1100 + Number(d.demand_number));
+    d._score = computeScore(d, state.weights);
+    return d;
+  }
+
+  function loadAll(){
+    return Promise.resolve()
+      .then(function(){ return db.from('demand_scoring_weights').select('*').eq('id', 1).single(); })
+      .then(function(wr){
+        if (wr.error) throw wr.error;
+        state.weights = wr.data;
+        return db.from('clients').select('*').order('name');
+      })
+      .then(function(cr){
+        if (cr.error) throw cr.error;
+        state.clients = cr.data || [];
+        return db.from('demands').select('*').order('created_at', {ascending:false});
+      })
+      .then(function(dr){
+        if (dr.error) throw dr.error;
+        state.demands = (dr.data || []).map(decorate);
+        showState('app');
+        renderAll();
+      })
+      .catch(function(e){
+        showState('error', (e && e.message) ? e.message : String(e));
+      });
+  }
+
+  // ---- tabs ----
+  function tabCounts(){
+    var mine = state.demands.filter(function(d){ return d.owner_name === CURRENT_USER; });
+    var unscored = state.demands.filter(function(d){ return d.stage === 'unscored'; });
+    var decision = state.demands.filter(function(d){ return d.stage === 'decision'; });
+    var open = state.demands.filter(function(d){ return ['unscored','open','decision'].indexOf(d.stage) !== -1; });
+    return { my: mine.length, unscored: unscored.length, decision: decision.length, all: open.length };
+  }
+  function renderTabs(){
+    var c = tabCounts();
+    var tabs = [
+      {id:'my', label:'My demands', count:c.my},
+      {id:'unscored', label:'Unscored', count:c.unscored},
+      {id:'decision', label:'Awaiting decision', count:c.decision},
+      {id:'all', label:'All open', count:c.all}
+    ];
+    $('dm-tabs').innerHTML = tabs.map(function(t){
+      var active = state.activeTab === t.id;
+      return '<div data-tab="'+t.id+'" style="display:flex;align-items:center;gap:7px;padding:10px 14px 11px;border-bottom:2px solid '+(active?'#013E90':'transparent')+';cursor:pointer">'
+        + '<span style="font-size:13.5px;font-weight:'+(active?'600':'500')+';color:'+(active?'#131A26':'#6B7686')+'">'+esc(t.label)+'</span>'
+        + '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;background:#F1F4F9;color:#6B7686;padding:1px 5px;border-radius:4px">'+t.count+'</span>'
+        + '</div>';
+    }).join('');
+    Array.prototype.forEach.call($('dm-tabs').children, function(el){
+      el.addEventListener('click', function(){ state.activeTab = el.getAttribute('data-tab'); renderTabs(); renderTable(); renderPortfolio(); });
+    });
+  }
+
+  // ---- filters ----
+  function distinctVals(getter){
+    var set = {};
+    state.demands.forEach(function(d){ var v = getter(d); if (v) set[v] = true; });
+    return Object.keys(set).sort();
+  }
+  function selectHtml(id, label, opts, val){
+    return '<select id="'+id+'" style="height:32px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;background:#fff;font-size:13px;color:#4E5866;cursor:pointer">'
+      + '<option value=""'+(val===''?' selected':'')+'>'+esc(label)+' — any</option>'
+      + opts.map(function(o){ return '<option value="'+esc(o)+'"'+(val===o?' selected':'')+'>'+esc(o)+'</option>'; }).join('')
+      + '</select>';
+  }
+  var STAGE_ORDER = ['unscored','open','decision','converted','parked','rejected'];
+
+  function renderFilters(){
+    var segOpts = distinctVals(function(d){ return d._segment; });
+    var srcOpts = distinctVals(function(d){ return d.source; });
+    var ownerOpts = distinctVals(function(d){ return d.owner_name; });
+    var stageOptionsHtml = '<option value=""'+(state.filters.stage===''?' selected':'')+'>Stage — any</option>'
+      + STAGE_ORDER.map(function(s){
+          var label = (STAGE_META[s] || {label:s}).label;
+          return '<option value="'+s+'"'+(state.filters.stage===s?' selected':'')+'>'+esc(label)+'</option>';
+        }).join('');
+    $('dm-filters').innerHTML =
+      selectHtml('dm-f-segment','Segment', segOpts, state.filters.segment)
+      + selectHtml('dm-f-source','Source', srcOpts, state.filters.source)
+      + selectHtml('dm-f-owner','Owner', ownerOpts, state.filters.owner)
+      + '<select id="dm-f-stage" style="height:32px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;background:#fff;font-size:13px;color:#4E5866;cursor:pointer">'+stageOptionsHtml+'</select>'
+      + '<input id="dm-f-minscore" type="number" min="0" max="100" placeholder="Min score" value="'+esc(state.filters.minScore)+'" style="height:32px;width:96px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;font-size:13px;box-sizing:border-box">'
+      + '<select id="dm-f-created" style="height:32px;padding:0 8px;border:1px solid #DCE2EC;border-radius:7px;background:#fff;font-size:13px;color:#4E5866;cursor:pointer">'
+        + '<option value="">Created — any time</option>'
+        + '<option value="7"'+(state.filters.created==='7'?' selected':'')+'>Last 7 days</option>'
+        + '<option value="30"'+(state.filters.created==='30'?' selected':'')+'>Last 30 days</option>'
+        + '<option value="90"'+(state.filters.created==='90'?' selected':'')+'>This quarter</option>'
+      + '</select>'
+      + '<span id="dm-shown-count" style="margin-left:auto;font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:.12em;color:#8B95A6"></span>';
+    $('dm-f-segment').addEventListener('change', function(e){ state.filters.segment = e.target.value; renderTable(); renderPortfolio(); });
+    $('dm-f-source').addEventListener('change', function(e){ state.filters.source = e.target.value; renderTable(); renderPortfolio(); });
+    $('dm-f-owner').addEventListener('change', function(e){ state.filters.owner = e.target.value; renderTable(); renderPortfolio(); });
+    $('dm-f-stage').addEventListener('change', function(e){ state.filters.stage = e.target.value; renderTable(); renderPortfolio(); });
+    $('dm-f-minscore').addEventListener('input', function(e){ state.filters.minScore = e.target.value; renderTable(); renderPortfolio(); });
+    $('dm-f-created').addEventListener('change', function(e){ state.filters.created = e.target.value; renderTable(); renderPortfolio(); });
+  }
+
+  function getFilteredList(){
+    var list = state.demands.slice();
+    if (state.activeTab === 'my') list = list.filter(function(d){ return d.owner_name === CURRENT_USER; });
+    else if (state.activeTab === 'unscored') list = list.filter(function(d){ return d.stage === 'unscored'; });
+    else if (state.activeTab === 'decision') list = list.filter(function(d){ return d.stage === 'decision'; });
+    else if (state.activeTab === 'all') list = list.filter(function(d){ return ['unscored','open','decision'].indexOf(d.stage) !== -1; });
+    if (state.filters.segment) list = list.filter(function(d){ return d._segment === state.filters.segment; });
+    if (state.filters.source) list = list.filter(function(d){ return d.source === state.filters.source; });
+    if (state.filters.owner) list = list.filter(function(d){ return d.owner_name === state.filters.owner; });
+    if (state.filters.stage) list = list.filter(function(d){ return d.stage === state.filters.stage; });
+    if (state.filters.minScore !== '' && state.filters.minScore != null){
+      var min = Number(state.filters.minScore);
+      list = list.filter(function(d){ return d._score != null && d._score >= min; });
+    }
+    if (state.filters.created){
+      var cutoff = Date.now() - Number(state.filters.created) * 86400000;
+      list = list.filter(function(d){ return new Date(d.created_at).getTime() >= cutoff; });
+    }
+    return list;
+  }
+
+  // ---- table ----
+  function renderTable(){
+    var list = getFilteredList();
+    var countEl = $('dm-shown-count');
+    if (countEl) countEl.textContent = list.length + ' OF ' + state.demands.length + ' SHOWN';
+    var rows = $('dm-rows');
+    if (!list.length){
+      rows.innerHTML = '<div style="padding:36px 16px;text-align:center;font-size:13px;color:#97A1B2">No demands match these filters.</div>';
+    } else {
+      rows.innerHTML = list.map(function(d){
+        var meta = STAGE_META[d.stage] || STAGE_META.unscored;
+        var scoreHtml = d._score != null
+          ? '<div style="flex:1;height:5px;border-radius:99px;background:#EDF0F6;overflow:hidden"><div style="height:100%;width:'+d._score+'%;background:'+scoreColor(d._score)+';border-radius:99px"></div></div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:#4E5866">'+d._score+'</div>'
+          : '<span style="font-size:11.5px;color:#97A1B2;font-style:italic">not scored</span>';
+        var selected = state.selectedId === d.id;
+        return '<div class="dm-row" data-id="'+d.id+'" style="display:grid;grid-template-columns:1.5fr 1fr .55fr .55fr .8fr .8fr .5fr;gap:10px;padding:12px 16px;border-top:1px solid #F1F4F9;align-items:center;font-size:13px;cursor:pointer;background:'+(selected?'#F5F9FF':'#fff')+'">'
+          + '<div style="min-width:0"><div style="font-weight:600;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(d._clientName)+'</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:10.5px;color:#97A1B2;margin-top:2px">'+esc(d._code)+'</div></div>'
+          + '<div style="color:#5A6474">'+esc(d._segment||'—')+'</div>'
+          + '<div style="text-align:right;color:#5A6474">'+(d.est_monthly_volume!=null?d.est_monthly_volume:'—')+'</div>'
+          + '<div style="text-align:right;font-weight:600">'+fmtMoney(d.est_annual_value)+'</div>'
+          + '<div style="display:flex;align-items:center;gap:7px">'+scoreHtml+'</div>'
+          + '<div><span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.08em;padding:3px 6px;border-radius:5px;background:'+meta.bg+';color:'+meta.fg+'">'+meta.label+'</span></div>'
+          + '<div style="text-align:right;font-family:\'IBM Plex Mono\',monospace;font-size:10.5px;color:#97A1B2">'+fmtAge(d.created_at)+'</div>'
+          + '</div>';
+      }).join('');
+      Array.prototype.forEach.call(document.querySelectorAll('.dm-row'), function(el){
+        el.addEventListener('click', function(){ state.selectedId = el.getAttribute('data-id'); renderTable(); renderDetail(); renderPortfolio(); });
+      });
+    }
+    var openList = state.demands.filter(function(d){ return ['unscored','open','decision'].indexOf(d.stage) !== -1; });
+    var totalVal = openList.reduce(function(s,d){ return s + (Number(d.est_annual_value) || 0); }, 0);
+    var sub = $('dm-subtitle');
+    if (sub) sub.textContent = 'Every strategic request, scored on the same criteria. ' + openList.length + ' open · ' + fmtMoney(totalVal) + ' estimated annual value.';
+  }
+
+  // ---- detail panel ----
+  function renderDetail(){
+    var d = state.demands.filter(function(x){ return x.id === state.selectedId; })[0];
+    var panel = $('dm-detail');
+    if (!d){
+      panel.innerHTML = '<div style="padding:40px 18px;text-align:center;font-size:13px;color:#97A1B2">Select a demand to see its detail.</div>';
+      return;
+    }
+    var meta = STAGE_META[d.stage] || STAGE_META.unscored;
+    var scoreRows = CRITERIA.map(function(c){
+      var v = d[c.key];
+      var iconHtml = c.desc ? '<span class="info-icon" tabindex="0">i<span class="tooltip">'+esc(c.desc)+'</span></span>' : '';
+      return '<div style="margin-bottom:9px">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:#5A6474;margin-bottom:4px">'
+          + '<span>'+esc(c.label)+iconHtml+'</span>'
+          + '<input type="number" min="0" max="100" data-score="'+c.key+'" value="'+(v==null?'':v)+'" placeholder="—" style="width:52px;text-align:right;font-family:\'IBM Plex Mono\',monospace;border:1px solid #DCE2EC;border-radius:5px;padding:2px 4px;font-size:11.5px">'
+        + '</div>'
+        + '<div style="height:6px;border-radius:99px;background:#EDF0F6;overflow:hidden"><div style="height:100%;width:'+(v||0)+'%;background:#013E90;border-radius:99px"></div></div>'
+        + '</div>';
+    }).join('');
+
+    panel.innerHTML =
+      '<div style="padding:16px 18px;border-bottom:1px solid #F1F4F9">'
+        + '<div style="display:flex;align-items:center;gap:9px">'
+          + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10.5px;color:#97A1B2">'+esc(d._code)+'</div>'
+          + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.1em;padding:2px 7px;border-radius:5px;background:'+meta.bg+';color:'+meta.fg+'">'+meta.label+'</div>'
+        + '</div>'
+        + '<div style="margin-top:7px;font-size:18px;font-weight:600;letter-spacing:-.01em">'+esc(d._clientName)+'</div>'
+        + '<div style="margin-top:4px;font-size:13px;color:#6B7686">'+esc(d._segment||'—')+' · '+(d.est_monthly_volume!=null?d.est_monthly_volume:'—')+' orders / month · '+fmtMoney(d.est_annual_value)+' est. annual</div>'
+        + (d.requirement_summary ? '<div style="margin-top:9px;font-size:12.5px;color:#5A6474;line-height:1.5">'+esc(d.requirement_summary)+'</div>' : '')
+        + (d.decision_reason ? '<div style="margin-top:9px;font-size:12px;color:#8B95A6;line-height:1.5"><b>Decision reason:</b> '+esc(d.decision_reason)+'</div>' : '')
+      + '</div>'
+      + '<div style="padding:16px 18px;border-bottom:1px solid #F1F4F9">'
+        + '<div style="display:flex;align-items:baseline;gap:9px">'
+          + '<div style="font-size:13.5px;font-weight:600">Strategic fit score</div>'
+          + '<div style="margin-left:auto;font-size:26px;font-weight:600;letter-spacing:-.02em">'+(d._score!=null?d._score:'—')+'</div>'
+        + '</div>'
+        + '<div style="margin-top:12px">'+scoreRows+'</div>'
+        + '<div style="margin-top:11px;font-size:12px;color:#8B95A6;line-height:1.45">Weights owned by the portfolio owner. Every input is visible — advisory, never automatic.</div>'
+        + '<button id="dm-save-score-btn" style="margin-top:10px;width:100%;height:34px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Save score</button>'
+      + '</div>'
+      + '<div style="padding:16px 18px;border-bottom:1px solid #F1F4F9">'
+        + '<div style="font-size:13.5px;font-weight:600">Activity</div>'
+        + '<div id="dm-activity-list" style="margin-top:9px;display:flex;flex-direction:column;gap:8px;max-height:180px;overflow-y:auto">Loading…</div>'
+        + '<div style="margin-top:9px;display:flex;gap:6px">'
+          + '<input id="dm-note-input" type="text" placeholder="Add a note…" style="flex:1;height:32px;padding:0 9px;border:1px solid #DCE2EC;border-radius:7px;font-size:12.5px;box-sizing:border-box">'
+          + '<button id="dm-note-btn" style="height:32px;padding:0 12px;border-radius:7px;border:none;background:#013E90;color:#fff;font-size:12.5px;font-weight:600;cursor:pointer">Add</button>'
+        + '</div>'
+      + '</div>'
+      + '<div style="padding:16px 18px;display:flex;flex-direction:column;gap:9px">'
+        + '<button id="dm-cpq-btn" '+(d.stage==='converted'?'disabled':'')+' style="height:40px;border-radius:8px;border:none;background:'+(d.stage==='converted'?'#B9C6DA':'#013E90')+';color:#fff;font-size:14px;font-weight:600;cursor:'+(d.stage==='converted'?'default':'pointer')+'">'+(d.stage==='converted'?'Already converted':'Configure quote in CPQ')+'</button>'
+        + (d.stage === 'parked' || d.stage === 'rejected'
+            ? '<button id="dm-reopen-btn" style="height:34px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Reopen</button>'
+            : d.stage === 'converted' ? ''
+            : '<div style="display:flex;gap:8px">'
+                + '<button id="dm-park-btn" style="flex:1;height:34px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Park</button>'
+                + '<button id="dm-reject-btn" style="flex:1;height:34px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Reject with reason</button>'
+              + '</div>')
+        + '<div style="font-size:11.5px;color:#97A1B2;line-height:1.45">Demands are never deleted — the decision and its reason stay on the investment record.</div>'
+      + '</div>';
+
+    $('dm-save-score-btn').addEventListener('click', function(){ saveScore(d.id); });
+    $('dm-note-btn').addEventListener('click', function(){ addNote(d.id); });
+    $('dm-cpq-btn').addEventListener('click', function(){
+      if (d.stage !== 'converted'){
+        openInfoModal('Value CPQ isn’t built yet', 'This button will hand the demand’s context (client, segment, volume) straight into the CPQ module once it exists. There’s nothing to configure a quote in yet.');
+      }
+    });
+    var parkBtn = $('dm-park-btn'); if (parkBtn) parkBtn.addEventListener('click', function(){ openReasonModal('Park this demand', 'parked', d.id); });
+    var rejectBtn = $('dm-reject-btn'); if (rejectBtn) rejectBtn.addEventListener('click', function(){ openReasonModal('Reject this demand', 'rejected', d.id); });
+    var reopenBtn = $('dm-reopen-btn'); if (reopenBtn) reopenBtn.addEventListener('click', function(){ reopenDemand(d.id); });
+
+    loadActivity(d.id);
+  }
+
+  function reopenDemand(demandId){
+    var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
+    var fromStage = d.stage;
+    return Promise.resolve(db.from('demands').update({ stage:'open', decision_reason:null }).eq('id', demandId).select().single())
+      .then(function(r){
+        if (r.error) throw r.error;
+        Object.assign(d, r.data);
+        return db.from('demand_activity').insert({ demand_id: demandId, kind:'stage_change', body: 'Reopened (was ' + fromStage + ')', author_name: CURRENT_USER });
+      })
+      .then(function(){ renderTabs(); renderTable(); renderDetail(); renderPortfolio(); })
+      .catch(function(e){ openInfoModal('Couldn’t reopen the demand', e.message || String(e)); });
+  }
+
+  function loadActivity(demandId){
+    return Promise.resolve(db.from('demand_activity').select('*').eq('demand_id', demandId).order('created_at', {ascending:false}))
+      .then(function(r){
+        if (r.error) throw r.error;
+        var el = $('dm-activity-list');
+        if (!el) return;
+        var list = r.data || [];
+        if (!list.length){ el.innerHTML = '<div style="font-size:12px;color:#97A1B2;font-style:italic">No activity yet.</div>'; return; }
+        el.innerHTML = list.map(function(a){
+          return '<div style="font-size:12px;color:#5A6474;line-height:1.45"><b>'+esc(a.author_name||'—')+'</b> · <span style="color:#97A1B2">'+new Date(a.created_at).toLocaleString()+'</span><br>'+esc(a.body)+'</div>';
+        }).join('');
+      })
+      .catch(function(){
+        var el = $('dm-activity-list');
+        if (el) el.textContent = 'Couldn’t load activity.';
+      });
+  }
+
+  function addNote(demandId){
+    var input = $('dm-note-input');
+    var body = (input.value || '').trim();
+    if (!body) return;
+    input.disabled = true;
+    return Promise.resolve(db.from('demand_activity').insert({ demand_id: demandId, kind:'note', body: body, author_name: CURRENT_USER }))
+      .then(function(r){
+        if (r.error) throw r.error;
+        input.value = '';
+        return loadActivity(demandId);
+      })
+      .catch(function(e){ openInfoModal('Couldn’t save note', e.message || String(e)); })
+      .then(function(){ input.disabled = false; });
+  }
+
+  function saveScore(demandId){
+    var patch = {};
+    CRITERIA.forEach(function(c){
+      var el = document.querySelector('[data-score="'+c.key+'"]');
+      var v = el ? el.value : '';
+      patch[c.key] = (v === '' ? null : Math.max(0, Math.min(100, Number(v))));
+    });
+    var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
+    var willHaveAll = CRITERIA.every(function(c){ return patch[c.key] != null; });
+    if (willHaveAll && d.stage === 'unscored') patch.stage = 'open';
+    return Promise.resolve(db.from('demands').update(patch).eq('id', demandId).select().single())
+      .then(function(r){
+        if (r.error) throw r.error;
+        Object.assign(d, r.data);
+        d._score = computeScore(d, state.weights);
+        renderTabs(); renderTable(); renderDetail(); renderPortfolio();
+      })
+      .catch(function(e){ openInfoModal('Couldn’t save score', e.message || String(e)); });
+  }
+
+  function changeStage(demandId, newStage, reason){
+    return Promise.resolve(db.from('demands').update({ stage:newStage, decision_reason:reason }).eq('id', demandId).select().single())
+      .then(function(r){
+        if (r.error) throw r.error;
+        var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
+        Object.assign(d, r.data);
+        return db.from('demand_activity').insert({ demand_id: demandId, kind:'stage_change', body: 'Moved to ' + newStage + ': ' + reason, author_name: CURRENT_USER });
+      })
+      .then(function(){ renderTabs(); renderTable(); renderDetail(); renderPortfolio(); })
+      .catch(function(e){ openInfoModal('Couldn’t update the demand', e.message || String(e)); });
+  }
+
+  // ---- modals ----
+  function openInfoModal(title, body){
+    $('dm-modal-box').innerHTML =
+      '<div style="font-size:15px;font-weight:600;color:#131A26;margin-bottom:8px">'+esc(title)+'</div>'
+      + '<div style="font-size:13.5px;color:#5A6474;line-height:1.55;margin-bottom:16px">'+esc(body)+'</div>'
+      + '<div style="display:flex;justify-content:flex-end"><button id="dm-modal-ok" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">OK</button></div>';
+    $('dm-modal-overlay').style.display = 'flex';
+    $('dm-modal-ok').addEventListener('click', closeModal);
+  }
+
+  function openReasonModal(title, targetStage, demandId){
+    $('dm-modal-box').innerHTML =
+      '<div style="font-size:15px;font-weight:600;color:#131A26;margin-bottom:8px">'+esc(title)+'</div>'
+      + '<div style="font-size:12.5px;color:#8B95A6;margin-bottom:10px">The reason is kept on the record — demands are never deleted.</div>'
+      + '<textarea id="dm-modal-reason" rows="3" placeholder="Reason…" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;font-family:inherit;margin-bottom:14px;box-sizing:border-box"></textarea>'
+      + '<div style="display:flex;justify-content:flex-end;gap:8px">'
+        + '<button id="dm-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+        + '<button id="dm-modal-confirm" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Confirm</button>'
+      + '</div>';
+    $('dm-modal-overlay').style.display = 'flex';
+    $('dm-modal-cancel').addEventListener('click', closeModal);
+    $('dm-modal-confirm').addEventListener('click', function(){
+      var ta = $('dm-modal-reason');
+      var reason = (ta.value || '').trim();
+      if (!reason){ ta.style.borderColor = '#C4472C'; return; }
+      changeStage(demandId, targetStage, reason);
+      closeModal();
+    });
+  }
+
+  function closeModal(){ $('dm-modal-overlay').style.display = 'none'; $('dm-modal-box').innerHTML = ''; }
+
+  // ---- new demand ----
+  function field(id, label, type, val){
+    return '<label style="display:block;font-size:11.5px;font-weight:600;color:#5A6474;margin-bottom:4px">'+esc(label)+'</label>'
+      + '<input id="'+id+'" type="'+type+'" value="'+esc(val)+'" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;margin-bottom:12px;box-sizing:border-box">';
+  }
+  function selectField(id, label, opts){
+    return '<label style="display:block;font-size:11.5px;font-weight:600;color:#5A6474;margin-bottom:4px">'+esc(label)+'</label>'
+      + '<select id="'+id+'" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;margin-bottom:12px;background:#fff;box-sizing:border-box">'
+      + opts.map(function(o){ return '<option value="'+esc(o)+'">'+esc(o)+'</option>'; }).join('')
+      + '</select>';
+  }
+
+  function openNewDemandModal(){
+    $('dm-modal-box').innerHTML =
+      '<div style="font-size:15px;font-weight:600;color:#131A26;margin-bottom:12px">New demand</div>'
+      + field('dm-nd-client','Client name', 'text', '')
+      + selectField('dm-nd-segment','Segment', SEGMENTS)
+      + selectField('dm-nd-source','Source', SOURCES)
+      + field('dm-nd-owner','Owner', 'text', CURRENT_USER)
+      + field('dm-nd-volume','Est. monthly volume', 'number', '')
+      + field('dm-nd-value','Est. annual value ($)', 'number', '')
+      + '<label style="display:block;font-size:11.5px;font-weight:600;color:#5A6474;margin-bottom:4px">Requirement summary</label>'
+      + '<textarea id="dm-nd-summary" rows="3" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;font-family:inherit;margin-bottom:14px;box-sizing:border-box"></textarea>'
+      + '<div id="dm-nd-error" style="display:none;color:#C4472C;font-size:12.5px;margin-bottom:10px"></div>'
+      + '<div style="display:flex;justify-content:flex-end;gap:8px">'
+        + '<button id="dm-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+        + '<button id="dm-nd-submit" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Create demand</button>'
+      + '</div>';
+    $('dm-modal-overlay').style.display = 'flex';
+    $('dm-modal-cancel').addEventListener('click', closeModal);
+    $('dm-nd-submit').addEventListener('click', submitNewDemand);
+  }
+
+  function submitNewDemand(){
+    var name = ($('dm-nd-client').value || '').trim();
+    var errEl = $('dm-nd-error');
+    if (!name){ errEl.textContent = 'Client name is required.'; errEl.style.display = 'block'; return; }
+    var segment = $('dm-nd-segment').value;
+    var source = $('dm-nd-source').value;
+    var owner = ($('dm-nd-owner').value || '').trim();
+    var volume = $('dm-nd-volume').value === '' ? null : Number($('dm-nd-volume').value);
+    var value = $('dm-nd-value').value === '' ? null : Number($('dm-nd-value').value);
+    var summary = ($('dm-nd-summary').value || '').trim();
+    var submitBtn = $('dm-nd-submit');
+    submitBtn.disabled = true;
+
+    var existing = state.clients.filter(function(c){ return c.name.toLowerCase() === name.toLowerCase(); })[0];
+    var clientPromise = existing
+      ? Promise.resolve({ error:null, data: existing })
+      : Promise.resolve(db.from('clients').insert({ name: name, segment: segment }).select().single());
+
+    clientPromise
+      .then(function(cr){
+        if (cr.error) throw cr.error;
+        if (!existing) state.clients.push(cr.data);
+        var clientId = cr.data.id;
+        return Promise.resolve(db.from('demands').insert({
+          client_id: clientId, source: source, owner_name: owner || null,
+          est_monthly_volume: volume, est_annual_value: value,
+          requirement_summary: summary || null, stage: 'unscored'
+        }).select().single());
+      })
+      .then(function(dr){
+        if (dr.error) throw dr.error;
+        var d = decorate(dr.data);
+        state.demands.unshift(d);
+        closeModal();
+        state.selectedId = d.id;
+        renderTabs(); renderFilters(); renderTable(); renderDetail();
+      })
+      .catch(function(e){ errEl.textContent = e.message || String(e); errEl.style.display = 'block'; })
+      .then(function(){ if (submitBtn) submitBtn.disabled = false; });
+  }
+
+  // ---- portfolio matrix ----
+  function portfolioTooltipHtml(d){
+    var meta = STAGE_META[d.stage] || STAGE_META.unscored;
+    return '<div style="font-weight:600;margin-bottom:3px">'+esc(d._clientName)+'</div>'
+      + '<div style="opacity:.8">'+esc(d._segment||'—')+' · <span style="font-family:\'IBM Plex Mono\',monospace">'+meta.label+'</span></div>'
+      + '<div style="margin-top:5px">Est. annual value: <b>'+fmtMoney(d.est_annual_value)+'</b></div>'
+      + '<div>Monthly volume: <b>'+(d.est_monthly_volume!=null?d.est_monthly_volume:'—')+'</b></div>'
+      + '<div>Strategic fit score: <b>'+(d._score!=null?d._score:'not scored')+'</b></div>'
+      + '<div style="margin-top:4px;opacity:.7;font-size:10.5px">Click to select</div>';
+  }
+
+  function renderPortfolio(){
+    var btn = $('dm-portfolio-btn');
+    if (btn){
+      btn.style.background = state.showPortfolio ? '#013E90' : '#fff';
+      btn.style.color = state.showPortfolio ? '#fff' : '#131A26';
+      btn.style.borderColor = state.showPortfolio ? '#013E90' : '#DCE2EC';
+    }
+    var box = $('dm-portfolio-chart');
+    if (!box) return;
+    if (!state.showPortfolio){ box.style.display = 'none'; return; }
+    box.style.display = 'block';
+    var pts = getFilteredList().filter(function(d){ return d.est_annual_value != null; });
+    if (!pts.length){ box.innerHTML = '<div style="font-size:15.5px;font-weight:600;margin-bottom:4px">Portfolio matrix</div><div style="font-size:13px;color:#97A1B2">No demands with an estimated value match the current filters.</div>'; return; }
+    var maxVal = Math.max.apply(null, pts.map(function(d){ return Number(d.est_annual_value) || 0; }));
+    var maxVol = Math.max.apply(null, pts.map(function(d){ return Number(d.est_monthly_volume) || 1; }));
+    var W = 760, H = 260, PAD = 40;
+    // draw the selected point last so it renders on top of any overlapping neighbors
+    var ordered = pts.slice().sort(function(a,b){
+      return (a.id === state.selectedId ? 1 : 0) - (b.id === state.selectedId ? 1 : 0);
+    });
+    var dots = ordered.map(function(d){
+      var effort = d.score_integration_effort != null ? (100 - d.score_integration_effort) : 50;
+      var x = PAD + (effort/100) * (W - PAD*2);
+      var y = H - PAD - ((Number(d.est_annual_value) || 0) / maxVal) * (H - PAD*2);
+      var r = 5 + 14 * ((Number(d.est_monthly_volume) || 0) / maxVol);
+      var color = (STAGE_META[d.stage] || STAGE_META.unscored).fg;
+      var selected = d.id === state.selectedId;
+      return '<circle data-id="'+d.id+'" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r.toFixed(1)+'" fill="'+color+'" fill-opacity="'+(selected?0.85:0.5)+'" stroke="'+(selected?'#85C341':color)+'" stroke-width="'+(selected?3:1.2)+'" style="cursor:pointer"></circle>';
+    }).join('');
+    box.innerHTML =
+      '<div style="font-size:15.5px;font-weight:600;margin-bottom:4px">Portfolio matrix</div>'
+      + '<div style="font-size:12px;color:#8B95A6;margin-bottom:10px">Estimated value vs. integration effort. Bubble size is monthly volume — same data as the list, different lens. Hover a bubble for details, click to select.</div>'
+      + '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:260px">'
+        + '<line x1="'+PAD+'" y1="'+(H-PAD)+'" x2="'+(W-PAD)+'" y2="'+(H-PAD)+'" stroke="#DCE2EC"/>'
+        + '<line x1="'+PAD+'" y1="'+PAD+'" x2="'+PAD+'" y2="'+(H-PAD)+'" stroke="#DCE2EC"/>'
+        + '<text x="'+(W/2)+'" y="'+(H-8)+'" text-anchor="middle" font-size="10.5" fill="#8B95A6">Integration effort →</text>'
+        + '<text x="14" y="'+(H/2)+'" text-anchor="middle" font-size="10.5" fill="#8B95A6" transform="rotate(-90 14 '+(H/2)+')">Estimated value →</text>'
+        + dots
+      + '</svg>'
+      + '<div id="dm-portfolio-tooltip" style="display:none;position:absolute;pointer-events:none;background:#01285E;color:#fff;font-size:11.5px;line-height:1.5;padding:8px 10px;border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.22);z-index:20;max-width:220px"></div>';
+
+    var tooltip = $('dm-portfolio-tooltip');
+    Array.prototype.forEach.call(box.querySelectorAll('circle'), function(circle){
+      var demandId = circle.getAttribute('data-id');
+      var d = ordered.filter(function(x){ return x.id === demandId; })[0];
+      if (!d || !tooltip) return;
+      circle.addEventListener('mouseenter', function(){
+        tooltip.innerHTML = portfolioTooltipHtml(d);
+        tooltip.style.display = 'block';
+      });
+      circle.addEventListener('mousemove', function(e){
+        var rect = box.getBoundingClientRect();
+        tooltip.style.left = (e.clientX - rect.left + 14) + 'px';
+        tooltip.style.top = (e.clientY - rect.top + 14) + 'px';
+      });
+      circle.addEventListener('mouseleave', function(){ tooltip.style.display = 'none'; });
+      circle.addEventListener('click', function(){ state.selectedId = d.id; renderTable(); renderDetail(); renderPortfolio(); });
+    });
+  }
+
+  function renderAll(){ renderTabs(); renderFilters(); renderTable(); renderDetail(); renderPortfolio(); }
+
+  function bindStaticHandlers(){
+    $('dm-new-btn').addEventListener('click', openNewDemandModal);
+    $('dm-portfolio-btn').addEventListener('click', function(){ state.showPortfolio = !state.showPortfolio; renderPortfolio(); });
+    $('dm-retry-btn').addEventListener('click', function(){ connectAndLoad(); });
+    $('dm-modal-overlay').addEventListener('click', function(e){ if (e.target.id === 'dm-modal-overlay') closeModal(); });
+  }
+
+  function connectAndLoad(){
+    if (!available()){ showState('empty'); return; }
+    if (!db){
+      try { db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
+      catch(e){ showState('error', e.message || String(e)); return; }
+    }
+    showState('app');
+    var sub = $('dm-subtitle');
+    if (sub) sub.textContent = 'Loading…';
+    loadAll();
+  }
+
+  window.DemandModule = {
+    onShow: function(){
+      if (!state.initialized){ state.initialized = true; bindStaticHandlers(); }
+      connectAndLoad();
+    },
+    // exposed for tests only
+    _state: state
+  };
+})();
+
+window.DemandModule.onShow();
+</script>
+</body>
+</html>

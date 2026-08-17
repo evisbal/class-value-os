@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Value CPQ — Class Value OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app-shell">
+<div style="background:#01285E;display:flex;flex-direction:column;overflow:hidden">
+    <div style="padding:18px 18px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.08)">
+      <div style="width:26px;height:26px;border-radius:6px;background:#85C341;flex:0 0 auto"></div>
+      <div>
+        <div style="color:#fff;font-size:13.5px;font-weight:700;letter-spacing:.1em;line-height:1.1">VALUE OS</div>
+        <div style="color:#7E97BD;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;margin-top:2px">CLASS VALUATION</div>
+      </div>
+    </div>
+    <div style="flex:1 1 0;overflow-y:auto;padding:12px 10px 18px">
+      <div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">PIPELINE</div>
+          <a href="index.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-home">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">My work</span>
+              
+            </div>
+          </a>
+<a href="demand.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-demand">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Demand Management</span>
+              
+            </div>
+          </a>
+<a href="cpq.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:rgba(133,195,65,.14);color:#FFFFFF" class="nav-item" id="nav-cpq">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#85C341" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:600;letter-spacing:-.005em" class="nav-label">Value CPQ</span>
+              
+            </div>
+          </a>
+        </div>
+<div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">DELIVERY</div>
+          <a href="plan.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-plan">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Plan Builder</span>
+              
+            </div>
+          </a>
+<a href="studio.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-studio">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Integration Studio</span>
+              
+            </div>
+          </a>
+<a href="delivery.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-delivery">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Delivery</span>
+              <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9.5px;background:rgba(133,195,65,.16);color:#A8DB6E;padding:2px 6px;border-radius:5px">2</span>
+            </div>
+          </a>
+<a href="reporting.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-reporting">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Status Reporting</span>
+              
+            </div>
+          </a>
+        </div>
+<div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">CLIENT</div>
+          <a href="engagement.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-engagement">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Engagement Mgmt</span>
+              
+            </div>
+          </a>
+        </div>
+<div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">PLATFORM</div>
+          <a href="roles.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-roles">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Roles &amp; permissions</span>
+              
+            </div>
+          </a>
+<a href="states.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-states">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">System states</span>
+              
+            </div>
+          </a>
+        </div>
+    </div>
+    <div style="padding:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px">
+      <div style="width:30px;height:30px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">DM</div>
+      <div style="min-width:0">
+        <div style="color:#E8EEF8;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Dana Mercer</div>
+        <div style="color:#7E97BD;font-size:11px">Solutions Engineer</div>
+      </div>
+      <div title="Sign out" style="margin-left:auto;color:#7E97BD;font-size:15px;cursor:pointer;padding:0 2px">&#9211;</div>
+    </div>
+  </div>
+  <div class="right-col">
+<div style="height:56px;flex:0 0 auto;background:#fff;border-bottom:1px solid #DCE2EC;display:flex;align-items:center;gap:14px;padding:0 20px">
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#6B7686">
+        <span id="crumbGroup">Pipeline</span><span style="color:#C4CBD8">/</span>
+        <span style="color:#131A26;font-weight:600" id="crumbScreen">Value CPQ</span>
+      </div>
+      <div style="margin-left:18px;flex:1 1 0;max-width:420px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;gap:9px;padding:0 11px;color:#97A1B2;font-size:13.5px;cursor:pointer;background:#FAFBFD">
+        <span style="font-size:13px">&#8981;</span><span>Search clients, demands, quotes&hellip;</span>
+        <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;border:1px solid #DCE2EC;border-radius:4px;padding:1px 5px;background:#fff">&#8984;K</span>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <div style="position:relative;width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">
+          &#9684;<span style="position:absolute;top:-5px;right:-5px;min-width:16px;height:16px;border-radius:99px;background:#C4472C;color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;padding:0 4px">3</span>
+        </div>
+        <div style="width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">&#9776;</div>
+      </div>
+    </div>
+<div id="previewBanner" style="position:sticky;top:0;z-index:50;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:11.5px;padding:7px 20px;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em">STATIC DESIGN PREVIEW — this module is a non-functional mockup with sample data.</div>
+    <div class="content-viewport" id="contentViewport">
+<div style="background: rgb(255, 255, 255); border-bottom: 1px solid rgb(220, 226, 236); padding: 18px 28px 0px;">
+            <div style="display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <div style="font-size: 22px; font-weight: 600; letter-spacing: -0.01em;">Summit Ridge Bank — Origination bundle</div>
+                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; letter-spacing: 0.1em; background: rgb(253, 243, 224); color: rgb(138, 90, 18); border: 1px solid rgb(241, 223, 188); padding: 3px 8px; border-radius: 5px;">DRAFT · NEEDS PRICING APPROVAL</div>
+                </div>
+                <div style="margin-top: 7px; display: flex; align-items: center; gap: 14px; font-size: 12.5px; color: rgb(107, 118, 134); flex-wrap: wrap;">
+                  <span style="font-family: &quot;IBM Plex Mono&quot;, monospace;">Q-2026-0481</span>
+                  <span style="color: rgb(196, 203, 216);">|</span>
+                  <span>from demand <a href="#">DMD-1174</a></span>
+                  <span style="color: rgb(196, 203, 216);">|</span>
+                  <span>owner Dana Mercer</span>
+                  <span style="color: rgb(196, 203, 216);">|</span>
+                  <span>updated 8 min ago</span>
+                  <span style="color: rgb(1, 62, 144); font-weight: 600; cursor: pointer;">version 7 · history</span>
+                </div>
+              </div>
+              <div style="margin-left: auto; display: flex; gap: 8px;">
+                <button style="height: 36px; padding: 0px 14px; border-radius: 8px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 13.5px; font-weight: 600; cursor: pointer;" class="scp4">Save draft</button>
+                <button style="height: 36px; padding: 0px 14px; border-radius: 8px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 13.5px; font-weight: 600; cursor: pointer;" class="scp4">Preview PDF</button>
+                <button style="height: 36px; padding: 0px 16px; border-radius: 8px; border: medium; background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 13.5px; font-weight: 600; cursor: pointer;" class="scp1"><span class="sc-interp">Continue</span></button>
+              </div>
+            </div>
+            <div style="margin-top: 16px; display: flex; gap: 2px;">
+              
+                <div style="display: flex; align-items: center; gap: 9px; padding: 11px 16px 12px; border-bottom: 2px solid transparent; cursor: pointer;" onclick="showCpqStep('client_demand')" id="cpqstep-tab-client_demand">
+                  <span style="width: 20px; height: 20px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; background: rgb(234, 241, 251); color: rgb(1, 46, 107); border: 1px solid rgb(201, 220, 242);"><span class="sc-interp">✓</span></span>
+                  <span style="font-size: 13.5px; font-weight: 500; color: rgb(107, 118, 134); white-space: nowrap;"><span class="sc-interp">Client &amp; demand</span></span>
+                </div>
+              
+                <div style="display: flex; align-items: center; gap: 9px; padding: 11px 16px 12px; border-bottom: 2px solid rgb(1, 62, 144); cursor: pointer;" onclick="showCpqStep('configure')" id="cpqstep-tab-configure">
+                  <span style="width: 20px; height: 20px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; background: rgb(1, 62, 144); color: rgb(255, 255, 255); border: 1px solid rgb(1, 62, 144);"><span class="sc-interp">2</span></span>
+                  <span style="font-size: 13.5px; font-weight: 600; color: rgb(19, 26, 38); white-space: nowrap;"><span class="sc-interp">Configure</span></span>
+                </div>
+              
+                <div style="display: flex; align-items: center; gap: 9px; padding: 11px 16px 12px; border-bottom: 2px solid transparent; cursor: pointer;" onclick="showCpqStep('rules_check')" id="cpqstep-tab-rules_check">
+                  <span style="width: 20px; height: 20px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; background: rgb(255, 255, 255); color: rgb(151, 161, 178); border: 1px solid rgb(220, 226, 236);"><span class="sc-interp">3</span></span>
+                  <span style="font-size: 13.5px; font-weight: 500; color: rgb(107, 118, 134); white-space: nowrap;"><span class="sc-interp">Rules check</span></span>
+                </div>
+              
+                <div style="display: flex; align-items: center; gap: 9px; padding: 11px 16px 12px; border-bottom: 2px solid transparent; cursor: pointer;" onclick="showCpqStep('pricing_terms')" id="cpqstep-tab-pricing_terms">
+                  <span style="width: 20px; height: 20px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; background: rgb(255, 255, 255); color: rgb(151, 161, 178); border: 1px solid rgb(220, 226, 236);"><span class="sc-interp">4</span></span>
+                  <span style="font-size: 13.5px; font-weight: 500; color: rgb(107, 118, 134); white-space: nowrap;"><span class="sc-interp">Pricing &amp; terms</span></span>
+                </div>
+              
+                <div style="display: flex; align-items: center; gap: 9px; padding: 11px 16px 12px; border-bottom: 2px solid transparent; cursor: pointer;" onclick="showCpqStep('quote_approvals')" id="cpqstep-tab-quote_approvals">
+                  <span style="width: 20px; height: 20px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; background: rgb(255, 255, 255); color: rgb(151, 161, 178); border: 1px solid rgb(220, 226, 236);"><span class="sc-interp">5</span></span>
+                  <span style="font-size: 13.5px; font-weight: 500; color: rgb(107, 118, 134); white-space: nowrap;"><span class="sc-interp">Quote &amp; approvals</span></span>
+                </div>
+              
+            </div>
+          </div>
+<div style="padding:20px 28px 48px;max-width:1520px"><div id="cpqstep-client_demand" style="display:none"><div style="display: grid; grid-template-columns: 1fr 336px; gap: 18px; padding: 20px 28px 48px; align-items: start; max-width: 1520px;">
+            <div style="min-width: 0px; display: flex; flex-direction: column; gap: 14px;">
+
+              
+                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 20px 22px;">
+                  <div style="font-size: 16px; font-weight: 600;">Client &amp; demand context</div>
+                  <div style="margin-top: 4px; font-size: 13px; color: rgb(107, 118, 134);">Pulled from Demand Management. Read-only fields stay in sync with the demand record.</div>
+                  <div style="margin-top: 18px; display: grid; grid-template-columns: repeat(3,1fr); gap: 14px;">
+                    
+                      <div>
+                        <div style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.02em; color: rgb(139, 149, 166); text-transform: uppercase;"><span class="sc-interp">Client</span></div>
+                        <div style="margin-top: 5px; height: 40px; border: 1px solid rgb(227, 232, 240); background: rgb(250, 251, 253); border-radius: 8px; display: flex; align-items: center; padding: 0px 12px; font-size: 14px; color: rgb(19, 26, 38);"><span class="sc-interp">Summit Ridge Bank</span></div>
+                      </div>
+                    
+                      <div>
+                        <div style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.02em; color: rgb(139, 149, 166); text-transform: uppercase;"><span class="sc-interp">Segment</span></div>
+                        <div style="margin-top: 5px; height: 40px; border: 1px solid rgb(227, 232, 240); background: rgb(250, 251, 253); border-radius: 8px; display: flex; align-items: center; padding: 0px 12px; font-size: 14px; color: rgb(19, 26, 38);"><span class="sc-interp">Centralized banking</span></div>
+                      </div>
+                    
+                      <div>
+                        <div style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.02em; color: rgb(139, 149, 166); text-transform: uppercase;"><span class="sc-interp">Source demand</span></div>
+                        <div style="margin-top: 5px; height: 40px; border: 1px solid rgb(227, 232, 240); background: rgb(250, 251, 253); border-radius: 8px; display: flex; align-items: center; padding: 0px 12px; font-size: 14px; color: rgb(19, 26, 38);"><span class="sc-interp">DMD-1174 · score 82</span></div>
+                      </div>
+                    
+                      <div>
+                        <div style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.02em; color: rgb(139, 149, 166); text-transform: uppercase;"><span class="sc-interp">Est. monthly orders</span></div>
+                        <div style="margin-top: 5px; height: 40px; border: 1px solid rgb(227, 232, 240); background: rgb(250, 251, 253); border-radius: 8px; display: flex; align-items: center; padding: 0px 12px; font-size: 14px; color: rgb(19, 26, 38);"><span class="sc-interp">740</span></div>
+                      </div>
+                    
+                      <div>
+                        <div style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.02em; color: rgb(139, 149, 166); text-transform: uppercase;"><span class="sc-interp">Term</span></div>
+                        <div style="margin-top: 5px; height: 40px; border: 1px solid rgb(227, 232, 240); background: rgb(250, 251, 253); border-radius: 8px; display: flex; align-items: center; padding: 0px 12px; font-size: 14px; color: rgb(19, 26, 38);"><span class="sc-interp">3 years</span></div>
+                      </div>
+                    
+                      <div>
+                        <div style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.02em; color: rgb(139, 149, 166); text-transform: uppercase;"><span class="sc-interp">Target first order</span></div>
+                        <div style="margin-top: 5px; height: 40px; border: 1px solid rgb(227, 232, 240); background: rgb(250, 251, 253); border-radius: 8px; display: flex; align-items: center; padding: 0px 12px; font-size: 14px; color: rgb(19, 26, 38);"><span class="sc-interp">90 days</span></div>
+                      </div>
+                    
+                  </div>
+                  <div style="margin-top: 18px; padding: 14px 16px; background: rgb(234, 241, 251); border: 1px solid rgb(216, 229, 245); border-radius: 10px; display: flex; gap: 12px; align-items: flex-start;">
+                    <div style="width: 18px; height: 18px; border-radius: 99px; background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; margin-top: 1px;">i</div>
+                    <div style="font-size: 13px; line-height: 1.55; color: rgb(62, 74, 92); text-wrap: pretty;">Guided selling is on. Answers here filter the product catalog in step 2 and lock incompatible options before pricing runs — engineering rules, not sales memory.</div>
+                  </div>
+                </div>
+                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 20px 22px;">
+                  <div style="font-size: 16px; font-weight: 600;">Guided questions</div>
+                  <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 12px;">
+                    
+                      <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 13px 15px;">
+                        <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Which market segment does this client sit in?</span></div>
+                        <div style="margin-top: 9px; display: flex; gap: 8px; flex-wrap: wrap;">
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(1, 62, 144); background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-weight: 600;"><span class="sc-interp">Centralized banking</span></div>
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Wholesale / TPO</span></div>
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Credit union</span></div>
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Private lending</span></div>
+                          
+                        </div>
+                      </div>
+                    
+                      <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 13px 15px;">
+                        <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Primary use case</span></div>
+                        <div style="margin-top: 9px; display: flex; gap: 8px; flex-wrap: wrap;">
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(1, 62, 144); background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-weight: 600;"><span class="sc-interp">Origination</span></div>
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Home equity</span></div>
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Servicing</span></div>
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">New construction</span></div>
+                          
+                        </div>
+                      </div>
+                    
+                      <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 13px 15px;">
+                        <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Loan origination system to integrate with</span></div>
+                        <div style="margin-top: 9px; display: flex; gap: 8px; flex-wrap: wrap;">
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(1, 62, 144); background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-weight: 600;"><span class="sc-interp">Encompass</span></div>
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Empower</span></div>
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">MeridianLink</span></div>
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Custom API</span></div>
+                          
+                        </div>
+                      </div>
+                    
+                      <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 13px 15px;">
+                        <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Target time to first order</span></div>
+                        <div style="margin-top: 9px; display: flex; gap: 8px; flex-wrap: wrap;">
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">30 days</span></div>
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">60 days</span></div>
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(1, 62, 144); background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-weight: 600;"><span class="sc-interp">90 days</span></div>
+                          
+                            <div style="padding: 7px 13px; border-radius: 99px; font-size: 13px; cursor: pointer; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); color: rgb(78, 88, 102); font-weight: 500;"><span class="sc-interp">Flexible</span></div>
+                          
+                        </div>
+                      </div>
+                    
+                  </div>
+                </div>
+              
+
+              
+
+              
+
+              
+
+              
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; position: sticky; top: 0px;">
+              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; overflow: hidden;">
+                <div style="padding: 14px 16px; border-bottom: 1px solid rgb(237, 240, 246); display: flex; align-items: center; justify-content: space-between;">
+                  <div style="font-size: 14px; font-weight: 600;">Live pricing</div>
+                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; letter-spacing: 0.1em; color: rgb(1, 62, 144);">RECALCULATED</div>
+                </div>
+                <div style="padding: 16px;">
+                  <div style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em;"><span class="sc-interp">$205,674</span></div>
+                  <div style="font-size: 12.5px; color: rgb(107, 118, 134); margin-top: 2px;">estimated monthly · <span class="sc-interp">$2,468,088</span> annual</div>
+                  <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Products (3)</span></div>
+                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$201,474</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Add-ons</span></div>
+                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$4,200</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Blended discount</span></div>
+                        <div style="font-weight: 600; color: rgb(197, 138, 28);"><span class="sc-interp">−18%</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Gross margin</span></div>
+                        <div style="font-weight: 600; color: rgb(196, 71, 44);"><span class="sc-interp">38%</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Pricing model</span></div>
+                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">Tiered</span></div>
+                      </div>
+                    
+                  </div>
+                  <div style="margin-top: 14px; padding-top: 14px; border-top: 1px dashed rgb(227, 232, 240); display: flex; flex-direction: column; gap: 9px;">
+                    
+                      <div style="display: flex; gap: 10px; padding: 11px 12px; background: rgb(253, 243, 224); border: 1px solid rgb(241, 223, 188); border-radius: 9px;">
+                        <div style="color: rgb(138, 90, 18); font-weight: 700; font-size: 12px;">!</div>
+                        <div style="font-size: 12.5px; line-height: 1.45; color: rgb(110, 74, 17);">Discount above the 12% auto-approve cap — pricing &amp; finance sign-off required before the quote can be sent.</div>
+                      </div>
+                    
+                    <div style="font-size: 12px; color: rgb(139, 149, 166); line-height: 1.5;">Margin, discount and approval state are computed on every change so nobody negotiates against stale numbers.</div>
+                  </div>
+                </div>
+              </div>
+              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 14px 16px;">
+                <div style="font-size: 14px; font-weight: 600;">Stakeholders on this quote</div>
+                <div style="margin-top: 11px; display: flex; flex-direction: column; gap: 10px;">
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">DM</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Dana Mercer</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Solutions engineer · owner</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">EDITING</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">RT</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Ray Tolbert</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Account executive</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">VIEWED</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">PF</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Priya Fenwick</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Pricing &amp; finance</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">PENDING</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">JO</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Jon Okafor</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Implementation PM</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">CC</span></div>
+                    </div>
+                  
+                </div>
+              </div>
+              <div style="background: rgb(234, 241, 251); border: 1px solid rgb(216, 229, 245); border-radius: 12px; padding: 14px 16px;">
+                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(1, 46, 107);">UX RATIONALE</div>
+                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.55; color: rgb(62, 74, 92); text-wrap: pretty;">The wizard reduces cognitive load for AEs, but the pricing rail is always visible — the number is the negotiation. Engineering owns rules, finance owns the floor, sales owns the story.</div>
+              </div>
+            </div>
+          </div></div>
+<div id="cpqstep-configure" style="display:block"><div style="display: grid; grid-template-columns: 1fr 336px; gap: 18px; padding: 20px 28px 48px; align-items: start; max-width: 1520px;">
+            <div style="min-width: 0px; display: flex; flex-direction: column; gap: 14px;">
+
+              
+
+              
+                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 20px 22px;">
+                  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                    <div>
+                      <div style="font-size: 16px; font-weight: 600;">Configure the offering</div>
+                      <div style="margin-top: 4px; font-size: 13px; color: rgb(107, 118, 134);">Catalog filtered by guided answers · monthly order volume drives tiered pricing.</div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; letter-spacing: 0.1em; border: 1px solid rgb(220, 226, 236); border-radius: 6px; padding: 5px 9px; color: rgb(107, 118, 134);">3 OF 6 SELECTED</div>
+                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; letter-spacing: 0.1em; border: 1px solid rgb(216, 229, 245); background: rgb(234, 241, 251); border-radius: 6px; padding: 5px 9px; color: rgb(1, 46, 107);">BUNDLE ELIGIBLE</div>
+                    </div>
+                  </div>
+                  <div style="margin-top: 16px; display: grid; grid-template-columns: repeat(2,1fr); gap: 12px;">
+                    
+                      <div style="border: 1px solid rgb(184, 219, 146); background: rgb(248, 251, 255); border-radius: 11px; padding: 14px 15px 13px; display: flex; flex-direction: column; gap: 10px; opacity: 1;">
+                        <div style="display: flex; align-items: flex-start; gap: 11px;">
+                          <div style="width: 19px; height: 19px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; cursor: pointer; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 12px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
+                          <div style="min-width: 0px; flex: 1 1 0%;">
+                            <div style="font-size: 14.5px; font-weight: 600; cursor: pointer; letter-spacing: -0.005em;"><span class="sc-interp">Traditional Appraisal</span></div>
+                            <div style="margin-top: 3px; font-size: 12.5px; color: rgb(107, 118, 134); line-height: 1.45;"><span class="sc-interp">Full interior/exterior, 1004 / 1073</span></div>
+                          </div>
+                          <div style="text-align: right; flex: 0 0 auto;">
+                            <div style="font-size: 15px; font-weight: 600;"><span class="sc-interp">$545</span></div>
+                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(139, 149, 166); letter-spacing: 0.08em;"><span class="sc-interp">PER ORDER</span></div>
+                          </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; padding-top: 9px; border-top: 1px dashed rgb(227, 232, 240);">
+                          <div style="font-size: 12px; color: rgb(107, 118, 134);">Monthly volume</div>
+                          <input style="width: 86px; height: 32px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; padding: 0px 9px; font-size: 13.5px; background: rgb(255, 255, 255); outline: none;" value="180">
+                          <div style="margin-left: auto; font-size: 13px; font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$80,442 / mo</span></div>
+                        </div>
+                        
+                      </div>
+                    
+                      <div style="border: 1px solid rgb(184, 219, 146); background: rgb(248, 251, 255); border-radius: 11px; padding: 14px 15px 13px; display: flex; flex-direction: column; gap: 10px; opacity: 1;">
+                        <div style="display: flex; align-items: flex-start; gap: 11px;">
+                          <div style="width: 19px; height: 19px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; cursor: pointer; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 12px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
+                          <div style="min-width: 0px; flex: 1 1 0%;">
+                            <div style="font-size: 14.5px; font-weight: 600; cursor: pointer; letter-spacing: -0.005em;"><span class="sc-interp">Hybrid Appraisal</span></div>
+                            <div style="margin-top: 3px; font-size: 12.5px; color: rgb(107, 118, 134); line-height: 1.45;"><span class="sc-interp">Third-party data collection + desktop appraisal</span></div>
+                          </div>
+                          <div style="text-align: right; flex: 0 0 auto;">
+                            <div style="font-size: 15px; font-weight: 600;"><span class="sc-interp">$395</span></div>
+                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(139, 149, 166); letter-spacing: 0.08em;"><span class="sc-interp">PER ORDER</span></div>
+                          </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; padding-top: 9px; border-top: 1px dashed rgb(227, 232, 240);">
+                          <div style="font-size: 12px; color: rgb(107, 118, 134);">Monthly volume</div>
+                          <input style="width: 86px; height: 32px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; padding: 0px 9px; font-size: 13.5px; background: rgb(255, 255, 255); outline: none;" value="240">
+                          <div style="margin-left: auto; font-size: 13px; font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$77,736 / mo</span></div>
+                        </div>
+                        
+                      </div>
+                    
+                      <div style="border: 1px solid rgb(184, 219, 146); background: rgb(248, 251, 255); border-radius: 11px; padding: 14px 15px 13px; display: flex; flex-direction: column; gap: 10px; opacity: 1;">
+                        <div style="display: flex; align-items: flex-start; gap: 11px;">
+                          <div style="width: 19px; height: 19px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; cursor: pointer; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 12px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
+                          <div style="min-width: 0px; flex: 1 1 0%;">
+                            <div style="font-size: 14.5px; font-weight: 600; cursor: pointer; letter-spacing: -0.005em;"><span class="sc-interp">Property Data Advantage</span></div>
+                            <div style="margin-top: 3px; font-size: 12.5px; color: rgb(107, 118, 134); line-height: 1.45;"><span class="sc-interp">PDC capture, UAD 3.6 ready dataset</span></div>
+                          </div>
+                          <div style="text-align: right; flex: 0 0 auto;">
+                            <div style="font-size: 15px; font-weight: 600;"><span class="sc-interp">$165</span></div>
+                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(139, 149, 166); letter-spacing: 0.08em;"><span class="sc-interp">PER ORDER</span></div>
+                          </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; padding-top: 9px; border-top: 1px dashed rgb(227, 232, 240);">
+                          <div style="font-size: 12px; color: rgb(107, 118, 134);">Monthly volume</div>
+                          <input style="width: 86px; height: 32px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; padding: 0px 9px; font-size: 13.5px; background: rgb(255, 255, 255); outline: none;" value="320">
+                          <div style="margin-left: auto; font-size: 13px; font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$43,296 / mo</span></div>
+                        </div>
+                        
+                      </div>
+                    
+                      <div style="border: 1px solid rgb(227, 232, 240); background: rgb(255, 255, 255); border-radius: 11px; padding: 14px 15px 13px; display: flex; flex-direction: column; gap: 10px; opacity: 1;">
+                        <div style="display: flex; align-items: flex-start; gap: 11px;">
+                          <div style="width: 19px; height: 19px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; cursor: pointer; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 12px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
+                          <div style="min-width: 0px; flex: 1 1 0%;">
+                            <div style="font-size: 14.5px; font-weight: 600; cursor: pointer; letter-spacing: -0.005em;"><span class="sc-interp">Inspection-Based Waiver</span></div>
+                            <div style="margin-top: 3px; font-size: 12.5px; color: rgb(107, 118, 134); line-height: 1.45;"><span class="sc-interp">Waiver-eligible inspection workflow</span></div>
+                          </div>
+                          <div style="text-align: right; flex: 0 0 auto;">
+                            <div style="font-size: 15px; font-weight: 600;"><span class="sc-interp">$145</span></div>
+                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(139, 149, 166); letter-spacing: 0.08em;"><span class="sc-interp">PER ORDER</span></div>
+                          </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; padding-top: 9px; border-top: 1px dashed rgb(227, 232, 240);">
+                          <div style="font-size: 12px; color: rgb(107, 118, 134);">Monthly volume</div>
+                          <input style="width: 86px; height: 32px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; padding: 0px 9px; font-size: 13.5px; background: rgb(255, 255, 255); outline: none;" value="0">
+                          <div style="margin-left: auto; font-size: 13px; font-weight: 600; color: rgb(151, 161, 178);"><span class="sc-interp">not included</span></div>
+                        </div>
+                        
+                      </div>
+                    
+                      <div style="border: 1px solid rgb(227, 232, 240); background: rgb(255, 255, 255); border-radius: 11px; padding: 14px 15px 13px; display: flex; flex-direction: column; gap: 10px; opacity: 0.55;">
+                        <div style="display: flex; align-items: flex-start; gap: 11px;">
+                          <div style="width: 19px; height: 19px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; cursor: pointer; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 12px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
+                          <div style="min-width: 0px; flex: 1 1 0%;">
+                            <div style="font-size: 14.5px; font-weight: 600; cursor: pointer; letter-spacing: -0.005em;"><span class="sc-interp">AVM + PCR</span></div>
+                            <div style="margin-top: 3px; font-size: 12.5px; color: rgb(107, 118, 134); line-height: 1.45;"><span class="sc-interp">Automated valuation with property condition report</span></div>
+                          </div>
+                          <div style="text-align: right; flex: 0 0 auto;">
+                            <div style="font-size: 15px; font-weight: 600;"><span class="sc-interp">$95</span></div>
+                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(139, 149, 166); letter-spacing: 0.08em;"><span class="sc-interp">PER ORDER</span></div>
+                          </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; padding-top: 9px; border-top: 1px dashed rgb(227, 232, 240);">
+                          <div style="font-size: 12px; color: rgb(107, 118, 134);">Monthly volume</div>
+                          <input style="width: 86px; height: 32px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; padding: 0px 9px; font-size: 13.5px; background: rgb(255, 255, 255); outline: none;" value="0">
+                          <div style="margin-left: auto; font-size: 13px; font-weight: 600; color: rgb(151, 161, 178);"><span class="sc-interp">not included</span></div>
+                        </div>
+                        
+                          <div style="font-size: 12px; color: rgb(138, 90, 18); background: rgb(253, 243, 224); border: 1px solid rgb(241, 223, 188); border-radius: 7px; padding: 7px 9px; line-height: 1.4;"><span class="sc-interp">Requires alternative-valuation eligibility — not enabled for this segment yet.</span></div>
+                        
+                      </div>
+                    
+                      <div style="border: 1px solid rgb(227, 232, 240); background: rgb(255, 255, 255); border-radius: 11px; padding: 14px 15px 13px; display: flex; flex-direction: column; gap: 10px; opacity: 1;">
+                        <div style="display: flex; align-items: flex-start; gap: 11px;">
+                          <div style="width: 19px; height: 19px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; cursor: pointer; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 12px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
+                          <div style="min-width: 0px; flex: 1 1 0%;">
+                            <div style="font-size: 14.5px; font-weight: 600; cursor: pointer; letter-spacing: -0.005em;"><span class="sc-interp">Class Evaluation</span></div>
+                            <div style="margin-top: 3px; font-size: 12.5px; color: rgb(107, 118, 134); line-height: 1.45;"><span class="sc-interp">Evaluation product for portfolio &amp; home equity</span></div>
+                          </div>
+                          <div style="text-align: right; flex: 0 0 auto;">
+                            <div style="font-size: 15px; font-weight: 600;"><span class="sc-interp">$210</span></div>
+                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(139, 149, 166); letter-spacing: 0.08em;"><span class="sc-interp">PER ORDER</span></div>
+                          </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; padding-top: 9px; border-top: 1px dashed rgb(227, 232, 240);">
+                          <div style="font-size: 12px; color: rgb(107, 118, 134);">Monthly volume</div>
+                          <input style="width: 86px; height: 32px; border: 1px solid rgb(220, 226, 236); border-radius: 7px; padding: 0px 9px; font-size: 13.5px; background: rgb(255, 255, 255); outline: none;" value="0">
+                          <div style="margin-left: auto; font-size: 13px; font-weight: 600; color: rgb(151, 161, 178);"><span class="sc-interp">not included</span></div>
+                        </div>
+                        
+                      </div>
+                    
+                  </div>
+                </div>
+                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 20px 22px;">
+                  <div style="font-size: 16px; font-weight: 600;">Add-ons &amp; service levels</div>
+                  <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 1px; background: rgb(237, 240, 246); border-radius: 9px; overflow: hidden;">
+                    
+                      <div style="display: grid; grid-template-columns: 22px 1.6fr 1fr .8fr; gap: 12px; align-items: center; background: rgb(255, 255, 255); padding: 11px 13px;">
+                        <div style="width: 17px; height: 17px; border-radius: 5px; cursor: pointer; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
+                        <div>
+                          <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Rush turn-time tier</span></div>
+                          <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">24h expedite on eligible orders</span></div>
+                        </div>
+                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(107, 118, 134);"><span class="sc-interp">MAX 15% OF VOLUME</span></div>
+                        <div style="text-align: right; font-size: 13.5px; font-weight: 600;"><span class="sc-interp">$1,800 / mo</span></div>
+                      </div>
+                    
+                      <div style="display: grid; grid-template-columns: 22px 1.6fr 1fr .8fr; gap: 12px; align-items: center; background: rgb(255, 255, 255); padding: 11px 13px;">
+                        <div style="width: 17px; height: 17px; border-radius: 5px; cursor: pointer; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
+                        <div>
+                          <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Guaranteed Pricing</span></div>
+                          <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">Fixed fee regardless of complexity</span></div>
+                        </div>
+                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(107, 118, 134);"><span class="sc-interp">REQUIRES 12MO TERM</span></div>
+                        <div style="text-align: right; font-size: 13.5px; font-weight: 600;"><span class="sc-interp">$2,400 / mo</span></div>
+                      </div>
+                    
+                      <div style="display: grid; grid-template-columns: 22px 1.6fr 1fr .8fr; gap: 12px; align-items: center; background: rgb(255, 255, 255); padding: 11px 13px;">
+                        <div style="width: 17px; height: 17px; border-radius: 5px; cursor: pointer; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
+                        <div>
+                          <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Order API + webhooks</span></div>
+                          <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">Direct LOS integration, status callbacks</span></div>
+                        </div>
+                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(107, 118, 134);"><span class="sc-interp">ENG EFFORT: 3 WKS</span></div>
+                        <div style="text-align: right; font-size: 13.5px; font-weight: 600;"><span class="sc-interp">$1,200 / mo</span></div>
+                      </div>
+                    
+                      <div style="display: grid; grid-template-columns: 22px 1.6fr 1fr .8fr; gap: 12px; align-items: center; background: rgb(255, 255, 255); padding: 11px 13px;">
+                        <div style="width: 17px; height: 17px; border-radius: 5px; cursor: pointer; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
+                        <div>
+                          <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Client analytics portal</span></div>
+                          <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">Volume &amp; turn-time dashboards for the lender</span></div>
+                        </div>
+                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(107, 118, 134);"><span class="sc-interp">SEATS UNLIMITED</span></div>
+                        <div style="text-align: right; font-size: 13.5px; font-weight: 600;"><span class="sc-interp">$900 / mo</span></div>
+                      </div>
+                    
+                  </div>
+                </div>
+              
+
+              
+
+              
+
+              
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; position: sticky; top: 0px;">
+              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; overflow: hidden;">
+                <div style="padding: 14px 16px; border-bottom: 1px solid rgb(237, 240, 246); display: flex; align-items: center; justify-content: space-between;">
+                  <div style="font-size: 14px; font-weight: 600;">Live pricing</div>
+                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; letter-spacing: 0.1em; color: rgb(1, 62, 144);">RECALCULATED</div>
+                </div>
+                <div style="padding: 16px;">
+                  <div style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em;"><span class="sc-interp">$205,674</span></div>
+                  <div style="font-size: 12.5px; color: rgb(107, 118, 134); margin-top: 2px;">estimated monthly · <span class="sc-interp">$2,468,088</span> annual</div>
+                  <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Products (3)</span></div>
+                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$201,474</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Add-ons</span></div>
+                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$4,200</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Blended discount</span></div>
+                        <div style="font-weight: 600; color: rgb(197, 138, 28);"><span class="sc-interp">−18%</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Gross margin</span></div>
+                        <div style="font-weight: 600; color: rgb(196, 71, 44);"><span class="sc-interp">38%</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Pricing model</span></div>
+                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">Tiered</span></div>
+                      </div>
+                    
+                  </div>
+                  <div style="margin-top: 14px; padding-top: 14px; border-top: 1px dashed rgb(227, 232, 240); display: flex; flex-direction: column; gap: 9px;">
+                    
+                      <div style="display: flex; gap: 10px; padding: 11px 12px; background: rgb(253, 243, 224); border: 1px solid rgb(241, 223, 188); border-radius: 9px;">
+                        <div style="color: rgb(138, 90, 18); font-weight: 700; font-size: 12px;">!</div>
+                        <div style="font-size: 12.5px; line-height: 1.45; color: rgb(110, 74, 17);">Discount above the 12% auto-approve cap — pricing &amp; finance sign-off required before the quote can be sent.</div>
+                      </div>
+                    
+                    <div style="font-size: 12px; color: rgb(139, 149, 166); line-height: 1.5;">Margin, discount and approval state are computed on every change so nobody negotiates against stale numbers.</div>
+                  </div>
+                </div>
+              </div>
+              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 14px 16px;">
+                <div style="font-size: 14px; font-weight: 600;">Stakeholders on this quote</div>
+                <div style="margin-top: 11px; display: flex; flex-direction: column; gap: 10px;">
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">DM</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Dana Mercer</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Solutions engineer · owner</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">EDITING</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">RT</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Ray Tolbert</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Account executive</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">VIEWED</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">PF</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Priya Fenwick</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Pricing &amp; finance</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">PENDING</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">JO</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Jon Okafor</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Implementation PM</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">CC</span></div>
+                    </div>
+                  
+                </div>
+              </div>
+              <div style="background: rgb(234, 241, 251); border: 1px solid rgb(216, 229, 245); border-radius: 12px; padding: 14px 16px;">
+                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(1, 46, 107);">UX RATIONALE</div>
+                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.55; color: rgb(62, 74, 92); text-wrap: pretty;">The wizard reduces cognitive load for AEs, but the pricing rail is always visible — the number is the negotiation. Engineering owns rules, finance owns the floor, sales owns the story.</div>
+              </div>
+            </div>
+          </div></div>
+<div id="cpqstep-rules_check" style="display:none"><div style="display: grid; grid-template-columns: 1fr 336px; gap: 18px; padding: 20px 28px 48px; align-items: start; max-width: 1520px;">
+            <div style="min-width: 0px; display: flex; flex-direction: column; gap: 14px;">
+
+              
+
+              
+
+              
+                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 20px 22px;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="font-size: 16px; font-weight: 600;">Rule &amp; compatibility check</div>
+                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; letter-spacing: 0.1em; background: rgb(234, 241, 251); border: 1px solid rgb(216, 229, 245); color: rgb(1, 46, 107); border-radius: 6px; padding: 4px 8px;">RULESET v14 · 6 OF 8 PASS</div>
+                  </div>
+                  <div style="margin-top: 4px; font-size: 13px; color: rgb(107, 118, 134);">Owned by product engineering. Sales cannot override a hard stop — only request an exception, which routes for approval.</div>
+                  <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 9px;">
+                    
+                      <div style="display: flex; gap: 12px; align-items: flex-start; border: 1px solid rgb(227, 232, 240); background: rgb(255, 255, 255); border-radius: 10px; padding: 13px 15px;">
+                        <div style="width: 20px; height: 20px; border-radius: 99px; flex: 0 0 auto; background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px;"><span class="sc-interp">✓</span></div>
+                        <div style="min-width: 0px; flex: 1 1 0%;">
+                          <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Segment eligibility</span></div>
+                          <div style="margin-top: 3px; font-size: 12.5px; line-height: 1.5; color: rgb(90, 100, 116); text-wrap: pretty;"><span class="sc-interp">Centralized banking is approved for Traditional, Hybrid and Property Data Advantage in all licensed states.</span></div>
+                        </div>
+                        
+                      </div>
+                    
+                      <div style="display: flex; gap: 12px; align-items: flex-start; border: 1px solid rgb(227, 232, 240); background: rgb(255, 255, 255); border-radius: 10px; padding: 13px 15px;">
+                        <div style="width: 20px; height: 20px; border-radius: 99px; flex: 0 0 auto; background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px;"><span class="sc-interp">✓</span></div>
+                        <div style="min-width: 0px; flex: 1 1 0%;">
+                          <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">UAD 3.6 readiness</span></div>
+                          <div style="margin-top: 3px; font-size: 12.5px; line-height: 1.5; color: rgb(90, 100, 116); text-wrap: pretty;"><span class="sc-interp">Selected products emit the Uniform Property Data Report specification — no remediation needed before the mandate.</span></div>
+                        </div>
+                        
+                      </div>
+                    
+                      <div style="display: flex; gap: 12px; align-items: flex-start; border: 1px solid rgb(227, 232, 240); background: rgb(255, 255, 255); border-radius: 10px; padding: 13px 15px;">
+                        <div style="width: 20px; height: 20px; border-radius: 99px; flex: 0 0 auto; background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px;"><span class="sc-interp">✓</span></div>
+                        <div style="min-width: 0px; flex: 1 1 0%;">
+                          <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Guaranteed Pricing compatibility</span></div>
+                          <div style="margin-top: 3px; font-size: 12.5px; line-height: 1.5; color: rgb(90, 100, 116); text-wrap: pretty;"><span class="sc-interp">Guaranteed Pricing is compatible with the selected term and product mix.</span></div>
+                        </div>
+                        
+                      </div>
+                    
+                      <div style="display: flex; gap: 12px; align-items: flex-start; border: 1px solid rgb(241, 223, 188); background: rgb(254, 250, 242); border-radius: 10px; padding: 13px 15px;">
+                        <div style="width: 20px; height: 20px; border-radius: 99px; flex: 0 0 auto; background: rgb(197, 138, 28); color: rgb(255, 255, 255); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px;"><span class="sc-interp">!</span></div>
+                        <div style="min-width: 0px; flex: 1 1 0%;">
+                          <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Rush tier coverage</span></div>
+                          <div style="margin-top: 3px; font-size: 12.5px; line-height: 1.5; color: rgb(90, 100, 116); text-wrap: pretty;"><span class="sc-interp">Rush is capped at 15% of monthly volume; panel capacity in two metro counties is tight at the quoted volume. Operations sign-off recommended.</span></div>
+                        </div>
+                        
+                          <button style="flex: 0 0 auto; height: 30px; padding: 0px 12px; border-radius: 7px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 12.5px; font-weight: 600; cursor: pointer;" class="scp0"><span class="sc-interp">Request review</span></button>
+                        
+                      </div>
+                    
+                      <div style="display: flex; gap: 12px; align-items: flex-start; border: 1px solid rgb(227, 232, 240); background: rgb(255, 255, 255); border-radius: 10px; padding: 13px 15px;">
+                        <div style="width: 20px; height: 20px; border-radius: 99px; flex: 0 0 auto; background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px;"><span class="sc-interp">✓</span></div>
+                        <div style="min-width: 0px; flex: 1 1 0%;">
+                          <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Alternative valuation entitlement</span></div>
+                          <div style="margin-top: 3px; font-size: 12.5px; line-height: 1.5; color: rgb(90, 100, 116); text-wrap: pretty;"><span class="sc-interp">No non-entitled products in the configuration.</span></div>
+                        </div>
+                        
+                      </div>
+                    
+                      <div style="display: flex; gap: 12px; align-items: flex-start; border: 1px solid rgb(241, 223, 188); background: rgb(254, 250, 242); border-radius: 10px; padding: 13px 15px;">
+                        <div style="width: 20px; height: 20px; border-radius: 99px; flex: 0 0 auto; background: rgb(197, 138, 28); color: rgb(255, 255, 255); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px;"><span class="sc-interp">!</span></div>
+                        <div style="min-width: 0px; flex: 1 1 0%;">
+                          <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Discount authority</span></div>
+                          <div style="margin-top: 3px; font-size: 12.5px; line-height: 1.5; color: rgb(90, 100, 116); text-wrap: pretty;"><span class="sc-interp">A 18% blended discount exceeds the AE authority of 12% and will route to pricing &amp; finance.</span></div>
+                        </div>
+                        
+                      </div>
+                    
+                  </div>
+                </div>
+              
+
+              
+
+              
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; position: sticky; top: 0px;">
+              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; overflow: hidden;">
+                <div style="padding: 14px 16px; border-bottom: 1px solid rgb(237, 240, 246); display: flex; align-items: center; justify-content: space-between;">
+                  <div style="font-size: 14px; font-weight: 600;">Live pricing</div>
+                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; letter-spacing: 0.1em; color: rgb(1, 62, 144);">RECALCULATED</div>
+                </div>
+                <div style="padding: 16px;">
+                  <div style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em;"><span class="sc-interp">$205,674</span></div>
+                  <div style="font-size: 12.5px; color: rgb(107, 118, 134); margin-top: 2px;">estimated monthly · <span class="sc-interp">$2,468,088</span> annual</div>
+                  <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Products (3)</span></div>
+                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$201,474</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Add-ons</span></div>
+                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$4,200</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Blended discount</span></div>
+                        <div style="font-weight: 600; color: rgb(197, 138, 28);"><span class="sc-interp">−18%</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Gross margin</span></div>
+                        <div style="font-weight: 600; color: rgb(196, 71, 44);"><span class="sc-interp">38%</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Pricing model</span></div>
+                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">Tiered</span></div>
+                      </div>
+                    
+                  </div>
+                  <div style="margin-top: 14px; padding-top: 14px; border-top: 1px dashed rgb(227, 232, 240); display: flex; flex-direction: column; gap: 9px;">
+                    
+                      <div style="display: flex; gap: 10px; padding: 11px 12px; background: rgb(253, 243, 224); border: 1px solid rgb(241, 223, 188); border-radius: 9px;">
+                        <div style="color: rgb(138, 90, 18); font-weight: 700; font-size: 12px;">!</div>
+                        <div style="font-size: 12.5px; line-height: 1.45; color: rgb(110, 74, 17);">Discount above the 12% auto-approve cap — pricing &amp; finance sign-off required before the quote can be sent.</div>
+                      </div>
+                    
+                    <div style="font-size: 12px; color: rgb(139, 149, 166); line-height: 1.5;">Margin, discount and approval state are computed on every change so nobody negotiates against stale numbers.</div>
+                  </div>
+                </div>
+              </div>
+              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 14px 16px;">
+                <div style="font-size: 14px; font-weight: 600;">Stakeholders on this quote</div>
+                <div style="margin-top: 11px; display: flex; flex-direction: column; gap: 10px;">
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">DM</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Dana Mercer</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Solutions engineer · owner</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">EDITING</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">RT</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Ray Tolbert</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Account executive</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">VIEWED</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">PF</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Priya Fenwick</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Pricing &amp; finance</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">PENDING</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">JO</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Jon Okafor</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Implementation PM</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">CC</span></div>
+                    </div>
+                  
+                </div>
+              </div>
+              <div style="background: rgb(234, 241, 251); border: 1px solid rgb(216, 229, 245); border-radius: 12px; padding: 14px 16px;">
+                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(1, 46, 107);">UX RATIONALE</div>
+                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.55; color: rgb(62, 74, 92); text-wrap: pretty;">The wizard reduces cognitive load for AEs, but the pricing rail is always visible — the number is the negotiation. Engineering owns rules, finance owns the floor, sales owns the story.</div>
+              </div>
+            </div>
+          </div></div>
+<div id="cpqstep-pricing_terms" style="display:none"><div style="display: grid; grid-template-columns: 1fr 336px; gap: 18px; padding: 20px 28px 48px; align-items: start; max-width: 1520px;">
+            <div style="min-width: 0px; display: flex; flex-direction: column; gap: 14px;">
+
+              
+
+              
+
+              
+
+              
+                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 20px 22px;">
+                  <div style="font-size: 16px; font-weight: 600;">Pricing &amp; commercial terms</div>
+                  <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
+                    
+                      <div style="flex: 1 1 180px; cursor: pointer; border: 1.5px solid rgb(1, 62, 144); background: rgb(234, 241, 251); border-radius: 10px; padding: 12px 14px;">
+                        <div style="font-size: 13.5px; font-weight: 600; color: rgb(1, 46, 107);"><span class="sc-interp">Tiered volume pricing</span></div>
+                        <div style="margin-top: 4px; font-size: 12px; color: rgb(107, 118, 134); line-height: 1.45;"><span class="sc-interp">Unit price steps down at agreed monthly bands</span></div>
+                      </div>
+                    
+                      <div style="flex: 1 1 180px; cursor: pointer; border: 1.5px solid rgb(227, 232, 240); background: rgb(255, 255, 255); border-radius: 10px; padding: 12px 14px;">
+                        <div style="font-size: 13.5px; font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">Annual commitment</span></div>
+                        <div style="margin-top: 4px; font-size: 12px; color: rgb(107, 118, 134); line-height: 1.45;"><span class="sc-interp">Committed spend, true-up at renewal</span></div>
+                      </div>
+                    
+                      <div style="flex: 1 1 180px; cursor: pointer; border: 1.5px solid rgb(227, 232, 240); background: rgb(255, 255, 255); border-radius: 10px; padding: 12px 14px;">
+                        <div style="font-size: 13.5px; font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">Pure consumption</span></div>
+                        <div style="margin-top: 4px; font-size: 12px; color: rgb(107, 118, 134); line-height: 1.45;"><span class="sc-interp">Pay per order, no minimum, list rate</span></div>
+                      </div>
+                    
+                  </div>
+                  <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
+                    <div>
+                      <div style="display: flex; align-items: baseline; justify-content: space-between;">
+                        <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.02em; color: rgb(139, 149, 166); text-transform: uppercase;">Blended discount</div>
+                        <div style="font-size: 20px; font-weight: 600;"><span class="sc-interp">18%</span></div>
+                      </div>
+                      <input type="range" min="0" max="30" style="width: 100%; margin-top: 10px; accent-color: rgb(1, 62, 144);" value="18">
+                      <div style="display: flex; justify-content: space-between; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(151, 161, 178); margin-top: 2px;"><span>0%</span><span>12% AUTO-APPROVE CAP</span><span>30%</span></div>
+                      <div style="margin-top: 14px; padding: 12px 14px; border-radius: 9px; border: 1px solid rgb(239, 207, 199); background: rgb(253, 244, 242);">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                          <div style="font-size: 13px; font-weight: 600; color: rgb(196, 71, 44);">Gross margin <span class="sc-interp">38%</span></div>
+                          <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(196, 71, 44);">FLOOR 42%</div>
+                        </div>
+                        <div style="margin-top: 9px; height: 7px; border-radius: 99px; background: rgb(230, 234, 242); overflow: hidden;">
+                          <div style="height: 100%; width: 38%; background: rgb(196, 71, 44); border-radius: 99px;"></div>
+                        </div>
+                        <div style="margin-top: 9px; font-size: 12.5px; line-height: 1.45; color: rgb(90, 100, 116);"><span class="sc-interp">Below the 42% margin floor. Finance approval is mandatory and the deal desk will be notified.</span></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.02em; color: rgb(139, 149, 166); text-transform: uppercase;">Terms</div>
+                      <div style="margin-top: 9px; display: flex; flex-direction: column; gap: 1px; background: rgb(237, 240, 246); border-radius: 9px; overflow: hidden;">
+                        
+                          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgb(255, 255, 255); padding: 10px 13px;">
+                            <div style="font-size: 13px; color: rgb(78, 88, 102);"><span class="sc-interp">Contract term</span></div>
+                            <div style="font-size: 13px; font-weight: 600;"><span class="sc-interp">36 months</span></div>
+                          </div>
+                        
+                          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgb(255, 255, 255); padding: 10px 13px;">
+                            <div style="font-size: 13px; color: rgb(78, 88, 102);"><span class="sc-interp">Payment terms</span></div>
+                            <div style="font-size: 13px; font-weight: 600;"><span class="sc-interp">Net 30</span></div>
+                          </div>
+                        
+                          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgb(255, 255, 255); padding: 10px 13px;">
+                            <div style="font-size: 13px; color: rgb(78, 88, 102);"><span class="sc-interp">Pay Later enabled</span></div>
+                            <div style="font-size: 13px; font-weight: 600;"><span class="sc-interp">Yes</span></div>
+                          </div>
+                        
+                          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgb(255, 255, 255); padding: 10px 13px;">
+                            <div style="font-size: 13px; color: rgb(78, 88, 102);"><span class="sc-interp">Volume commitment</span></div>
+                            <div style="font-size: 13px; font-weight: 600;"><span class="sc-interp">740 / month</span></div>
+                          </div>
+                        
+                          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgb(255, 255, 255); padding: 10px 13px;">
+                            <div style="font-size: 13px; color: rgb(78, 88, 102);"><span class="sc-interp">Price review</span></div>
+                            <div style="font-size: 13px; font-weight: 600;"><span class="sc-interp">Annual, CPI-capped</span></div>
+                          </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 20px 22px;">
+                  <div style="font-size: 16px; font-weight: 600;">Line items</div>
+                  <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 1px; background: rgb(237, 240, 246); border-radius: 9px; overflow: hidden;">
+                    <div style="display: grid; grid-template-columns: 2fr .7fr .8fr .8fr .8fr; gap: 12px; background: rgb(250, 251, 253); padding: 9px 13px; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">
+                      <div>ITEM</div><div style="text-align: right;">VOL</div><div style="text-align: right;">LIST</div><div style="text-align: right;">NET</div><div style="text-align: right;">MONTHLY</div>
+                    </div>
+                    
+                      <div style="display: grid; grid-template-columns: 2fr .7fr .8fr .8fr .8fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; font-size: 13.5px; align-items: center;">
+                        <div style="font-weight: 600;"><span class="sc-interp">Traditional Appraisal</span></div>
+                        <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">180</span></div>
+                        <div style="text-align: right; color: rgb(151, 161, 178); text-decoration: line-through;"><span class="sc-interp">$545</span></div>
+                        <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">$447</span></div>
+                        <div style="text-align: right; font-weight: 600;"><span class="sc-interp">$80,442</span></div>
+                      </div>
+                    
+                      <div style="display: grid; grid-template-columns: 2fr .7fr .8fr .8fr .8fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; font-size: 13.5px; align-items: center;">
+                        <div style="font-weight: 600;"><span class="sc-interp">Hybrid Appraisal</span></div>
+                        <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">240</span></div>
+                        <div style="text-align: right; color: rgb(151, 161, 178); text-decoration: line-through;"><span class="sc-interp">$395</span></div>
+                        <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">$324</span></div>
+                        <div style="text-align: right; font-weight: 600;"><span class="sc-interp">$77,736</span></div>
+                      </div>
+                    
+                      <div style="display: grid; grid-template-columns: 2fr .7fr .8fr .8fr .8fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; font-size: 13.5px; align-items: center;">
+                        <div style="font-weight: 600;"><span class="sc-interp">Property Data Advantage</span></div>
+                        <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">320</span></div>
+                        <div style="text-align: right; color: rgb(151, 161, 178); text-decoration: line-through;"><span class="sc-interp">$165</span></div>
+                        <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">$135</span></div>
+                        <div style="text-align: right; font-weight: 600;"><span class="sc-interp">$43,296</span></div>
+                      </div>
+                    
+                  </div>
+                </div>
+              
+
+              
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; position: sticky; top: 0px;">
+              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; overflow: hidden;">
+                <div style="padding: 14px 16px; border-bottom: 1px solid rgb(237, 240, 246); display: flex; align-items: center; justify-content: space-between;">
+                  <div style="font-size: 14px; font-weight: 600;">Live pricing</div>
+                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; letter-spacing: 0.1em; color: rgb(1, 62, 144);">RECALCULATED</div>
+                </div>
+                <div style="padding: 16px;">
+                  <div style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em;"><span class="sc-interp">$205,674</span></div>
+                  <div style="font-size: 12.5px; color: rgb(107, 118, 134); margin-top: 2px;">estimated monthly · <span class="sc-interp">$2,468,088</span> annual</div>
+                  <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Products (3)</span></div>
+                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$201,474</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Add-ons</span></div>
+                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$4,200</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Blended discount</span></div>
+                        <div style="font-weight: 600; color: rgb(197, 138, 28);"><span class="sc-interp">−18%</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Gross margin</span></div>
+                        <div style="font-weight: 600; color: rgb(196, 71, 44);"><span class="sc-interp">38%</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Pricing model</span></div>
+                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">Tiered</span></div>
+                      </div>
+                    
+                  </div>
+                  <div style="margin-top: 14px; padding-top: 14px; border-top: 1px dashed rgb(227, 232, 240); display: flex; flex-direction: column; gap: 9px;">
+                    
+                      <div style="display: flex; gap: 10px; padding: 11px 12px; background: rgb(253, 243, 224); border: 1px solid rgb(241, 223, 188); border-radius: 9px;">
+                        <div style="color: rgb(138, 90, 18); font-weight: 700; font-size: 12px;">!</div>
+                        <div style="font-size: 12.5px; line-height: 1.45; color: rgb(110, 74, 17);">Discount above the 12% auto-approve cap — pricing &amp; finance sign-off required before the quote can be sent.</div>
+                      </div>
+                    
+                    <div style="font-size: 12px; color: rgb(139, 149, 166); line-height: 1.5;">Margin, discount and approval state are computed on every change so nobody negotiates against stale numbers.</div>
+                  </div>
+                </div>
+              </div>
+              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 14px 16px;">
+                <div style="font-size: 14px; font-weight: 600;">Stakeholders on this quote</div>
+                <div style="margin-top: 11px; display: flex; flex-direction: column; gap: 10px;">
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">DM</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Dana Mercer</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Solutions engineer · owner</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">EDITING</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">RT</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Ray Tolbert</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Account executive</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">VIEWED</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">PF</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Priya Fenwick</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Pricing &amp; finance</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">PENDING</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">JO</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Jon Okafor</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Implementation PM</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">CC</span></div>
+                    </div>
+                  
+                </div>
+              </div>
+              <div style="background: rgb(234, 241, 251); border: 1px solid rgb(216, 229, 245); border-radius: 12px; padding: 14px 16px;">
+                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(1, 46, 107);">UX RATIONALE</div>
+                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.55; color: rgb(62, 74, 92); text-wrap: pretty;">The wizard reduces cognitive load for AEs, but the pricing rail is always visible — the number is the negotiation. Engineering owns rules, finance owns the floor, sales owns the story.</div>
+              </div>
+            </div>
+          </div></div>
+<div id="cpqstep-quote_approvals" style="display:none"><div style="display: grid; grid-template-columns: 1fr 336px; gap: 18px; padding: 20px 28px 48px; align-items: start; max-width: 1520px;">
+            <div style="min-width: 0px; display: flex; flex-direction: column; gap: 14px;">
+
+              
+
+              
+
+              
+
+              
+
+              
+                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 20px 22px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+                    <div>
+                      <div style="font-size: 16px; font-weight: 600;">Quote document</div>
+                      <div style="margin-top: 4px; font-size: 13px; color: rgb(107, 118, 134);">Template: Origination Bundle v3 · generated from the configuration, not retyped.</div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                      <button style="height: 32px; padding: 0px 12px; border-radius: 7px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 12.5px; font-weight: 600; cursor: pointer;">Change template</button>
+                      <button style="height: 32px; padding: 0px 12px; border-radius: 7px; border: medium; background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 12.5px; font-weight: 600; cursor: pointer;">Download PDF</button>
+                    </div>
+                  </div>
+                  <div style="margin-top: 16px; background: rgb(237, 240, 246); border-radius: 10px; padding: 22px; display: flex; justify-content: center;">
+                    <div style="width: 100%; max-width: 520px; background: rgb(255, 255, 255); box-shadow: 0 6px 22px rgba(1,40,94,.12); padding: 34px 36px; font-size: 12px; color: rgb(35, 44, 58);">
+                      <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                          <div style="width: 16px; height: 16px; border-radius: 4px; background: rgb(133, 195, 65);"></div>
+                          <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.14em;">CLASS VALUATION</div>
+                        </div>
+                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(139, 149, 166);">Q-2026-0481 · 16 AUG 2026</div>
+                      </div>
+                      <div style="margin-top: 26px; font-size: 19px; font-weight: 600; letter-spacing: -0.01em;">Valuation services quote</div>
+                      <div style="margin-top: 4px; color: rgb(107, 118, 134); font-size: 11.5px;">Prepared for Summit Ridge Bank · Centralized Banking · 3-year term</div>
+                      <div style="margin-top: 22px; height: 1px; background: rgb(227, 232, 240);"></div>
+                      
+                        <div style="display: flex; justify-content: space-between; gap: 12px; padding: 9px 0px; border-bottom: 1px solid rgb(240, 243, 248);">
+                          <div>
+                            <div style="font-weight: 600; font-size: 11.5px;"><span class="sc-interp">Traditional Appraisal</span></div>
+                            <div style="color: rgb(139, 149, 166); font-size: 10.5px; margin-top: 2px;"><span class="sc-interp">180</span> orders / month at <span class="sc-interp">$447</span></div>
+                          </div>
+                          <div style="font-weight: 600; font-size: 11.5px; white-space: nowrap;"><span class="sc-interp">$80,442</span></div>
+                        </div>
+                      
+                        <div style="display: flex; justify-content: space-between; gap: 12px; padding: 9px 0px; border-bottom: 1px solid rgb(240, 243, 248);">
+                          <div>
+                            <div style="font-weight: 600; font-size: 11.5px;"><span class="sc-interp">Hybrid Appraisal</span></div>
+                            <div style="color: rgb(139, 149, 166); font-size: 10.5px; margin-top: 2px;"><span class="sc-interp">240</span> orders / month at <span class="sc-interp">$324</span></div>
+                          </div>
+                          <div style="font-weight: 600; font-size: 11.5px; white-space: nowrap;"><span class="sc-interp">$77,736</span></div>
+                        </div>
+                      
+                        <div style="display: flex; justify-content: space-between; gap: 12px; padding: 9px 0px; border-bottom: 1px solid rgb(240, 243, 248);">
+                          <div>
+                            <div style="font-weight: 600; font-size: 11.5px;"><span class="sc-interp">Property Data Advantage</span></div>
+                            <div style="color: rgb(139, 149, 166); font-size: 10.5px; margin-top: 2px;"><span class="sc-interp">320</span> orders / month at <span class="sc-interp">$135</span></div>
+                          </div>
+                          <div style="font-weight: 600; font-size: 11.5px; white-space: nowrap;"><span class="sc-interp">$43,296</span></div>
+                        </div>
+                      
+                      <div style="margin-top: 14px; display: flex; justify-content: space-between; font-size: 13px; font-weight: 700;">
+                        <div>Estimated monthly total</div><div><span class="sc-interp">$205,674</span></div>
+                      </div>
+                      <div style="margin-top: 26px; font-size: 10.5px; line-height: 1.6; color: rgb(139, 149, 166);">Pricing assumes the stated monthly volume and standard turn-time SLAs. Guaranteed Pricing applies to eligible products. Valid 30 days from issue.</div>
+                      <div style="margin-top: 26px; display: flex; gap: 26px;">
+                        <div style="flex: 1 1 0%;"><div style="height: 1px; background: rgb(196, 203, 216);"></div><div style="margin-top: 5px; font-size: 9.5px; color: rgb(139, 149, 166);">CLIENT SIGNATURE</div></div>
+                        <div style="flex: 1 1 0%;"><div style="height: 1px; background: rgb(196, 203, 216);"></div><div style="margin-top: 5px; font-size: 9.5px; color: rgb(139, 149, 166);">CLASS VALUATION</div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 20px 22px;">
+                  <div style="font-size: 16px; font-weight: 600;">Approval routing</div>
+                  <div style="margin-top: 4px; font-size: 13px; color: rgb(107, 118, 134);">Triggered by discount depth and non-standard terms. Parallel where possible, sequential where policy requires.</div>
+                  <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 0px;">
+                    
+                      <div style="display: flex; gap: 14px;">
+                        <div style="display: flex; flex-direction: column; align-items: center; flex: 0 0 auto; width: 22px;">
+                          <div style="width: 22px; height: 22px; border-radius: 99px; background: rgb(1, 62, 144); border: 1.5px solid rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
+                          <div style="flex: 1 1 0%; width: 2px; background: rgb(227, 232, 240); min-height: 14px;"></div>
+                        </div>
+                        <div style="padding-bottom: 16px; flex: 1 1 0%; min-width: 0px;">
+                          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Deal desk review</span></div>
+                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 5px; background: rgb(234, 241, 251); color: rgb(1, 46, 107);"><span class="sc-interp">COMPLETE</span></div>
+                          </div>
+                          <div style="margin-top: 3px; font-size: 12.5px; color: rgb(90, 100, 116); line-height: 1.5;"><span class="sc-interp">Configuration validated against ruleset v14 by S. Iyer.</span></div>
+                        </div>
+                      </div>
+                    
+                      <div style="display: flex; gap: 14px;">
+                        <div style="display: flex; flex-direction: column; align-items: center; flex: 0 0 auto; width: 22px;">
+                          <div style="width: 22px; height: 22px; border-radius: 99px; background: rgb(255, 255, 255); border: 1.5px solid rgb(197, 138, 28); color: rgb(138, 90, 18); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">2</span></div>
+                          <div style="flex: 1 1 0%; width: 2px; background: rgb(227, 232, 240); min-height: 14px;"></div>
+                        </div>
+                        <div style="padding-bottom: 16px; flex: 1 1 0%; min-width: 0px;">
+                          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Pricing &amp; finance</span></div>
+                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 5px; background: rgb(253, 243, 224); color: rgb(138, 90, 18);"><span class="sc-interp">REQUIRED · PENDING</span></div>
+                          </div>
+                          <div style="margin-top: 3px; font-size: 12.5px; color: rgb(90, 100, 116); line-height: 1.5;"><span class="sc-interp">Triggered by a 18% blended discount above the 12% cap. SLA 1 business day.</span></div>
+                        </div>
+                      </div>
+                    
+                      <div style="display: flex; gap: 14px;">
+                        <div style="display: flex; flex-direction: column; align-items: center; flex: 0 0 auto; width: 22px;">
+                          <div style="width: 22px; height: 22px; border-radius: 99px; background: rgb(255, 255, 255); border: 1.5px solid rgb(220, 226, 236); color: rgb(151, 161, 178); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">3</span></div>
+                          <div style="flex: 1 1 0%; width: 2px; background: rgb(227, 232, 240); min-height: 14px;"></div>
+                        </div>
+                        <div style="padding-bottom: 16px; flex: 1 1 0%; min-width: 0px;">
+                          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Operations capacity</span></div>
+                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 5px; background: rgb(244, 246, 250); color: rgb(107, 118, 134);"><span class="sc-interp">PARALLEL · PENDING</span></div>
+                          </div>
+                          <div style="margin-top: 3px; font-size: 12.5px; color: rgb(90, 100, 116); line-height: 1.5;"><span class="sc-interp">Rush tier at 740 orders/month needs panel capacity confirmation in two counties.</span></div>
+                        </div>
+                      </div>
+                    
+                      <div style="display: flex; gap: 14px;">
+                        <div style="display: flex; flex-direction: column; align-items: center; flex: 0 0 auto; width: 22px;">
+                          <div style="width: 22px; height: 22px; border-radius: 99px; background: rgb(255, 255, 255); border: 1.5px solid rgb(220, 226, 236); color: rgb(151, 161, 178); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">4</span></div>
+                          <div style="flex: 1 1 0%; width: 2px; background: rgb(227, 232, 240); min-height: 14px;"></div>
+                        </div>
+                        <div style="padding-bottom: 16px; flex: 1 1 0%; min-width: 0px;">
+                          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">VP Sales countersign</span></div>
+                            <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 5px; background: rgb(244, 246, 250); color: rgb(107, 118, 134);"><span class="sc-interp">QUEUED</span></div>
+                          </div>
+                          <div style="margin-top: 3px; font-size: 12.5px; color: rgb(90, 100, 116); line-height: 1.5;"><span class="sc-interp">Required for 3-year terms above $250k annual contract value.</span></div>
+                        </div>
+                      </div>
+                    
+                  </div>
+                  <div style="margin-top: 6px; padding: 14px 16px; background: rgb(1, 40, 94); border-radius: 10px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+                    <div style="color: rgb(255, 255, 255); font-size: 13.5px; font-weight: 600;">On approval</div>
+                    <div style="color: rgb(175, 196, 226); font-size: 13px; flex: 1 1 0%; min-width: 200px;">Quote locks, Plan Builder receives the configuration, and Integration Studio drafts the requirement set.</div>
+                    <button style="height: 34px; padding: 0px 14px; border-radius: 8px; border: 1px solid rgb(18, 62, 119); background: transparent; color: rgb(133, 195, 65); font-size: 13px; font-weight: 600; cursor: pointer;">See Plan Builder handoff</button>
+                  </div>
+                </div>
+              
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; position: sticky; top: 0px;">
+              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; overflow: hidden;">
+                <div style="padding: 14px 16px; border-bottom: 1px solid rgb(237, 240, 246); display: flex; align-items: center; justify-content: space-between;">
+                  <div style="font-size: 14px; font-weight: 600;">Live pricing</div>
+                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; letter-spacing: 0.1em; color: rgb(1, 62, 144);">RECALCULATED</div>
+                </div>
+                <div style="padding: 16px;">
+                  <div style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em;"><span class="sc-interp">$205,674</span></div>
+                  <div style="font-size: 12.5px; color: rgb(107, 118, 134); margin-top: 2px;">estimated monthly · <span class="sc-interp">$2,468,088</span> annual</div>
+                  <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Products (3)</span></div>
+                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$201,474</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Add-ons</span></div>
+                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">$4,200</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Blended discount</span></div>
+                        <div style="font-weight: 600; color: rgb(197, 138, 28);"><span class="sc-interp">−18%</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Gross margin</span></div>
+                        <div style="font-weight: 600; color: rgb(196, 71, 44);"><span class="sc-interp">38%</span></div>
+                      </div>
+                    
+                      <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px;">
+                        <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Pricing model</span></div>
+                        <div style="font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">Tiered</span></div>
+                      </div>
+                    
+                  </div>
+                  <div style="margin-top: 14px; padding-top: 14px; border-top: 1px dashed rgb(227, 232, 240); display: flex; flex-direction: column; gap: 9px;">
+                    
+                      <div style="display: flex; gap: 10px; padding: 11px 12px; background: rgb(253, 243, 224); border: 1px solid rgb(241, 223, 188); border-radius: 9px;">
+                        <div style="color: rgb(138, 90, 18); font-weight: 700; font-size: 12px;">!</div>
+                        <div style="font-size: 12.5px; line-height: 1.45; color: rgb(110, 74, 17);">Discount above the 12% auto-approve cap — pricing &amp; finance sign-off required before the quote can be sent.</div>
+                      </div>
+                    
+                    <div style="font-size: 12px; color: rgb(139, 149, 166); line-height: 1.5;">Margin, discount and approval state are computed on every change so nobody negotiates against stale numbers.</div>
+                  </div>
+                </div>
+              </div>
+              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 14px 16px;">
+                <div style="font-size: 14px; font-weight: 600;">Stakeholders on this quote</div>
+                <div style="margin-top: 11px; display: flex; flex-direction: column; gap: 10px;">
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">DM</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Dana Mercer</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Solutions engineer · owner</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">EDITING</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">RT</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Ray Tolbert</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Account executive</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">VIEWED</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">PF</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Priya Fenwick</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Pricing &amp; finance</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">PENDING</span></div>
+                    </div>
+                  
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 26px; height: 26px; border-radius: 99px; background: rgb(234, 241, 251); color: rgb(1, 46, 107); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;"><span class="sc-interp">JO</span></div>
+                      <div style="min-width: 0px;">
+                        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Jon Okafor</span></div>
+                        <div style="font-size: 11.5px; color: rgb(139, 149, 166);"><span class="sc-interp">Implementation PM</span></div>
+                      </div>
+                      <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(151, 161, 178);"><span class="sc-interp">CC</span></div>
+                    </div>
+                  
+                </div>
+              </div>
+              <div style="background: rgb(234, 241, 251); border: 1px solid rgb(216, 229, 245); border-radius: 12px; padding: 14px 16px;">
+                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.16em; color: rgb(1, 46, 107);">UX RATIONALE</div>
+                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.55; color: rgb(62, 74, 92); text-wrap: pretty;">The wizard reduces cognitive load for AEs, but the pricing rail is always visible — the number is the negotiation. Engineering owns rules, finance owns the floor, sales owns the story.</div>
+              </div>
+            </div>
+          </div></div></div>
+    </div>
+  </div>
+</div>
+<script>
+  var CPQ_STEPS = ["client_demand","configure","rules_check","pricing_terms","quote_approvals"];
+  function showCpqStep(id){
+    var idx = CPQ_STEPS.indexOf(id);
+    CPQ_STEPS.forEach(function(s){
+      var body = document.getElementById('cpqstep-' + s);
+      if (body) body.style.display = (s === id) ? 'block' : 'none';
+    });
+    CPQ_STEPS.forEach(function(s, i){
+      var tab = document.getElementById('cpqstep-tab-' + s);
+      if (!tab) return;
+      var marker = tab.querySelector('span');
+      var markerText = marker ? marker.querySelector('span') : null;
+      var label = tab.querySelectorAll('span')[1];
+      var labelText = label ? label.querySelector('span') : null;
+      if (i < idx){
+        tab.style.borderBottom = '2px solid transparent';
+        if (marker){ marker.style.background = '#EAF1FB'; marker.style.color = '#012E6B'; marker.style.border = '1px solid #C9DCF2'; }
+        if (markerText) markerText.textContent = '✓';
+        if (label){ label.style.color = '#6B7686'; label.style.fontWeight = '500'; }
+      } else if (i === idx){
+        tab.style.borderBottom = '2px solid #013E90';
+        if (marker){ marker.style.background = '#013E90'; marker.style.color = '#fff'; marker.style.border = '1px solid #013E90'; }
+        if (markerText) markerText.textContent = String(i + 1);
+        if (label){ label.style.color = '#131A26'; label.style.fontWeight = '600'; }
+      } else {
+        tab.style.borderBottom = '2px solid transparent';
+        if (marker){ marker.style.background = '#fff'; marker.style.color = '#97A1B2'; marker.style.border = '1px solid #DCE2EC'; }
+        if (markerText) markerText.textContent = String(i + 1);
+        if (label){ label.style.color = '#6B7686'; label.style.fontWeight = '500'; }
+      }
+    });
+  }
+</script>
+</body>
+</html>
