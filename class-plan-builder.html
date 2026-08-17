@@ -1,0 +1,3228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class Plan Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    --teal-dark:#011E48;
+    --teal:#01285E;
+    --accent:#85C341;
+    --accent-2:#013E90;
+    --bg:#F4F6FA;
+    --card:#ffffff;
+    --border:#DCE2EC;
+    --text:#01285E;
+    --muted:#6B7686;
+    --sev-none:#97A1B2;
+    --sev-low:#013E90;
+    --sev-medium:#C58A1C;
+    --sev-high:#C4472C;
+  }
+  *{box-sizing:border-box;}
+  body{ font-family:'Barlow',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); margin:0; }
+  header{ background:linear-gradient(120deg,var(--teal-dark),var(--teal)); color:#fff; padding:22px 32px; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; }
+  header h1{ margin:0; font-size:20px; }
+  header p{ margin:4px 0 0; color:#AFC4E2; font-size:13px; }
+  header .actions{ display:flex; gap:8px; }
+  .top-btn{ background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.3); padding:8px 14px; border-radius:8px; font-size:13px; cursor:pointer; }
+  .top-btn:hover{ background:rgba(255,255,255,.22); }
+
+  .project-bar{ display:flex; align-items:center; gap:10px; padding:12px 32px; background:#EAF1FB; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+  .project-bar-label{ font-size:11px; font-weight:700; color:var(--teal); text-transform:uppercase; letter-spacing:.05em; }
+  .project-bar select{ padding:7px 10px; border-radius:8px; border:1px solid var(--border); font-size:13.5px; min-width:200px; background:#fff; color:var(--text); }
+
+  details.quickref{ margin:16px 32px 0; background:#fff; border:1px solid var(--border); border-radius:10px; }
+  details.quickref summary{ padding:12px 16px; font-weight:600; cursor:pointer; color:var(--teal); font-size:14px; }
+  .quickref-body{ padding:0 16px 16px; font-size:13px; color:var(--muted); line-height:1.6; }
+  .quickref-body b{ color:var(--text); }
+  .phase-chain{ display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 14px; }
+  .phase-chip{ background:#EAF1FB; border:1px solid var(--border); border-radius:16px; padding:4px 10px; font-size:12px; }
+
+  .tabs{ display:flex; gap:6px; padding:20px 32px 0; }
+  .tab-btn{ padding:10px 18px; border-radius:8px 8px 0 0; border:1px solid var(--border); border-bottom:none; background:#EDF0F6; cursor:pointer; font-weight:600; color:var(--muted); font-size:14px; }
+  .tab-btn.active{ background:var(--card); color:var(--teal); }
+  .tab-content{ display:none; padding:20px 32px 56px; }
+  .tab-content.active{ display:block; }
+
+  .columns{ display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start; }
+  @media(max-width:920px){ .columns{grid-template-columns:1fr;} }
+  .panel{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; }
+  .panel h2{ margin-top:0; font-size:15px; color:var(--teal); }
+  .panel .hint{ font-size:12px; color:var(--muted); margin:-6px 0 12px; }
+
+  .group{ border:1px solid var(--border); border-radius:10px; margin-bottom:10px; background:#FAFBFD; }
+  .group summary{ border-radius:10px 10px 0 0; }
+  .group summary{ padding:10px 14px; font-weight:600; cursor:pointer; color:var(--teal); font-size:13px; }
+  .grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 14px 14px; }
+  .grid.no-pad{ padding:0; }
+  .field{ display:flex; flex-direction:column; gap:3px; font-size:12.5px; color:var(--muted); }
+  .field.wide{ grid-column:1/-1; }
+  .field input, .field select, .field textarea{ padding:7px 9px; border:1px solid var(--border); border-radius:6px; font-size:13.5px; font-family:inherit; color:var(--text); background:#fff; }
+  .field textarea{ min-height:56px; resize:vertical; }
+  .field > span{ font-weight:600; color:var(--text); }
+
+  .info-icon{ display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px; border-radius:50%; background:var(--border); color:var(--muted); font-size:10px; font-weight:700; font-style:italic; font-family:Georgia,'Times New Roman',serif; cursor:help; position:relative; margin-left:5px; vertical-align:middle; }
+  .info-icon:hover, .info-icon:focus{ background:var(--accent-2); color:#fff; outline:none; }
+  .info-icon .tooltip{ display:none; position:absolute; left:50%; transform:translateX(-50%); bottom:135%; width:230px; background:var(--teal); color:#fff; font-size:11px; font-weight:400; font-style:normal; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; padding:8px 10px; border-radius:8px; line-height:1.45; z-index:30; box-shadow:0 4px 12px rgba(0,0,0,.18); text-align:left; }
+  .info-icon .tooltip::after{ content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:var(--teal); }
+  .info-icon:hover .tooltip, .info-icon:focus .tooltip{ display:block; }
+  .change-group{ border-left:3px solid var(--accent-2); }
+  .change-subhead{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin:10px 14px 6px; }
+  .impact-lever-title{ font-size:12px; font-weight:700; color:var(--teal); margin-bottom:4px; }
+  .change-field-cluster{ margin:0 14px 12px; padding-left:10px; border-left:2px solid var(--border); }
+  .change-field-cluster-title{ font-size:11px; font-weight:700; color:var(--accent-2); margin:0 0 6px; }
+  .change-field-cluster .grid{ padding:0; }
+
+  .wizard-steps{ display:flex; align-items:flex-start; margin-bottom:16px; overflow-x:auto; padding-bottom:4px; }
+  .wizard-step{ display:flex; flex-direction:column; align-items:center; cursor:pointer; flex:0 0 auto; width:74px; text-align:center; }
+  .wizard-step-icon{ width:32px; height:32px; border-radius:50%; background:#EDF0F6; border:2px solid var(--border); color:var(--muted); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; }
+  .wizard-step.filled .wizard-step-icon{ background:var(--accent-2); border-color:var(--accent-2); color:#fff; }
+  .wizard-step.active .wizard-step-icon{ border-color:var(--teal); box-shadow:0 0 0 3px rgba(1,62,144,.18); }
+  .wizard-step.active .wizard-step-label{ color:var(--teal); font-weight:700; }
+  .wizard-step-label{ font-size:10.5px; color:var(--muted); margin-top:6px; line-height:1.25; }
+  .wizard-step-line{ flex:1 1 auto; height:2px; background:var(--border); margin-top:16px; min-width:6px; }
+  .wizard-step-title{ font-size:14px; color:var(--teal); margin:0 0 10px; }
+
+  button.primary{ background:var(--accent-2); color:#fff; border:none; padding:10px 18px; border-radius:8px; font-weight:600; cursor:pointer; font-size:13.5px; }
+  button.primary:hover{ background:#012E6B; }
+  button.secondary{ background:#fff; border:1px solid var(--border); padding:9px 16px; border-radius:8px; cursor:pointer; font-weight:600; color:var(--teal); font-size:13.5px; }
+  button.secondary:hover{ background:#F1F4F9; }
+  button:disabled{ opacity:.5; cursor:not-allowed; }
+  .btn-row{ display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+
+  .plan-group{ margin-bottom:14px; }
+  .plan-group h3{ font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--accent-2); border-bottom:1px solid var(--border); padding-bottom:5px; margin:0 0 6px; }
+  .plan-row{ display:grid; grid-template-columns:190px 1fr; gap:10px; padding:3px 4px; font-size:13px; border-radius:6px; }
+  .plan-row.changed{ background:#FDF3E0; }
+  .plan-label{ color:var(--muted); font-weight:600; }
+  .old{ text-decoration:line-through; color:#A8392B; margin-right:4px; }
+  .new{ color:var(--accent-2); font-weight:700; }
+  .empty-plan{ color:var(--muted); font-size:13px; font-style:italic; }
+
+  .gantt{ margin-bottom:18px; padding:12px; background:#FAFBFD; border:1px solid var(--border); border-radius:10px; }
+  .gantt-axis{ display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:8px; padding:0 2px; font-weight:600; }
+  .gantt-row{ display:grid; grid-template-columns:180px 1fr; align-items:center; gap:8px; margin-bottom:7px; }
+  .gantt-label{ font-size:12px; color:var(--text); font-weight:600; }
+  .gantt-track{ position:relative; height:24px; background:#EDF0F6; border-radius:6px; }
+  .gantt-bar{ position:absolute; top:2px; bottom:2px; background:var(--accent-2); border-radius:5px; display:flex; align-items:center; overflow:hidden; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .gantt-bar.changed{ background:var(--sev-medium); }
+  .gantt-bar-text{ font-size:10px; color:#fff; white-space:nowrap; padding:0 6px; }
+  .gantt-empty{ font-size:11px; color:var(--muted); font-style:italic; padding-left:8px; line-height:24px; }
+
+  .lever-checklist{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:4px; }
+  .lever-check{ display:flex; align-items:center; gap:6px; font-size:12.5px; border:1px solid var(--border); border-radius:20px; padding:6px 12px; cursor:pointer; background:#fff; color:var(--text); }
+  .lever-check input{ margin:0; }
+  .lever-check.checked{ background:var(--accent-2); border-color:var(--accent-2); color:#fff; }
+
+  .impact-card{ border:1px solid var(--border); border-radius:10px; padding:10px 12px; margin-bottom:8px; border-left:6px solid var(--sev-none); background:#fff; }
+  .impact-card.sev-none{ border-left-color:var(--sev-none); }
+  .impact-card.sev-low{ border-left-color:var(--sev-low); }
+  .impact-card.sev-medium{ border-left-color:var(--sev-medium); }
+  .impact-card.sev-high{ border-left-color:var(--sev-high); }
+  .impact-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  .impact-head strong{ font-size:13px; }
+  .impact-head select{ font-size:12px; padding:3px 6px; border-radius:6px; border:1px solid var(--border); }
+  .impact-card textarea{ width:100%; border:1px solid var(--border); border-radius:6px; padding:6px 8px; font-size:12.5px; min-height:44px; font-family:inherit; }
+
+  .version-row{ display:flex; align-items:center; gap:6px; margin-bottom:8px; }
+  .version-pill{ flex:1; display:inline-block; padding:7px 13px; border-radius:20px; border:1px solid var(--border); cursor:pointer; font-size:12.5px; font-weight:600; color:var(--muted); background:#fff; }
+  .version-pill.active{ background:var(--teal); color:#fff; border-color:var(--teal); }
+  .mini-btn{ font-size:11px; padding:6px 9px; border-radius:6px; border:1px solid var(--border); background:#fff; cursor:pointer; color:var(--muted); font-weight:600; }
+  .mini-btn:hover{ background:#F1F4F9; }
+
+  .badge{ display:inline-block; font-size:10.5px; padding:2px 7px; border-radius:10px; background:#EDF0F6; color:var(--muted); margin-left:6px; font-weight:500; }
+  .note{ font-size:12px; color:var(--muted); background:#F1F4F9; border-radius:8px; padding:8px 10px; margin-bottom:10px; }
+  textarea#changeDescription{ width:100%; min-height:56px; padding:8px 10px; border-radius:8px; border:1px solid var(--border); font-family:inherit; font-size:13.5px; }
+  .impact-summary-line{ font-size:13px; margin:2px 0; }
+  .sev-tag{ display:inline-block; font-size:10.5px; font-weight:700; text-transform:uppercase; padding:2px 7px; border-radius:6px; color:#fff; margin-right:6px; }
+  .sev-tag.none{ background:var(--sev-none); }
+  .sev-tag.low{ background:var(--sev-low); }
+  .sev-tag.medium{ background:var(--sev-medium); }
+  .sev-tag.high{ background:var(--sev-high); }
+
+  .risk-list{ margin:6px 14px 4px; }
+  .risk-row{ display:grid; grid-template-columns:1fr auto auto; gap:8px; align-items:start; padding:8px 0; border-bottom:1px solid var(--border); }
+  .risk-row textarea{ min-height:44px; padding:7px 9px; border:1px solid var(--border); border-radius:6px; font-family:inherit; font-size:13px; resize:vertical; }
+  .risk-share{ display:flex; align-items:center; gap:5px; font-size:11.5px; color:var(--muted); white-space:nowrap; padding-top:8px; }
+  .risk-display-list{ margin:0; padding-left:18px; }
+  .risk-display-list li{ margin-bottom:3px; }
+
+  .stakeholder-list{ margin:6px 14px 4px; }
+  .stakeholder-row{ display:grid; grid-template-columns:1.2fr 1fr auto auto; gap:8px; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); }
+  .stakeholder-row input, .stakeholder-row select{ padding:7px 9px; border:1px solid var(--border); border-radius:6px; font-family:inherit; font-size:13px; }
+
+  .raci-table-wrap{ margin:6px 14px 12px; overflow-x:auto; }
+  .raci-table{ border-collapse:collapse; width:100%; font-size:12.5px; }
+  .raci-table th, .raci-table td{ border:1px solid var(--border); padding:6px 8px; text-align:center; }
+  .raci-table thead th{ background:#EAF1FB; color:var(--teal); font-size:11px; text-transform:uppercase; letter-spacing:.03em; }
+  .raci-row-label{ text-align:left !important; font-weight:600; color:var(--text); white-space:nowrap; }
+  .raci-row-label input{ width:100%; padding:5px 7px; border:1px solid var(--border); border-radius:5px; font-family:inherit; font-size:12.5px; }
+  .raci-role-sub{ display:block; font-weight:400; color:var(--muted); font-size:10.5px; text-transform:none; letter-spacing:0; }
+  .raci-table select{ padding:4px 5px; border:1px solid var(--border); border-radius:5px; font-size:12px; font-weight:700; text-align:center; width:100%; }
+  .raci-cell-R{ background:#D8E5F5; color:#012E6B; font-weight:700; }
+  .raci-cell-A{ background:#FDF4F2; color:#A8392B; font-weight:700; }
+  .raci-cell-C{ background:#FDF3E0; color:#8A5A12; font-weight:700; }
+  .raci-cell-I{ background:#eaf1fb; color:#013E90; font-weight:700; }
+  .raci-cell-blank{ background:#FAFBFD; color:var(--muted); }
+  .raci-tag{ display:inline-block; font-size:9.5px; font-weight:700; text-transform:uppercase; padding:1px 6px; border-radius:5px; margin-right:5px; color:#fff; vertical-align:middle; }
+  .raci-tag-phase{ background:var(--accent-2); }
+  .raci-tag-risk{ background:var(--sev-high); }
+  .raci-tag-custom{ background:var(--muted); }
+  .raci-legend{ font-size:11.5px; color:var(--muted); margin:0; }
+
+  .comms-list{ margin:6px 14px 4px; }
+  .comms-row{ padding:10px 0; border-bottom:1px solid var(--border); }
+  .comms-row-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px; }
+  .comms-row-grid label{ display:flex; flex-direction:column; gap:3px; font-size:11.5px; color:var(--muted); font-weight:600; }
+  .comms-row-grid input, .comms-row-grid select{ padding:6px 8px; border:1px solid var(--border); border-radius:6px; font-family:inherit; font-size:13px; color:var(--text); font-weight:400; }
+  .comms-row textarea{ width:100%; min-height:40px; padding:7px 9px; border:1px solid var(--border); border-radius:6px; font-family:inherit; font-size:13px; resize:vertical; margin-bottom:6px; }
+
+  .present-doc{ max-width:720px; }
+  .present-kicker{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-2); margin-bottom:6px; }
+  .present-hero h2{ font-size:22px; color:var(--teal); margin:0 0 18px; line-height:1.35; }
+  .present-section{ margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--border); }
+  .present-section:last-child{ border-bottom:none; }
+  .present-section h3{ font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--accent-2); margin:0 0 8px; }
+  .present-section p{ font-size:14px; line-height:1.6; margin:0; color:var(--text); }
+  .present-kpis{ display:flex; flex-wrap:wrap; gap:8px; }
+  .present-kpi{ background:#EAF1FB; border:1px solid var(--border); border-radius:20px; padding:6px 14px; font-size:13px; font-weight:600; color:var(--teal); }
+
+  .upload-box{ border-left:3px solid var(--accent); margin-bottom:14px; }
+  .upload-box summary{ display:flex; align-items:center; gap:8px; }
+  .upload-box-body{ padding:0 14px 14px; }
+  .dropzone{ border:2px dashed var(--border); border-radius:10px; padding:22px 16px; text-align:center; cursor:pointer; background:#FAFBFD; transition:border-color .15s, background .15s; }
+  .dropzone:hover, .dropzone.dragover{ border-color:var(--accent-2); background:#EAF1FB; }
+  .dropzone-icon{ font-size:22px; margin-bottom:6px; }
+  .dropzone-title{ font-size:13px; font-weight:600; color:var(--teal); margin-bottom:3px; }
+  .dropzone-sub{ font-size:11.5px; color:var(--muted); }
+  .dropzone-filelist{ list-style:none; margin:10px 0 0; padding:0; text-align:left; }
+  .dropzone-filelist li{ display:flex; align-items:center; gap:8px; font-size:12.5px; font-weight:600; color:var(--accent-2); word-break:break-all; padding:4px 8px; border-radius:6px; background:#fff; border:1px solid var(--border); margin-bottom:5px; }
+  .dropzone-filelist .file-size{ font-weight:400; color:var(--muted); white-space:nowrap; }
+  .dropzone-filelist .file-remove{ margin-left:auto; background:none; border:none; color:var(--muted); cursor:pointer; font-size:14px; line-height:1; padding:2px 4px; }
+  .dropzone-filelist .file-remove:hover{ color:#A8392B; }
+  .upload-status{ font-size:12px; color:var(--muted); margin-top:10px; line-height:1.5; min-height:0; }
+  .upload-status.busy{ color:var(--accent-2); }
+  .upload-status.error{ color:#A8392B; }
+  .upload-status.success{ color:var(--accent-2); }
+  .originator-row{ display:flex; align-items:center; gap:6px; margin-bottom:10px; padding-bottom:10px; border-bottom:1px dashed var(--border); }
+  .originator-tag{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; background:var(--accent); color:#011E48; border-radius:10px; padding:3px 9px; }
+  .originator-name{ font-size:12.5px; color:var(--text); flex:1; word-break:break-all; }
+
+  .modal-overlay{ position:fixed; inset:0; background:rgba(1,30,72,.55); display:flex; align-items:center; justify-content:center; z-index:200; padding:20px; }
+  .modal-box{ background:#fff; border-radius:12px; padding:22px; width:360px; max-width:100%; box-shadow:0 12px 40px rgba(0,0,0,.25); }
+  .modal-message{ font-size:13.5px; color:var(--text); margin-bottom:14px; line-height:1.5; white-space:pre-line; }
+  .modal-input{ width:100%; padding:9px 10px; border:1px solid var(--border); border-radius:8px; font-size:13.5px; margin-bottom:16px; font-family:inherit; color:var(--text); }
+  .modal-actions{ display:flex; justify-content:flex-end; gap:8px; }
+
+  .print-only{ position:absolute; left:-9999px; top:0; width:800px; }
+  @media print{
+    body *{ visibility:hidden; }
+    #printArea, #printArea *{ visibility:visible; }
+    #printArea{ position:absolute; left:0; top:0; width:100%; padding:24px; }
+    #printArea h1{ font-size:20px; margin-bottom:4px; }
+    #printArea h2{ font-size:14px; margin:18px 0 6px; border-bottom:1px solid #ccc; padding-bottom:4px; }
+    #printArea .plan-group h3{ font-size:12px; }
+    #printArea .plan-row{ font-size:12px; padding:2px 0; }
+    #printArea .old{ text-decoration:line-through; }
+    #printArea .gantt{ background:#fff; }
+    #printArea .gantt-row{ grid-template-columns:150px 1fr; }
+    #printArea .gantt-bar{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    #printArea .present-doc{ max-width:100%; }
+    #printArea .present-kpi{ border:1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Class Plan Builder</h1>
+    <p>Build a baseline client engagement plan, then log changes and see the impact across scope, schedule, budget, quality and risk.</p>
+  </div>
+  <div class="actions">
+    <button class="top-btn" id="resetAllBtn">Reset current plan</button>
+  </div>
+</header>
+
+<div class="project-bar">
+  <span class="project-bar-label">Plan / Project</span>
+  <select id="projectSelect"></select>
+  <button class="mini-btn" id="renameProjectBtn">Rename</button>
+  <button class="mini-btn" id="newProjectBtn">New plan</button>
+  <button class="mini-btn" id="deleteProjectBtn">Delete plan</button>
+</div>
+
+<details class="quickref">
+  <summary>Quick reference — phases &amp; change method</summary>
+  <div class="quickref-body">
+    <b>Client engagement lifecycle:</b>
+    <div class="phase-chain">
+      <span class="phase-chip">0–1 Intake &amp; Design</span>
+      <span class="phase-chip">2 Onboarding</span>
+      <span class="phase-chip">3 Go-Live</span>
+      <span class="phase-chip">4 CVUE Enablement</span>
+      <span class="phase-chip">5 Verify &amp; Report</span>
+      <span class="phase-chip">6 Sustain &amp; Scale</span>
+    </div>
+    <b>When something changes:</b> name it → assess impact (scope / schedule / budget / quality / risk) → reprioritize around outcome KPIs → re-baseline with options → communicate → document.
+  </div>
+</details>
+
+<div class="tabs">
+  <div class="tab-btn active" data-tab="baseline">1 · Build Baseline Plan</div>
+  <div class="tab-btn" data-tab="change">2 · Log a Change</div>
+  <div class="tab-btn" data-tab="history">3 · Version History</div>
+  <div class="tab-btn" data-tab="present">4 · Present to Stakeholders</div>
+</div>
+
+<!-- TAB 1: BASELINE -->
+<div class="tab-content active" id="tab-baseline">
+  <div class="columns">
+    <div class="panel">
+      <h2>Client engagement inputs</h2>
+      <p class="hint">Step through each phase below. Nothing is required and finishing one step is not a gate for the next — jump to any step, or generate the plan, at any time.</p>
+
+      <details class="group upload-box" id="uploadProcessBox">
+        <summary>⚡ Upload &amp; Process — jump-start this plan from a document</summary>
+        <div class="upload-box-body">
+          <p class="hint" style="margin-top:0;">Upload a scope of work, brief, budget, or photos of a written plan and Claude will read them and pre-fill the fields below where it can. You can select multiple files at once — e.g. several page photos of the same document. Photo/image extraction is experimental; review everything before you generate the plan.</p>
+          <div class="dropzone" id="dropzone" tabindex="0">
+            <div class="dropzone-icon">📄</div>
+            <div class="dropzone-title">Drag &amp; drop file(s), or click to browse</div>
+            <div class="dropzone-sub">Accepted: .xlsx, .docx, .pdf, .jpg, .png — multiple files allowed</div>
+            <ul class="dropzone-filelist" id="dropzoneFilelist" style="display:none;"></ul>
+          </div>
+          <input type="file" id="uploadFileInput" accept=".xlsx,.docx,.pdf,.jpg,.jpeg,.png" multiple style="display:none;">
+          <div class="btn-row">
+            <button class="primary" id="processUploadBtn" disabled>Process document(s)</button>
+            <button class="secondary" id="clearUploadBtn" style="display:none;">Remove all</button>
+          </div>
+          <div class="upload-status" id="uploadStatus"></div>
+        </div>
+      </details>
+
+      <div class="wizard-steps" id="wizardSteps"></div>
+      <div id="wizardStepBody"></div>
+      <div class="btn-row">
+        <button class="secondary" id="wizardPrevBtn">← Back</button>
+        <button class="secondary" id="wizardNextBtn">Next →</button>
+      </div>
+      <div class="btn-row">
+        <button class="primary" id="generateBtn">Generate / update plan</button>
+        <button class="secondary" id="exportBaselineBtn">Export plan (.md)</button>
+        <button class="secondary" id="exportBaselinePdfBtn">Export plan (PDF)</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Plan preview — v1 Baseline</h2>
+      <div id="planView"><p class="empty-plan">Fill in the fields on the left and click "Generate / update plan".</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: CHANGE -->
+<div class="tab-content" id="tab-change">
+  <div class="columns">
+    <div class="panel">
+      <h2>What changed?</h2>
+      <p class="hint">Check every lever that applies. Each one gets its own scope / schedule / budget / quality / risk rating and its own affected fields — so Budget and Underwriting shift, for example, can rate "scope" differently — and you can combine several levers into one version.</p>
+      <div id="leverChecklist" class="lever-checklist"></div>
+      <div id="changeFieldsContainer" style="margin-top:10px;"></div>
+      <label style="display:block; margin-top:12px; font-size:13px; font-weight:600; color:var(--muted);">Change description
+        <textarea id="changeDescription" placeholder="What happened, in your own words..."></textarea>
+      </label>
+      <div class="btn-row">
+        <button class="primary" id="applyChangeBtn" disabled>Create new plan version</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h2 id="resultHeading">Current active plan</h2>
+      <div id="resultImpactSummary"></div>
+      <div id="resultPlanView"><p class="empty-plan">Generate your baseline plan first (tab 1).</p></div>
+      <div class="btn-row">
+        <button class="secondary" id="exportResultBtn" disabled>Export this version (.md)</button>
+        <button class="secondary" id="exportResultPdfBtn" disabled>Export this version (PDF)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: HISTORY -->
+<div class="tab-content" id="tab-history">
+  <div class="columns">
+    <div class="panel">
+      <h2>Versions</h2>
+      <p class="hint">Plan: <b id="historyProjectName">—</b>. Switch, rename, or delete plans from the bar at the top. Click a version name below to view it.</p>
+      <div id="originatorSection"></div>
+      <div id="versionPills"><p class="empty-plan">No versions yet.</p></div>
+      <div class="btn-row">
+        <button class="secondary" id="exportAllBtn" disabled>Export full history (.md)</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h2 id="historyHeading">—</h2>
+      <div id="historyImpactSummary"></div>
+      <div id="historyPlanView"><p class="empty-plan">Select a version.</p></div>
+      <div class="btn-row">
+        <button class="secondary" id="exportHistoryBtn" disabled>Export this version (.md)</button>
+        <button class="secondary" id="exportHistoryPdfBtn" disabled>Export this version (PDF)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 4: PRESENT -->
+<div class="tab-content" id="tab-present">
+  <div class="panel">
+    <h2>Client-facing summary</h2>
+    <p class="hint">Auto-composed from the latest version of the active plan — fill in the "Presenting To Stakeholders" step (tab 1) and the risk register to populate this. This view is meant to be shown to the client, not edited directly.</p>
+    <div id="presentView"></div>
+    <div class="btn-row">
+      <button class="secondary" id="exportPresentPdfBtn">Export presentation (PDF)</button>
+    </div>
+  </div>
+</div>
+
+<div id="printArea" class="print-only"></div>
+
+<div id="modalOverlay" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <div class="modal-message" id="modalMessage"></div>
+    <input type="text" id="modalInput" class="modal-input" style="display:none;">
+    <div class="modal-actions">
+      <button class="secondary" id="modalCancelBtn">Cancel</button>
+      <button class="primary" id="modalConfirmBtn">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+
+  var FIELDS = [
+    // ---- 0-1 · Client Intake & Engagement Design ----
+    {id:'phaseIntake_start', label:'Start date', group:'intake', type:'date', levers:['timeline'], desc:'When work on the Intake & Design phase is expected to begin.'},
+    {id:'phaseIntake_end', label:'End date', group:'intake', type:'date', levers:['timeline'], desc:'When work on the Intake & Design phase is expected to wrap up.'},
+    {id:'clientName', label:'Client name', group:'intake', type:'text', placeholder:'e.g. Consumers Credit Union, Pennymac, American Portfolio Mortgage', desc:'The lender, broker, credit union, or servicer this engagement plan is for.'},
+    {id:'clientSegment', label:'Client segment', group:'intake', type:'select', options:['Banking / Centralized Banking','Wholesale Lending / TPO','Distributed Retail Lending','Credit Union','Private Lending','Other'], desc:'The market segment shapes the engagement: banks often centralize ordering, wholesale/TPO channels route through brokers, distributed retail needs branch-level coverage, and credit unions and private lenders have their own volume and compliance patterns.'},
+    {id:'engagementObjective', label:'Engagement objective / definition of success', group:'intake', type:'textarea', wide:true, desc:'What this client relationship needs to achieve — faster turn times, lower repurchase risk, cost savings, or expanded coverage. Be specific; it drives every decision below.'},
+    {id:'monthlyOrderVolume', label:'Target monthly appraisal order volume', group:'intake', type:'number', levers:['volume'], desc:'How many appraisal orders per month this client is expected to place, as a hard number or a range.'},
+    {id:'footprint', label:'Coverage footprint / states served', group:'intake', type:'text', desc:'Where this client needs appraiser panel coverage: states, MSAs, or specific regions.'},
+    {id:'primaryUseCase', label:'Primary use case', group:'intake', type:'select', options:['Origination','Home Equity','Servicing','Reverse Mortgage','New Construction','Multiple / mixed'], desc:'The loan use case driving order volume. Confirm this with the client rather than assuming it — it changes which appraisal products and turn-time expectations matter most.'},
+    {id:'panelCoverageRequirements', label:'Panel coverage requirements', group:'intake', type:'textarea', wide:true, levers:['volume'], desc:'States or MSAs where appraiser panel capacity must be built out or verified before go-live, including any rural or low-coverage areas that need special attention.'},
+    {id:'estimatedAnnualSpend', label:'Estimated annual appraisal spend', group:'intake', type:'text', levers:['budget'], desc:'The client’s expected total spend on appraisal and valuation services over the next 12 months.'},
+    {id:'targetCostPerFile', label:'Target average cost per file', group:'intake', type:'text', levers:['budget'], desc:'Target average cost per appraisal order. Useful for comparing product mix (traditional vs. digital vs. alternative valuations) and catching scope creep early.'},
+    {id:'pricingModel', label:'Pricing model', group:'intake', type:'select', options:['Guaranteed Pricing','Standard / pay-per-order','Pay Later','Volume-based / negotiated','Other'], levers:['budget'], desc:'How the client is billed. Guaranteed Pricing locks in a fixed fee, Pay Later defers payment, and volume-based pricing is negotiated against committed order counts.'},
+    {id:'appraisalProducts', label:'Appraisal products & valuation offerings needed', group:'intake', type:'textarea', wide:true, levers:['panel'], desc:'The mix of products this client will order: traditional, digital, or hybrid appraisals; inspection-based waivers; or alternative valuations like AVM, BPO, or Class Evaluation.'},
+    {id:'appraisalDeliveryMode', label:'Primary appraisal delivery mode', group:'intake', type:'select', options:['Traditional','Digital','Hybrid','Alternative valuation (AVM/BPO/desktop)','Mixed'], levers:['panel'], desc:'The primary way appraisals are delivered for this client. Digital and hybrid options speed up turn times; alternative valuations can skip a full inspection entirely where eligible.'},
+    {id:'targetTurnTime', label:'Target turn-time SLA', group:'intake', type:'text', placeholder:'e.g. 5 business days', levers:['panel','timeline'], desc:'The turnaround time this client expects from order to completed report.'},
+    {id:'complianceCertifications', label:'Required compliance credentials', group:'intake', type:'text', desc:'Compliance requirements this engagement must satisfy: USPAP, state appraiser licensing, Appraiser Independence Requirements (AIR), SOC 2, or client-specific vendor requirements.'},
+    {id:'onTimeDeliveryTarget', label:'On-time / early delivery target (%)', group:'intake', type:'number', levers:['compliance'], desc:'The percentage of orders expected to deliver on time or early.'},
+    {id:'cvueCoverageTarget', label:'CVUE / appraisal assurance coverage target (%)', group:'intake', type:'number', levers:['compliance','underwriting'], desc:'The percentage of this client’s eligible conventional appraisals expected to qualify for CVUE (Class Valuation Underwriting Engine), removing the need for a lender-side underwriting review.'},
+    {id:'revisionCycleTarget', label:'Target revision cycle time (days)', group:'intake', type:'number', levers:['compliance'], desc:'How long a revision request should take to resolve between the appraiser, Class Valuation, and the client once flagged.'},
+    {id:'revisionRateTarget', label:'Target revision / ROV rate (%)', group:'intake', type:'number', levers:['compliance'], desc:'The share of orders expected to trigger a revision or Reconsideration of Value (ROV) request. Lower is better.'},
+    {id:'integrationRequirements', label:'Technology & integration requirements', group:'intake', type:'textarea', wide:true, levers:['panel'], desc:'What needs to connect before go-live: LOS integration, AppraisalScope or Class Marketplace (CMP) setup, single sign-on, or API connections.'},
+
+    // ---- 2 · Panel & Platform Onboarding ----
+    {id:'phaseMobilize_start', label:'Start date', group:'mobilize', type:'date', levers:['timeline'], desc:'When work on the Onboarding phase is expected to begin.'},
+    {id:'phaseMobilize_end', label:'End date', group:'mobilize', type:'date', levers:['timeline'], desc:'When work on the Onboarding phase is expected to wrap up.'},
+    {id:'panelBuildWindow', label:'Panel build-out window (weeks)', group:'mobilize', type:'number', levers:['volume','timeline'], desc:'How many weeks are allocated to build or verify appraiser panel coverage in this client’s footprint before go-live.'},
+    {id:'rolloutStructure', label:'Rollout structure', group:'mobilize', type:'select', options:['Single market launch','Phased / staggered rollout by region'], levers:['timeline'], desc:'Whether the client goes live everywhere at once, or rolls out region by region. Phasing reduces risk but slows the ramp to full volume.'},
+    {id:'orderPlatform', label:'Order & tracking platform', group:'mobilize', type:'text', levers:['compliance'], desc:'The platform used to place, track, and manage orders — e.g. AppraisalScope, Class Marketplace (CMP), or a direct LOS integration.'},
+
+    // ---- 3 · Go-Live & Order Fulfillment ----
+    {id:'phaseDeliver_start', label:'Start date', group:'deliver', type:'date', levers:['timeline'], desc:'When work on the Go-Live phase is expected to begin.'},
+    {id:'phaseDeliver_end', label:'End date', group:'deliver', type:'date', levers:['timeline'], desc:'When work on the Go-Live phase is expected to wrap up.'},
+    {id:'goLiveWindow', label:'Go-live / ramp-up window', group:'deliver', type:'text', placeholder:'e.g. weeks 5-8', levers:['timeline'], desc:'The calendar period during which the client transitions from onboarding into live order volume.'},
+    {id:'qaCheckpoints', label:'Quality assurance checkpoints', group:'deliver', type:'textarea', wide:true, levers:['panel'], desc:'Planned check-ins to catch turn-time, quality, or coverage problems early: AI-enabled QA (Class INtelligence) reviews, panel performance scorecards, or client escalation check-ins.'},
+
+    // ---- 4 · Underwriting Assurance & CVUE Enablement ----
+    {id:'phaseUnderwriting_start', label:'Start date', group:'underwriting', type:'date', levers:['timeline'], desc:'When work on the Underwriting Assurance & CVUE Enablement phase is expected to begin.'},
+    {id:'phaseUnderwriting_end', label:'End date', group:'underwriting', type:'date', levers:['timeline'], desc:'When work on the Underwriting Assurance & CVUE Enablement phase is expected to wrap up.'},
+    {id:'underwritingStakeholders', label:'Client underwriting / risk stakeholders', group:'underwriting', type:'textarea', wide:true, levers:['underwriting'], desc:'The underwriting, risk, and QC leaders on the client side who need to sign off on CVUE enrollment and repurchase risk assumption.'},
+    {id:'cvueEnrollment', label:'CVUE enrollment status', group:'underwriting', type:'select', options:['Enrolled - fully qualified','Partially qualified','Not yet enrolled','Not applicable for this client'], levers:['underwriting'], desc:'Whether this client is enrolled in CVUE. Enrolling early substantially lowers the lender’s internal review burden.'},
+    {id:'cuScoreThreshold', label:'CU® score / eligibility threshold', group:'underwriting', type:'text', levers:['underwriting'], desc:'The Collateral Underwriter (CU) score ceiling and other eligibility rules (property type, LTV/CLTV, loan purpose) that determine which of this client’s appraisals qualify for CVUE.'},
+
+    // ---- 5 · Verify & Report ----
+    {id:'phaseVerify_start', label:'Start date', group:'verify', type:'date', levers:['timeline'], desc:'When work on the Verify & Report phase is expected to begin.'},
+    {id:'phaseVerify_end', label:'End date', group:'verify', type:'date', levers:['timeline'], desc:'When work on the Verify & Report phase is expected to wrap up.'},
+    {id:'qualityAssuranceMethod', label:'How turn-time, quality & compliance are verified', group:'verify', type:'textarea', wide:true, levers:['compliance'], desc:'How results are confirmed: AI-enabled quality assurance (Class INtelligence) plus human review, panel performance scorecards, a SOC 2 audit trail, or a client-side QC sample.'},
+    {id:'reportingCadence', label:'Reporting cadence to client', group:'verify', type:'select', options:['Weekly','Biweekly','Monthly','Quarterly','Milestone-based'], levers:['compliance'], desc:'How often you report turn-time, coverage, and CVUE savings performance back to the client.'},
+
+    // ---- 6 · Sustain & Scale ----
+    {id:'phaseSustain_start', label:'Start date', group:'sustain', type:'date', levers:['timeline'], desc:'When work on the Sustain & Scale phase is expected to begin.'},
+    {id:'phaseSustain_end', label:'End date', group:'sustain', type:'date', levers:['timeline'], desc:'When work on the Sustain & Scale phase is expected to wrap up.'},
+    {id:'scalePlan', label:'Renewal / expansion plan', group:'sustain', type:'textarea', wide:true, desc:'What happens if the engagement performs well: contract renewal, expansion into new segments (credit unions, private lending) or products (CVUE, alternative valuations), or added state coverage.'},
+
+    // ---- Risk Register (cross-cutting, no phase dates) ----
+    {id:'topRisks', label:'Top risks & mitigations', group:'risk', type:'risklist', wide:true, desc:'Add each risk separately. Mark whether it is safe to show to the client on the Present tab.'},
+
+    // ---- Presenting To Stakeholders (cross-cutting, editable per version) ----
+    {id:'clientNeed', label:'Client’s stated need', group:'present', type:'textarea', wide:true, desc:'The specific pain point that triggered this engagement, in the client’s own words. Becomes the opening line of the stakeholder presentation.'},
+    {id:'clientSponsor', label:'Client-side sponsor / contact', group:'present', type:'text', desc:'Who on the client side (lender, broker, or credit union) owns this relationship and can make decisions.'},
+    {id:'accountExecutive', label:'Class Valuation account lead / contact', group:'present', type:'text', desc:'The Account Executive or client success lead on Class Valuation’s side who is accountable for this relationship.'},
+    {id:'decisionRights', label:'Decision rights / escalation path', group:'present', type:'textarea', wide:true, desc:'Who can approve a pricing, panel, or SLA change, and who it escalates to if there is disagreement.'},
+    {id:'meetingCadence', label:'Meeting cadence & format', group:'present', type:'select', options:['Weekly','Biweekly','Monthly','Ad hoc'], desc:'How often you will meet with the client, and in what format.'},
+    {id:'clientAsks', label:'What we need from the client (and by when)', group:'present', type:'textarea', wide:true, desc:'Concrete asks: LOS access, data, approvals, introductions, sign-offs — one per line, with a rough date.'},
+    {id:'stakeholders', label:'Stakeholders & roles', group:'present', type:'stakeholderlist', wide:true, desc:'The people involved in this plan, on either side. Populates the RACI matrix below and the Present tab.'},
+    {id:'raciAssignments', label:'RACI matrix', group:'present', type:'racigrid', wide:true, desc:'Who is Responsible, Accountable, Consulted, or Informed for each phase (and each shared risk). Rows sync automatically from your phases and risk register; assign people from your stakeholder list above.'},
+    {id:'commsPlan', label:'Communications plan', group:'present', type:'commslist', wide:true, desc:'Who needs to hear from you, how often, through what channel, and why. Add one row per audience — pull from your stakeholder list above, or use "+ Add one row per stakeholder" to pre-fill it, then set cadence and channel per person.'}
+  ];
+
+  var GROUPS = [
+    {id:'intake', title:'0-1 · Client Intake & Engagement Design', shortLabel:'Intake & Design'},
+    {id:'mobilize', title:'2 · Panel & Platform Onboarding', shortLabel:'Onboarding'},
+    {id:'deliver', title:'3 · Go-Live & Order Fulfillment', shortLabel:'Go-Live'},
+    {id:'underwriting', title:'4 · Underwriting Assurance & CVUE Enablement', shortLabel:'CVUE Enablement'},
+    {id:'verify', title:'5 · Verification & Reporting', shortLabel:'Verify & Report'},
+    {id:'sustain', title:'6 · Sustain & Scale', shortLabel:'Sustain & Scale'},
+    {id:'risk', title:'Risk Register', shortLabel:'Risks'},
+    {id:'present', title:'Presenting To Stakeholders', shortLabel:'Present'}
+  ];
+
+  var LEVERS = [
+    {id:'budget', label:'Budget / pricing change', impact:{scope:'medium',schedule:'low',budget:'high',quality:'medium',risk:'medium'}, note:'Protect turn-time SLAs and compliance verification first — renegotiate product mix or panel tier before cutting QA checkpoints or reporting cadence.'},
+    {id:'panel', label:'Panel or product issue (coverage gap / capacity / quality)', impact:{scope:'low',schedule:'high',budget:'medium',quality:'high',risk:'high'}, note:'Activate backup panel tiers or redistribute volume across additional appraisers in the footprint; flag turn-time slippage immediately rather than letting it surface in the client’s own SLA report.'},
+    {id:'timeline', label:'Timeline change (compressed / extended)', impact:{scope:'low',schedule:'high',budget:'low',quality:'medium',risk:'medium'}, note:'Consider parallelizing panel build-out and platform integration where compliance allows, and be explicit with the client about what turn-time target is realistic.'},
+    {id:'underwriting', label:'Underwriting / CVUE eligibility shift', impact:{scope:'medium',schedule:'low',budget:'low',quality:'low',risk:'high'}, note:'Re-confirm CU score thresholds and eligibility rules with the client’s underwriting team immediately rather than letting it surface in a repurchase dispute.'},
+    {id:'compliance', label:'Reporting / compliance requirement change', impact:{scope:'low',schedule:'medium',budget:'low',quality:'high',risk:'medium'}, note:'Check whether existing panel or platform data already satisfies the new requirement (e.g. UAD 3.6, AIR, state licensing) before building new process.'},
+    {id:'volume', label:'Order volume shortfall / surge', impact:{scope:'high',schedule:'medium',budget:'low',quality:'low',risk:'medium'}, note:'Diagnose whether it is a rate-cycle, seasonal, or panel-capacity issue before just extending the panel build-out window.'},
+    {id:'other', label:'Other / custom change', impact:{scope:'medium',schedule:'medium',budget:'medium',quality:'medium',risk:'medium'}, note:'Assess manually using the scope / schedule / budget / quality / risk lens.'}
+  ];
+
+  var TIMELINE_PHASES = [
+    {id:'phaseIntake', label:'0-1 · Intake & Design', group:'intake'},
+    {id:'phaseMobilize', label:'2 · Onboarding', group:'mobilize'},
+    {id:'phaseDeliver', label:'3 · Go-Live', group:'deliver'},
+    {id:'phaseUnderwriting', label:'4 · CVUE Enablement', group:'underwriting'},
+    {id:'phaseVerify', label:'5 · Verify & Report', group:'verify'},
+    {id:'phaseSustain', label:'6 · Sustain & Scale', group:'sustain'}
+  ];
+
+  var DIMENSIONS = ['scope','schedule','budget','quality','risk'];
+  var SEVERITIES = ['none','low','medium','high'];
+  var SEV_RANK = {none:0, low:1, medium:2, high:3};
+
+  // ============================================================================
+  // Minimal inline DEFLATE (RFC1951) decoder + ZIP reader + xlsx/docx/pdf text
+  // extractors. Written from scratch against the RFC1951/ZIP spec so xlsx/docx
+  // files can be parsed with zero external libraries (the sandboxed artifact
+  // view only allows loading Chart.js/Grid.js/Mermaid from CDN).
+  // ============================================================================
+  var DocParser = (function(){
+
+    // ---- RFC1951 DEFLATE decoder ----
+    var LENBASE = [3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258];
+    var LENEXT  = [0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0];
+    var DISTBASE= [1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577];
+    var DISTEXT = [0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13];
+    var CLCIDX  = [16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15];
+
+    function BitReader(data, startByte){
+      this.data = data; this.pos = startByte || 0; this.bitpos = 0;
+    }
+    BitReader.prototype.readBit = function(){
+      var byte = this.data[this.pos] || 0;
+      var bit = (byte >> this.bitpos) & 1;
+      this.bitpos++;
+      if (this.bitpos === 8){ this.bitpos = 0; this.pos++; }
+      return bit;
+    };
+    BitReader.prototype.readBits = function(n){
+      var v = 0;
+      for (var i=0;i<n;i++) v |= this.readBit() << i;
+      return v >>> 0;
+    };
+    BitReader.prototype.align = function(){
+      if (this.bitpos !== 0){ this.bitpos = 0; this.pos++; }
+    };
+
+    // Canonical Huffman table: for each code length, the range of codes assigned and the
+    // symbols in that range, built directly from RFC1951 3.2.2.
+    function buildHuffman(lengths){
+      var maxBits = 0;
+      for (var i=0;i<lengths.length;i++) if (lengths[i] > maxBits) maxBits = lengths[i];
+      var blCount = new Array(maxBits+1); for (i=0;i<=maxBits;i++) blCount[i]=0;
+      for (i=0;i<lengths.length;i++) if (lengths[i] > 0) blCount[lengths[i]]++;
+      var firstCode = new Array(maxBits+1);
+      var firstSymbolIndex = new Array(maxBits+1);
+      var symbols = [];
+      var code = 0, index = 0;
+      for (var bits=1; bits<=maxBits; bits++){
+        firstCode[bits] = code;
+        firstSymbolIndex[bits] = index;
+        for (var sym=0; sym<lengths.length; sym++){
+          if (lengths[sym] === bits){ symbols[index] = sym; index++; }
+        }
+        code = (code + blCount[bits]) << 1;
+      }
+      return { maxBits: maxBits, blCount: blCount, firstCode: firstCode, firstSymbolIndex: firstSymbolIndex, symbols: symbols };
+    }
+
+    function decodeSymbol(br, h){
+      var code = 0, first = 0, index = 0;
+      for (var len=1; len<=h.maxBits; len++){
+        code |= br.readBit();
+        var count = h.blCount[len] || 0;
+        if (count && (code - first) < count){
+          return h.symbols[index + (code - first)];
+        }
+        index += count;
+        first += count;
+        first <<= 1;
+        code <<= 1;
+      }
+      throw new Error('DocParser: bad Huffman code in compressed stream');
+    }
+
+    var FIXED_LIT_HUFF = (function(){
+      var lengths = new Array(288);
+      var i;
+      for (i=0;i<=143;i++) lengths[i]=8;
+      for (i=144;i<=255;i++) lengths[i]=9;
+      for (i=256;i<=279;i++) lengths[i]=7;
+      for (i=280;i<=287;i++) lengths[i]=8;
+      return buildHuffman(lengths);
+    })();
+    var FIXED_DIST_HUFF = (function(){
+      var lengths = new Array(30);
+      for (var i=0;i<30;i++) lengths[i]=5;
+      return buildHuffman(lengths);
+    })();
+
+    function readDynamicHuffman(br){
+      var hlit = br.readBits(5) + 257;
+      var hdist = br.readBits(5) + 1;
+      var hclen = br.readBits(4) + 4;
+      var clLengths = new Array(19); for (var z=0;z<19;z++) clLengths[z]=0;
+      for (var i=0;i<hclen;i++){ clLengths[CLCIDX[i]] = br.readBits(3); }
+      var clHuff = buildHuffman(clLengths);
+      var lengths = [];
+      while (lengths.length < hlit+hdist){
+        var sym = decodeSymbol(br, clHuff);
+        if (sym <= 15){
+          lengths.push(sym);
+        } else if (sym === 16){
+          var rep = br.readBits(2)+3;
+          var prev = lengths[lengths.length-1] || 0;
+          for (var r=0;r<rep;r++) lengths.push(prev);
+        } else if (sym === 17){
+          var rep2 = br.readBits(3)+3;
+          for (var r2=0;r2<rep2;r2++) lengths.push(0);
+        } else if (sym === 18){
+          var rep3 = br.readBits(7)+11;
+          for (var r3=0;r3<rep3;r3++) lengths.push(0);
+        } else {
+          throw new Error('DocParser: bad code-length symbol');
+        }
+      }
+      var litLengths = lengths.slice(0, hlit);
+      var distLengths = lengths.slice(hlit, hlit+hdist);
+      return { lit: buildHuffman(litLengths), dist: buildHuffman(distLengths) };
+    }
+
+    function inflateBlock(br, out, litHuff, distHuff){
+      while (true){
+        var sym = decodeSymbol(br, litHuff);
+        if (sym < 256){
+          out.push(sym);
+        } else if (sym === 256){
+          break;
+        } else {
+          var lenIdx = sym - 257;
+          if (lenIdx < 0 || lenIdx >= LENBASE.length) throw new Error('DocParser: bad length symbol');
+          var length = LENBASE[lenIdx] + br.readBits(LENEXT[lenIdx]);
+          var distSym = decodeSymbol(br, distHuff);
+          var dist = DISTBASE[distSym] + br.readBits(DISTEXT[distSym]);
+          var start = out.length - dist;
+          if (start < 0) throw new Error('DocParser: bad back-reference distance');
+          for (var k=0;k<length;k++){ out.push(out[start+k]); }
+        }
+      }
+    }
+
+    // Raw DEFLATE (no zlib/gzip wrapper) -> Uint8Array. `data` is a Uint8Array or plain byte array.
+    function inflateRaw(data){
+      var br = new BitReader(data, 0);
+      var out = [];
+      var isFinal = false;
+      var guard = 0;
+      while (!isFinal){
+        guard++;
+        if (guard > 2000000) throw new Error('DocParser: inflate exceeded block limit (corrupt stream?)');
+        isFinal = br.readBit() === 1;
+        var type = br.readBits(2);
+        if (type === 0){
+          br.align();
+          var len = data[br.pos] | (data[br.pos+1] << 8);
+          br.pos += 4; // LEN (2 bytes) + NLEN (2 bytes, ones-complement, unused here)
+          for (var i=0;i<len;i++){ out.push(data[br.pos+i]); }
+          br.pos += len;
+        } else if (type === 1){
+          inflateBlock(br, out, FIXED_LIT_HUFF, FIXED_DIST_HUFF);
+        } else if (type === 2){
+          var huffs = readDynamicHuffman(br);
+          inflateBlock(br, out, huffs.lit, huffs.dist);
+        } else {
+          throw new Error('DocParser: reserved/invalid DEFLATE block type');
+        }
+      }
+      return new Uint8Array(out);
+    }
+
+    // ---- Minimal ZIP reader (xlsx/docx are ZIP containers) ----
+    // Locates the End Of Central Directory record, walks the central directory, and lazily
+    // inflates only the requested entries (by exact filename) to keep this fast on large files.
+    function readUint16LE(buf, off){ return buf[off] | (buf[off+1]<<8); }
+    function readUint32LE(buf, off){ return (buf[off] | (buf[off+1]<<8) | (buf[off+2]<<16) | (buf[off+3]<<24)) >>> 0; }
+
+    function findEOCD(buf){
+      var minPos = Math.max(0, buf.length - 65557);
+      for (var i=buf.length-22; i>=minPos; i--){
+        if (buf[i]===0x50 && buf[i+1]===0x4b && buf[i+2]===0x05 && buf[i+3]===0x06){
+          return i;
+        }
+      }
+      return -1;
+    }
+
+    // Returns { 'path/in/zip.xml': Uint8Array, ... } for every entry whose name matches `wantFn`.
+    function unzip(buf, wantFn){
+      var eocd = findEOCD(buf);
+      if (eocd < 0) throw new Error('DocParser: not a valid zip/xlsx/docx file (no End Of Central Directory found)');
+      var entryCount = readUint16LE(buf, eocd+10);
+      var cdOffset = readUint32LE(buf, eocd+16);
+      var out = {};
+      var pos = cdOffset;
+      for (var n=0; n<entryCount; n++){
+        if (buf[pos]!==0x50 || buf[pos+1]!==0x4b || buf[pos+2]!==0x01 || buf[pos+3]!==0x02){
+          break; // malformed central directory - stop rather than read garbage
+        }
+        var compMethod = readUint16LE(buf, pos+10);
+        var compSize = readUint32LE(buf, pos+20);
+        var uncompSize = readUint32LE(buf, pos+24);
+        var fnLen = readUint16LE(buf, pos+28);
+        var extraLen = readUint16LE(buf, pos+30);
+        var commentLen = readUint16LE(buf, pos+32);
+        var localHeaderOffset = readUint32LE(buf, pos+42);
+        var fname = '';
+        for (var c=0;c<fnLen;c++){ fname += String.fromCharCode(buf[pos+46+c]); }
+        if (!wantFn || wantFn(fname)){
+          var lh = localHeaderOffset;
+          if (buf[lh]===0x50 && buf[lh+1]===0x4b && buf[lh+2]===0x03 && buf[lh+3]===0x04){
+            var lfnLen = readUint16LE(buf, lh+26);
+            var lextraLen = readUint16LE(buf, lh+28);
+            var dataStart = lh + 30 + lfnLen + lextraLen;
+            var compData = buf.subarray(dataStart, dataStart+compSize);
+            if (compMethod === 0){
+              out[fname] = compData;
+            } else if (compMethod === 8){
+              out[fname] = inflateRaw(compData);
+            } else {
+              // unsupported compression method (rare) - skip rather than throw, other parts of
+              // the archive may still be readable
+            }
+          }
+        }
+        pos += 46 + fnLen + extraLen + commentLen;
+      }
+      return out;
+    }
+
+    function bytesToUtf8(bytes){
+      if (typeof TextDecoder !== 'undefined'){
+        return new TextDecoder('utf-8').decode(bytes);
+      }
+      // Fallback manual UTF-8 decode (older environments without TextDecoder)
+      var out = '', i = 0;
+      while (i < bytes.length){
+        var b0 = bytes[i++];
+        if (b0 < 0x80){ out += String.fromCharCode(b0); }
+        else if ((b0 & 0xE0) === 0xC0){ var b1=bytes[i++]; out += String.fromCharCode(((b0&0x1F)<<6)|(b1&0x3F)); }
+        else if ((b0 & 0xF0) === 0xE0){ var b1e=bytes[i++], b2=bytes[i++]; out += String.fromCharCode(((b0&0x0F)<<12)|((b1e&0x3F)<<6)|(b2&0x3F)); }
+        else if ((b0 & 0xF8) === 0xF0){
+          var b1f=bytes[i++], b2f=bytes[i++], b3f=bytes[i++];
+          var cp = ((b0&0x07)<<18)|((b1f&0x3F)<<12)|((b2f&0x3F)<<6)|(b3f&0x3F);
+          cp -= 0x10000;
+          out += String.fromCharCode(0xD800 + (cp>>10), 0xDC00 + (cp&0x3FF));
+        } else { i++; }
+      }
+      return out;
+    }
+
+    // ASCII85 (Adobe variant, used by PDF's /ASCII85Decode filter). Groups of 5 chars (33-117)
+    // decode to 4 bytes; 'z' is shorthand for 4 zero bytes; stream ends at '~>'.
+    function decodeASCII85(str){
+      var end = str.indexOf('~>');
+      if (end >= 0) str = str.slice(0, end);
+      str = str.replace(/\s+/g, '');
+      var out = [];
+      var group = [];
+      for (var i=0;i<str.length;i++){
+        var ch = str[i];
+        if (ch === 'z' && group.length === 0){
+          out.push(0,0,0,0);
+          continue;
+        }
+        group.push(str.charCodeAt(i) - 33);
+        if (group.length === 5){
+          var n = (group[0]*85*85*85*85) + (group[1]*85*85*85) + (group[2]*85*85) + (group[3]*85) + group[4];
+          out.push((n >>> 24) & 0xFF, (n >>> 16) & 0xFF, (n >>> 8) & 0xFF, n & 0xFF);
+          group = [];
+        }
+      }
+      if (group.length > 0){
+        var padCount = 5 - group.length;
+        for (var p=0;p<padCount;p++) group.push(84); // pad with 'u' (84) per spec before decoding
+        var n2 = (group[0]*85*85*85*85) + (group[1]*85*85*85) + (group[2]*85*85) + (group[3]*85) + group[4];
+        var bytesOut = [(n2 >>> 24) & 0xFF, (n2 >>> 16) & 0xFF, (n2 >>> 8) & 0xFF, n2 & 0xFF];
+        out.push.apply(out, bytesOut.slice(0, 4 - padCount));
+      }
+      return new Uint8Array(out);
+    }
+
+    function decodeXmlEntities(s){
+      return s.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&apos;/g,"'")
+        .replace(/&#x([0-9a-fA-F]+);/g, function(m,h){ return String.fromCodePoint(parseInt(h,16)); })
+        .replace(/&#(\d+);/g, function(m,d){ return String.fromCodePoint(parseInt(d,10)); })
+        .replace(/&amp;/g,'&');
+    }
+
+    // ---- .docx text extraction ----
+    function extractDocxText(buf){
+      var files = unzip(buf, function(name){ return name === 'word/document.xml'; });
+      var xml = files['word/document.xml'];
+      if (!xml) throw new Error('DocParser: could not find word/document.xml inside this .docx');
+      var s = bytesToUtf8(xml);
+      // Table cells and paragraphs both end in </w:p> — treat as line breaks; strip all other tags.
+      s = s.replace(/<\/w:p>/g, '\n');
+      s = s.replace(/<w:tab\/>/g, '\t');
+      s = s.replace(/<[^>]+>/g, '');
+      s = decodeXmlEntities(s);
+      s = s.replace(/\n{3,}/g, '\n\n').trim();
+      return s;
+    }
+
+    // ---- .xlsx text extraction ----
+    function extractXlsxText(buf){
+      var files = unzip(buf, function(name){
+        return name === 'xl/sharedStrings.xml' || /^xl\/worksheets\/sheet\d+\.xml$/.test(name);
+      });
+      var sharedStrings = [];
+      if (files['xl/sharedStrings.xml']){
+        var ssXml = bytesToUtf8(files['xl/sharedStrings.xml']);
+        // Each <si> is one shared-string entry, possibly with multiple <t> runs (rich text).
+        var siMatches = ssXml.match(/<si[^>]*>[\s\S]*?<\/si>/g) || [];
+        sharedStrings = siMatches.map(function(si){
+          var parts = si.match(/<t[^>]*>([\s\S]*?)<\/t>/g) || [];
+          var text = parts.map(function(p){ return p.replace(/<t[^>]*>/,'').replace(/<\/t>/,''); }).join('');
+          return decodeXmlEntities(text);
+        });
+      }
+      var sheetNames = Object.keys(files).filter(function(n){ return /^xl\/worksheets\/sheet\d+\.xml$/.test(n); }).sort();
+      var out = [];
+      sheetNames.forEach(function(sn){
+        var xml = bytesToUtf8(files[sn]);
+        var rowMatches = xml.match(/<row[^>]*>[\s\S]*?<\/row>/g) || [];
+        rowMatches.forEach(function(rowXml){
+          var cellMatches = rowXml.match(/<c[^>]*>[\s\S]*?<\/c>|<c[^>]*\/>/g) || [];
+          var cells = cellMatches.map(function(c){
+            var typeMatch = c.match(/ t="([^"]+)"/);
+            var type = typeMatch ? typeMatch[1] : 'n';
+            if (type === 's'){
+              var vMatch = c.match(/<v>([\s\S]*?)<\/v>/);
+              var idx = vMatch ? parseInt(vMatch[1], 10) : -1;
+              return sharedStrings[idx] !== undefined ? sharedStrings[idx] : '';
+            } else if (type === 'inlineStr'){
+              var tMatch = c.match(/<t[^>]*>([\s\S]*?)<\/t>/);
+              return tMatch ? decodeXmlEntities(tMatch[1]) : '';
+            } else {
+              var vMatch2 = c.match(/<v>([\s\S]*?)<\/v>/);
+              return vMatch2 ? vMatch2[1] : '';
+            }
+          }).filter(function(v){ return v !== ''; });
+          if (cells.length) out.push(cells.join(' | '));
+        });
+      });
+      return out.join('\n');
+    }
+
+    // ---- Best-effort .pdf text extraction ----
+    // Not a full PDF renderer: scans for text-showing operators (Tj / TJ) inside content
+    // streams, decompressing FlateDecode streams where present. Works well on typical
+    // text-based PDFs (reports, SOWs, briefs); scanned/rasterized PDFs need OCR (out of scope).
+    function extractPdfText(buf){
+      var raw = '';
+      for (var i=0;i<buf.length;i++){ raw += String.fromCharCode(buf[i]); }
+
+      // The EOL before "endstream" is conventional but not guaranteed by every PDF writer, so it's
+      // matched optionally here and trimmed off the captured body only if actually present.
+      var streamRe = /stream\r?\n([\s\S]*?)(?:\r?\n)?endstream/g;
+      var m, chunks = [];
+      while ((m = streamRe.exec(raw))){
+        var streamStart = m.index;
+        // Look back up to 400 chars for this stream's dictionary to see if it's FlateDecode.
+        var dictStart = raw.lastIndexOf('<<', streamStart);
+        var dict = dictStart >= 0 ? raw.slice(dictStart, streamStart) : '';
+        var filterMatch = dict.match(/\/Filter\s*(\/[A-Za-z0-9]+|\[[^\]]*\])/);
+        var filters = [];
+        if (filterMatch){
+          var raw85 = filterMatch[1];
+          if (raw85[0] === '['){
+            var names = raw85.match(/\/[A-Za-z0-9]+/g) || [];
+            filters = names.map(function(n){ return n.slice(1); });
+          } else {
+            filters = [raw85.slice(1)];
+          }
+        }
+        var bodyStr = m[1];
+        var bodyBytes = new Uint8Array(bodyStr.length);
+        for (var b=0;b<bodyStr.length;b++) bodyBytes[b] = bodyStr.charCodeAt(b) & 0xFF;
+        var textSource;
+        try {
+          var current = bodyBytes;
+          for (var f=0; f<filters.length; f++){
+            if (filters[f] === 'ASCII85Decode'){
+              var asciiStr = '';
+              for (var ci=0; ci<current.length; ci++) asciiStr += String.fromCharCode(current[ci]);
+              current = decodeASCII85(asciiStr);
+            } else if (filters[f] === 'FlateDecode'){
+              // PDF FlateDecode streams are zlib-wrapped (2-byte header) raw deflate data.
+              var zlibBody = current.length > 2 ? current.subarray(2) : current;
+              current = inflateRaw(zlibBody);
+            } else {
+              // Unsupported filter (e.g. DCTDecode/JPX for images, LZWDecode) - can't decode this
+              // stream's text, but don't abort the whole document over one image/font stream.
+              current = null;
+              break;
+            }
+          }
+          if (current === null) continue;
+          textSource = bytesToUtf8(current);
+          if (!filters.length && !/\bTj\b|\bTJ\b/.test(bodyStr)) continue;
+        } catch(e){
+          continue; // undecodable stream (encrypted/corrupt/non-standard) - skip it
+        }
+        chunks.push(extractTextOperators(textSource));
+      }
+      return chunks.filter(function(c){ return c && c.trim(); }).join('\n');
+    }
+
+    function pdfUnescapeString(s){
+      var out = '';
+      for (var i=0;i<s.length;i++){
+        var ch = s[i];
+        if (ch === '\\'){
+          var next = s[i+1];
+          if (next === 'n'){ out += '\n'; i++; }
+          else if (next === 'r'){ out += '\n'; i++; }
+          else if (next === 't'){ out += '\t'; i++; }
+          else if (next === '(' || next === ')' || next === '\\'){ out += next; i++; }
+          else if (next >= '0' && next <= '7'){
+            var oct = s.substr(i+1, 3).match(/^[0-7]{1,3}/)[0];
+            out += String.fromCharCode(parseInt(oct, 8));
+            i += oct.length;
+          } else { i++; }
+        } else {
+          out += ch;
+        }
+      }
+      return out;
+    }
+
+    function extractTextOperators(content){
+      var out = [];
+      // (string) Tj  -- single string show
+      var tjRe = /\(((?:[^()\\]|\\.)*)\)\s*Tj/g;
+      var m;
+      while ((m = tjRe.exec(content))){ out.push(pdfUnescapeString(m[1])); }
+      // [ (str) -N (str) ... ] TJ -- array show, numbers between strings are kerning (ignored)
+      var tjArrRe = /\[((?:[^\[\]]|\\.)*)\]\s*TJ/g;
+      while ((m = tjArrRe.exec(content))){
+        var arr = m[1];
+        var strRe = /\(((?:[^()\\]|\\.)*)\)/g, sm;
+        var line = '';
+        while ((sm = strRe.exec(arr))){ line += pdfUnescapeString(sm[1]); }
+        if (line) out.push(line);
+      }
+      var withBreaks = content.replace(/T\*|Td|TD/g, '\n');
+      if (!out.length && /Tj|TJ/.test(withBreaks)) return '';
+      return out.join(' ');
+    }
+
+    function extractDocumentText(name, buf){
+      var lower = (name||'').toLowerCase();
+      if (/\.docx$/.test(lower)) return { text: extractDocxText(buf), kind: 'docx' };
+      if (/\.xlsx$/.test(lower)) return { text: extractXlsxText(buf), kind: 'xlsx' };
+      if (/\.pdf$/.test(lower)) return { text: extractPdfText(buf), kind: 'pdf' };
+      if (/\.doc$/.test(lower) || /\.xls$/.test(lower)){
+        throw new Error('Legacy .doc/.xls binary formats are not supported — please save as .docx/.xlsx and try again.');
+      }
+      throw new Error('Unsupported file type. Please upload a .xlsx, .docx, or .pdf file.');
+    }
+
+    return {
+      inflateRaw: inflateRaw,
+      unzip: unzip,
+      bytesToUtf8: bytesToUtf8,
+      extractDocxText: extractDocxText,
+      extractXlsxText: extractXlsxText,
+      extractPdfText: extractPdfText,
+      extractDocumentText: extractDocumentText
+    };
+  })();
+
+  var STORAGE_KEY = 'classPlanBuilder.projects.v1';
+  var projects = {};
+  var activeProjectId = null;
+  var pendingEdits = {};
+  var currentImpact = {};
+  var impactTouched = {};
+  var activeLevers = [];
+  var activeHistoryId = null;
+  var pendingUploadFiles = [];
+  var wizardStepIndex = 0;
+
+  function proj(){ return projects[activeProjectId]; }
+  function makeProject(name){
+    return { id: 'p'+Date.now()+Math.floor(Math.random()*1000), name: (name||'Untitled Plan'), baseline:{}, versions:[] };
+  }
+  function slug(s){ return String(s||'plan').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || 'plan'; }
+
+  function persist(){
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ projects: projects, activeProjectId: activeProjectId }));
+    } catch(e){ /* storage unavailable or full - fail silently, in-memory state still works */ }
+  }
+  function loadPersisted(){
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return false;
+      var data = JSON.parse(raw);
+      if (data && data.projects && Object.keys(data.projects).length){
+        projects = data.projects;
+        activeProjectId = (data.activeProjectId && projects[data.activeProjectId]) ? data.activeProjectId : Object.keys(projects)[0];
+        return true;
+      }
+    } catch(e){ /* corrupt data - start fresh */ }
+    return false;
+  }
+
+  function escapeHtml(s){
+    if (s === undefined || s === null) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+  function severityRank(s){ return SEV_RANK.hasOwnProperty(s) ? SEV_RANK[s] : 0; }
+
+  // ---- Risk list (repeatable risk entries with a "share with client" flag) ----
+  // Legacy saved plans stored this field as a single freeform string; normalize on read.
+  function normalizeRiskList(value){
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'string' && value.trim()){
+      return [{ id:'r'+Date.now(), text: value.trim(), share:false }];
+    }
+    return [];
+  }
+
+  function riskListSummary(value){
+    var list = normalizeRiskList(value);
+    if (!list.length) return '—';
+    var shared = list.filter(function(r){ return r.share; }).length;
+    return list.length+' risk'+(list.length===1?'':'s')+' ('+shared+' shared with client)';
+  }
+
+  function riskListDisplayHTML(value){
+    var list = normalizeRiskList(value);
+    if (!list.length) return '—';
+    return '<ul class="risk-display-list">'+list.map(function(r){
+      return '<li>'+escapeHtml(r.text||'—')+(r.share?' <span class="badge">shares with client</span>':'')+'</li>';
+    }).join('')+'</ul>';
+  }
+
+  function riskListRowHTML(r){
+    return '<div class="risk-row" data-risk-id="'+r.id+'">'+
+      '<textarea data-risk-text placeholder="Describe the risk and mitigation...">'+escapeHtml(r.text||'')+'</textarea>'+
+      '<label class="risk-share"><input type="checkbox" data-risk-share '+(r.share?'checked':'')+'> Share with client</label>'+
+      '<button type="button" class="mini-btn" data-risk-remove>Remove</button>'+
+      '</div>';
+  }
+
+  function riskListEditorHTML(list){
+    return '<div class="risk-list">'+list.map(riskListRowHTML).join('')+'</div>'+
+      '<button type="button" class="secondary" data-risk-add style="margin:8px 14px 4px;">+ Add a risk</button>';
+  }
+
+  // Renders a risk-list editor into `container` and keeps `list` (an array reference held by the
+  // caller via onChange) in sync as rows are edited, added, or removed.
+  function wireRiskList(container, list, onChange){
+    function rerender(){
+      container.innerHTML = riskListEditorHTML(list);
+      wireRows();
+    }
+    function wireRows(){
+      container.querySelectorAll('.risk-row').forEach(function(row){
+        var id = row.getAttribute('data-risk-id');
+        row.querySelector('[data-risk-text]').addEventListener('input', function(e){
+          var r = list.filter(function(x){ return x.id === id; })[0];
+          if (r){ r.text = e.target.value; onChange(list); }
+        });
+        row.querySelector('[data-risk-share]').addEventListener('change', function(e){
+          var r = list.filter(function(x){ return x.id === id; })[0];
+          if (r){ r.share = e.target.checked; onChange(list); }
+        });
+        row.querySelector('[data-risk-remove]').addEventListener('click', function(){
+          list = list.filter(function(x){ return x.id !== id; });
+          onChange(list);
+          rerender();
+        });
+      });
+      var addBtn = container.querySelector('[data-risk-add]');
+      if (addBtn) addBtn.addEventListener('click', function(){
+        list.push({ id:'r'+Date.now()+Math.floor(Math.random()*1000), text:'', share:false });
+        onChange(list);
+        rerender();
+      });
+    }
+    rerender();
+  }
+
+  // ---- Stakeholders & roles (repeatable roster; feeds the RACI matrix and the Present tab) ----
+  function normalizeStakeholderList(value){
+    return Array.isArray(value) ? value : [];
+  }
+  function sideLabel(v){
+    return v==='client' ? 'Client side' : v==='delivery' ? 'Delivery side' : v==='third' ? 'Third party' : '—';
+  }
+  function stakeholderListSummary(value){
+    var list = normalizeStakeholderList(value);
+    if (!list.length) return '—';
+    return list.length+' stakeholder'+(list.length===1?'':'s');
+  }
+  function stakeholderListDisplayHTML(value){
+    var list = normalizeStakeholderList(value);
+    if (!list.length) return '—';
+    return '<ul class="risk-display-list">'+list.map(function(p){
+      return '<li>'+escapeHtml(p.name||'—')+(p.role?' — '+escapeHtml(p.role):'')+' <span class="badge">'+sideLabel(p.side)+'</span></li>';
+    }).join('')+'</ul>';
+  }
+  function stakeholderRowHTML(p){
+    return '<div class="stakeholder-row" data-sh-id="'+p.id+'">'+
+      '<input data-sh-name type="text" placeholder="Name" value="'+escapeHtml(p.name||'')+'">'+
+      '<input data-sh-role type="text" placeholder="Role / title" value="'+escapeHtml(p.role||'')+'">'+
+      '<select data-sh-side>'+
+        '<option value="client" '+(p.side==='client'?'selected':'')+'>Client side</option>'+
+        '<option value="delivery" '+(p.side==='delivery'?'selected':'')+'>Delivery side</option>'+
+        '<option value="third" '+(p.side==='third'?'selected':'')+'>Third party</option>'+
+      '</select>'+
+      '<button type="button" class="mini-btn" data-sh-remove>Remove</button>'+
+      '</div>';
+  }
+  function stakeholderListEditorHTML(list){
+    if (!list.length) return '<p class="hint" style="padding:0 14px;">No stakeholders yet.</p>'+
+      '<button type="button" class="secondary" data-sh-add style="margin:8px 14px 4px;">+ Add a stakeholder</button>';
+    return '<div class="stakeholder-list">'+list.map(stakeholderRowHTML).join('')+'</div>'+
+      '<button type="button" class="secondary" data-sh-add style="margin:8px 14px 4px;">+ Add a stakeholder</button>';
+  }
+  // Renders a stakeholder-roster editor into `container`, keeping `list` in sync as rows are
+  // edited, added, or removed. Mirrors wireRiskList's rerender-on-structural-change pattern.
+  function wireStakeholderList(container, list, onChange){
+    function rerender(){
+      container.innerHTML = stakeholderListEditorHTML(list);
+      wireRows();
+    }
+    function wireRows(){
+      container.querySelectorAll('.stakeholder-row').forEach(function(row){
+        var id = row.getAttribute('data-sh-id');
+        row.querySelector('[data-sh-name]').addEventListener('input', function(e){
+          var p = list.filter(function(x){ return x.id === id; })[0];
+          if (p){ p.name = e.target.value; onChange(list); }
+        });
+        row.querySelector('[data-sh-role]').addEventListener('input', function(e){
+          var p = list.filter(function(x){ return x.id === id; })[0];
+          if (p){ p.role = e.target.value; onChange(list); }
+        });
+        row.querySelector('[data-sh-side]').addEventListener('change', function(e){
+          var p = list.filter(function(x){ return x.id === id; })[0];
+          if (p){ p.side = e.target.value; onChange(list); }
+        });
+        row.querySelector('[data-sh-remove]').addEventListener('click', function(){
+          list = list.filter(function(x){ return x.id !== id; });
+          onChange(list);
+          rerender();
+        });
+      });
+      var addBtn = container.querySelector('[data-sh-add]');
+      if (addBtn) addBtn.addEventListener('click', function(){
+        list.push({ id:'sh'+Date.now()+Math.floor(Math.random()*1000), name:'', role:'', side:'client' });
+        onChange(list);
+        rerender();
+      });
+    }
+    rerender();
+  }
+
+  // ---- RACI matrix (rows sync from phases + risk register; cells assign R/A/C/I per stakeholder) ----
+  function phaseRaciRows(){
+    return GROUPS.filter(function(g){ return g.id !== 'risk' && g.id !== 'present'; }).map(function(g){
+      return { refId: g.id, label: g.title };
+    });
+  }
+  // Rebuilds the row list from the current phases + risk list every time it's called, reusing any
+  // cell assignments already made for a row that still exists, dropping rows for risks that were
+  // removed, and preserving user-added custom rows untouched. Safe (and cheap) to call on every render.
+  function normalizeRaciRows(raw, riskList){
+    var rawList = Array.isArray(raw) ? raw : [];
+    function findExisting(source, refId){
+      return rawList.filter(function(r){ return r.source === source && r.refId === refId; })[0];
+    }
+    var rows = [];
+    phaseRaciRows().forEach(function(pr){
+      var existing = findExisting('phase', pr.refId);
+      rows.push({ id:'phase-'+pr.refId, source:'phase', refId:pr.refId, label:pr.label, cells:(existing && existing.cells) || {} });
+    });
+    (riskList||[]).forEach(function(r, idx){
+      var existing = findExisting('risk', r.id);
+      var shortText = r.text ? (r.text.length > 50 ? r.text.slice(0,50)+'…' : r.text) : ('#'+(idx+1));
+      rows.push({ id:'risk-'+r.id, source:'risk', refId:r.id, label:'Risk: '+shortText, shared: !!r.share, cells:(existing && existing.cells) || {} });
+    });
+    rawList.filter(function(r){ return r.source === 'custom'; }).forEach(function(r){
+      rows.push({ id:r.id, source:'custom', refId:null, label:r.label||'', cells:r.cells||{} });
+    });
+    return rows;
+  }
+  function raciGridSummary(value){
+    var rows = Array.isArray(value) ? value : [];
+    if (!rows.length) return '—';
+    var withOwner = rows.filter(function(r){
+      return r.cells && Object.keys(r.cells).some(function(k){ return r.cells[k] === 'A'; });
+    }).length;
+    return rows.length+' row'+(rows.length===1?'':'s')+' ('+withOwner+' with an owner assigned)';
+  }
+  function raciGridDisplayHTML(raciValue, stakeholdersValue){
+    var rows = Array.isArray(raciValue) ? raciValue : [];
+    var stakeholders = normalizeStakeholderList(stakeholdersValue);
+    if (!rows.length || !stakeholders.length) return '—';
+    var headCells = stakeholders.map(function(p){ return '<th>'+escapeHtml(p.name||'Unnamed')+'</th>'; }).join('');
+    var bodyRows = rows.map(function(row){
+      var cells = stakeholders.map(function(p){
+        var v = (row.cells && row.cells[p.id]) || '';
+        return '<td class="raci-cell-'+(v||'blank')+'">'+v+'</td>';
+      }).join('');
+      return '<tr><td class="raci-row-label">'+escapeHtml(row.label)+'</td>'+cells+'</tr>';
+    }).join('');
+    return '<div class="raci-table-wrap"><table class="raci-table"><thead><tr><th>Activity</th>'+headCells+'</tr></thead><tbody>'+bodyRows+'</tbody></table></div>';
+  }
+  function raciGridEditorHTML(rows, stakeholders){
+    if (!stakeholders.length){
+      return '<p class="hint" style="padding:0 14px;">Add at least one stakeholder above to start assigning RACI roles.</p>';
+    }
+    var headCells = stakeholders.map(function(p){
+      return '<th>'+escapeHtml(p.name||'Unnamed')+(p.role?'<span class="raci-role-sub">'+escapeHtml(p.role)+'</span>':'')+'</th>';
+    }).join('');
+    var bodyRows = rows.map(function(row){
+      var tagCls = row.source==='phase' ? 'raci-tag-phase' : row.source==='risk' ? 'raci-tag-risk' : 'raci-tag-custom';
+      var tagText = row.source==='phase' ? 'Phase' : row.source==='risk' ? 'Risk' : 'Custom';
+      var labelCell = row.source==='custom'
+        ? '<input type="text" data-raci-label data-row-id="'+row.id+'" placeholder="Activity / deliverable" value="'+escapeHtml(row.label||'')+'">'
+        : escapeHtml(row.label);
+      var removeCell = row.source==='custom' ? '<button type="button" class="mini-btn" data-raci-remove data-row-id="'+row.id+'">Remove</button>' : '';
+      var cells = stakeholders.map(function(p){
+        var val = (row.cells && row.cells[p.id]) || '';
+        var opts = ['','R','A','C','I'].map(function(code){
+          return '<option value="'+code+'" '+(val===code?'selected':'')+'>'+(code||'—')+'</option>';
+        }).join('');
+        return '<td class="raci-cell-'+(val||'blank')+'"><select data-raci-cell data-row-id="'+row.id+'" data-sh-id="'+p.id+'">'+opts+'</select></td>';
+      }).join('');
+      return '<tr><td class="raci-row-label"><span class="raci-tag '+tagCls+'">'+tagText+'</span>'+labelCell+'</td>'+cells+'<td>'+removeCell+'</td></tr>';
+    }).join('');
+    return '<div class="raci-table-wrap"><table class="raci-table"><thead><tr><th>Activity</th>'+headCells+'<th></th></tr></thead><tbody>'+bodyRows+'</tbody></table></div>'
+      + '<button type="button" class="secondary" data-raci-add-row style="margin:8px 14px 4px;">+ Add a custom row</button>'
+      + '<p class="hint" style="padding:0 14px;"><b>R</b> Responsible — does the work. <b>A</b> Accountable — owns the outcome (aim for one per row). <b>C</b> Consulted — gives input before it happens. <b>I</b> Informed — kept in the loop after.</p>';
+  }
+  // Wires a linked stakeholder-roster + RACI-grid editor pair into two containers, keeping the
+  // grid's columns in sync with the roster (renaming/removing a stakeholder updates the grid
+  // immediately) and its rows in sync with the risk register via the returned resyncRisks() hook.
+  // ---- Communications plan (repeatable: one row per audience — cadence, channel, purpose, trigger) ----
+  var COMMS_CADENCE_OPTS = ['Weekly','Biweekly','Monthly','Quarterly','Milestone-based','Ad hoc'];
+  var COMMS_CHANNEL_OPTS = ['Meeting','Email','Written report','Dashboard','Phone call','Other'];
+  var COMMS_PURPOSE_OPTS = ['Status update','Decision needed','Escalation','FYI'];
+
+  function normalizeCommsList(value){
+    return Array.isArray(value) ? value : [];
+  }
+  // A row's audience is either a live link to the stakeholder roster (preferred, stays in sync
+  // with renames) or freeform text — used as a fallback when no roster entry matches, including
+  // for a stakeholder who has since been removed (their name gets copied into audienceCustom first).
+  function commsAudienceLabel(c, stakeholders){
+    if (c.audienceStakeholderId){
+      var p = (stakeholders||[]).filter(function(s){ return s.id === c.audienceStakeholderId; })[0];
+      if (p) return p.name || 'Unnamed';
+    }
+    return c.audienceCustom || 'Unspecified audience';
+  }
+  function commsListSummary(value){
+    var list = normalizeCommsList(value);
+    if (!list.length) return '—';
+    return list.length+' communication'+(list.length===1?'':'s')+' planned';
+  }
+  function commsListDisplayHTML(value, stakeholdersValue){
+    var list = normalizeCommsList(value);
+    if (!list.length) return '—';
+    var stakeholders = normalizeStakeholderList(stakeholdersValue);
+    return '<ul class="risk-display-list">'+list.map(function(c){
+      var audience = commsAudienceLabel(c, stakeholders);
+      var meta = [c.cadence, c.channel, c.purpose].filter(Boolean).join(' · ');
+      return '<li><b>'+escapeHtml(audience)+'</b>'+(meta?' — '+escapeHtml(meta):'')+(c.trigger?' <span class="badge">'+escapeHtml(c.trigger)+'</span>':'')+'</li>';
+    }).join('')+'</ul>';
+  }
+  function commsSelectHTML(dataAttr, options, value){
+    var opts = '<option value="">— select —</option>' + options.map(function(o){
+      return '<option value="'+escapeHtml(o)+'" '+(o===value?'selected':'')+'>'+escapeHtml(o)+'</option>';
+    }).join('');
+    return '<select '+dataAttr+'>'+opts+'</select>';
+  }
+  function commsRowHTML(c, stakeholders){
+    var audOpts = '<option value="">— custom / other —</option>' + stakeholders.map(function(p){
+      return '<option value="'+p.id+'" '+(c.audienceStakeholderId===p.id?'selected':'')+'>'+escapeHtml(p.name||'Unnamed')+'</option>';
+    }).join('');
+    return '<div class="comms-row" data-comms-id="'+c.id+'">'+
+      '<div class="comms-row-grid">'+
+        '<label>Audience<select data-comms-audience>'+audOpts+'</select></label>'+
+        '<label>Audience name (if custom)<input data-comms-audience-custom type="text" placeholder="e.g. Client underwriting team" value="'+escapeHtml(c.audienceCustom||'')+'"></label>'+
+        '<label>Cadence'+commsSelectHTML('data-comms-cadence', COMMS_CADENCE_OPTS, c.cadence)+'</label>'+
+        '<label>Channel'+commsSelectHTML('data-comms-channel', COMMS_CHANNEL_OPTS, c.channel)+'</label>'+
+        '<label>Purpose'+commsSelectHTML('data-comms-purpose', COMMS_PURPOSE_OPTS, c.purpose)+'</label>'+
+        '<label>Trigger (optional)<input data-comms-trigger type="text" placeholder="e.g. start of Delivery phase" value="'+escapeHtml(c.trigger||'')+'"></label>'+
+      '</div>'+
+      '<textarea data-comms-notes placeholder="Key message / talking points...">'+escapeHtml(c.notes||'')+'</textarea>'+
+      '<button type="button" class="mini-btn" data-comms-remove>Remove</button>'+
+      '</div>';
+  }
+  function commsListEditorHTML(list, stakeholders){
+    var rowsHtml = list.length ? list.map(function(c){ return commsRowHTML(c, stakeholders); }).join('')
+      : '<p class="hint" style="padding:0 14px;">No communications planned yet.</p>';
+    return '<div class="comms-list">'+rowsHtml+'</div>'+
+      '<div class="btn-row" style="margin:8px 14px 4px; padding:0;">'+
+        '<button type="button" class="secondary" data-comms-add>+ Add a communication</button>'+
+        (stakeholders.length ? '<button type="button" class="secondary" data-comms-quickfill>+ Add one row per stakeholder</button>' : '')+
+      '</div>';
+  }
+  // Guesses a sensible default purpose for a stakeholder based on the "highest" RACI role they
+  // hold anywhere in the current matrix: Accountable anywhere suggests they need decision-grade
+  // updates; Responsible/Consulted suggests routine status updates; Informed-only suggests FYI.
+  function suggestPurposeForStakeholder(shId, raciRows){
+    var codes = {};
+    (raciRows||[]).forEach(function(row){ var c = row.cells && row.cells[shId]; if (c) codes[c] = true; });
+    if (codes.A) return 'Decision needed';
+    if (codes.R || codes.C) return 'Status update';
+    if (codes.I) return 'FYI';
+    return '';
+  }
+
+  function wirePresentExtras(opts){
+    var stakeholders = opts.stakeholders;
+    var raciRows = normalizeRaciRows(opts.raciRaw, opts.riskList);
+    var commsRows = normalizeCommsList(opts.commsRaw);
+
+    function commitRaci(){ opts.onRaciChange(raciRows); }
+    function commitComms(){ if (opts.onCommsChange) opts.onCommsChange(commsRows); }
+
+    function renderRaci(){
+      opts.raciContainer.innerHTML = raciGridEditorHTML(raciRows, stakeholders);
+      wireRaciInputs();
+    }
+    function wireRaciInputs(){
+      opts.raciContainer.querySelectorAll('[data-raci-cell]').forEach(function(sel){
+        sel.addEventListener('change', function(e){
+          var rowId = e.target.getAttribute('data-row-id');
+          var shId = e.target.getAttribute('data-sh-id');
+          var row = raciRows.filter(function(r){ return r.id === rowId; })[0];
+          if (!row) return;
+          if (e.target.value){ row.cells[shId] = e.target.value; } else { delete row.cells[shId]; }
+          e.target.closest('td').className = 'raci-cell-'+(e.target.value||'blank');
+          commitRaci();
+        });
+      });
+      opts.raciContainer.querySelectorAll('[data-raci-label]').forEach(function(inp){
+        inp.addEventListener('input', function(e){
+          var rowId = e.target.getAttribute('data-row-id');
+          var row = raciRows.filter(function(r){ return r.id === rowId; })[0];
+          if (row){ row.label = e.target.value; commitRaci(); }
+        });
+      });
+      opts.raciContainer.querySelectorAll('[data-raci-remove]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var rowId = btn.getAttribute('data-row-id');
+          raciRows = raciRows.filter(function(r){ return r.id !== rowId; });
+          commitRaci();
+          renderRaci();
+        });
+      });
+      var addBtn = opts.raciContainer.querySelector('[data-raci-add-row]');
+      if (addBtn) addBtn.addEventListener('click', function(){
+        raciRows.push({ id:'custom'+Date.now()+Math.floor(Math.random()*1000), source:'custom', refId:null, label:'', cells:{} });
+        commitRaci();
+        renderRaci();
+      });
+    }
+
+    function renderComms(){
+      if (!opts.commsContainer) return;
+      opts.commsContainer.innerHTML = commsListEditorHTML(commsRows, stakeholders);
+      wireCommsInputs();
+    }
+    function wireCommsInputs(){
+      if (!opts.commsContainer) return;
+      opts.commsContainer.querySelectorAll('.comms-row').forEach(function(row){
+        var id = row.getAttribute('data-comms-id');
+        function getRow(){ return commsRows.filter(function(x){ return x.id === id; })[0]; }
+        row.querySelector('[data-comms-audience]').addEventListener('change', function(e){
+          var c = getRow(); if (c){ c.audienceStakeholderId = e.target.value; commitComms(); }
+        });
+        row.querySelector('[data-comms-audience-custom]').addEventListener('input', function(e){
+          var c = getRow(); if (c){ c.audienceCustom = e.target.value; commitComms(); }
+        });
+        row.querySelector('[data-comms-cadence]').addEventListener('change', function(e){
+          var c = getRow(); if (c){ c.cadence = e.target.value; commitComms(); }
+        });
+        row.querySelector('[data-comms-channel]').addEventListener('change', function(e){
+          var c = getRow(); if (c){ c.channel = e.target.value; commitComms(); }
+        });
+        row.querySelector('[data-comms-purpose]').addEventListener('change', function(e){
+          var c = getRow(); if (c){ c.purpose = e.target.value; commitComms(); }
+        });
+        row.querySelector('[data-comms-trigger]').addEventListener('input', function(e){
+          var c = getRow(); if (c){ c.trigger = e.target.value; commitComms(); }
+        });
+        row.querySelector('[data-comms-notes]').addEventListener('input', function(e){
+          var c = getRow(); if (c){ c.notes = e.target.value; commitComms(); }
+        });
+        row.querySelector('[data-comms-remove]').addEventListener('click', function(){
+          commsRows = commsRows.filter(function(x){ return x.id !== id; });
+          commitComms();
+          renderComms();
+        });
+      });
+      var addBtn = opts.commsContainer.querySelector('[data-comms-add]');
+      if (addBtn) addBtn.addEventListener('click', function(){
+        commsRows.push({ id:'comm'+Date.now()+Math.floor(Math.random()*1000), audienceStakeholderId:'', audienceCustom:'', cadence:'', channel:'', purpose:'', trigger:'', notes:'' });
+        commitComms();
+        renderComms();
+      });
+      var quickBtn = opts.commsContainer.querySelector('[data-comms-quickfill]');
+      if (quickBtn) quickBtn.addEventListener('click', function(){
+        var referenced = {};
+        commsRows.forEach(function(c){ if (c.audienceStakeholderId) referenced[c.audienceStakeholderId] = true; });
+        stakeholders.forEach(function(p){
+          if (referenced[p.id]) return;
+          commsRows.push({
+            id:'comm'+Date.now()+Math.floor(Math.random()*1000)+p.id,
+            audienceStakeholderId: p.id, audienceCustom:'',
+            cadence: (typeof opts.getDefaultCadence === 'function' ? opts.getDefaultCadence() : opts.defaultCadence) || '',
+            channel:'',
+            purpose: suggestPurposeForStakeholder(p.id, raciRows),
+            trigger:'', notes:''
+          });
+        });
+        commitComms();
+        renderComms();
+      });
+    }
+
+    wireStakeholderList(opts.stakeholderContainer, stakeholders, function(newList){
+      var oldById = {};
+      stakeholders.forEach(function(p){ oldById[p.id] = p.name; });
+      stakeholders = newList;
+      opts.onStakeholdersChange(newList);
+      var validIds = {};
+      newList.forEach(function(p){ validIds[p.id] = true; });
+      raciRows.forEach(function(row){
+        Object.keys(row.cells).forEach(function(shId){ if (!validIds[shId]) delete row.cells[shId]; });
+      });
+      commsRows.forEach(function(row){
+        if (row.audienceStakeholderId && !validIds[row.audienceStakeholderId]){
+          if (!row.audienceCustom) row.audienceCustom = oldById[row.audienceStakeholderId] || '';
+          row.audienceStakeholderId = '';
+        }
+      });
+      commitRaci();
+      commitComms();
+      renderRaci();
+      renderComms();
+    });
+
+    renderRaci();
+    renderComms();
+
+    return {
+      resyncRisks: function(newRiskList){
+        raciRows = normalizeRaciRows(raciRows, newRiskList);
+        commitRaci();
+        renderRaci();
+      }
+    };
+  }
+
+  function fieldInputHTML(f, value){
+    value = value || '';
+    if (f.type === 'textarea'){
+      return '<textarea data-field="'+f.id+'" placeholder="'+escapeHtml(f.placeholder||'')+'">'+escapeHtml(value)+'</textarea>';
+    }
+    if (f.type === 'select'){
+      var opts = '<option value="">— select —</option>';
+      f.options.forEach(function(o){
+        opts += '<option value="'+escapeHtml(o)+'" '+(o===value?'selected':'')+'>'+escapeHtml(o)+'</option>';
+      });
+      return '<select data-field="'+f.id+'">'+opts+'</select>';
+    }
+    return '<input data-field="'+f.id+'" type="'+f.type+'" value="'+escapeHtml(value)+'" placeholder="'+escapeHtml(f.placeholder||'')+'">';
+  }
+
+  function fieldLabelHTML(f, extraHtml){
+    var iconHtml = f.desc ? '<span class="info-icon" tabindex="0">i<span class="tooltip">'+escapeHtml(f.desc)+'</span></span>' : '';
+    return '<span>'+f.label+iconHtml+(extraHtml||'')+'</span>';
+  }
+
+  // ---- Baseline wizard (Tab 1) ----
+  function stepHasContent(groupId){
+    var b = proj().baseline;
+    return FIELDS.some(function(f){
+      if (f.group !== groupId) return false;
+      var v = b[f.id];
+      return Array.isArray(v) ? v.length > 0 : !!v;
+    });
+  }
+
+  function renderWizardSteps(){
+    var html = GROUPS.map(function(g, idx){
+      var filled = stepHasContent(g.id);
+      var cls = 'wizard-step' + (idx===wizardStepIndex?' active':'') + (filled?' filled':'');
+      var icon = filled ? '&#10003;' : String(idx+1);
+      return '<div class="'+cls+'" data-step="'+idx+'"><div class="wizard-step-icon">'+icon+'</div><div class="wizard-step-label">'+g.shortLabel+'</div></div>'
+        + (idx < GROUPS.length-1 ? '<div class="wizard-step-line"></div>' : '');
+    }).join('');
+    var wrap = document.getElementById('wizardSteps');
+    wrap.innerHTML = html;
+    wrap.querySelectorAll('.wizard-step').forEach(function(el){
+      el.addEventListener('click', function(){
+        wizardStepIndex = parseInt(el.getAttribute('data-step'), 10);
+        renderWizardSteps();
+        renderWizardStepBody();
+      });
+    });
+  }
+
+  function renderWizardStepBody(){
+    var g = GROUPS[wizardStepIndex];
+    var b = proj().baseline;
+    var body = document.getElementById('wizardStepBody');
+    if (g.id === 'risk'){
+      body.innerHTML = '<h3 class="wizard-step-title">'+g.title+'</h3>'+
+        '<p class="hint">Add each risk separately, with its mitigation. Check "Share with client" for risks you are comfortable presenting on tab 4.</p>'+
+        '<div id="riskListWizard"></div>';
+      wireRiskList(document.getElementById('riskListWizard'), normalizeRiskList(b.topRisks), function(newList){
+        proj().baseline.topRisks = newList;
+        persist();
+        renderWizardSteps();
+      });
+    } else if (g.id === 'present'){
+      var pFields = FIELDS.filter(function(f){ return f.group === 'present' && f.type !== 'stakeholderlist' && f.type !== 'racigrid' && f.type !== 'commslist'; });
+      var pRows = pFields.map(function(f){
+        return '<label class="field '+(f.wide?'wide':'')+'">'+fieldLabelHTML(f)+fieldInputHTML(f, b[f.id])+'</label>';
+      }).join('');
+      body.innerHTML = '<h3 class="wizard-step-title">'+g.title+'</h3><div class="grid no-pad">'+pRows+'</div>'
+        + '<div class="change-subhead">Stakeholders &amp; roles</div>'
+        + '<div id="stakeholderWizard"></div>'
+        + '<div class="change-subhead">RACI matrix</div>'
+        + '<p class="hint" style="padding:0 14px; margin:6px 0;">Rows sync automatically from your phases and risk register above. Assign R/A/C/I per stakeholder for each row.</p>'
+        + '<div id="raciWizard"></div>'
+        + '<div class="change-subhead">Communications plan</div>'
+        + '<p class="hint" style="padding:0 14px; margin:6px 0;">Who needs to hear from you, how often, and through what channel. Use "+ Add one row per stakeholder" to pre-fill it from your roster above.</p>'
+        + '<div id="commsWizard"></div>';
+      body.querySelectorAll('[data-field]').forEach(function(inp){
+        inp.addEventListener('input', function(e){
+          proj().baseline[e.target.getAttribute('data-field')] = e.target.value;
+          persist();
+          renderWizardSteps();
+        });
+      });
+      wirePresentExtras({
+        stakeholderContainer: document.getElementById('stakeholderWizard'),
+        raciContainer: document.getElementById('raciWizard'),
+        commsContainer: document.getElementById('commsWizard'),
+        stakeholders: normalizeStakeholderList(b.stakeholders),
+        raciRaw: b.raciAssignments,
+        commsRaw: b.commsPlan,
+        riskList: normalizeRiskList(b.topRisks),
+        getDefaultCadence: function(){ return proj().baseline.meetingCadence || ''; },
+        onStakeholdersChange: function(newList){ proj().baseline.stakeholders = newList; persist(); renderWizardSteps(); },
+        onRaciChange: function(newRows){ proj().baseline.raciAssignments = newRows; persist(); renderWizardSteps(); },
+        onCommsChange: function(newRows){ proj().baseline.commsPlan = newRows; persist(); renderWizardSteps(); }
+      });
+    } else {
+      var fields = FIELDS.filter(function(f){ return f.group === g.id; });
+      var rows = fields.map(function(f){
+        return '<label class="field '+(f.wide?'wide':'')+'">'+fieldLabelHTML(f)+fieldInputHTML(f, b[f.id])+'</label>';
+      }).join('');
+      body.innerHTML = '<h3 class="wizard-step-title">'+g.title+'</h3><div class="grid no-pad">'+rows+'</div>';
+      body.querySelectorAll('[data-field]').forEach(function(inp){
+        inp.addEventListener('input', function(e){
+          proj().baseline[e.target.getAttribute('data-field')] = e.target.value;
+          persist();
+          renderWizardSteps();
+        });
+      });
+    }
+    document.getElementById('wizardPrevBtn').disabled = wizardStepIndex === 0;
+    document.getElementById('wizardNextBtn').disabled = wizardStepIndex === GROUPS.length - 1;
+  }
+
+  function renderBaselineForm(){
+    wizardStepIndex = 0;
+    renderWizardSteps();
+    renderWizardStepBody();
+    renderUploadBox();
+  }
+
+  // ---- Upload & Process: bootstrap a plan's baseline fields from an uploaded document ----
+  var UPLOAD_MAX_BYTES = 15 * 1024 * 1024; // 15MB per file - generous for a text-based document or a single photo
+  var UPLOAD_MAX_FILES = 12; // enough for a multi-page photographed document without an unbounded batch
+  var UPLOAD_MAX_BATCH_BYTES = 40 * 1024 * 1024; // 40MB total per batch, to keep the upload/extraction snappy
+  var UPLOAD_TEXT_LIMIT = 14000; // characters of extracted document text sent to askClaude per batch
+
+  function anyBaselineContent(baseline){
+    return FIELDS.some(function(f){
+      var v = baseline[f.id];
+      return Array.isArray(v) ? v.length > 0 : !!v;
+    });
+  }
+
+  function readFileAsArrayBuffer(file){
+    return new Promise(function(resolve, reject){
+      var reader = new FileReader();
+      reader.onload = function(){ resolve(reader.result); };
+      reader.onerror = function(){ reject(reader.error || new Error('Could not read file')); };
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+  function readFileAsDataURL(file){
+    return new Promise(function(resolve, reject){
+      var reader = new FileReader();
+      reader.onload = function(){ resolve(reader.result); };
+      reader.onerror = function(){ reject(reader.error || new Error('Could not read file')); };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function setUploadStatus(message, kind){
+    var el = document.getElementById('uploadStatus');
+    if (!el) return;
+    el.textContent = message || '';
+    el.className = 'upload-status' + (kind ? ' '+kind : '');
+  }
+
+  function renderUploadBox(){
+    var box = document.getElementById('uploadProcessBox');
+    if (!box) return;
+    var hasContent = anyBaselineContent(proj().baseline);
+    box.open = !hasContent;
+    resetUploadSelection();
+  }
+
+  function resetUploadSelection(){
+    pendingUploadFiles = [];
+    renderFileList();
+    var processBtn = document.getElementById('processUploadBtn');
+    if (processBtn) processBtn.disabled = true;
+    var clearBtn = document.getElementById('clearUploadBtn');
+    if (clearBtn) clearBtn.style.display = 'none';
+    setUploadStatus('', '');
+    var fileInput = document.getElementById('uploadFileInput');
+    if (fileInput) fileInput.value = '';
+  }
+
+  // 'image' covers photos of a written/printed plan (e.g. phone camera shots, iPhone Notes scans
+  // exported as individual pages) — those get sent for vision-based extraction instead of text parsing.
+  function classifyUploadFile(file){
+    var lower = (file.name||'').toLowerCase();
+    if (/\.docx$/.test(lower)) return 'docx';
+    if (/\.xlsx$/.test(lower)) return 'xlsx';
+    if (/\.pdf$/.test(lower)) return 'pdf';
+    if (/\.(jpg|jpeg|png)$/.test(lower)) return 'image';
+    return null;
+  }
+
+  function renderFileList(){
+    var ul = document.getElementById('dropzoneFilelist');
+    if (!ul) return;
+    if (!pendingUploadFiles.length){
+      ul.style.display = 'none';
+      ul.innerHTML = '';
+      return;
+    }
+    ul.style.display = 'block';
+    ul.innerHTML = pendingUploadFiles.map(function(f, idx){
+      return '<li>' + escapeHtml(f.name) + ' <span class="file-size">(' + formatFileSize(f.size) + ')</span>' +
+        '<button type="button" class="file-remove" data-remove-idx="' + idx + '" title="Remove">✕</button></li>';
+    }).join('');
+    ul.querySelectorAll('[data-remove-idx]').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var idx = parseInt(btn.getAttribute('data-remove-idx'), 10);
+        pendingUploadFiles.splice(idx, 1);
+        renderFileList();
+        var processBtn = document.getElementById('processUploadBtn');
+        if (processBtn) processBtn.disabled = pendingUploadFiles.length === 0;
+        if (!pendingUploadFiles.length) document.getElementById('clearUploadBtn').style.display = 'none';
+      });
+    });
+  }
+
+  // Selecting a new batch replaces the pending set (rather than appending), so it stays obvious
+  // which files are about to be processed together. Invalid files are skipped with an explanation
+  // rather than blocking the whole batch, since a mixed "photos + one bad file" drop is likely.
+  function selectUploadFiles(fileList){
+    var files = Array.prototype.slice.call(fileList || []);
+    if (!files.length) return;
+
+    var valid = [];
+    var skippedType = 0, skippedSize = 0;
+    files.forEach(function(f){
+      if (!classifyUploadFile(f)){ skippedType++; return; }
+      if (f.size > UPLOAD_MAX_BYTES){ skippedSize++; return; }
+      valid.push(f);
+    });
+
+    var droppedForCount = 0;
+    if (valid.length > UPLOAD_MAX_FILES){
+      droppedForCount = valid.length - UPLOAD_MAX_FILES;
+      valid = valid.slice(0, UPLOAD_MAX_FILES);
+    }
+
+    var totalBytes = valid.reduce(function(sum, f){ return sum + f.size; }, 0);
+    var droppedForBatchSize = 0;
+    while (valid.length && totalBytes > UPLOAD_MAX_BATCH_BYTES){
+      var removed = valid.pop();
+      totalBytes -= removed.size;
+      droppedForBatchSize++;
+    }
+
+    pendingUploadFiles = valid;
+    renderFileList();
+    var processBtn = document.getElementById('processUploadBtn');
+    var clearBtn = document.getElementById('clearUploadBtn');
+
+    if (!valid.length){
+      processBtn.disabled = true;
+      clearBtn.style.display = 'none';
+      setUploadStatus('Unsupported file type or file too large. Please upload .xlsx, .docx, .pdf, .jpg, or .png files (15MB max each).', 'error');
+      return;
+    }
+
+    processBtn.disabled = false;
+    clearBtn.style.display = 'inline-block';
+    var notes = [];
+    if (skippedType) notes.push(skippedType + ' file' + (skippedType===1?'':'s') + ' skipped (unsupported type)');
+    if (skippedSize) notes.push(skippedSize + ' file' + (skippedSize===1?'':'s') + ' skipped (over 15MB)');
+    if (droppedForCount) notes.push(droppedForCount + ' file' + (droppedForCount===1?'':'s') + ' dropped (max ' + UPLOAD_MAX_FILES + ' per batch)');
+    if (droppedForBatchSize) notes.push(droppedForBatchSize + ' file' + (droppedForBatchSize===1?'':'s') + ' dropped (batch over 40MB total)');
+    setUploadStatus(valid.length + ' file' + (valid.length===1?'':'s') + ' ready to process.' + (notes.length ? ' (' + notes.join('; ') + ')' : ''), notes.length ? 'error' : '');
+  }
+
+  // Fields with relational/multi-entity shapes (stakeholders, RACI, comms) are excluded from v1 of
+  // this pipeline — they depend on each other in ways a single free-text extraction pass can't
+  // safely resolve. Everything else, including the risk register, is fair game.
+  function fieldExtractionSchema(){
+    return FIELDS.filter(function(f){
+      return f.type !== 'stakeholderlist' && f.type !== 'racigrid' && f.type !== 'commslist';
+    }).map(function(f){
+      var entry = { id: f.id, label: f.label, type: f.type };
+      if (f.type === 'select') entry.options = f.options;
+      if (f.desc) entry.hint = f.desc;
+      return entry;
+    });
+  }
+
+  function buildExtractionPrompt(combinedText, hasImages){
+    var schema = fieldExtractionSchema();
+    var lines = [];
+    lines.push('You are helping populate a client engagement plan from one or more uploaded source files.');
+    if (hasImages && combinedText){
+      lines.push('Some of the source material is plain text (below) and some is photos of a written or printed document (attached separately, in reading order — treat multiple photos as consecutive pages of the same document).');
+    } else if (hasImages){
+      lines.push('The source material is photos of a written or printed document (attached separately, in reading order — treat multiple photos as consecutive pages of the same document). Read the handwriting/print in the images.');
+    } else {
+      lines.push('Read the document text below and extract values for as many of the following fields as you can confidently support directly from the source material.');
+    }
+    lines.push('Do not guess or invent information that is not actually present in the source material.');
+    lines.push('');
+    lines.push('Fields (JSON array, one entry per field):');
+    lines.push(JSON.stringify(schema));
+    lines.push('');
+    lines.push('Rules:');
+    lines.push('- Return ONLY a single JSON object mapping field "id" to the extracted value. No prose, no markdown code fences.');
+    lines.push('- Only include a field if the source material actually supports a value for it. Omit fields with no support rather than guessing.');
+    lines.push('- For "select" type fields, the value must be an exact (case-insensitive) match to one of that field\'s "options".');
+    lines.push('- For "date" type fields, use YYYY-MM-DD format.');
+    lines.push('- For "number" type fields, return digits only (no % sign, no commas, no currency symbol).');
+    lines.push('- For the risk register field (id "topRisks"), return an array of objects like {"text":"...","share":false} — one per distinct risk found in the source material.');
+    if (combinedText){
+      lines.push('');
+      lines.push('Document text (files separated by "=== filename ===" headers):');
+      lines.push('"""');
+      lines.push(combinedText);
+      lines.push('"""');
+    }
+    return lines.join('\n');
+  }
+
+  function splitDataUrl(dataUrl){
+    var m = /^data:([^;]+);base64,(.*)$/s.exec(dataUrl || '');
+    if (!m) return { mimeType: '', base64: '' };
+    return { mimeType: m[1], base64: m[2] };
+  }
+
+  function extractJsonFromResponse(raw){
+    if (raw === null || raw === undefined) throw new Error('empty response');
+    var str = typeof raw === 'string' ? raw : (raw.text || raw.content || raw.completion || JSON.stringify(raw));
+    if (typeof str !== 'string') throw new Error('unexpected response shape');
+    str = str.trim();
+    // Strip ```json ... ``` or ``` ... ``` fences if the model wrapped its answer in one.
+    var fenceMatch = str.match(/```(?:json)?\s*([\s\S]*?)```/i);
+    if (fenceMatch) str = fenceMatch[1].trim();
+    var firstBrace = str.indexOf('{');
+    var lastBrace = str.lastIndexOf('}');
+    if (firstBrace === -1 || lastBrace === -1 || lastBrace < firstBrace){
+      throw new Error('no JSON object found in response');
+    }
+    str = str.slice(firstBrace, lastBrace+1);
+    return JSON.parse(str);
+  }
+
+  function isValidDateString(s){ return /^\d{4}-\d{2}-\d{2}$/.test(s); }
+
+  // Only fills fields that are currently empty - never overwrites something the user (or a prior
+  // upload) already entered. Returns counts so the status message can be specific about what happened.
+  function applyExtractedFields(parsed){
+    var b = proj().baseline;
+    var applied = 0, skippedExisting = 0, skippedInvalid = 0;
+    var fieldsById = {};
+    FIELDS.forEach(function(f){ fieldsById[f.id] = f; });
+
+    Object.keys(parsed).forEach(function(fid){
+      var f = fieldsById[fid];
+      if (!f) return; // unknown field id - ignore
+      if (f.type === 'stakeholderlist' || f.type === 'racigrid' || f.type === 'commslist') return; // not supported in v1
+
+      var existing = b[fid];
+      var hasExisting = Array.isArray(existing) ? existing.length > 0 : !!existing;
+      if (hasExisting){ skippedExisting++; return; }
+
+      var raw = parsed[fid];
+
+      if (f.type === 'risklist'){
+        if (!Array.isArray(raw) || !raw.length){ skippedInvalid++; return; }
+        var risks = raw.filter(function(r){ return r && (r.text || typeof r === 'string'); }).map(function(r, idx){
+          var text = typeof r === 'string' ? r : String(r.text||'').trim();
+          return { id: 'up'+Date.now()+idx, text: text, share: !!(r && r.share) };
+        }).filter(function(r){ return r.text; });
+        if (!risks.length){ skippedInvalid++; return; }
+        b[fid] = risks;
+        applied++;
+        return;
+      }
+
+      if (raw === null || raw === undefined || raw === ''){ skippedInvalid++; return; }
+
+      if (f.type === 'select'){
+        var opt = (f.options||[]).filter(function(o){ return o.toLowerCase() === String(raw).trim().toLowerCase(); })[0];
+        if (!opt){ skippedInvalid++; return; }
+        b[fid] = opt;
+        applied++;
+        return;
+      }
+
+      if (f.type === 'date'){
+        var d = String(raw).trim();
+        if (!isValidDateString(d)){ skippedInvalid++; return; }
+        b[fid] = d;
+        applied++;
+        return;
+      }
+
+      if (f.type === 'number'){
+        var numStr = String(raw).replace(/[^0-9.\-]/g, '');
+        if (!numStr){ skippedInvalid++; return; }
+        b[fid] = numStr;
+        applied++;
+        return;
+      }
+
+      // text / textarea
+      b[fid] = String(raw).trim();
+      applied++;
+    });
+
+    return { applied: applied, skippedExisting: skippedExisting, skippedInvalid: skippedInvalid };
+  }
+
+  function formatFileSize(bytes){
+    if (bytes === undefined || bytes === null) return '';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+    return (bytes/(1024*1024)).toFixed(1) + ' MB';
+  }
+
+  // Keeps every uploaded source file attached to the plan so it can be downloaded again later from
+  // the Version History tab (labeled "Originator") — each successful Process run adds to the list
+  // rather than replacing it, so the full trail of source material stays available. If localStorage
+  // is full, keeps the filename/size metadata but drops the (large) data URL for that file rather
+  // than losing the rest of the app's saved state.
+  function storeOriginatorFiles(fileRecords){
+    var p = proj();
+    if (!Array.isArray(p.originatorFiles)) p.originatorFiles = [];
+    // Backward-compat: fold in a single-file record from the previous version of this feature.
+    if (p.originatorFile){
+      p.originatorFiles.push(p.originatorFile);
+      delete p.originatorFile;
+    }
+    p.originatorFiles = p.originatorFiles.concat(fileRecords);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ projects: projects, activeProjectId: activeProjectId }));
+      return true;
+    } catch(e){
+      // Retry with data URLs stripped from this batch's records so the rest of the app's state
+      // (including previously-stored originator files) still persists.
+      p.originatorFiles = p.originatorFiles.map(function(r){
+        var isNew = fileRecords.indexOf(r) !== -1;
+        return isNew ? { name: r.name, type: r.type, size: r.size, dataUrl: null, uploadedAt: r.uploadedAt, tooLargeToStore: true } : r;
+      });
+      persist();
+      return false;
+    }
+  }
+
+  function originatorFileList(p){
+    var list = Array.isArray(p.originatorFiles) ? p.originatorFiles.slice() : [];
+    if (p.originatorFile) list.push(p.originatorFile); // backward-compat, in case persist() hasn't migrated it yet
+    return list;
+  }
+
+  function renderOriginatorSection(){
+    var el = document.getElementById('originatorSection');
+    if (!el) return;
+    var list = originatorFileList(proj());
+    if (!list.length){ el.innerHTML = ''; return; }
+    el.innerHTML = list.map(function(f, idx){
+      var sizeLabel = formatFileSize(f.size);
+      var actionHtml = f.dataUrl
+        ? '<button class="mini-btn" data-originator-download="' + idx + '">Download</button>'
+        : '<span class="badge" title="This file was too large to keep in browser storage">not stored</span>';
+      return '<div class="originator-row">' +
+        '<span class="originator-tag">Originator</span>' +
+        '<span class="originator-name">' + escapeHtml(f.name) + (sizeLabel ? ' <span class="badge">'+sizeLabel+'</span>' : '') + '</span>' +
+        actionHtml +
+        '</div>';
+    }).join('');
+    el.querySelectorAll('[data-originator-download]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var idx = parseInt(btn.getAttribute('data-originator-download'), 10);
+        var f = list[idx];
+        if (!f || !f.dataUrl) return;
+        var a = document.createElement('a');
+        a.href = f.dataUrl;
+        a.download = f.name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+    });
+  }
+
+  function processUploadedDocument(){
+    if (!pendingUploadFiles.length) return;
+    var files = pendingUploadFiles.slice();
+    var processBtn = document.getElementById('processUploadBtn');
+    processBtn.disabled = true;
+    setUploadStatus('Reading ' + files.length + ' file' + (files.length===1?'':'s') + '…', 'busy');
+
+    var textParts = [];   // [{label, text}]
+    var imageParts = [];  // [{name, mimeType, base64}]
+    var noTextFiles = []; // filenames where a document type yielded no usable text (e.g. scanned PDF)
+
+    var readPromises = files.map(function(file){
+      var kind = classifyUploadFile(file);
+      if (kind === 'image'){
+        return readFileAsDataURL(file).then(function(dataUrl){
+          var split = splitDataUrl(dataUrl);
+          if (split.base64) imageParts.push({ name: file.name, mimeType: split.mimeType, base64: split.base64 });
+        });
+      }
+      return readFileAsArrayBuffer(file).then(function(buf){
+        var bytes = new Uint8Array(buf);
+        var result = DocParser.extractDocumentText(file.name, bytes);
+        var text = (result.text||'').trim();
+        if (text && text.length >= 20){
+          textParts.push({ label: file.name, text: text });
+        } else {
+          noTextFiles.push(file.name);
+        }
+      });
+    });
+
+    Promise.all(readPromises).then(function(){
+      if (!textParts.length && !imageParts.length){
+        var hint = noTextFiles.length
+          ? ' No readable text was found in: ' + noTextFiles.join(', ') + '. If these are scanned or image-based PDFs, try uploading photos of the pages as .jpg/.png instead, or a text-based export.'
+          : '';
+        setUploadStatus('Could not extract anything usable from the uploaded file(s).' + hint, 'error');
+        processBtn.disabled = false;
+        return null;
+      }
+
+      setUploadStatus('Analyzing with Claude…', 'busy');
+      if (!window.cowork || typeof window.cowork.askClaude !== 'function'){
+        setUploadStatus('AI extraction is not available in this view. Try opening this artifact from Cowork.', 'error');
+        processBtn.disabled = false;
+        return null;
+      }
+
+      var combinedText = textParts.map(function(p){ return '=== ' + p.label + ' ===\n' + p.text; }).join('\n\n');
+      if (combinedText.length > UPLOAD_TEXT_LIMIT) combinedText = combinedText.slice(0, UPLOAD_TEXT_LIMIT);
+
+      var prompt = buildExtractionPrompt(combinedText, imageParts.length > 0);
+      // Best-effort data payload: text content plus an Anthropic-style image content block per
+      // photo. Vision support for this in-artifact AI call is unconfirmed — if it isn't accepted,
+      // the response will fail JSON parsing below and surface a clear error rather than corrupt data.
+      var dataPayload = [];
+      if (combinedText) dataPayload.push(combinedText);
+      imageParts.forEach(function(img){
+        dataPayload.push({ type: 'image', source: { type: 'base64', media_type: img.mimeType, data: img.base64 } });
+      });
+
+      return Promise.resolve(window.cowork.askClaude(prompt, dataPayload)).then(function(response){
+        var parsed;
+        try {
+          parsed = extractJsonFromResponse(response);
+        } catch(e){
+          var visionNote = imageParts.length ? ' Photo/image extraction is experimental in this environment and may not be supported yet.' : '';
+          setUploadStatus('Claude\'s response could not be read as structured data.' + visionNote + ' Try again, or fill in the fields manually.', 'error');
+          processBtn.disabled = false;
+          return;
+        }
+        var summary = applyExtractedFields(parsed);
+        persist();
+        renderWizardSteps();
+        renderWizardStepBody();
+
+        var fileRecordPromises = files.map(function(file){
+          return readFileAsDataURL(file).then(function(dataUrl){
+            return { name: file.name, type: file.type || '', size: file.size, dataUrl: dataUrl, uploadedAt: new Date().toISOString() };
+          });
+        });
+
+        return Promise.all(fileRecordPromises).then(function(fileRecords){
+          var stored = storeOriginatorFiles(fileRecords);
+          renderOriginatorSection();
+          var msg;
+          var fileNames = files.map(function(f){ return f.name; }).join(', ');
+          if (summary.applied === 0){
+            msg = 'Processed ' + fileNames + ', but couldn\'t confidently map any fields — fill things in manually below.';
+          } else {
+            msg = 'Applied ' + summary.applied + ' field' + (summary.applied===1?'':'s') + ' from ' + files.length + ' file' + (files.length===1?'':'s') + '.';
+            if (summary.skippedExisting) msg += ' ' + summary.skippedExisting + ' field' + (summary.skippedExisting===1?'':'s') + ' already had a value and ' + (summary.skippedExisting===1?'was':'were') + ' left unchanged.';
+            msg += ' Review the fields below, then click "Generate / update plan".';
+          }
+          if (noTextFiles.length) msg += ' No text was found in: ' + noTextFiles.join(', ') + '.';
+          if (imageParts.length) msg += ' Photo-based extraction is experimental — double-check anything pulled from images.';
+          if (!stored) msg += ' (One or more files were too large to keep for download, but the extracted fields were applied.)';
+          setUploadStatus(msg, 'success');
+          processBtn.disabled = false;
+        });
+      });
+    }).catch(function(err){
+      setUploadStatus('Could not process these files: ' + (err && err.message ? err.message : 'unknown error') + '.', 'error');
+      processBtn.disabled = false;
+    });
+  }
+
+  function renderPlanHTML(snapshot, diffs){
+    var diffMap = {};
+    (diffs||[]).forEach(function(d){ diffMap[d.fieldId] = d; });
+    var hasAny = false;
+    var html = GROUPS.map(function(g){
+      var fields = FIELDS.filter(function(f){ return f.group === g.id; });
+      var rows = fields.map(function(f){
+        var val = snapshot[f.id];
+        var d = diffMap[f.id];
+        var display;
+        if (d){
+          hasAny = true;
+          display = '<span class="old">'+escapeHtml(d.oldVal||'—')+'</span>→ <span class="new">'+escapeHtml(d.newVal||'—')+'</span>';
+        } else if (f.type === 'risklist'){
+          var list = normalizeRiskList(val);
+          if (list.length) hasAny = true;
+          display = riskListDisplayHTML(val);
+        } else if (f.type === 'stakeholderlist'){
+          var shList = normalizeStakeholderList(val);
+          if (shList.length) hasAny = true;
+          display = stakeholderListDisplayHTML(val);
+        } else if (f.type === 'racigrid'){
+          var raciRowsForPlan = normalizeRaciRows(val, normalizeRiskList(snapshot.topRisks));
+          if (raciRowsForPlan.length) hasAny = true;
+          display = raciGridDisplayHTML(raciRowsForPlan, snapshot.stakeholders);
+        } else if (f.type === 'commslist'){
+          var commsForPlan = normalizeCommsList(val);
+          if (commsForPlan.length) hasAny = true;
+          display = commsListDisplayHTML(val, snapshot.stakeholders);
+        } else {
+          if (val) hasAny = true;
+          display = escapeHtml(val || '—');
+        }
+        return '<div class="plan-row '+(d?'changed':'')+'"><div class="plan-label">'+f.label+'</div><div class="plan-value">'+display+'</div></div>';
+      }).join('');
+      return '<div class="plan-group"><h3>'+g.title+'</h3>'+rows+'</div>';
+    }).join('');
+    if (!hasAny) return '<p class="empty-plan">No fields filled in yet.</p>';
+    return html;
+  }
+
+  function parseDate(str){
+    if (!str) return null;
+    var d = new Date(str+'T00:00:00');
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  function fmtDate(d){
+    if (!d) return '—';
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return months[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
+  }
+
+  function renderGanttHTML(snapshot, diffs){
+    var diffMap = {};
+    (diffs||[]).forEach(function(d){ diffMap[d.fieldId] = d; });
+    var rows = TIMELINE_PHASES.map(function(p){
+      return {
+        phase: p,
+        start: parseDate(snapshot[p.id+'_start']),
+        end: parseDate(snapshot[p.id+'_end']),
+        changed: !!diffMap[p.id+'_start'] || !!diffMap[p.id+'_end']
+      };
+    });
+    var allDates = [];
+    rows.forEach(function(r){ if (r.start) allDates.push(r.start); if (r.end) allDates.push(r.end); });
+    if (allDates.length === 0){
+      return '<p class="empty-plan">No phase dates entered yet — add a start and end date to any phase step to generate a chart.</p>';
+    }
+    var minD = new Date(Math.min.apply(null, allDates.map(function(d){ return d.getTime(); })));
+    var maxD = new Date(Math.max.apply(null, allDates.map(function(d){ return d.getTime(); })));
+    if (maxD.getTime() === minD.getTime()) maxD = new Date(minD.getTime() + 7*24*3600*1000);
+    var totalMs = maxD.getTime() - minD.getTime();
+    function pct(d){ return (d.getTime()-minD.getTime())/totalMs*100; }
+
+    var barsHtml = rows.map(function(r){
+      if (!r.start || !r.end){
+        return '<div class="gantt-row"><div class="gantt-label">'+r.phase.label+'</div><div class="gantt-track"><span class="gantt-empty">not scheduled</span></div></div>';
+      }
+      var left = pct(r.start);
+      var width = Math.max(0.6, pct(r.end) - left);
+      var dateLabel = fmtDate(r.start)+' → '+fmtDate(r.end);
+      return '<div class="gantt-row"><div class="gantt-label">'+r.phase.label+'</div><div class="gantt-track">'+
+        '<div class="gantt-bar'+(r.changed?' changed':'')+'" style="left:'+left.toFixed(2)+'%; width:'+width.toFixed(2)+'%;" title="'+escapeHtml(dateLabel)+'">'+
+        '<span class="gantt-bar-text">'+escapeHtml(dateLabel)+'</span></div></div></div>';
+    }).join('');
+
+    return '<div class="gantt"><div class="gantt-axis"><span>'+fmtDate(minD)+'</span><span>'+fmtDate(maxD)+'</span></div>'+barsHtml+'</div>';
+  }
+
+  // Old saved versions stored one flat {scope:{...},schedule:{...},...} object shared across all
+  // levers. New versions store it keyed by lever: {budget:{scope:{...},...}, underwriting:{...}}.
+  function isLegacyImpact(impact){
+    if (!impact) return false;
+    var keys = Object.keys(impact);
+    if (!keys.length) return false;
+    var first = impact[keys[0]];
+    return !!(first && typeof first === 'object' && first.hasOwnProperty('severity'));
+  }
+
+  function dimensionLinesHTML(dims){
+    return DIMENSIONS.map(function(d){
+      var c = dims[d] || {severity:'none', note:''};
+      return '<div class="impact-summary-line"><span class="sev-tag '+c.severity+'">'+c.severity+'</span><b>'+cap(d)+':</b> '+escapeHtml(c.note)+'</div>';
+    }).join('');
+  }
+
+  function impactSummaryHTML(impact){
+    if (!impact || !Object.keys(impact).length) return '';
+    if (isLegacyImpact(impact)){
+      return '<div class="note">'+dimensionLinesHTML(impact)+'</div>';
+    }
+    return Object.keys(impact).map(function(lid){
+      var ldef = LEVERS.filter(function(l){ return l.id === lid; })[0];
+      return '<div class="note"><div class="impact-lever-title">'+escapeHtml(ldef ? ldef.label : lid)+'</div>'+dimensionLinesHTML(impact[lid])+'</div>';
+    }).join('');
+  }
+
+  function planToMarkdown(version, projectName){
+    var md = '# Class Plan — '+(projectName ? projectName+' — ' : '')+version.label+'\n\n';
+    if (version.description) md += '**Change:** '+version.description+'\n\n';
+    if (version.impact && Object.keys(version.impact).length){
+      md += '## Impact assessment\n\n';
+      if (isLegacyImpact(version.impact)){
+        DIMENSIONS.forEach(function(d){
+          md += '- **'+cap(d)+' ('+version.impact[d].severity+'):** '+version.impact[d].note+'\n';
+        });
+        md += '\n';
+      } else {
+        Object.keys(version.impact).forEach(function(lid){
+          var ldef = LEVERS.filter(function(l){ return l.id === lid; })[0];
+          md += '**'+(ldef ? ldef.label : lid)+'**\n\n';
+          DIMENSIONS.forEach(function(d){
+            var c = version.impact[lid][d] || {severity:'none', note:''};
+            md += '- '+cap(d)+' ('+c.severity+'): '+c.note+'\n';
+          });
+          md += '\n';
+        });
+      }
+    }
+    if (version.diffs && version.diffs.length){
+      md += '## Changes from previous version\n\n';
+      version.diffs.forEach(function(d){
+        md += '- **'+d.label+':** '+(d.oldVal||'—')+' → '+(d.newVal||'—')+'\n';
+      });
+      md += '\n';
+    }
+    md += '## Plan\n\n';
+    GROUPS.forEach(function(g){
+      md += '### '+g.title+'\n\n';
+      FIELDS.filter(function(f){ return f.group === g.id; }).forEach(function(f){
+        if (f.type === 'risklist'){
+          var list = normalizeRiskList(version.snapshot[f.id]);
+          if (!list.length){
+            md += '**'+f.label+':** —\n\n';
+          } else {
+            md += '**'+f.label+':**\n';
+            list.forEach(function(r){ md += '- '+(r.text||'—')+(r.share?' _(shared with client)_':'')+'\n'; });
+            md += '\n';
+          }
+        } else if (f.type === 'stakeholderlist'){
+          var shListMd = normalizeStakeholderList(version.snapshot[f.id]);
+          if (!shListMd.length){
+            md += '**'+f.label+':** —\n\n';
+          } else {
+            md += '**'+f.label+':**\n';
+            shListMd.forEach(function(p){ md += '- '+(p.name||'—')+(p.role?' — '+p.role:'')+' ('+sideLabel(p.side)+')\n'; });
+            md += '\n';
+          }
+        } else if (f.type === 'racigrid'){
+          var raciRowsMd = normalizeRaciRows(version.snapshot[f.id], normalizeRiskList(version.snapshot.topRisks));
+          var shForMd = normalizeStakeholderList(version.snapshot.stakeholders);
+          if (!raciRowsMd.length || !shForMd.length){
+            md += '**'+f.label+':** —\n\n';
+          } else {
+            md += '**'+f.label+':**\n\n';
+            md += '| Activity | '+shForMd.map(function(p){ return p.name||'Unnamed'; }).join(' | ')+' |\n';
+            md += '|---'+shForMd.map(function(){ return '|---'; }).join('')+'|\n';
+            raciRowsMd.forEach(function(row){
+              md += '| '+(row.label||'—')+' | '+shForMd.map(function(p){ return (row.cells && row.cells[p.id]) || '—'; }).join(' | ')+' |\n';
+            });
+            md += '\n';
+          }
+        } else if (f.type === 'commslist'){
+          var commsMd = normalizeCommsList(version.snapshot[f.id]);
+          var shForComms = normalizeStakeholderList(version.snapshot.stakeholders);
+          if (!commsMd.length){
+            md += '**'+f.label+':** —\n\n';
+          } else {
+            md += '**'+f.label+':**\n\n';
+            md += '| Audience | Cadence | Channel | Purpose | Trigger |\n';
+            md += '|---|---|---|---|---|\n';
+            commsMd.forEach(function(c){
+              md += '| '+commsAudienceLabel(c, shForComms)+' | '+(c.cadence||'—')+' | '+(c.channel||'—')+' | '+(c.purpose||'—')+' | '+(c.trigger||'—')+' |\n';
+            });
+            md += '\n';
+          }
+        } else {
+          md += '**'+f.label+':** '+(version.snapshot[f.id] || '—')+'\n\n';
+        }
+      });
+    });
+    return md;
+  }
+
+  function buildPrintHTML(version, projectName){
+    var html = '<h1>Class Plan — '+(projectName ? escapeHtml(projectName)+' — ' : '')+escapeHtml(version.label)+'</h1>';
+    if (version.description) html += '<p><b>Change:</b> '+escapeHtml(version.description)+'</p>';
+    if (version.impact && Object.keys(version.impact).length){
+      html += '<h2>Impact assessment</h2>';
+      if (isLegacyImpact(version.impact)){
+        html += '<ul>';
+        DIMENSIONS.forEach(function(d){
+          html += '<li><b>'+cap(d)+' ('+version.impact[d].severity+'):</b> '+escapeHtml(version.impact[d].note)+'</li>';
+        });
+        html += '</ul>';
+      } else {
+        Object.keys(version.impact).forEach(function(lid){
+          var ldef = LEVERS.filter(function(l){ return l.id === lid; })[0];
+          html += '<h3 style="font-size:13px;margin:10px 0 4px;">'+escapeHtml(ldef ? ldef.label : lid)+'</h3><ul>';
+          DIMENSIONS.forEach(function(d){
+            var c = version.impact[lid][d] || {severity:'none', note:''};
+            html += '<li><b>'+cap(d)+' ('+c.severity+'):</b> '+escapeHtml(c.note)+'</li>';
+          });
+          html += '</ul>';
+        });
+      }
+    }
+    if (version.diffs && version.diffs.length){
+      html += '<h2>Changes from previous version</h2><ul>';
+      version.diffs.forEach(function(d){
+        html += '<li><b>'+escapeHtml(d.label)+':</b> '+escapeHtml(d.oldVal||'—')+' → '+escapeHtml(d.newVal||'—')+'</li>';
+      });
+      html += '</ul>';
+    }
+    html += '<h2>Timeline</h2>' + renderGanttHTML(version.snapshot, version.diffs);
+    html += '<h2>Plan</h2>' + renderPlanHTML(version.snapshot, version.diffs);
+    return html;
+  }
+
+  function exportPDF(version, projectName){
+    if (!version) return;
+    document.getElementById('printArea').innerHTML = buildPrintHTML(version, projectName);
+    window.print();
+  }
+
+  // ---- Tab 4: Present to Stakeholders — a curated one-pager, not the full field-by-field plan ----
+  function renderPresentationHTML(version, projectName){
+    if (!version){
+      return '<p class="empty-plan">Generate your baseline plan first (tab 1), then come back here.</p>';
+    }
+    var s = version.snapshot;
+    var kpis = [];
+    if (s.monthlyOrderVolume) kpis.push('Monthly order volume: '+s.monthlyOrderVolume);
+    if (s.targetTurnTime) kpis.push('Turn-time SLA: '+s.targetTurnTime);
+    if (s.onTimeDeliveryTarget) kpis.push('On-time delivery: '+s.onTimeDeliveryTarget+'%');
+    if (s.cvueCoverageTarget) kpis.push('CVUE coverage: '+s.cvueCoverageTarget+'%');
+    if (s.revisionRateTarget) kpis.push('Revision / ROV rate: '+s.revisionRateTarget+'% at '+(s.revisionCycleTarget || '—')+'-day cycle');
+
+    var sharedRisks = normalizeRiskList(s.topRisks).filter(function(r){ return r.share && r.text; });
+
+    var html = '<div class="present-doc">';
+    html += '<div class="present-hero">';
+    html += '<div class="present-kicker">'+escapeHtml(projectName || 'Class Plan')+' — '+escapeHtml(version.label)+'</div>';
+    html += '<h2>'+(s.clientNeed ? escapeHtml(s.clientNeed) : 'Add the client’s stated need on the "Presenting To Stakeholders" step (tab 1) to open with it here.')+'</h2>';
+    html += '</div>';
+
+    if (s.engagementObjective){
+      html += '<div class="present-section"><h3>Our approach</h3><p>'+escapeHtml(s.engagementObjective)+'</p></div>';
+    }
+    if (kpis.length){
+      html += '<div class="present-section"><h3>Success criteria</h3><div class="present-kpis">'+kpis.map(function(k){ return '<span class="present-kpi">'+escapeHtml(k)+'</span>'; }).join('')+'</div></div>';
+    }
+
+    html += '<div class="present-section"><h3>Timeline</h3>'+renderGanttHTML(s, [])+'</div>';
+
+    var govLines = [];
+    if (s.clientSponsor) govLines.push('<b>Client sponsor:</b> '+escapeHtml(s.clientSponsor));
+    if (s.accountExecutive) govLines.push('<b>Account lead:</b> '+escapeHtml(s.accountExecutive));
+    if (s.meetingCadence) govLines.push('<b>Cadence:</b> '+escapeHtml(s.meetingCadence));
+    if (s.decisionRights) govLines.push('<b>Decision rights:</b> '+escapeHtml(s.decisionRights));
+    if (govLines.length){
+      html += '<div class="present-section"><h3>Governance</h3><p>'+govLines.join('<br>')+'</p></div>';
+    }
+
+    var presentStakeholders = normalizeStakeholderList(s.stakeholders);
+    // Re-derived (not read raw) so labels are always correct even for an older stored snapshot.
+    var presentRaciRows = normalizeRaciRows(s.raciAssignments, normalizeRiskList(s.topRisks)).filter(function(r){
+      return r.source !== 'risk' || r.shared;
+    });
+    if (presentStakeholders.length && presentRaciRows.length){
+      var raciHeadCells = presentStakeholders.map(function(p){
+        return '<th>'+escapeHtml(p.name||'Unnamed')+(p.role?'<span class="raci-role-sub">'+escapeHtml(p.role)+'</span>':'')+'</th>';
+      }).join('');
+      var raciBodyRows = presentRaciRows.map(function(row){
+        var cells = presentStakeholders.map(function(p){
+          var v = (row.cells && row.cells[p.id]) || '';
+          return '<td class="raci-cell-'+(v||'blank')+'">'+v+'</td>';
+        }).join('');
+        return '<tr><td class="raci-row-label">'+escapeHtml(row.label)+'</td>'+cells+'</tr>';
+      }).join('');
+      html += '<div class="present-section"><h3>Roles &amp; RACI</h3>'
+        + '<div class="raci-table-wrap"><table class="raci-table"><thead><tr><th>Activity</th>'+raciHeadCells+'</tr></thead><tbody>'+raciBodyRows+'</tbody></table></div>'
+        + '<p class="raci-legend"><b>R</b> Responsible &nbsp; <b>A</b> Accountable &nbsp; <b>C</b> Consulted &nbsp; <b>I</b> Informed</p>'
+        + '</div>';
+    }
+
+    var presentComms = normalizeCommsList(s.commsPlan);
+    if (presentComms.length){
+      var commsBodyRows = presentComms.map(function(c){
+        var audience = commsAudienceLabel(c, presentStakeholders);
+        return '<tr><td class="raci-row-label">'+escapeHtml(audience)+'</td><td>'+escapeHtml(c.cadence||'—')+'</td><td>'+escapeHtml(c.channel||'—')+'</td><td>'+escapeHtml(c.purpose||'—')+'</td><td>'+escapeHtml(c.trigger||'—')+'</td></tr>';
+      }).join('');
+      html += '<div class="present-section"><h3>Communications Plan</h3>'
+        + '<div class="raci-table-wrap"><table class="raci-table"><thead><tr><th>Audience</th><th>Cadence</th><th>Channel</th><th>Purpose</th><th>Trigger</th></tr></thead><tbody>'+commsBodyRows+'</tbody></table></div>'
+        + '</div>';
+    }
+
+    if (s.clientAsks){
+      html += '<div class="present-section"><h3>What we need from you</h3><p style="white-space:pre-line;">'+escapeHtml(s.clientAsks)+'</p></div>';
+    }
+
+    if (sharedRisks.length){
+      html += '<div class="present-section"><h3>Risks we’re watching</h3><ul class="risk-display-list">'+sharedRisks.map(function(r){ return '<li>'+escapeHtml(r.text)+'</li>'; }).join('')+'</ul></div>';
+    }
+
+    if (version.description || (version.diffs && version.diffs.length)){
+      html += '<div class="present-section"><h3>Most recent change</h3>';
+      if (version.description) html += '<p>'+escapeHtml(version.description)+'</p>';
+      html += '</div>';
+    }
+
+    html += '</div>';
+    return html;
+  }
+
+  function renderPresentTab(){
+    var p = proj();
+    var latest = p.versions.length ? p.versions[p.versions.length-1] : null;
+    var el = document.getElementById('presentView');
+    if (el) el.innerHTML = renderPresentationHTML(latest, p.name);
+  }
+
+  function exportPresentationPDF(version, projectName){
+    if (!version) return;
+    document.getElementById('printArea').innerHTML = renderPresentationHTML(version, projectName);
+    window.print();
+  }
+
+  function download(filename, text){
+    var blob = new Blob([text], {type:'text/markdown'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function baselineDraftToMarkdown(baseline, projectName){
+    var md = '# Class Plan (draft — no version generated yet) — '+(projectName||'')+'\n\n';
+    GROUPS.forEach(function(g){
+      md += '### '+g.title+'\n\n';
+      FIELDS.filter(function(f){ return f.group === g.id; }).forEach(function(f){
+        if (f.type === 'risklist'){
+          var list = normalizeRiskList(baseline[f.id]);
+          if (!list.length){ md += '**'+f.label+':** —\n\n'; }
+          else {
+            md += '**'+f.label+':**\n';
+            list.forEach(function(r){ md += '- '+(r.text||'—')+(r.share?' _(shared with client)_':'')+'\n'; });
+            md += '\n';
+          }
+        } else if (f.type === 'stakeholderlist'){
+          var shList = normalizeStakeholderList(baseline[f.id]);
+          if (!shList.length){ md += '**'+f.label+':** —\n\n'; }
+          else {
+            md += '**'+f.label+':**\n';
+            shList.forEach(function(p){ md += '- '+(p.name||'—')+(p.role?' — '+p.role:'')+' ('+sideLabel(p.side)+')\n'; });
+            md += '\n';
+          }
+        } else if (f.type === 'racigrid'){
+          var raciRows = normalizeRaciRows(baseline[f.id], normalizeRiskList(baseline.topRisks));
+          var shForMd = normalizeStakeholderList(baseline.stakeholders);
+          if (!raciRows.length || !shForMd.length){ md += '**'+f.label+':** —\n\n'; }
+          else {
+            md += '**'+f.label+':**\n\n';
+            md += '| Activity | '+shForMd.map(function(p){ return p.name||'Unnamed'; }).join(' | ')+' |\n';
+            md += '|---'+shForMd.map(function(){ return '|---'; }).join('')+'|\n';
+            raciRows.forEach(function(row){
+              md += '| '+(row.label||'—')+' | '+shForMd.map(function(p){ return (row.cells && row.cells[p.id]) || '—'; }).join(' | ')+' |\n';
+            });
+            md += '\n';
+          }
+        } else if (f.type === 'commslist'){
+          var commsRowsDraft = normalizeCommsList(baseline[f.id]);
+          var shForCommsDraft = normalizeStakeholderList(baseline.stakeholders);
+          if (!commsRowsDraft.length){ md += '**'+f.label+':** —\n\n'; }
+          else {
+            md += '**'+f.label+':**\n\n';
+            md += '| Audience | Cadence | Channel | Purpose | Trigger |\n';
+            md += '|---|---|---|---|---|\n';
+            commsRowsDraft.forEach(function(c){
+              md += '| '+commsAudienceLabel(c, shForCommsDraft)+' | '+(c.cadence||'—')+' | '+(c.channel||'—')+' | '+(c.purpose||'—')+' | '+(c.trigger||'—')+' |\n';
+            });
+            md += '\n';
+          }
+        } else {
+          md += '**'+f.label+':** '+(baseline[f.id] || '—')+'\n\n';
+        }
+      });
+    });
+    return md;
+  }
+
+  // Full-history backup used to auto-export before a destructive action (Reset/Delete)
+  function fullProjectBackupMarkdown(p){
+    if (p.versions && p.versions.length){
+      return p.versions.map(function(v){ return planToMarkdown(v, p.name); }).join('\n\n---\n\n');
+    }
+    if (p.baseline && Object.keys(p.baseline).length){
+      return baselineDraftToMarkdown(p.baseline, p.name);
+    }
+    return null;
+  }
+
+  function autoBackupProject(p, reason){
+    var content = fullProjectBackupMarkdown(p);
+    if (!content) return false;
+    var stamp = new Date().toISOString().slice(0,10);
+    download('class-plan-'+slug(p.name)+'-backup-before-'+reason+'-'+stamp+'.md', content);
+    return true;
+  }
+
+  // ---- Modal (replaces native prompt/confirm/alert, which are blocked in the sandboxed view) ----
+  var modalOnConfirm = null;
+  var modalOnCancel = null;
+
+  function openModal(opts){
+    document.getElementById('modalMessage').textContent = opts.message || '';
+    var input = document.getElementById('modalInput');
+    if (opts.showInput){
+      input.style.display = 'block';
+      input.value = opts.defaultValue || '';
+    } else {
+      input.style.display = 'none';
+    }
+    document.getElementById('modalConfirmBtn').textContent = opts.confirmText || 'OK';
+    document.getElementById('modalCancelBtn').style.display = (opts.showCancel === false) ? 'none' : 'inline-block';
+    modalOnConfirm = opts.onConfirm || null;
+    modalOnCancel = opts.onCancel || null;
+    document.getElementById('modalOverlay').style.display = 'flex';
+    if (opts.showInput){
+      setTimeout(function(){ input.focus(); input.select(); }, 0);
+    }
+  }
+
+  function closeModal(){
+    document.getElementById('modalOverlay').style.display = 'none';
+    modalOnConfirm = null;
+    modalOnCancel = null;
+  }
+
+  document.getElementById('modalConfirmBtn').addEventListener('click', function(){
+    var input = document.getElementById('modalInput');
+    var value = input.style.display !== 'none' ? input.value : true;
+    var cb = modalOnConfirm;
+    closeModal();
+    if (cb) cb(value);
+  });
+  document.getElementById('modalCancelBtn').addEventListener('click', function(){
+    var cb = modalOnCancel;
+    closeModal();
+    if (cb) cb();
+  });
+  document.getElementById('modalOverlay').addEventListener('click', function(e){
+    if (e.target.id === 'modalOverlay'){
+      var cb = modalOnCancel;
+      closeModal();
+      if (cb) cb();
+    }
+  });
+  document.getElementById('modalInput').addEventListener('keydown', function(e){
+    if (e.key === 'Enter'){ e.preventDefault(); document.getElementById('modalConfirmBtn').click(); }
+  });
+
+  function customPrompt(message, defaultValue, onOk){
+    openModal({ message: message, showInput: true, defaultValue: defaultValue, confirmText:'OK', showCancel:true,
+      onConfirm: function(val){ onOk(val); }
+    });
+  }
+  function customConfirm(message, onYes){
+    openModal({ message: message, showInput:false, confirmText:'Confirm', showCancel:true,
+      onConfirm: function(){ onYes(); }
+    });
+  }
+  function customAlert(message, onClose){
+    openModal({ message: message, showInput:false, confirmText:'OK', showCancel:false,
+      onConfirm: function(){ if (onClose) onClose(); }
+    });
+  }
+
+  // ---- Projects ----
+  function renderProjectBar(){
+    var sel = document.getElementById('projectSelect');
+    var ids = Object.keys(projects);
+    sel.innerHTML = ids.map(function(id){
+      return '<option value="'+id+'" '+(id===activeProjectId?'selected':'')+'>'+escapeHtml(projects[id].name)+'</option>';
+    }).join('');
+  }
+
+  function resetChangeSession(){
+    pendingEdits = {}; currentImpact = {}; impactTouched = {}; activeLevers = []; activeHistoryId = null;
+    document.querySelectorAll('#leverChecklist input[type=checkbox]').forEach(function(cb){
+      cb.checked = false;
+      cb.closest('.lever-check').classList.remove('checked');
+    });
+    document.getElementById('changeFieldsContainer').innerHTML = '';
+    document.getElementById('changeDescription').value = '';
+    document.getElementById('applyChangeBtn').disabled = true;
+  }
+
+  function switchProject(id){
+    if (!projects[id]) return;
+    activeProjectId = id;
+    resetChangeSession();
+    renderProjectBar();
+    renderBaselineForm();
+    var p = proj();
+    if (p.versions.length){
+      document.getElementById('planView').innerHTML = renderGanttHTML(p.versions[0].snapshot, []) + renderPlanHTML(p.versions[0].snapshot, []);
+    } else {
+      document.getElementById('planView').innerHTML = '<p class="empty-plan">Fill in the fields on the left and click "Generate / update plan".</p>';
+    }
+    refreshChangeTabContext();
+    renderVersionPills();
+    renderOriginatorSection();
+    renderPresentTab();
+    persist();
+  }
+
+  document.getElementById('projectSelect').addEventListener('change', function(e){
+    switchProject(e.target.value);
+  });
+  document.getElementById('newProjectBtn').addEventListener('click', function(){
+    customPrompt('Name this plan / project:', 'Untitled Plan', function(name){
+      name = (name || '').trim() || 'Untitled Plan';
+      var p = makeProject(name);
+      projects[p.id] = p;
+      switchProject(p.id);
+    });
+  });
+  document.getElementById('renameProjectBtn').addEventListener('click', function(){
+    var p = proj();
+    customPrompt('Rename this plan / project:', p.name, function(name){
+      name = (name || '').trim();
+      if (name){ p.name = name; }
+      renderProjectBar();
+      renderVersionPills();
+      persist();
+    });
+  });
+  document.getElementById('deleteProjectBtn').addEventListener('click', function(){
+    var ids = Object.keys(projects);
+    if (ids.length <= 1){ customAlert('You need at least one plan. Create a new one before deleting this.'); return; }
+    var p = proj();
+    var hasContent = (p.versions && p.versions.length) || (p.baseline && Object.keys(p.baseline).length);
+    var msg = 'Delete "'+p.name+'"? This removes its baseline and all '+p.versions.length+' version(s). This cannot be undone.'
+      + (hasContent ? ' A full Markdown backup will download automatically first.' : '');
+    customConfirm(msg, function(){
+      autoBackupProject(p, 'delete');
+      delete projects[activeProjectId];
+      switchProject(Object.keys(projects)[0]);
+    });
+  });
+
+  // ---- Tabs ----
+  document.querySelectorAll('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+      document.querySelectorAll('.tab-content').forEach(function(c){ c.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('tab-'+btn.getAttribute('data-tab')).classList.add('active');
+      if (btn.getAttribute('data-tab') === 'change') refreshChangeTabContext();
+      if (btn.getAttribute('data-tab') === 'present') renderPresentTab();
+    });
+  });
+
+  document.getElementById('exportPresentPdfBtn').addEventListener('click', function(){
+    var p = proj();
+    if (p.versions.length === 0){ customAlert('Generate the plan first.'); return; }
+    exportPresentationPDF(p.versions[p.versions.length-1], p.name);
+  });
+
+  // ---- Tab 1: Baseline ----
+  document.getElementById('wizardPrevBtn').addEventListener('click', function(){
+    if (wizardStepIndex > 0){ wizardStepIndex--; renderWizardSteps(); renderWizardStepBody(); }
+  });
+  document.getElementById('wizardNextBtn').addEventListener('click', function(){
+    if (wizardStepIndex < GROUPS.length-1){ wizardStepIndex++; renderWizardSteps(); renderWizardStepBody(); }
+  });
+
+  document.getElementById('generateBtn').addEventListener('click', function(){
+    var p = proj();
+    if (p.versions.length === 0){
+      var snap1 = JSON.parse(JSON.stringify(p.baseline));
+      snap1.raciAssignments = normalizeRaciRows(snap1.raciAssignments, normalizeRiskList(snap1.topRisks));
+      p.versions.push({ id:1, label:'v1 · Baseline', snapshot: snap1, diffs:[], lever:null, description:'Initial plan', impact:null });
+    } else {
+      var snap0 = JSON.parse(JSON.stringify(p.baseline));
+      snap0.raciAssignments = normalizeRaciRows(snap0.raciAssignments, normalizeRiskList(snap0.topRisks));
+      p.versions[0].snapshot = snap0;
+    }
+    document.getElementById('planView').innerHTML = renderGanttHTML(p.versions[0].snapshot, []) + renderPlanHTML(p.versions[0].snapshot, []);
+    renderVersionPills();
+    refreshChangeTabContext();
+    renderPresentTab();
+    persist();
+  });
+
+  document.getElementById('exportBaselineBtn').addEventListener('click', function(){
+    var p = proj();
+    if (p.versions.length === 0){ customAlert('Generate the plan first.'); return; }
+    download('class-plan-'+slug(p.name)+'-v1-baseline.md', planToMarkdown(p.versions[0], p.name));
+  });
+  document.getElementById('exportBaselinePdfBtn').addEventListener('click', function(){
+    var p = proj();
+    if (p.versions.length === 0){ customAlert('Generate the plan first.'); return; }
+    exportPDF(p.versions[0], p.name);
+  });
+
+  // ---- Tab 2: Change ----
+  var leverChecklist = document.getElementById('leverChecklist');
+  LEVERS.forEach(function(l){
+    var wrap = document.createElement('label');
+    wrap.className = 'lever-check';
+    wrap.innerHTML = '<input type="checkbox" data-lever="'+l.id+'"> '+l.label;
+    leverChecklist.appendChild(wrap);
+  });
+  leverChecklist.querySelectorAll('input[type=checkbox]').forEach(function(cb){
+    cb.addEventListener('change', function(e){
+      var lid = e.target.getAttribute('data-lever');
+      if (e.target.checked){
+        if (activeLevers.indexOf(lid) === -1) activeLevers.push(lid);
+      } else {
+        activeLevers = activeLevers.filter(function(x){ return x !== lid; });
+      }
+      e.target.closest('.lever-check').classList.toggle('checked', e.target.checked);
+      document.getElementById('applyChangeBtn').disabled = proj().versions.length === 0;
+      if (e.target.checked) ensureLeverImpact(lid);
+      renderChangeSections();
+    });
+  });
+
+  function ensureLeverImpact(leverId){
+    var ldef = LEVERS.filter(function(l){ return l.id === leverId; })[0];
+    if (!ldef) return;
+    if (!currentImpact[leverId]) currentImpact[leverId] = {};
+    if (!impactTouched[leverId]) impactTouched[leverId] = {};
+    DIMENSIONS.forEach(function(d){
+      if (impactTouched[leverId][d]) return; // respect any manual edit already made for this lever+dimension
+      currentImpact[leverId][d] = { severity: ldef.impact[d], note: ldef.note };
+    });
+  }
+
+  function renderImpactCardsForLever(leverId){
+    return DIMENSIONS.map(function(d){
+      var c = currentImpact[leverId][d];
+      var opts = SEVERITIES.map(function(s){
+        return '<option value="'+s+'" '+(s===c.severity?'selected':'')+'>'+cap(s)+'</option>';
+      }).join('');
+      return '<div class="impact-card sev-'+c.severity+'" data-lever="'+leverId+'" data-dim="'+d+'">'+
+        '<div class="impact-head"><strong>'+cap(d)+'</strong><select data-impact-severity data-lever="'+leverId+'" data-dim="'+d+'">'+opts+'</select></div>'+
+        '<textarea data-impact-note data-lever="'+leverId+'" data-dim="'+d+'">'+escapeHtml(c.note)+'</textarea></div>';
+    }).join('');
+  }
+
+  // Group a lever's affected fields by the phase (GROUPS entry) they belong to, so e.g. every
+  // "Start date"/"End date" pair is shown under its own phase heading instead of as an
+  // undifferentiated list.
+  function clusterFieldsByPhaseHTML(fields, last){
+    var byGroup = {};
+    var order = [];
+    fields.forEach(function(f){
+      if (!byGroup[f.group]){ byGroup[f.group] = []; order.push(f.group); }
+      byGroup[f.group].push(f);
+    });
+    return order.map(function(gid){
+      var g = GROUPS.filter(function(x){ return x.id === gid; })[0];
+      var fieldsHtml = byGroup[gid].map(function(f){
+        var oldVal = last[f.id] || '';
+        var curVal = pendingEdits.hasOwnProperty(f.id) ? pendingEdits[f.id] : oldVal;
+        var badge = ' <span class="badge">was: '+escapeHtml(oldVal||'—')+'</span>';
+        return '<label class="field '+(f.wide?'wide':'')+'">'+fieldLabelHTML(f, badge)+fieldInputHTML(f, curVal)+'</label>';
+      }).join('');
+      return '<div class="change-field-cluster"><div class="change-field-cluster-title">'+escapeHtml(g ? g.title : gid)+'</div><div class="grid">'+fieldsHtml+'</div></div>';
+    }).join('');
+  }
+
+  function renderChangeSections(){
+    var container = document.getElementById('changeFieldsContainer');
+    if (proj().versions.length === 0){
+      container.innerHTML = '';
+      return;
+    }
+    var pv = proj().versions;
+    var last = pv.length ? pv[pv.length-1].snapshot : {};
+    var usedIds = {};
+
+    // Presentation, Governance & Risk — always visible, not gated by a lever checkbox, since a
+    // client-relationship or risk update often has nothing to do with an operational lever.
+    var presentFields = FIELDS.filter(function(f){ return f.group === 'present' && f.type !== 'stakeholderlist' && f.type !== 'racigrid' && f.type !== 'commslist'; });
+    presentFields.forEach(function(f){ usedIds[f.id] = true; });
+    var presentRowsHtml = presentFields.map(function(f){
+      var oldVal = last[f.id] || '';
+      var curVal = pendingEdits.hasOwnProperty(f.id) ? pendingEdits[f.id] : oldVal;
+      var badge = ' <span class="badge">was: '+escapeHtml(oldVal||'—')+'</span>';
+      return '<label class="field '+(f.wide?'wide':'')+'">'+fieldLabelHTML(f, badge)+fieldInputHTML(f, curVal)+'</label>';
+    }).join('');
+    usedIds['topRisks'] = true;
+    usedIds['stakeholders'] = true;
+    usedIds['raciAssignments'] = true;
+    usedIds['commsPlan'] = true;
+    var presentSectionHtml = '<details class="group change-group" open><summary>Presentation, Governance &amp; Risk — update anytime</summary>'
+      + '<p class="hint" style="padding:0 14px; margin:6px 0;">Not tied to a specific lever. Edit whenever the client relationship, your asks of them, or the risk picture changes — even without logging an operational change.</p>'
+      + '<div class="grid">' + presentRowsHtml + '</div>'
+      + '<div class="change-subhead">Risk register</div>'
+      + '<div id="changeRiskList"></div>'
+      + '<div class="change-subhead">Stakeholders &amp; roles</div>'
+      + '<div id="changeStakeholderList"></div>'
+      + '<div class="change-subhead">RACI matrix</div>'
+      + '<p class="hint" style="padding:0 14px; margin:6px 0;">Rows sync from the phases and risk register above.</p>'
+      + '<div id="changeRaciGrid"></div>'
+      + '<div class="change-subhead">Communications plan</div>'
+      + '<div id="changeCommsList"></div>'
+      + '</details>';
+
+    // keep lever sections in a stable order (LEVERS order), one collapsible container per checked
+    // lever, each holding its own impact rating AND its own affected fields
+    var leverSectionsHtml = '';
+    if (activeLevers.length){
+      var orderedActive = LEVERS.filter(function(l){ return activeLevers.indexOf(l.id) !== -1; });
+      leverSectionsHtml = orderedActive.map(function(ldef){
+        var fields;
+        if (ldef.id === 'other'){
+          fields = FIELDS.filter(function(f){ return !usedIds[f.id]; });
+        } else {
+          fields = FIELDS.filter(function(f){ return f.levers && f.levers.indexOf(ldef.id) !== -1 && !usedIds[f.id]; });
+        }
+        fields.forEach(function(f){ usedIds[f.id] = true; });
+
+        var rowsHtml;
+        if (fields.length === 0){
+          rowsHtml = '<p class="hint" style="padding:0 14px 14px; margin-top:0;">No directly related fields for this lever — use the impact rating above and the change description below to capture it.</p>';
+        } else {
+          rowsHtml = clusterFieldsByPhaseHTML(fields, last);
+        }
+        return '<details class="group change-group" open><summary>'+ldef.label+'</summary>'
+          + '<div class="change-subhead">Impact of this change</div>' + renderImpactCardsForLever(ldef.id)
+          + '<div class="change-subhead">Affected fields</div>' + rowsHtml
+          + '</details>';
+      }).join('');
+    }
+
+    container.innerHTML = presentSectionHtml + leverSectionsHtml;
+
+    container.querySelectorAll('[data-field]').forEach(function(inp){
+      inp.addEventListener('input', function(e){
+        pendingEdits[e.target.getAttribute('data-field')] = e.target.value;
+      });
+    });
+
+    var riskListStart = normalizeRiskList(pendingEdits.hasOwnProperty('topRisks') ? pendingEdits.topRisks : last.topRisks);
+
+    // Deep-clone the starting stakeholder/RACI values before handing them to the editors: unlike
+    // topRisks (edited in place further below), these must never share object references with a
+    // previous version's stored snapshot, or editing "now" would silently rewrite history.
+    var stakeholdersStart = JSON.parse(JSON.stringify(normalizeStakeholderList(pendingEdits.hasOwnProperty('stakeholders') ? pendingEdits.stakeholders : last.stakeholders)));
+    var raciRawStart = JSON.parse(JSON.stringify(normalizeRaciRows(pendingEdits.hasOwnProperty('raciAssignments') ? pendingEdits.raciAssignments : last.raciAssignments, riskListStart)));
+    var commsRawStart = JSON.parse(JSON.stringify(normalizeCommsList(pendingEdits.hasOwnProperty('commsPlan') ? pendingEdits.commsPlan : last.commsPlan)));
+
+    var presentExtras = wirePresentExtras({
+      stakeholderContainer: document.getElementById('changeStakeholderList'),
+      raciContainer: document.getElementById('changeRaciGrid'),
+      commsContainer: document.getElementById('changeCommsList'),
+      stakeholders: stakeholdersStart,
+      raciRaw: raciRawStart,
+      commsRaw: commsRawStart,
+      riskList: riskListStart,
+      getDefaultCadence: function(){ return pendingEdits.hasOwnProperty('meetingCadence') ? pendingEdits.meetingCadence : (last.meetingCadence || ''); },
+      onStakeholdersChange: function(newList){ pendingEdits.stakeholders = newList; },
+      onRaciChange: function(newRows){ pendingEdits.raciAssignments = newRows; },
+      onCommsChange: function(newRows){ pendingEdits.commsPlan = newRows; }
+    });
+
+    wireRiskList(document.getElementById('changeRiskList'), riskListStart, function(newList){
+      pendingEdits.topRisks = newList;
+      presentExtras.resyncRisks(normalizeRiskList(newList));
+    });
+
+    container.querySelectorAll('[data-impact-severity]').forEach(function(sel){
+      sel.addEventListener('change', function(e){
+        var lid2 = e.target.getAttribute('data-lever');
+        var dim = e.target.getAttribute('data-dim');
+        currentImpact[lid2][dim].severity = e.target.value;
+        impactTouched[lid2][dim] = true;
+        e.target.closest('.impact-card').className = 'impact-card sev-'+e.target.value;
+      });
+    });
+    container.querySelectorAll('[data-impact-note]').forEach(function(ta){
+      ta.addEventListener('input', function(e){
+        var lid2 = e.target.getAttribute('data-lever');
+        var dim = e.target.getAttribute('data-dim');
+        currentImpact[lid2][dim].note = e.target.value;
+        impactTouched[lid2][dim] = true;
+      });
+    });
+  }
+
+  function refreshChangeTabContext(){
+    var p = proj();
+    if (p.versions.length === 0){
+      document.getElementById('resultHeading').textContent = 'Current active plan';
+      document.getElementById('resultPlanView').innerHTML = '<p class="empty-plan">Generate your baseline plan first (tab 1).</p>';
+      document.getElementById('resultImpactSummary').innerHTML = '';
+      document.getElementById('exportResultBtn').disabled = true;
+      document.getElementById('exportResultPdfBtn').disabled = true;
+      return;
+    }
+    var latest = p.versions[p.versions.length-1];
+    document.getElementById('resultHeading').textContent = 'Active plan — '+latest.label;
+    document.getElementById('resultPlanView').innerHTML = renderGanttHTML(latest.snapshot, []) + renderPlanHTML(latest.snapshot, []);
+    document.getElementById('resultImpactSummary').innerHTML = '';
+    document.getElementById('exportResultBtn').disabled = false;
+    document.getElementById('exportResultBtn').onclick = function(){
+      download('class-plan-'+slug(p.name)+'-'+latest.label.split(' ')[0]+'.md', planToMarkdown(latest, p.name));
+    };
+    document.getElementById('exportResultPdfBtn').disabled = false;
+    document.getElementById('exportResultPdfBtn').onclick = function(){ exportPDF(latest, p.name); };
+    document.getElementById('applyChangeBtn').disabled = false;
+    renderChangeSections();
+  }
+
+  document.getElementById('applyChangeBtn').addEventListener('click', function(){
+    var p = proj();
+    if (p.versions.length === 0){ customAlert('Generate the baseline plan first.'); return; }
+    var lastVersion = p.versions[p.versions.length-1];
+    var lastSnapshot = lastVersion.snapshot;
+    var newSnapshot = JSON.parse(JSON.stringify(lastSnapshot));
+    var diffs = [];
+    Object.keys(pendingEdits).forEach(function(fid){
+      var newVal = pendingEdits[fid];
+      var fdef = FIELDS.filter(function(f){ return f.id === fid; })[0];
+      var isRiskList = fdef && fdef.type === 'risklist';
+      var isStakeholderList = fdef && fdef.type === 'stakeholderlist';
+      var isRaciGrid = fdef && fdef.type === 'racigrid';
+      var isCommsList = fdef && fdef.type === 'commslist';
+      var isListLike = isRiskList || isStakeholderList || isRaciGrid || isCommsList;
+      var oldVal = lastSnapshot.hasOwnProperty(fid) ? lastSnapshot[fid] : (isListLike ? [] : '');
+      var changed = JSON.stringify(newVal) !== JSON.stringify(oldVal);
+      if (changed){
+        newSnapshot[fid] = newVal;
+        var oldDisplay = isRiskList ? riskListSummary(oldVal) : isStakeholderList ? stakeholderListSummary(oldVal) : isRaciGrid ? raciGridSummary(oldVal) : isCommsList ? commsListSummary(oldVal) : (oldVal || '');
+        var newDisplay = isRiskList ? riskListSummary(newVal) : isStakeholderList ? stakeholderListSummary(newVal) : isRaciGrid ? raciGridSummary(newVal) : isCommsList ? commsListSummary(newVal) : (newVal || '');
+        diffs.push({fieldId: fid, label: fdef.label, oldVal: oldDisplay, newVal: newDisplay});
+      }
+    });
+    // Defensive re-sync: guarantees raciAssignments rows match this version's own topRisks/phases
+    // regardless of live-editor timing, so a saved version's RACI data is always internally consistent.
+    newSnapshot.raciAssignments = normalizeRaciRows(newSnapshot.raciAssignments, normalizeRiskList(newSnapshot.topRisks));
+    var description = document.getElementById('changeDescription').value.trim();
+    if (diffs.length === 0 && !description){
+      customAlert('Enter at least one changed field value or a change description before creating a new version.');
+      return;
+    }
+    var leverLabels = activeLevers.map(function(lid){
+      var l = LEVERS.filter(function(x){ return x.id === lid; })[0];
+      return l ? l.label : lid;
+    });
+    var leverText = leverLabels.length <= 2 ? leverLabels.join(' + ') : (leverLabels.length + ' combined changes');
+    if (!leverText) leverText = 'Presentation / governance update';
+    var versionNum = p.versions.length + 1;
+    var impactForVersion = {};
+    activeLevers.forEach(function(lid){
+      if (currentImpact[lid]) impactForVersion[lid] = JSON.parse(JSON.stringify(currentImpact[lid]));
+    });
+    var version = {
+      id: versionNum,
+      label: 'v'+versionNum+' · '+(leverText || 'Change'),
+      snapshot: newSnapshot,
+      diffs: diffs,
+      lever: activeLevers.slice(),
+      description: description,
+      impact: impactForVersion
+    };
+    p.versions.push(version);
+
+    document.getElementById('resultHeading').textContent = 'New version created — '+version.label;
+    document.getElementById('resultImpactSummary').innerHTML = impactSummaryHTML(version.impact);
+    document.getElementById('resultPlanView').innerHTML = renderGanttHTML(version.snapshot, version.diffs) + renderPlanHTML(version.snapshot, version.diffs);
+    document.getElementById('exportResultBtn').disabled = false;
+    document.getElementById('exportResultBtn').onclick = function(){
+      download('class-plan-'+slug(p.name)+'-'+version.label.split(' ')[0]+'.md', planToMarkdown(version, p.name));
+    };
+    document.getElementById('exportResultPdfBtn').disabled = false;
+    document.getElementById('exportResultPdfBtn').onclick = function(){ exportPDF(version, p.name); };
+
+    // reset change session for the next change, preserving nothing stale
+    pendingEdits = {};
+    currentImpact = {};
+    impactTouched = {};
+    activeLevers = [];
+    document.querySelectorAll('#leverChecklist input[type=checkbox]').forEach(function(cb){
+      cb.checked = false;
+      cb.closest('.lever-check').classList.remove('checked');
+    });
+    document.getElementById('changeDescription').value = '';
+    document.getElementById('applyChangeBtn').disabled = false;
+    renderChangeSections();
+
+    renderVersionPills();
+    renderPresentTab();
+    persist();
+  });
+
+  // ---- Tab 3: History ----
+  function renderVersionPills(){
+    var p = proj();
+    var nameEl = document.getElementById('historyProjectName');
+    if (nameEl) nameEl.textContent = p.name;
+    var container = document.getElementById('versionPills');
+    if (p.versions.length === 0){
+      container.innerHTML = '<p class="empty-plan">No versions yet.</p>';
+      document.getElementById('exportAllBtn').disabled = true;
+      activeHistoryId = null;
+      document.getElementById('historyHeading').textContent = '—';
+      document.getElementById('historyImpactSummary').innerHTML = '';
+      document.getElementById('historyPlanView').innerHTML = '<p class="empty-plan">Select a version.</p>';
+      document.getElementById('exportHistoryBtn').disabled = true;
+      document.getElementById('exportHistoryBtn').onclick = null;
+      document.getElementById('exportHistoryPdfBtn').disabled = true;
+      document.getElementById('exportHistoryPdfBtn').onclick = null;
+      return;
+    }
+    document.getElementById('exportAllBtn').disabled = false;
+    container.innerHTML = p.versions.map(function(v){
+      return '<div class="version-row">'+
+        '<span class="version-pill" data-vid="'+v.id+'">'+v.label+'</span>'+
+        '<button class="mini-btn" data-vid-md="'+v.id+'" title="Export Markdown">MD</button>'+
+        '<button class="mini-btn" data-vid-pdf="'+v.id+'" title="Export PDF">PDF</button>'+
+      '</div>';
+    }).join('');
+    container.querySelectorAll('.version-pill').forEach(function(pl){
+      pl.addEventListener('click', function(){
+        showHistoryVersion(parseInt(pl.getAttribute('data-vid'), 10));
+      });
+    });
+    container.querySelectorAll('[data-vid-md]').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        var vid = parseInt(e.target.getAttribute('data-vid-md'), 10);
+        var v = proj().versions.filter(function(x){ return x.id === vid; })[0];
+        if (v) download('class-plan-'+slug(proj().name)+'-'+v.label.split(' ')[0]+'.md', planToMarkdown(v, proj().name));
+      });
+    });
+    container.querySelectorAll('[data-vid-pdf]').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        var vid = parseInt(e.target.getAttribute('data-vid-pdf'), 10);
+        var v = proj().versions.filter(function(x){ return x.id === vid; })[0];
+        if (v) exportPDF(v, proj().name);
+      });
+    });
+    if (activeHistoryId === null || !p.versions.some(function(v){ return v.id === activeHistoryId; })){
+      showHistoryVersion(p.versions[p.versions.length-1].id);
+    } else {
+      showHistoryVersion(activeHistoryId);
+    }
+  }
+
+  function showHistoryVersion(vid){
+    activeHistoryId = vid;
+    document.querySelectorAll('.version-pill').forEach(function(pl){
+      pl.classList.toggle('active', parseInt(pl.getAttribute('data-vid'),10) === vid);
+    });
+    var p = proj();
+    var version = p.versions.filter(function(v){ return v.id === vid; })[0];
+    if (!version) return;
+    document.getElementById('historyHeading').textContent = version.label;
+    var descHtml = version.description ? '<p class="hint" style="margin-top:0;">'+escapeHtml(version.description)+'</p>' : '';
+    document.getElementById('historyImpactSummary').innerHTML = descHtml + impactSummaryHTML(version.impact);
+    document.getElementById('historyPlanView').innerHTML = renderGanttHTML(version.snapshot, version.diffs) + renderPlanHTML(version.snapshot, version.diffs);
+    document.getElementById('exportHistoryBtn').disabled = false;
+    document.getElementById('exportHistoryBtn').onclick = function(){
+      download('class-plan-'+slug(p.name)+'-'+version.label.split(' ')[0]+'.md', planToMarkdown(version, p.name));
+    };
+    document.getElementById('exportHistoryPdfBtn').disabled = false;
+    document.getElementById('exportHistoryPdfBtn').onclick = function(){ exportPDF(version, p.name); };
+  }
+
+  document.getElementById('exportAllBtn').addEventListener('click', function(){
+    var p = proj();
+    if (p.versions.length === 0) return;
+    var md = p.versions.map(function(v){ return planToMarkdown(v, p.name); }).join('\n\n---\n\n');
+    download('class-plan-'+slug(p.name)+'-full-history.md', md);
+  });
+
+  // ---- Reset current plan ----
+  document.getElementById('resetAllBtn').addEventListener('click', function(){
+    var p = proj();
+    var hasContent = (p.versions && p.versions.length) || (p.baseline && Object.keys(p.baseline).length);
+    var msg = 'Clear all inputs, plan and version history for "'+p.name+'"? This cannot be undone. (To remove the plan entirely, use Delete plan instead.)'
+      + (hasContent ? ' A full Markdown backup will download automatically first.' : '');
+    customConfirm(msg, function(){
+    autoBackupProject(p, 'reset');
+    p.baseline = {};
+    p.versions = [];
+    resetChangeSession();
+    renderBaselineForm();
+    document.getElementById('planView').innerHTML = '<p class="empty-plan">Fill in the fields on the left and click "Generate / update plan".</p>';
+    refreshChangeTabContext();
+    renderVersionPills();
+    document.querySelectorAll('.tab-btn')[0].click();
+    persist();
+    });
+  });
+
+  // One-time seed of a fully-populated realistic test plan, added on first load only (guarded by
+  // its own localStorage flag so it never reappears once seeded — including after the user deletes
+  // it, per the normal Delete plan flow).
+  function seedExampleClient(){
+    var FLAG = 'classPlanBuilder.seed.example.v1';
+    try { if (localStorage.getItem(FLAG)) return; } catch(e){ return; }
+    var p = makeProject('Example: Lakeshore Community Credit Union Onboarding');
+    p.baseline = {
+      phaseIntake_start: '2026-09-01', phaseIntake_end: '2026-09-30',
+      clientName: 'Lakeshore Community Credit Union',
+      clientSegment: 'Credit Union',
+      engagementObjective: 'Cut average appraisal turn time from 12 to 7 business days, enroll at least 75% of eligible conventional volume into CVUE within 90 days of go-live, and hold cost per file inside a fixed Guaranteed Pricing band across the four-state footprint.',
+      monthlyOrderVolume: '450',
+      footprint: 'Michigan, Ohio, Indiana, and Illinois',
+      primaryUseCase: 'Origination',
+      panelCoverageRequirements: 'Six rural counties in northern Michigan and Ohio currently show thin Class Act panel coverage; verify appraiser depth in the Chicago and Indianapolis MSAs before go-live.',
+      estimatedAnnualSpend: '$1,850,000',
+      targetCostPerFile: '$525',
+      pricingModel: 'Guaranteed Pricing',
+      appraisalProducts: 'Traditional Appraisal and Digital Appraisal for purchase originations; Hybrid Appraisal for refinances; Inspection-Based Waivers for well-qualified, low-risk refinances.',
+      appraisalDeliveryMode: 'Hybrid',
+      targetTurnTime: '7 business days',
+      complianceCertifications: 'USPAP, state appraiser licensing in MI/OH/IN/IL, Appraiser Independence Requirements (AIR), SOC 2 Type 2 vendor review',
+      onTimeDeliveryTarget: '90',
+      cvueCoverageTarget: '75',
+      revisionCycleTarget: '2',
+      revisionRateTarget: '15',
+      integrationRequirements: 'Encompass LOS integration for order submission and status sync, AppraisalScope single sign-on for the underwriting team, and a secure monthly performance-reporting feed.',
+
+      phaseMobilize_start: '2026-10-01', phaseMobilize_end: '2026-11-07',
+      panelBuildWindow: '5',
+      rolloutStructure: 'Phased / staggered rollout by region',
+      orderPlatform: 'AppraisalScope, with Class Marketplace (CMP) for broker-originated files',
+
+      phaseDeliver_start: '2026-11-08', phaseDeliver_end: '2026-12-15',
+      goLiveWindow: 'weeks 6-8',
+      qaCheckpoints: 'Week 2 panel readiness review, week 4 turn-time pulse check against the 7-day SLA, week 8 full go-live retro with Class INtelligence AI-enabled QA sampling.',
+
+      phaseUnderwriting_start: '2026-12-16', phaseUnderwriting_end: '2027-02-15',
+      underwritingStakeholders: 'Chief Risk Officer and VP of Mortgage Lending on the credit union side sign off on CVUE enrollment and the repurchase risk assumption.',
+      cvueEnrollment: 'Partially qualified',
+      cuScoreThreshold: 'CU® score ≤ 2.5; single-family and condominium only; first mortgage purchase and refinance; LTV/CLTV not exceeding 100%.',
+
+      phaseVerify_start: '2027-02-16', phaseVerify_end: '2027-05-15',
+      qualityAssuranceMethod: 'AI-enabled quality assurance (Class INtelligence) plus human expert review, monthly panel performance scorecards, and a SOC 2 Type 2 audit trail.',
+      reportingCadence: 'Monthly',
+
+      phaseSustain_start: '2027-05-16', phaseSustain_end: '2027-08-15',
+      scalePlan: 'If turn-time and CVUE coverage targets hold for two consecutive quarters, expand the Guaranteed Pricing agreement to cover home equity and servicing volume, and evaluate Property Data Advantage for Lakeshore’s branch network.',
+
+      topRisks: [
+        { id:'seed1', text:'Rural panel coverage in northern Michigan and Ohio is thin, which could push turn times past the 7-day SLA in those counties. Mitigation: recruit and certify additional appraisers in the gap counties before go-live.', share:true },
+        { id:'seed2', text:'CVUE eligibility may run lower than projected if rural property CU scores come in higher than modeled, reducing the 75% coverage target. Mitigation: re-check the eligibility ruleset against real order data at the 30-day mark.', share:true },
+        { id:'seed3', text:'The Encompass LOS integration could slip past its target date and delay go-live. Mitigation: stand up a parallel manual order-intake path through AppraisalScope as a fallback.', share:false },
+        { id:'seed4', text:'A rate-cycle volume surge could strain panel capacity right after go-live, before the secondary tier is fully ramped. Mitigation: keep a secondary Class Act panel tier on standby through month one.', share:true }
+      ],
+
+      clientNeed: 'Lakeshore needs turn times cut from 12 to 7 business days and a lower underwriting review burden, without losing visibility into panel quality across its four-state footprint.',
+      clientSponsor: 'Karen Whitfield, VP of Mortgage Lending, Lakeshore Community Credit Union',
+      accountExecutive: 'Erika Novak, Senior Account Executive, Class Valuation',
+      decisionRights: 'The Account Executive approves changes affecting under 5% of order volume or under 2 weeks of schedule. Anything above that requires joint sign-off from Lakeshore’s VP of Mortgage Lending and Class Valuation’s regional VP within 5 business days.',
+      meetingCadence: 'Biweekly',
+      clientAsks: 'LOS/API access credentials provided by Sep 15, 2026\nSigned Guaranteed Pricing agreement by Sep 20, 2026\nUnderwriting team introductions (CRO + underwriting manager) by Sep 25, 2026\nConfirmation of the CVUE eligibility ruleset sign-off by Oct 1, 2026',
+
+      stakeholders: [
+        { id:'sh1', name:'Karen Whitfield', role:'VP of Mortgage Lending, Lakeshore Community Credit Union', side:'client' },
+        { id:'sh2', name:'Marcus Webb', role:'Chief Risk Officer, Lakeshore Community Credit Union', side:'client' },
+        { id:'sh3', name:'Erika Novak', role:'Senior Account Executive, Class Valuation', side:'delivery' },
+        { id:'sh4', name:'Priya Anand', role:'Client Implementation Lead, Class Valuation', side:'delivery' },
+        { id:'sh5', name:'Derek Simmons', role:'Panel Operations Manager, Class Valuation', side:'delivery' },
+        { id:'sh6', name:'Tom Alvarez', role:'Solutions Engineer, ICE Mortgage Technology (Encompass LOS integration)', side:'third' }
+      ],
+      raciAssignments: [
+        { source:'phase', refId:'intake', cells:{ sh1:'A', sh3:'R', sh4:'C', sh5:'C', sh2:'I' } },
+        { source:'phase', refId:'mobilize', cells:{ sh3:'A', sh5:'R', sh4:'C', sh1:'I' } },
+        { source:'phase', refId:'deliver', cells:{ sh3:'A', sh5:'R', sh4:'C', sh1:'I' } },
+        { source:'phase', refId:'underwriting', cells:{ sh3:'A', sh4:'R', sh2:'C', sh1:'I', sh5:'I' } },
+        { source:'phase', refId:'verify', cells:{ sh4:'A', sh3:'C', sh2:'I', sh1:'I' } },
+        { source:'phase', refId:'sustain', cells:{ sh1:'A', sh3:'R', sh2:'C' } },
+        { source:'risk', refId:'seed1', cells:{ sh5:'R', sh3:'A', sh1:'I' } },
+        { source:'risk', refId:'seed2', cells:{ sh4:'R', sh3:'A', sh2:'C' } },
+        { source:'risk', refId:'seed3', cells:{ sh6:'R', sh3:'A', sh1:'I' } },
+        { source:'risk', refId:'seed4', cells:{ sh5:'R', sh3:'A', sh4:'C' } }
+      ],
+      commsPlan: [
+        { id:'comm1', audienceStakeholderId:'sh1', audienceCustom:'', cadence:'Biweekly', channel:'Meeting', purpose:'Decision needed', trigger:'', notes:'Steering committee review of turn-time performance, CVUE coverage, and any pricing or panel decisions.' },
+        { id:'comm2', audienceStakeholderId:'sh2', audienceCustom:'', cadence:'Monthly', channel:'Written report', purpose:'Status update', trigger:'Tied to the quarterly risk review cycle', notes:'Monthly repurchase-risk and CVUE eligibility report for the risk committee.' },
+        { id:'comm3', audienceStakeholderId:'sh3', audienceCustom:'', cadence:'Weekly', channel:'Meeting', purpose:'Status update', trigger:'', notes:'Internal Class Valuation account team sync covering turn-time, panel coverage, and the risk register.' },
+        { id:'comm4', audienceStakeholderId:'sh4', audienceCustom:'', cadence:'Monthly', channel:'Written report', purpose:'Status update', trigger:'End of each phase', notes:'Implementation and QA compliance report verifying turn-time and revision data before it is shared externally.' },
+        { id:'comm5', audienceStakeholderId:'sh5', audienceCustom:'', cadence:'Biweekly', channel:'Email', purpose:'Status update', trigger:'', notes:'Panel build-out and coverage progress against the four-state footprint requirements.' },
+        { id:'comm6', audienceStakeholderId:'sh6', audienceCustom:'', cadence:'Monthly', channel:'Meeting', purpose:'Status update', trigger:'Start of the Go-Live phase', notes:'Encompass integration status and readiness for the order-platform cutover.' },
+        { id:'comm7', audienceStakeholderId:'', audienceCustom:'Lakeshore Executive Committee', cadence:'Quarterly', channel:'Written report', purpose:'FYI', trigger:'Quarterly reporting cycle', notes:'High-level relationship summary covering spend, turn-time trend, and CVUE savings for the credit union’s executive committee.' }
+      ]
+    };
+    projects[p.id] = p;
+    activeProjectId = p.id;
+    persist();
+    try { localStorage.setItem(FLAG, '1'); } catch(e){}
+  }
+
+  // ---- Upload & Process: wire the dropzone once (static HTML, not re-rendered per project) ----
+  (function wireUploadBox(){
+    var dropzone = document.getElementById('dropzone');
+    var fileInput = document.getElementById('uploadFileInput');
+    if (!dropzone || !fileInput) return;
+    dropzone.addEventListener('click', function(){ fileInput.click(); });
+    dropzone.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); fileInput.click(); }
+    });
+    dropzone.addEventListener('dragover', function(e){ e.preventDefault(); dropzone.classList.add('dragover'); });
+    dropzone.addEventListener('dragleave', function(){ dropzone.classList.remove('dragover'); });
+    dropzone.addEventListener('drop', function(e){
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+      var files = e.dataTransfer && e.dataTransfer.files;
+      if (files && files.length) selectUploadFiles(files);
+    });
+    fileInput.addEventListener('change', function(e){
+      if (e.target.files && e.target.files.length) selectUploadFiles(e.target.files);
+    });
+    document.getElementById('processUploadBtn').addEventListener('click', function(){
+      processUploadedDocument();
+    });
+    document.getElementById('clearUploadBtn').addEventListener('click', function(){
+      resetUploadSelection();
+    });
+  })();
+
+  // init
+  if (!loadPersisted()){
+    var initialProject = makeProject('Untitled Plan 1');
+    projects[initialProject.id] = initialProject;
+    activeProjectId = initialProject.id;
+  }
+  seedExampleClient();
+  renderProjectBar();
+  renderBaselineForm();
+  (function(){
+    var p0 = proj();
+    if (p0.versions.length){
+      document.getElementById('planView').innerHTML = renderGanttHTML(p0.versions[0].snapshot, []) + renderPlanHTML(p0.versions[0].snapshot, []);
+    }
+  })();
+  refreshChangeTabContext();
+  renderVersionPills();
+  renderOriginatorSection();
+  persist();
+})();
+</script>
+</body>
+</html>
