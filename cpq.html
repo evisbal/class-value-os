@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -184,7 +186,8 @@
               
             </div>
           </div>
-<div style="padding:20px 28px 48px;max-width:1520px"><div id="cpqstep-client_demand" style="display:none"><div style="display: grid; grid-template-columns: 1fr 336px; gap: 18px; padding: 20px 28px 48px; align-items: start; max-width: 1520px;">
+<div style="padding:20px 28px 48px;max-width:1520px"><div id="cpqstep-client_demand" style="display:none"><div id="cpq-converted-list-mount"></div>
+<div style="display: grid; grid-template-columns: 1fr 336px; gap: 18px; padding: 20px 28px 48px; align-items: start; max-width: 1520px;">
             <div style="min-width: 0px; display: flex; flex-direction: column; gap: 14px;">
 
               
@@ -1363,6 +1366,101 @@
       }
     });
   }
+</script>
+<script>
+// Read-only handoff list: once a demand is marked Converted in Demand
+// Management, it's meant to become visible here — the "Client & demand"
+// step's assembled payload for whichever quote gets configured against it.
+// Value CPQ itself has no backend yet, so this is intentionally read-only:
+// it shows what WOULD be handed off, sourced live from the same Supabase
+// project as Demand Management, and gracefully explains itself when that
+// isn't configured (same pattern as Demand Management's own empty state).
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function esc(s){
+    s = (s == null ? '' : String(s));
+    return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+  function fmtMoney(v){
+    if (v == null) return '—';
+    var n = Number(v);
+    if (isNaN(n)) return '—';
+    return '$' + (n/1000000).toFixed(1) + 'M';
+  }
+  function available(){
+    return typeof window.supabase !== 'undefined'
+      && !!window.SUPABASE_CONFIG && !!window.SUPABASE_CONFIG.url && !!window.SUPABASE_CONFIG.anonKey;
+  }
+
+  function renderEmpty(){
+    var mount = $('cpq-converted-list-mount');
+    if (!mount) return;
+    mount.innerHTML = '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px;margin-bottom:18px">'
+      + '<div style="font-size:14px;font-weight:600;margin-bottom:4px">Converted demands ready to quote</div>'
+      + '<div style="font-size:12.5px;color:#97A1B2">None yet. Demands appear here automatically once marked Converted in Demand Management.</div>'
+      + '</div>';
+  }
+
+  function renderNotConnected(){
+    var mount = $('cpq-converted-list-mount');
+    if (!mount) return;
+    mount.innerHTML = '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px;margin-bottom:18px">'
+      + '<div style="font-size:14px;font-weight:600;margin-bottom:4px">Converted demands ready to quote</div>'
+      + '<div style="font-size:12.5px;color:#97A1B2">Connect Supabase (see <code>supabase-config.js</code>) to show converted demands here — the same connection Demand Management uses.</div>'
+      + '</div>';
+  }
+
+  function render(demands, clients){
+    var mount = $('cpq-converted-list-mount');
+    if (!mount) return;
+    if (!demands.length){ renderEmpty(); return; }
+    var rows = demands.map(function(d){
+      var c = clients.filter(function(x){ return x.id === d.client_id; })[0];
+      var name = c ? c.name : 'Unknown client';
+      var segment = c ? c.segment : '';
+      var code = 'DMD-' + (1100 + Number(d.demand_number));
+      return '<div class="cpq-handoff-row" data-id="'+esc(d.id)+'" style="display:grid;grid-template-columns:1.7fr 1.1fr .7fr .8fr .5fr 1.6fr;gap:10px;padding:11px 14px;border-top:1px solid #F1F4F9;font-size:12.5px;align-items:start">'
+        + '<div><div style="font-weight:600">'+esc(name)+'</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#97A1B2;margin-top:2px">'+esc(code)+' · owner '+esc(d.owner_name||'—')+'</div></div>'
+        + '<div style="color:#5A6474">'+esc(segment||'—')+'</div>'
+        + '<div style="color:#5A6474">'+(d.est_monthly_volume!=null?d.est_monthly_volume+'/mo':'—')+'</div>'
+        + '<div style="font-weight:600">'+fmtMoney(d.est_annual_value)+'</div>'
+        + '<div style="font-family:\'IBM Plex Mono\',monospace">'+(d.score_overall!=null?Math.round(d.score_overall):'—')+'</div>'
+        + '<div style="color:#8B95A6">'+esc(d.requirement_summary||'—')+'</div>'
+        + '</div>';
+    }).join('');
+    mount.innerHTML = '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;overflow:hidden;margin-bottom:18px">'
+      + '<div style="padding:14px 18px;border-bottom:1px solid #F1F4F9">'
+        + '<div style="font-size:14px;font-weight:600">Converted demands ready to quote</div>'
+        + '<div style="font-size:12px;color:#8B95A6;margin-top:2px">Handed off from Demand Management &mdash; read-only until quote configuration is built. '+demands.length+' converted.</div>'
+      + '</div>'
+      + '<div style="display:grid;grid-template-columns:1.7fr 1.1fr .7fr .8fr .5fr 1.6fr;gap:10px;padding:9px 14px;background:#FAFBFD;font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.1em;color:#8B95A6">'
+        + '<div>CLIENT / DEMAND</div><div>SEGMENT</div><div>VOLUME</div><div>EST. VALUE</div><div>SCORE</div><div>REQUIREMENT SUMMARY</div>'
+      + '</div>'
+      + rows
+      + '</div>';
+  }
+
+  function init(){
+    if (!available()){ renderNotConnected(); return; }
+    var db;
+    try { db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
+    catch(e){ renderNotConnected(); return; }
+    Promise.resolve(db.from('demands').select('*').eq('stage', 'converted').order('created_at', {ascending:false}))
+      .then(function(dr){
+        if (dr.error) throw dr.error;
+        var demands = dr.data || [];
+        return Promise.resolve(db.from('clients').select('*')).then(function(cr){
+          if (cr.error) throw cr.error;
+          render(demands, cr.data || []);
+        });
+      })
+      .catch(function(){ renderNotConnected(); });
+  }
+
+  window.CpqHandoff = { init: init };
+})();
+
+window.CpqHandoff.init();
 </script>
 </body>
 </html>

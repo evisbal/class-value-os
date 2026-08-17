@@ -213,7 +213,7 @@
     demands: [],
     weights: null,
     activeTab: 'my',
-    filters: { segment:'', source:'', owner:'', minScore:'', created:'', stage:'' },
+    filters: { segment:'', source:'', owner:'', minScore:'', created:'', stage:'', showArchived:false },
     selectedId: null,
     showPortfolio: false,
     initialized: false
@@ -301,10 +301,11 @@
 
   // ---- tabs ----
   function tabCounts(){
-    var mine = state.demands.filter(function(d){ return d.owner_name === CURRENT_USER; });
-    var unscored = state.demands.filter(function(d){ return d.stage === 'unscored'; });
-    var decision = state.demands.filter(function(d){ return d.stage === 'decision'; });
-    var open = state.demands.filter(function(d){ return ['unscored','open','decision'].indexOf(d.stage) !== -1; });
+    var active = state.demands.filter(function(d){ return !d.archived; });
+    var mine = active.filter(function(d){ return d.owner_name === CURRENT_USER; });
+    var unscored = active.filter(function(d){ return d.stage === 'unscored'; });
+    var decision = active.filter(function(d){ return d.stage === 'decision'; });
+    var open = active.filter(function(d){ return ['unscored','open','decision'].indexOf(d.stage) !== -1; });
     return { my: mine.length, unscored: unscored.length, decision: decision.length, all: open.length };
   }
   function renderTabs(){
@@ -362,6 +363,7 @@
         + '<option value="30"'+(state.filters.created==='30'?' selected':'')+'>Last 30 days</option>'
         + '<option value="90"'+(state.filters.created==='90'?' selected':'')+'>This quarter</option>'
       + '</select>'
+      + '<label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:#5A6474;cursor:pointer;height:32px"><input type="checkbox" id="dm-f-archived" '+(state.filters.showArchived?'checked':'')+'> Show archived</label>'
       + '<span id="dm-shown-count" style="margin-left:auto;font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:.12em;color:#8B95A6"></span>';
     $('dm-f-segment').addEventListener('change', function(e){ state.filters.segment = e.target.value; renderTable(); renderPortfolio(); });
     $('dm-f-source').addEventListener('change', function(e){ state.filters.source = e.target.value; renderTable(); renderPortfolio(); });
@@ -369,10 +371,12 @@
     $('dm-f-stage').addEventListener('change', function(e){ state.filters.stage = e.target.value; renderTable(); renderPortfolio(); });
     $('dm-f-minscore').addEventListener('input', function(e){ state.filters.minScore = e.target.value; renderTable(); renderPortfolio(); });
     $('dm-f-created').addEventListener('change', function(e){ state.filters.created = e.target.value; renderTable(); renderPortfolio(); });
+    $('dm-f-archived').addEventListener('change', function(e){ state.filters.showArchived = e.target.checked; renderTable(); renderPortfolio(); });
   }
 
   function getFilteredList(){
     var list = state.demands.slice();
+    if (!state.filters.showArchived) list = list.filter(function(d){ return !d.archived; });
     if (state.activeTab === 'my') list = list.filter(function(d){ return d.owner_name === CURRENT_USER; });
     else if (state.activeTab === 'unscored') list = list.filter(function(d){ return d.stage === 'unscored'; });
     else if (state.activeTab === 'decision') list = list.filter(function(d){ return d.stage === 'decision'; });
@@ -413,7 +417,7 @@
           + '<div style="text-align:right;color:#5A6474">'+(d.est_monthly_volume!=null?d.est_monthly_volume:'—')+'</div>'
           + '<div style="text-align:right;font-weight:600">'+fmtMoney(d.est_annual_value)+'</div>'
           + '<div style="display:flex;align-items:center;gap:7px">'+scoreHtml+'</div>'
-          + '<div><span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.08em;padding:3px 6px;border-radius:5px;background:'+meta.bg+';color:'+meta.fg+'">'+meta.label+'</span></div>'
+          + '<div><span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.08em;padding:3px 6px;border-radius:5px;background:'+meta.bg+';color:'+meta.fg+'">'+meta.label+'</span>'+(d.archived?' <span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.08em;padding:3px 6px;border-radius:5px;background:#EDEFF3;color:#8B95A6">ARCHIVED</span>':'')+'</div>'
           + '<div style="text-align:right;font-family:\'IBM Plex Mono\',monospace;font-size:10.5px;color:#97A1B2">'+fmtAge(d.created_at)+'</div>'
           + '</div>';
       }).join('');
@@ -458,6 +462,13 @@
         + '<div style="margin-top:4px;font-size:13px;color:#6B7686">'+esc(d._segment||'—')+' · '+(d.est_monthly_volume!=null?d.est_monthly_volume:'—')+' orders / month · '+fmtMoney(d.est_annual_value)+' est. annual</div>'
         + (d.requirement_summary ? '<div style="margin-top:9px;font-size:12.5px;color:#5A6474;line-height:1.5">'+esc(d.requirement_summary)+'</div>' : '')
         + (d.decision_reason ? '<div style="margin-top:9px;font-size:12px;color:#8B95A6;line-height:1.5"><b>Decision reason:</b> '+esc(d.decision_reason)+'</div>' : '')
+        + (d.decision_owner_type ? '<div style="margin-top:9px;font-size:12px;color:#8B95A6;line-height:1.5"><b>Decision owner:</b> '
+            + (d.decision_owner_type==='client'
+                ? 'Client — '+esc(d.decision_owner_name||'—')+(d.decision_client_contact?' ('+esc(d.decision_client_contact)+')':'')
+                : esc(d.decision_owner_name||'—'))
+            + (d.decision_pending_note ? '<br><b>Pending:</b> '+esc(d.decision_pending_note) : '')
+          + '</div>' : '')
+        + (d.archived ? '<div style="margin-top:9px;font-size:11.5px;color:#8B95A6;background:#F4F6FA;border-radius:6px;padding:6px 8px;display:inline-block">Archived'+(d.archived_at?' '+new Date(d.archived_at).toLocaleDateString():'')+'</div>' : '')
       + '</div>'
       + '<div style="padding:16px 18px;border-bottom:1px solid #F1F4F9">'
         + '<div style="display:flex;align-items:baseline;gap:9px">'
@@ -478,13 +489,7 @@
       + '</div>'
       + '<div style="padding:16px 18px;display:flex;flex-direction:column;gap:9px">'
         + '<button id="dm-cpq-btn" '+(d.stage==='converted'?'disabled':'')+' style="height:40px;border-radius:8px;border:none;background:'+(d.stage==='converted'?'#B9C6DA':'#013E90')+';color:#fff;font-size:14px;font-weight:600;cursor:'+(d.stage==='converted'?'default':'pointer')+'">'+(d.stage==='converted'?'Already converted':'Configure quote in CPQ')+'</button>'
-        + (d.stage === 'parked' || d.stage === 'rejected'
-            ? '<button id="dm-reopen-btn" style="height:34px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Reopen</button>'
-            : d.stage === 'converted' ? ''
-            : '<div style="display:flex;gap:8px">'
-                + '<button id="dm-park-btn" style="flex:1;height:34px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Park</button>'
-                + '<button id="dm-reject-btn" style="flex:1;height:34px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13px;font-weight:600;cursor:pointer">Reject with reason</button>'
-              + '</div>')
+        + actionsSelectHtml(d)
         + '<div style="font-size:11.5px;color:#97A1B2;line-height:1.45">Demands are never deleted — the decision and its reason stay on the investment record.</div>'
       + '</div>';
 
@@ -492,20 +497,53 @@
     $('dm-note-btn').addEventListener('click', function(){ addNote(d.id); });
     $('dm-cpq-btn').addEventListener('click', function(){
       if (d.stage !== 'converted'){
-        openInfoModal('Value CPQ isn’t built yet', 'This button will hand the demand’s context (client, segment, volume) straight into the CPQ module once it exists. There’s nothing to configure a quote in yet.');
+        openInfoModal('Value CPQ isn’t built yet', 'Once this demand is marked Converted (from the Change stage menu below), it appears on Value CPQ’s Client & Demand list automatically — that’s the real trigger, not this button. Full quote configuration still isn’t built.');
       }
     });
-    var parkBtn = $('dm-park-btn'); if (parkBtn) parkBtn.addEventListener('click', function(){ openReasonModal('Park this demand', 'parked', d.id); });
-    var rejectBtn = $('dm-reject-btn'); if (rejectBtn) rejectBtn.addEventListener('click', function(){ openReasonModal('Reject this demand', 'rejected', d.id); });
-    var reopenBtn = $('dm-reopen-btn'); if (reopenBtn) reopenBtn.addEventListener('click', function(){ reopenDemand(d.id); });
+    var actionsSelect = $('dm-actions-select');
+    if (actionsSelect) actionsSelect.addEventListener('change', function(e){
+      var v = e.target.value;
+      e.target.value = '';
+      if (v === 'decision') openDecisionModal(d.id);
+      else if (v === 'converted') openConvertedConfirm(d.id);
+      else if (v === 'park') openReasonModal('Park this demand', 'parked', d.id);
+      else if (v === 'reject') openReasonModal('Reject this demand', 'rejected', d.id);
+      else if (v === 'reopen') reopenDemand(d.id);
+      else if (v === 'archive') openArchiveConfirm(d.id);
+    });
 
     loadActivity(d.id);
+  }
+
+  // ---- manual stage-change actions ----
+  function actionsForStage(d){
+    if (d.stage === 'converted') return [];
+    if (d.stage === 'parked') return [{value:'reopen', label:'Reopen'}];
+    if (d.stage === 'rejected'){
+      var opts = [{value:'reopen', label:'Reopen'}];
+      if (!d.archived) opts.push({value:'archive', label:'Archive'});
+      return opts;
+    }
+    var opts = [];
+    if (d.stage === 'open') opts.push({value:'decision', label:'Move to Decision'});
+    if (d.stage === 'decision') opts.push({value:'converted', label:'Mark Converted'});
+    opts.push({value:'park', label:'Park'});
+    opts.push({value:'reject', label:'Reject with reason'});
+    return opts;
+  }
+  function actionsSelectHtml(d){
+    var actions = actionsForStage(d);
+    if (!actions.length) return '';
+    return '<select id="dm-actions-select" style="height:38px;padding:0 10px;border:1px solid #DCE2EC;border-radius:8px;background:#fff;font-size:13.5px;font-weight:600;color:#131A26;cursor:pointer">'
+      + '<option value="" selected>Change stage&hellip;</option>'
+      + actions.map(function(a){ return '<option value="'+a.value+'">'+esc(a.label)+'</option>'; }).join('')
+      + '</select>';
   }
 
   function reopenDemand(demandId){
     var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
     var fromStage = d.stage;
-    return Promise.resolve(db.from('demands').update({ stage:'open', decision_reason:null }).eq('id', demandId).select().single())
+    return Promise.resolve(db.from('demands').update({ stage:'open', decision_reason:null, archived:false, archived_at:null }).eq('id', demandId).select().single())
       .then(function(r){
         if (r.error) throw r.error;
         Object.assign(d, r.data);
@@ -558,6 +596,7 @@
     var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
     var willHaveAll = CRITERIA.every(function(c){ return patch[c.key] != null; });
     if (willHaveAll && d.stage === 'unscored') patch.stage = 'open';
+    patch.score_overall = computeScore(patch, state.weights);
     return Promise.resolve(db.from('demands').update(patch).eq('id', demandId).select().single())
       .then(function(r){
         if (r.error) throw r.error;
@@ -611,6 +650,129 @@
   }
 
   function closeModal(){ $('dm-modal-overlay').style.display = 'none'; $('dm-modal-box').innerHTML = ''; }
+
+  function openDecisionModal(demandId){
+    $('dm-modal-box').innerHTML =
+      '<div style="font-size:15px;font-weight:600;color:#131A26;margin-bottom:8px">Move to Decision</div>'
+      + '<div style="font-size:12.5px;color:#8B95A6;margin-bottom:12px">Who needs to make the call, and what are they deciding?</div>'
+      + '<label style="display:block;font-size:11.5px;font-weight:600;color:#5A6474;margin-bottom:6px">Decision owner</label>'
+      + '<div style="display:flex;gap:16px;margin-bottom:12px">'
+        + '<label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="dm-dec-owner-type" id="dm-dec-owner-internal" value="internal" checked> Internal</label>'
+        + '<label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="dm-dec-owner-type" id="dm-dec-owner-client" value="client"> Client</label>'
+      + '</div>'
+      + '<div id="dm-dec-internal-fields">' + field('dm-dec-owner-name','Owner name', 'text', CURRENT_USER) + '</div>'
+      + '<div id="dm-dec-client-fields" style="display:none">'
+        + field('dm-dec-client-name','Client / stakeholder name', 'text', '')
+        + field('dm-dec-client-contact','Contact info (email or phone)', 'text', '')
+      + '</div>'
+      + '<label style="display:block;font-size:11.5px;font-weight:600;color:#5A6474;margin-bottom:4px">What decision is pending</label>'
+      + '<textarea id="dm-dec-note" rows="3" placeholder="e.g. awaiting pricing sign-off, client comparing vendors…" style="width:100%;padding:9px 10px;border:1px solid #DCE2EC;border-radius:8px;font-size:13.5px;font-family:inherit;margin-bottom:10px;box-sizing:border-box"></textarea>'
+      + '<div id="dm-dec-error" style="display:none;color:#C4472C;font-size:12.5px;margin-bottom:10px"></div>'
+      + '<div style="display:flex;justify-content:flex-end;gap:8px">'
+        + '<button id="dm-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+        + '<button id="dm-dec-submit" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Move to Decision</button>'
+      + '</div>';
+    $('dm-modal-overlay').style.display = 'flex';
+    $('dm-modal-cancel').addEventListener('click', closeModal);
+    $('dm-dec-owner-internal').addEventListener('change', toggleDecisionOwnerFields);
+    $('dm-dec-owner-client').addEventListener('change', toggleDecisionOwnerFields);
+    $('dm-dec-submit').addEventListener('click', function(){ submitDecision(demandId); });
+  }
+
+  function toggleDecisionOwnerFields(){
+    var isClient = $('dm-dec-owner-client').checked;
+    $('dm-dec-internal-fields').style.display = isClient ? 'none' : 'block';
+    $('dm-dec-client-fields').style.display = isClient ? 'block' : 'none';
+  }
+
+  function submitDecision(demandId){
+    var errEl = $('dm-dec-error');
+    var isClient = $('dm-dec-owner-client').checked;
+    var note = ($('dm-dec-note').value || '').trim();
+    if (!note){ errEl.textContent = 'Describe what decision is pending.'; errEl.style.display = 'block'; return; }
+    var payload = { decision_owner_type: isClient ? 'client' : 'internal', decision_pending_note: note };
+    if (isClient){
+      var clientName = ($('dm-dec-client-name').value || '').trim();
+      if (!clientName){ errEl.textContent = 'Client / stakeholder name is required.'; errEl.style.display = 'block'; return; }
+      payload.decision_owner_name = clientName;
+      payload.decision_client_contact = ($('dm-dec-client-contact').value || '').trim() || null;
+    } else {
+      var ownerName = ($('dm-dec-owner-name').value || '').trim();
+      if (!ownerName){ errEl.textContent = 'Owner name is required.'; errEl.style.display = 'block'; return; }
+      payload.decision_owner_name = ownerName;
+      payload.decision_client_contact = null;
+    }
+    moveToDecision(demandId, payload);
+    closeModal();
+  }
+
+  function moveToDecision(demandId, payload){
+    var patch = Object.assign({ stage:'decision', decision_at: new Date().toISOString() }, payload);
+    return Promise.resolve(db.from('demands').update(patch).eq('id', demandId).select().single())
+      .then(function(r){
+        if (r.error) throw r.error;
+        var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
+        Object.assign(d, r.data);
+        var who = payload.decision_owner_type === 'client'
+          ? 'client (' + payload.decision_owner_name + ')'
+          : payload.decision_owner_name;
+        return db.from('demand_activity').insert({ demand_id: demandId, kind:'stage_change', body: 'Moved to Decision — owner: ' + who + '. Pending: ' + payload.decision_pending_note, author_name: CURRENT_USER });
+      })
+      .then(function(){ renderTabs(); renderTable(); renderDetail(); renderPortfolio(); })
+      .catch(function(e){ openInfoModal('Couldn’t move to Decision', e.message || String(e)); });
+  }
+
+  function openConvertedConfirm(demandId){
+    $('dm-modal-box').innerHTML =
+      '<div style="font-size:15px;font-weight:600;color:#131A26;margin-bottom:8px">Mark as Converted</div>'
+      + '<div style="font-size:13.5px;color:#5A6474;line-height:1.55;margin-bottom:16px">This demand meets all criteria and is ready to be quoted. It will appear on the Client &amp; Demand list in Value CPQ.</div>'
+      + '<div style="display:flex;justify-content:flex-end;gap:8px">'
+        + '<button id="dm-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+        + '<button id="dm-modal-confirm" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Mark Converted</button>'
+      + '</div>';
+    $('dm-modal-overlay').style.display = 'flex';
+    $('dm-modal-cancel').addEventListener('click', closeModal);
+    $('dm-modal-confirm').addEventListener('click', function(){ markConverted(demandId); closeModal(); });
+  }
+
+  function markConverted(demandId){
+    var patch = { stage:'converted', converted_at: new Date().toISOString() };
+    return Promise.resolve(db.from('demands').update(patch).eq('id', demandId).select().single())
+      .then(function(r){
+        if (r.error) throw r.error;
+        var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
+        Object.assign(d, r.data);
+        return db.from('demand_activity').insert({ demand_id: demandId, kind:'stage_change', body: 'Marked as Converted — now visible on Value CPQ’s Client & Demand list.', author_name: CURRENT_USER });
+      })
+      .then(function(){ renderTabs(); renderTable(); renderDetail(); renderPortfolio(); })
+      .catch(function(e){ openInfoModal('Couldn’t mark this demand converted', e.message || String(e)); });
+  }
+
+  function openArchiveConfirm(demandId){
+    $('dm-modal-box').innerHTML =
+      '<div style="font-size:15px;font-weight:600;color:#131A26;margin-bottom:8px">Archive this demand</div>'
+      + '<div style="font-size:13.5px;color:#5A6474;line-height:1.55;margin-bottom:16px">It stays on the record — nothing is deleted — but it drops out of the default list. You can still find it with “Show archived.”</div>'
+      + '<div style="display:flex;justify-content:flex-end;gap:8px">'
+        + '<button id="dm-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+        + '<button id="dm-modal-confirm" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Archive</button>'
+      + '</div>';
+    $('dm-modal-overlay').style.display = 'flex';
+    $('dm-modal-cancel').addEventListener('click', closeModal);
+    $('dm-modal-confirm').addEventListener('click', function(){ archiveDemand(demandId); closeModal(); });
+  }
+
+  function archiveDemand(demandId){
+    var patch = { archived:true, archived_at: new Date().toISOString() };
+    return Promise.resolve(db.from('demands').update(patch).eq('id', demandId).select().single())
+      .then(function(r){
+        if (r.error) throw r.error;
+        var d = state.demands.filter(function(x){ return x.id === demandId; })[0];
+        Object.assign(d, r.data);
+        return db.from('demand_activity').insert({ demand_id: demandId, kind:'stage_change', body: 'Archived.', author_name: CURRENT_USER });
+      })
+      .then(function(){ renderTabs(); renderTable(); renderDetail(); renderPortfolio(); })
+      .catch(function(e){ openInfoModal('Couldn’t archive this demand', e.message || String(e)); });
+  }
 
   // ---- new demand ----
   function field(id, label, type, val){
