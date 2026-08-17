@@ -109,9 +109,19 @@
   .gantt-label{ font-size:12px; color:var(--text); font-weight:600; }
   .gantt-track{ position:relative; height:24px; background:#EDF0F6; border-radius:6px; }
   .gantt-bar{ position:absolute; top:2px; bottom:2px; background:var(--accent-2); border-radius:5px; display:flex; align-items:center; overflow:hidden; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .gantt-bar.status-complete{ background:var(--teal); }
+  .gantt-bar.status-active{ background:var(--accent); }
+  .gantt-bar.status-planned{ background:#B6CFEE; }
+  .gantt-bar.status-planned .gantt-bar-text{ color:var(--teal); }
   .gantt-bar.changed{ background:var(--sev-medium); }
   .gantt-bar-text{ font-size:10px; color:#fff; white-space:nowrap; padding:0 6px; }
   .gantt-empty{ font-size:11px; color:var(--muted); font-style:italic; padding-left:8px; line-height:24px; }
+  .gantt-legend{ display:flex; gap:14px; justify-content:flex-end; font-size:10.5px; color:var(--muted); font-weight:600; letter-spacing:.03em; margin-bottom:8px; }
+  .gantt-legend-item{ display:flex; align-items:center; gap:5px; }
+  .gantt-legend-dot{ width:8px; height:8px; border-radius:2px; display:inline-block; }
+  .gantt-legend-dot.status-complete{ background:var(--teal); }
+  .gantt-legend-dot.status-active{ background:var(--accent); }
+  .gantt-legend-dot.status-planned{ background:#B6CFEE; }
 
   .lever-checklist{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:4px; }
   .lever-check{ display:flex; align-items:center; gap:6px; font-size:12.5px; border:1px solid var(--border); border-radius:20px; padding:6px 12px; cursor:pointer; background:#fff; color:var(--text); }
@@ -190,6 +200,11 @@
   .present-section p{ font-size:14px; line-height:1.6; margin:0; color:var(--text); }
   .present-kpis{ display:flex; flex-wrap:wrap; gap:8px; }
   .present-kpi{ background:#EAF1FB; border:1px solid var(--border); border-radius:20px; padding:6px 14px; font-size:13px; font-weight:600; color:var(--teal); }
+  .present-context-strip{ display:flex; flex-wrap:wrap; background:#fff; border:1px solid var(--border); border-radius:10px; margin-bottom:22px; }
+  .present-context-item{ flex:1 1 140px; padding:10px 16px; border-right:1px solid var(--border); }
+  .present-context-item:last-child{ border-right:none; }
+  .present-context-label{ font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .present-context-value{ font-size:13.5px; font-weight:600; color:var(--text); margin-top:3px; }
 
   .upload-box{ border-left:3px solid var(--accent); margin-bottom:14px; }
   .upload-box summary{ display:flex; align-items:center; gap:8px; }
@@ -233,6 +248,9 @@
     #printArea .gantt-bar{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
     #printArea .present-doc{ max-width:100%; }
     #printArea .present-kpi{ border:1px solid #ccc; }
+    #printArea .present-context-strip{ border:1px solid #ccc; }
+    #printArea .present-context-item{ border-right:1px solid #ccc; }
+    #printArea .gantt-bar.status-complete, #printArea .gantt-bar.status-active, #printArea .gantt-bar.status-planned{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   }
 </style>
 </head>
@@ -2105,7 +2123,16 @@
     return months[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
   }
 
-  function renderGanttHTML(snapshot, diffs){
+  // Complete/Active/Planned, derived from real phase dates vs today — never fabricated.
+  function phaseStatusClass(start, end){
+    var now = new Date();
+    if (end && now > end) return 'status-complete';
+    if (start && end && now >= start && now <= end) return 'status-active';
+    return 'status-planned';
+  }
+
+  function renderGanttHTML(snapshot, diffs, opts){
+    opts = opts || {};
     var diffMap = {};
     (diffs||[]).forEach(function(d){ diffMap[d.fieldId] = d; });
     var rows = TIMELINE_PHASES.map(function(p){
@@ -2134,12 +2161,19 @@
       var left = pct(r.start);
       var width = Math.max(0.6, pct(r.end) - left);
       var dateLabel = fmtDate(r.start)+' → '+fmtDate(r.end);
+      var statusClass = (opts.showStatus && !r.changed) ? (' '+phaseStatusClass(r.start, r.end)) : '';
       return '<div class="gantt-row"><div class="gantt-label">'+r.phase.label+'</div><div class="gantt-track">'+
-        '<div class="gantt-bar'+(r.changed?' changed':'')+'" style="left:'+left.toFixed(2)+'%; width:'+width.toFixed(2)+'%;" title="'+escapeHtml(dateLabel)+'">'+
+        '<div class="gantt-bar'+(r.changed?' changed':'')+statusClass+'" style="left:'+left.toFixed(2)+'%; width:'+width.toFixed(2)+'%;" title="'+escapeHtml(dateLabel)+'">'+
         '<span class="gantt-bar-text">'+escapeHtml(dateLabel)+'</span></div></div></div>';
     }).join('');
 
-    return '<div class="gantt"><div class="gantt-axis"><span>'+fmtDate(minD)+'</span><span>'+fmtDate(maxD)+'</span></div>'+barsHtml+'</div>';
+    var legend = opts.showStatus ? '<div class="gantt-legend">'
+      + '<span class="gantt-legend-item"><span class="gantt-legend-dot status-complete"></span>Complete</span>'
+      + '<span class="gantt-legend-item"><span class="gantt-legend-dot status-active"></span>Active</span>'
+      + '<span class="gantt-legend-item"><span class="gantt-legend-dot status-planned"></span>Planned</span>'
+      + '</div>' : '';
+
+    return '<div class="gantt">'+legend+'<div class="gantt-axis"><span>'+fmtDate(minD)+'</span><span>'+fmtDate(maxD)+'</span></div>'+barsHtml+'</div>';
   }
 
   // Old saved versions stored one flat {scope:{...},schedule:{...},...} object shared across all
@@ -2319,6 +2353,16 @@
     html += '<h2>'+(s.clientNeed ? escapeHtml(s.clientNeed) : 'Add the client’s stated need on the "Presenting To Stakeholders" step (tab 1) to open with it here.')+'</h2>';
     html += '</div>';
 
+    var contextItems = [];
+    if (s.clientName) contextItems.push({label:'Client', value:s.clientName});
+    if (s.clientSegment) contextItems.push({label:'Segment', value:s.clientSegment});
+    if (s.goLiveWindow) contextItems.push({label:'Go-live target', value:s.goLiveWindow});
+    if (contextItems.length){
+      html += '<div class="present-context-strip">'+contextItems.map(function(c){
+        return '<div class="present-context-item"><div class="present-context-label">'+escapeHtml(c.label)+'</div><div class="present-context-value">'+escapeHtml(c.value)+'</div></div>';
+      }).join('')+'</div>';
+    }
+
     if (s.engagementObjective){
       html += '<div class="present-section"><h3>Our approach</h3><p>'+escapeHtml(s.engagementObjective)+'</p></div>';
     }
@@ -2326,7 +2370,7 @@
       html += '<div class="present-section"><h3>Success criteria</h3><div class="present-kpis">'+kpis.map(function(k){ return '<span class="present-kpi">'+escapeHtml(k)+'</span>'; }).join('')+'</div></div>';
     }
 
-    html += '<div class="present-section"><h3>Timeline</h3>'+renderGanttHTML(s, [])+'</div>';
+    html += '<div class="present-section"><h3>Timeline</h3>'+renderGanttHTML(s, [], {showStatus:true})+'</div>';
 
     var govLines = [];
     if (s.clientSponsor) govLines.push('<b>Client sponsor:</b> '+escapeHtml(s.clientSponsor));
