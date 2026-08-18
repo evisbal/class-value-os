@@ -659,6 +659,8 @@
     demands: [],
     clients: [],
     products: [],
+    tiers: [],             // active pricing_tiers, sorted by min_volume
+    tierRates: [],          // pricing_tier_rates rows — per-(tier,product) override prices
     quotesByDemand: {},   // demand_id -> latest quote row
     staticBodies: {},     // step id -> raw HTML string (from <template> fragments)
     mode: 'list',         // 'list' | 'editor'
@@ -748,10 +750,15 @@
     var existing = state.quotesByDemand[demandId];
     if (existing) return Promise.resolve(existing);
     var demand = state.demands.filter(function(d){ return d.id === demandId; })[0];
+    var client = findClient(demand.client_id);
+    // A new quote starts with whatever pricing tier is already assigned to
+    // the client (the sticky, client-level rule) — a rep can still change it
+    // per-quote from here, which also updates the client's assignment.
     return Promise.resolve(state.db.from('quotes').insert({
       demand_id: demandId,
       client_id: demand.client_id,
-      owner_name: demand.owner_name || CURRENT_USER
+      owner_name: demand.owner_name || CURRENT_USER,
+      pricing_tier_id: client ? client.pricing_tier_id || null : null
     }).select().single()).then(function(r){
       if (r.error) throw r.error;
       state.quotesByDemand[demandId] = r.data;
@@ -827,6 +834,28 @@
     }).catch(function(e){ console.error('CPQ: save draft failed', e); });
   }
 
+  // Applying a tier is the client-level business rule the user asked for:
+  // selecting one here sets it on the CLIENT (sticky — future quotes for
+  // this client default to it) as well as on this quote (what was actually
+  // in effect when its line items were priced). No invoicing/billing
+  // system involved — the only downstream effect is what Configure shows
+  // and what gets frozen into unit_price_snapshot from here on.
+  function applyTier(tierId){
+    var q = state.currentQuote, c = state.currentClient;
+    if (!q || !c) return;
+    var db = state.db;
+    Promise.all([
+      Promise.resolve(db.from('clients').update({ pricing_tier_id: tierId }).eq('id', c.id)),
+      Promise.resolve(db.from('quotes').update({ pricing_tier_id: tierId }).eq('id', q.id))
+    ]).then(function(results){
+      if (results[0] && results[0].error) throw results[0].error;
+      if (results[1] && results[1].error) throw results[1].error;
+      c.pricing_tier_id = tierId;
+      q.pricing_tier_id = tierId;
+      renderEditor();
+    }).catch(function(e){ console.error('CPQ: could not apply pricing tier', e); showToast('Could not apply that tier — try again.'); });
+  }
+
   // ---------------------------------------------------------------------
   // pricing
   // ---------------------------------------------------------------------
@@ -835,6 +864,44 @@
     var seg = product.eligible_segments;
     if (!seg || !seg.length) return true;
     return seg.indexOf(state.currentClient.segment) !== -1;
+  }
+
+  // ---------------------------------------------------------------------
+  // tiered pricing — a tier is a client-level business rule (clients.pricing_tier_id
+  // is the sticky assignment), applied per quote (quotes.pricing_tier_id records
+  // what was in effect). It's a per-product RATE CARD, not a blanket discount:
+  // pricing_tier_rates holds a per-(tier,product) override price; a product with
+  // no override for the active tier just falls back to its catalog unit_price.
+  // The frozen price a client actually gets still lives where it always has —
+  // quote_line_items.unit_price_snapshot — written from effectivePrice() at
+  // selection time, so a later tier change never rewrites an existing quote.
+  // ---------------------------------------------------------------------
+  function activeTier(){
+    var tierId = state.currentQuote && state.currentQuote.pricing_tier_id;
+    if (!tierId) return null;
+    return state.tiers.filter(function(t){ return t.id === tierId; })[0] || null;
+  }
+  function tierOverride(productId, tierId){
+    if (!tierId) return null;
+    var r = state.tierRates.filter(function(x){ return x.tier_id === tierId && x.product_id === productId; })[0];
+    return r ? Number(r.override_price) : null;
+  }
+  function effectivePrice(product){
+    var tier = activeTier();
+    if (!tier) return Number(product.unit_price);
+    var override = tierOverride(product.id, tier.id);
+    return override != null ? override : Number(product.unit_price);
+  }
+  function fmtVolRange(t){
+    if (t.max_volume == null) return t.min_volume + '+ orders/mo';
+    return t.min_volume + '–' + t.max_volume + ' orders/mo';
+  }
+  function suggestedTier(volume){
+    if (volume == null) return null;
+    var candidates = state.tiers.filter(function(t){
+      return volume >= t.min_volume && (t.max_volume == null || volume <= t.max_volume);
+    });
+    return candidates[0] || null;
   }
 
   function computeTotals(){
@@ -859,11 +926,16 @@
 
   function renderLivePricingPanel(){
     var t = computeTotals();
+    var tier = activeTier();
+    var tierNote = tier
+      ? '<div style="margin-top:10px;display:inline-flex;align-items:center;gap:6px;font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:.08em;background:#EAF1FB;color:#012E6B;border:1px solid #C9DCF2;border-radius:6px;padding:4px 8px">' + esc(tier.name.toUpperCase()) + ' TIER APPLIED</div>'
+      : '';
     return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;overflow:hidden">'
       + '<div style="padding:14px 16px;border-bottom:1px solid #EDF0F6"><div style="font-size:14px;font-weight:600">Live pricing</div></div>'
       + '<div style="padding:16px">'
       + '<div id="cpq-lp-monthly" style="font-size:28px;font-weight:600;letter-spacing:-.02em">' + fmtUsd(t.monthly) + '</div>'
       + '<div style="font-size:12.5px;color:#6B7686;margin-top:2px">estimated monthly &middot; <span id="cpq-lp-annual">' + fmtUsd(t.annual) + '</span> annual</div>'
+      + tierNote
       + '<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">'
       + '<div style="display:flex;justify-content:space-between;gap:10px;font-size:13px"><div style="color:#5A6474">Products (<span id="cpq-lp-pcount">' + t.productsCount + '</span>)</div><div id="cpq-lp-products" style="font-weight:600">' + fmtUsd(t.productsSubtotal) + '</div></div>'
       + '<div style="display:flex;justify-content:space-between;gap:10px;font-size:13px"><div style="color:#5A6474">Add-ons (<span id="cpq-lp-acount">' + t.addonsCount + '</span>)</div><div id="cpq-lp-addons" style="font-weight:600">' + fmtUsd(t.addonsSubtotal) + '</div></div>'
@@ -923,6 +995,21 @@
       + '</div>';
   }
 
+  function renderTierBlock(){
+    var d = state.currentDemand, c = state.currentClient, q = state.currentQuote;
+    var currentTierId = q.pricing_tier_id || '';
+    var suggestion = suggestedTier(d.est_monthly_volume);
+    var options = '<option value="">No tier assigned</option>' + state.tiers.map(function(t){
+      return '<option value="' + esc(t.id) + '" ' + (t.id === currentTierId ? 'selected' : '') + '>' + esc(t.name) + ' (' + esc(fmtVolRange(t)) + ')</option>';
+    }).join('');
+    var hint = (suggestion && suggestion.id !== currentTierId)
+      ? '<div style="margin-top:8px;font-size:12px;color:#6B7686">Suggested: <strong>' + esc(suggestion.name) + '</strong> based on this client’s ' + (d.est_monthly_volume != null ? d.est_monthly_volume : '—') + '/mo volume.</div>'
+      : '';
+    return '<div style="font-size:12.5px;color:#8B95A6;line-height:1.55;margin-bottom:10px">Applying a tier is a client-level rule — it sticks to ' + esc(c ? c.name : 'this client') + ' for future quotes too, and adjusts per-product pricing in Configure wherever the tier has a rate-card entry. Not connected to invoicing; it only changes what this quote shows.</div>'
+      + '<select class="cpq-tier-select" style="width:100%;max-width:360px;height:38px;border:1px solid #DCE2EC;border-radius:8px;padding:0 10px;font-size:13.5px;background:#fff">' + options + '</select>'
+      + hint;
+  }
+
   function renderClientDemandTab(){
     var d = state.currentDemand, c = state.currentClient, q = state.currentQuote;
     var fields = [
@@ -958,6 +1045,10 @@
       + '<div style="font-size:13px;line-height:1.55;color:#3E4A5C">The Configure catalog is filtered by this client’s segment (' + esc(c ? c.segment : '—') + '), pulled live from the client record. Guided answers below are captured for context but don’t change eligibility yet.</div>'
       + '</div></div>'
       + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
+      + '<div style="font-size:16px;font-weight:600">Pricing</div>'
+      + '<div style="margin-top:14px">' + renderTierBlock() + '</div>'
+      + '</div>'
+      + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
       + '<div style="font-size:16px;font-weight:600">Guided questions</div>'
       + '<div style="margin-top:14px;display:flex;flex-direction:column;gap:12px">' + questionsHtml + '</div>'
       + '</div></div>';
@@ -970,18 +1061,23 @@
     var selected = !!(li && li.selected);
     var eligible = isEligible(p);
     var vol = li && li.monthly_volume != null ? li.monthly_volume : '';
-    var cost = (selected && li && Number(li.monthly_volume) > 0) ? fmtUsd(Number(p.unit_price) * Number(li.monthly_volume)) + ' / mo' : 'not included';
+    var price = effectivePrice(p);
+    var tierApplied = price !== Number(p.unit_price);
+    var cost = (selected && li && Number(li.monthly_volume) > 0) ? fmtUsd(price * Number(li.monthly_volume)) + ' / mo' : 'not included';
     var borderColor = !eligible ? '#E3E8F0' : (selected ? '#B8DB92' : '#E3E8F0');
     var opacity = eligible ? '1' : '.55';
     var checkboxStyle = selected
       ? 'border:1.5px solid #013E90;background:#013E90;color:#fff'
       : 'border:1.5px solid #C4CBD8;background:#fff;color:#fff';
+    var priceBlock = tierApplied
+      ? '<div style="font-size:11.5px;color:#97A1B2;text-decoration:line-through">' + fmtUsd(p.unit_price) + '</div><div style="font-size:15px;font-weight:600;color:#1F6B2E">' + fmtUsd(price) + '</div>'
+      : '<div style="font-size:15px;font-weight:600">' + fmtUsd(price) + '</div>';
     return '<div style="border:1px solid ' + borderColor + ';background:#F8FBFF;border-radius:11px;padding:14px 15px 13px;display:flex;flex-direction:column;gap:10px;opacity:' + opacity + '">'
       + '<div style="display:flex;align-items:flex-start;gap:11px">'
       + '<div class="cpq-product-check" data-product="' + esc(p.id) + '" style="width:19px;height:19px;border-radius:5px;flex:0 0 auto;margin-top:2px;cursor:' + (eligible?'pointer':'not-allowed') + ';font-size:12px;display:flex;align-items:center;justify-content:center;' + checkboxStyle + '">' + (selected ? '&check;' : '') + '</div>'
       + '<div style="min-width:0;flex:1 1 0"><div style="font-size:14.5px;font-weight:600">' + esc(p.name) + '</div>'
       + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686;line-height:1.45">' + esc(p.description||'') + '</div></div>'
-      + '<div style="text-align:right;flex:0 0 auto"><div style="font-size:15px;font-weight:600">' + fmtUsd(p.unit_price) + '</div>'
+      + '<div style="text-align:right;flex:0 0 auto">' + priceBlock
       + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#8B95A6;letter-spacing:.08em">PER ORDER</div></div>'
       + '</div>'
       + '<div style="display:flex;align-items:center;gap:10px;padding-top:9px;border-top:1px dashed #E3E8F0">'
@@ -1094,9 +1190,14 @@
         description: p.requires_note });
     });
 
-    // 5. discount authority — not evaluable yet, no real discount captured until Pricing & terms
+    // 5. discount authority — tiered rate-card pricing (Client & demand) is real
+    // and reflected here; anything beyond the applied tier (ad hoc rep
+    // discounts, margin floors) still isn't evaluable until Pricing & terms.
+    var appliedTier = activeTier();
     rules.push({ id:'discount_authority', title:'Discount authority', severity:'info',
-      description:'Not evaluated yet — discount and pricing model are captured in Pricing & terms (next phase).' });
+      description: appliedTier
+        ? (appliedTier.name + ' tier applied — line items above use its rate card where one exists. Any discount beyond the tier still isn’t evaluated until Pricing & terms (next phase).')
+        : 'Not evaluated yet — no pricing tier applied, and ad hoc discounts are captured in Pricing & terms (next phase).' });
 
     return rules;
   }
@@ -1229,7 +1330,7 @@
         var li = state.lineItems[pid];
         var nowSelected = !(li && li.selected);
         var vol = li && li.monthly_volume != null ? li.monthly_volume : (state.currentDemand.est_monthly_volume || 0);
-        upsertLineItem(pid, { selected: nowSelected, monthly_volume: vol, unit_price_snapshot: product.unit_price })
+        upsertLineItem(pid, { selected: nowSelected, monthly_volume: vol, unit_price_snapshot: effectivePrice(product) })
           .then(renderEditor)
           .catch(function(err){ console.error('CPQ: could not update line item', err); });
         return;
@@ -1241,7 +1342,7 @@
         var aproduct = state.products.filter(function(p){ return p.id === aid; })[0];
         var ali = state.lineItems[aid];
         var aNowSelected = !(ali && ali.selected);
-        upsertLineItem(aid, { selected: aNowSelected, unit_price_snapshot: aproduct.unit_price })
+        upsertLineItem(aid, { selected: aNowSelected, unit_price_snapshot: effectivePrice(aproduct) })
           .then(renderEditor)
           .catch(function(err){ console.error('CPQ: could not update line item', err); });
         return;
@@ -1258,18 +1359,22 @@
       var costEl = $('cpq-cost-' + pid);
       if (costEl){
         var selected = state.lineItems[pid].selected;
-        costEl.textContent = (selected && vol > 0) ? fmtUsd(Number(product.unit_price) * vol) + ' / mo' : 'not included';
+        costEl.textContent = (selected && vol > 0) ? fmtUsd(effectivePrice(product) * vol) + ' / mo' : 'not included';
         costEl.style.color = selected ? '#131A26' : '#97A1B2';
       }
       updateLiveNumbers();
     });
 
     m.addEventListener('change', function(e){
+      if (e.target.classList && e.target.classList.contains('cpq-tier-select')){
+        applyTier(e.target.value || null);
+        return;
+      }
       if (!e.target.classList || !e.target.classList.contains('cpq-vol-input')) return;
       var pid = e.target.getAttribute('data-product');
       var vol = Number(e.target.value) || 0;
       var product = state.products.filter(function(p){ return p.id === pid; })[0];
-      upsertLineItem(pid, { monthly_volume: vol, unit_price_snapshot: product.unit_price })
+      upsertLineItem(pid, { monthly_volume: vol, unit_price_snapshot: effectivePrice(product) })
         .catch(function(err){ console.error('CPQ: could not save volume', err); });
     });
   }
@@ -1300,16 +1405,22 @@
       Promise.resolve(state.db.from('demands').select('*').eq('stage', 'converted').order('created_at', {ascending:false})),
       Promise.resolve(state.db.from('clients').select('*')),
       Promise.resolve(state.db.from('cpq_products').select('*').eq('active', true).order('sort_order')),
-      Promise.resolve(state.db.from('quotes').select('*').order('created_at', {ascending:false}))
+      Promise.resolve(state.db.from('quotes').select('*').order('created_at', {ascending:false})),
+      Promise.resolve(state.db.from('pricing_tiers').select('*').eq('active', true).order('sort_order')),
+      Promise.resolve(state.db.from('pricing_tier_rates').select('*'))
     ]).then(function(results){
-      var dr = results[0], cr = results[1], pr = results[2], qr = results[3];
+      var dr = results[0], cr = results[1], pr = results[2], qr = results[3], tr = results[4], rr = results[5];
       if (dr.error) throw dr.error;
       if (cr.error) throw cr.error;
       if (pr.error) throw pr.error;
       if (qr.error) throw qr.error;
+      if (tr.error) throw tr.error;
+      if (rr.error) throw rr.error;
       state.demands = dr.data || [];
       state.clients = cr.data || [];
       state.products = pr.data || [];
+      state.tiers = tr.data || [];
+      state.tierRates = rr.data || [];
       state.quotesByDemand = {};
       (qr.data || []).forEach(function(q){
         if (!state.quotesByDemand[q.demand_id]) state.quotesByDemand[q.demand_id] = q; // already newest-first

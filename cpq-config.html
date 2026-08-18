@@ -207,6 +207,8 @@
   var state = {
     db: null,
     products: [],
+    tiers: [],
+    tierRates: [],
     showInactive: false
   };
 
@@ -252,6 +254,44 @@
   }
 
   function visible(list){ return list.filter(function(p){ return state.showInactive || p.active !== false; }); }
+
+  function fmtVolRange(t){
+    if (t.max_volume == null) return t.min_volume + '+ orders/mo';
+    return t.min_volume + '–' + t.max_volume + ' orders/mo';
+  }
+
+  function renderTierCard(t){
+    var inactive = t.active === false;
+    var rateCount = state.tierRates.filter(function(r){ return r.tier_id === t.id; }).length;
+    return '<div style="border:1px solid ' + (inactive ? '#E3E8F0' : '#DCE2EC') + ';background:' + (inactive ? '#F7F8FA' : '#F8FBFF') + ';border-radius:11px;padding:14px 15px;display:flex;flex-direction:column;gap:9px;opacity:' + (inactive ? '.6' : '1') + '">'
+      + '<div>'
+      + '<div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">'
+      + '<div style="font-size:14.5px;font-weight:600">' + esc(t.name) + '</div>'
+      + (inactive ? '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.08em;color:#8B95A6;border:1px solid #DCE2EC;border-radius:5px;padding:2px 6px">INACTIVE</span>' : '')
+      + '</div>'
+      + '<div style="margin-top:4px;font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:#6B7686">' + esc(fmtVolRange(t)) + '</div>'
+      + '<div style="margin-top:4px;font-size:12.5px;color:#6B7686;line-height:1.45">' + esc(t.description || '—') + '</div>'
+      + '</div>'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:9px;border-top:1px dashed #E3E8F0">'
+      + '<div style="font-size:11.5px;color:#8B95A6">' + rateCount + ' rate-card override' + (rateCount === 1 ? '' : 's') + '</div>'
+      + '<div style="display:flex;gap:8px">'
+      + '<button type="button" class="cfg-tier-rates-btn" data-id="' + esc(t.id) + '" style="height:28px;padding:0 12px;border-radius:7px;border:1px solid #DCE2EC;background:#fff;font-size:12px;font-weight:600;cursor:pointer">Rate card</button>'
+      + '<button type="button" class="cfg-tier-edit-btn" data-id="' + esc(t.id) + '" style="height:28px;padding:0 12px;border-radius:7px;border:1px solid #DCE2EC;background:#fff;font-size:12px;font-weight:600;cursor:pointer">Edit</button>'
+      + '</div></div></div>';
+  }
+
+  function renderTiersSection(){
+    var tiers = visible(state.tiers).sort(function(a, b){ return (a.min_volume || 0) - (b.min_volume || 0); });
+    var body = tiers.length
+      ? '<div style="margin-top:16px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px">' + tiers.map(renderTierCard).join('') + '</div>'
+      : '<div style="margin-top:14px;font-size:12.5px;color:#97A1B2">Nothing here yet.</div>';
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
+      + '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">'
+      + '<div><div style="font-size:16px;font-weight:600">Pricing tiers</div>'
+      + '<div style="margin-top:4px;font-size:13px;color:#6B7686">Volume-based rate cards — not connected to invoicing. Applying a tier to a client (from Value CPQ’s Client &amp; demand tab) is a client-level rule: it overrides per-product pricing wherever a rate exists below, and everything else falls back to the catalog price.</div></div>'
+      + '<button type="button" class="cfg-tier-add-btn" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">+ Add tier</button>'
+      + '</div>' + body + '</div>';
+  }
 
   function renderProductsSection(){
     var products = state.products.filter(function(p){ return p.category === 'product'; });
@@ -305,7 +345,7 @@
       + '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#5A6474;margin-bottom:14px;cursor:pointer;width:max-content">'
       + '<input type="checkbox" id="cfg-show-inactive" ' + (state.showInactive ? 'checked' : '') + ' style="width:15px;height:15px"> Show inactive'
       + '</label>'
-      + '<div style="display:flex;flex-direction:column;gap:14px">' + renderProductsSection() + renderAddonsSection() + '</div>'
+      + '<div style="display:flex;flex-direction:column;gap:14px">' + renderProductsSection() + renderAddonsSection() + renderTiersSection() + '</div>'
       + '</div>';
   }
 
@@ -468,6 +508,130 @@
   }
 
   // ---------------------------------------------------------------------
+  // pricing tiers — a tier's name/volume range/description is edited like
+  // any other admin entity; its rate card (per-product override prices) is
+  // a separate modal since it's a one-to-many list, not a handful of fields.
+  // ---------------------------------------------------------------------
+  function openCreateTierModal(){
+    renderTierModal('create', null, { name: '', min_volume: 0, max_volume: null, description: '', active: true });
+  }
+  function openEditTierModal(id){
+    var t = state.tiers.filter(function(x){ return x.id === id; })[0];
+    if (!t) return;
+    renderTierModal('edit', t, Object.assign({}, t));
+  }
+
+  function renderTierModal(mode, existing, draft){
+    var title = mode === 'create' ? 'Add pricing tier' : ('Edit ' + existing.name);
+    var deactivateBtn = mode === 'edit'
+      ? '<button type="button" id="cfg-modal-toggle-active" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid ' + (existing.active === false ? '#B8DB92' : '#F1C4BC') + ';background:#fff;color:' + (existing.active === false ? '#3C6B1D' : '#8A2A12') + ';font-size:13px;font-weight:600;cursor:pointer;margin-right:auto">' + (existing.active === false ? 'Reactivate' : 'Deactivate') + '</button>'
+      : '';
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">' + esc(title) + '</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">The volume range and name shown when applying this tier to a client from Value CPQ.</div></div>'
+      + '<div style="padding:18px 22px;display:flex;flex-direction:column;gap:14px">'
+      + fieldBlock('Name', '<input id="cfg-tier-f-name" type="text" value="' + esc(draft.name || '') + '" placeholder="e.g. Preferred" style="' + INPUT_STYLE + '">')
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
+      + fieldBlock('Min monthly volume', '<input id="cfg-tier-f-min" type="number" min="0" step="1" value="' + esc(draft.min_volume != null ? draft.min_volume : 0) + '" style="' + INPUT_STYLE + '">')
+      + fieldBlock('Max monthly volume (blank = open-ended)', '<input id="cfg-tier-f-max" type="number" min="0" step="1" value="' + esc(draft.max_volume != null ? draft.max_volume : '') + '" style="' + INPUT_STYLE + '">')
+      + '</div>'
+      + fieldBlock('Description', '<textarea id="cfg-tier-f-description" rows="2" placeholder="Who this tier is typically for" style="' + TEXTAREA_STYLE + '">' + esc(draft.description || '') + '</textarea>')
+      + '</div>'
+      + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
+      + deactivateBtn
+      + '<button type="button" id="cfg-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+      + '<button type="button" id="cfg-tier-modal-save" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">' + (mode === 'create' ? 'Create' : 'Save changes') + '</button>'
+      + '</div>';
+    $('cfg-modal-box').innerHTML = html;
+    $('cfg-modal-overlay').style.display = 'flex';
+    $('cfg-modal-cancel').addEventListener('click', closeModal);
+    if (mode === 'edit'){
+      $('cfg-modal-toggle-active').addEventListener('click', function(){ toggleTierActive(existing); });
+    }
+    $('cfg-tier-modal-save').addEventListener('click', function(){ saveTierModal(mode, existing); });
+  }
+
+  function saveTierModal(mode, existing){
+    var name = $('cfg-tier-f-name').value.trim();
+    if (!name){ showToast('Name is required.'); return; }
+    var minVol = Number($('cfg-tier-f-min').value) || 0;
+    var maxRaw = $('cfg-tier-f-max').value.trim();
+    var maxVol = maxRaw === '' ? null : Number(maxRaw);
+    if (maxVol != null && maxVol < minVol){ showToast('Max volume must be greater than min volume.'); return; }
+    var draft = { name: name, min_volume: minVol, max_volume: maxVol, description: $('cfg-tier-f-description').value.trim() || null };
+    var db = state.db;
+    var req = mode === 'create'
+      ? db.from('pricing_tiers').insert(draft).select().single()
+      : db.from('pricing_tiers').update(draft).eq('id', existing.id).select().single();
+    Promise.resolve(req).then(function(r){
+      if (r.error) throw r.error;
+      closeModal();
+      return loadData();
+    }).catch(function(e){ showToast('Could not save: ' + (e.message || e)); });
+  }
+
+  function toggleTierActive(existing){
+    Promise.resolve(state.db.from('pricing_tiers').update({ active: existing.active === false }).eq('id', existing.id)).then(function(r){
+      if (r.error) throw r.error;
+      closeModal();
+      return loadData();
+    }).catch(function(e){ showToast('Could not update: ' + (e.message || e)); });
+  }
+
+  function openRateCardModal(tierId){
+    var tier = state.tiers.filter(function(t){ return t.id === tierId; })[0];
+    if (!tier) return;
+    var products = state.products.filter(function(p){ return p.category === 'product' && p.active !== false; })
+      .sort(function(a, b){ return (a.sort_order || 0) - (b.sort_order || 0); });
+    var rows = products.map(function(p){
+      var existing = state.tierRates.filter(function(r){ return r.tier_id === tierId && r.product_id === p.id; })[0];
+      return '<div style="display:grid;grid-template-columns:1fr 110px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #F1F4F9">'
+        + '<div><div style="font-size:13px;font-weight:600">' + esc(p.name) + '</div><div style="font-size:11px;color:#97A1B2">' + fmtUsd(p.unit_price) + ' base</div></div>'
+        + '<input type="number" min="0" step="1" class="cfg-rate-input" data-product="' + esc(p.id) + '" value="' + (existing ? esc(existing.override_price) : '') + '" placeholder="no override" style="height:34px;border:1px solid #DCE2EC;border-radius:7px;padding:0 9px;font-size:13px;text-align:right">'
+        + '</div>';
+    }).join('');
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">' + esc(tier.name) + ' rate card</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">Leave a field blank to use the catalog base price for that product at this tier.</div></div>'
+      + '<div style="padding:14px 22px;max-height:52vh;overflow-y:auto">'
+      + (products.length ? rows : '<div style="font-size:12.5px;color:#97A1B2;padding:10px 0">No active products to price.</div>')
+      + '</div>'
+      + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
+      + '<button type="button" id="cfg-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+      + '<button type="button" id="cfg-rate-card-save" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Save rate card</button>'
+      + '</div>';
+    $('cfg-modal-box').innerHTML = html;
+    $('cfg-modal-overlay').style.display = 'flex';
+    $('cfg-modal-cancel').addEventListener('click', closeModal);
+    $('cfg-rate-card-save').addEventListener('click', function(){ saveRateCard(tierId); });
+  }
+
+  function saveRateCard(tierId){
+    var inputs = Array.prototype.slice.call(document.querySelectorAll('.cfg-rate-input'));
+    var db = state.db;
+    var ops = inputs.map(function(input){
+      var productId = input.getAttribute('data-product');
+      var raw = input.value.trim();
+      var existing = state.tierRates.filter(function(r){ return r.tier_id === tierId && r.product_id === productId; })[0];
+      if (raw === ''){
+        if (!existing) return Promise.resolve({ error: null });
+        return Promise.resolve(db.from('pricing_tier_rates').delete().eq('id', existing.id));
+      }
+      var price = Number(raw);
+      if (isNaN(price) || price < 0) return Promise.resolve({ error: null }); // ignore an invalid single field rather than blocking the whole save
+      if (existing){
+        if (Number(existing.override_price) === price) return Promise.resolve({ error: null });
+        return Promise.resolve(db.from('pricing_tier_rates').update({ override_price: price }).eq('id', existing.id));
+      }
+      return Promise.resolve(db.from('pricing_tier_rates').insert({ tier_id: tierId, product_id: productId, override_price: price }));
+    });
+    Promise.all(ops).then(function(results){
+      var failed = results.filter(function(r){ return r && r.error; })[0];
+      if (failed) throw failed.error;
+      closeModal();
+      return loadData();
+    }).catch(function(e){ showToast('Could not save rate card: ' + (e.message || e)); });
+  }
+
+  // ---------------------------------------------------------------------
   // events + data
   // ---------------------------------------------------------------------
   function wireEvents(){
@@ -487,6 +651,15 @@
 
       var editBtn = e.target.closest && e.target.closest('.cfg-edit-btn');
       if (editBtn){ openEditModal(editBtn.getAttribute('data-id')); return; }
+
+      var tierAddBtn = e.target.closest && e.target.closest('.cfg-tier-add-btn');
+      if (tierAddBtn){ openCreateTierModal(); return; }
+
+      var tierEditBtn = e.target.closest && e.target.closest('.cfg-tier-edit-btn');
+      if (tierEditBtn){ openEditTierModal(tierEditBtn.getAttribute('data-id')); return; }
+
+      var tierRatesBtn = e.target.closest && e.target.closest('.cfg-tier-rates-btn');
+      if (tierRatesBtn){ openRateCardModal(tierRatesBtn.getAttribute('data-id')); return; }
     });
 
     m.addEventListener('change', function(e){
@@ -503,9 +676,18 @@
   }
 
   function loadData(){
-    return Promise.resolve(state.db.from('cpq_products').select('*').order('sort_order')).then(function(r){
-      if (r.error) throw r.error;
-      state.products = r.data || [];
+    return Promise.all([
+      Promise.resolve(state.db.from('cpq_products').select('*').order('sort_order')),
+      Promise.resolve(state.db.from('pricing_tiers').select('*').order('sort_order')),
+      Promise.resolve(state.db.from('pricing_tier_rates').select('*'))
+    ]).then(function(results){
+      var pr = results[0], tr = results[1], rr = results[2];
+      if (pr.error) throw pr.error;
+      if (tr.error) throw tr.error;
+      if (rr.error) throw rr.error;
+      state.products = pr.data || [];
+      state.tiers = tr.data || [];
+      state.tierRates = rr.data || [];
       renderRoot();
     }).catch(function(e){ console.error('CPQ Config: could not load', e); renderNotConnected(); });
   }
