@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CPQ Config — Class Value OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+</head>
+<body>
+<div class="app-shell">
+<div id="appSidebar" class="app-sidebar" style="background:#01285E;display:flex;flex-direction:column;overflow:hidden">
+    <div style="padding:18px 18px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.08)">
+      <div style="width:26px;height:26px;border-radius:6px;background:#85C341;flex:0 0 auto"></div>
+      <div>
+        <div style="color:#fff;font-size:13.5px;font-weight:700;letter-spacing:.1em;line-height:1.1">VALUE OS</div>
+        <div style="color:#7E97BD;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;margin-top:2px">CLASS VALUATION</div>
+      </div>
+    </div>
+    <div style="flex:1 1 0;overflow-y:auto;padding:12px 10px 18px">
+      <div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">PIPELINE</div>
+          <a href="index.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-home">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">My work</span>
+              
+            </div>
+          </a>
+<a href="demand.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-demand">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Demand Management</span>
+              
+            </div>
+          </a>
+<a href="cpq.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-cpq">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Value CPQ</span>
+              
+            </div>
+          </a>
+        </div>
+<div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">DELIVERY</div>
+          <a href="plan.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-plan">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Plan Builder</span>
+              
+            </div>
+          </a>
+<a href="studio.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-studio">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Integration Studio</span>
+              
+            </div>
+          </a>
+<a href="delivery.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-delivery">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Delivery</span>
+              <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9.5px;background:rgba(133,195,65,.16);color:#A8DB6E;padding:2px 6px;border-radius:5px">2</span>
+            </div>
+          </a>
+<a href="reporting.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-reporting">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Status Reporting</span>
+              
+            </div>
+          </a>
+        </div>
+<div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">CLIENT</div>
+          <a href="engagement.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-engagement">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Engagement Mgmt</span>
+              
+            </div>
+          </a>
+        </div>
+<div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">PLATFORM</div>
+          <a href="roles.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-roles">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Roles &amp; permissions</span>
+              
+            </div>
+          </a>
+<a href="states.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-states">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">System states</span>
+              
+            </div>
+          </a>
+        </div>
+    </div>
+    <div style="padding:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px">
+      <div style="width:30px;height:30px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">DM</div>
+      <div style="min-width:0">
+        <div style="color:#E8EEF8;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Dana Mercer</div>
+        <div style="color:#7E97BD;font-size:11px">Solutions Engineer</div>
+      </div>
+      <div title="Sign out" style="margin-left:auto;color:#7E97BD;font-size:15px;cursor:pointer;padding:0 2px">&#9211;</div>
+    </div>
+  </div>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+  <div class="right-col">
+<div style="height:56px;flex:0 0 auto;background:#fff;border-bottom:1px solid #DCE2EC;display:flex;align-items:center;gap:14px;padding:0 20px">
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#6B7686">
+        <span id="crumbGroup">Pipeline</span><span style="color:#C4CBD8">/</span>
+        <span style="color:#131A26;font-weight:600" id="crumbScreen">CPQ Config</span>
+      </div>
+      <div id="topbarSearch" style="margin-left:18px;flex:1 1 0;max-width:420px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;gap:9px;padding:0 11px;color:#97A1B2;font-size:13.5px;cursor:pointer;background:#FAFBFD">
+        <span style="font-size:13px">&#8981;</span><span>Search clients, demands, quotes&hellip;</span>
+        <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;border:1px solid #DCE2EC;border-radius:4px;padding:1px 5px;background:#fff">&#8984;K</span>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <div style="position:relative;width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">
+          &#9684;<span style="position:absolute;top:-5px;right:-5px;min-width:16px;height:16px;border-radius:99px;background:#C4472C;color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;padding:0 4px">3</span>
+        </div>
+        <div id="hamburgerBtn" class="topbar-hamburger" style="width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">&#9776;</div>
+      </div>
+    </div>
+
+    <div class="content-viewport" id="contentViewport">
+<div id="cpq-config-app-mount"></div>
+<div id="cfg-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(19,26,38,.45);z-index:80;align-items:center;justify-content:center;padding:20px"><div id="cfg-modal-box" style="background:#fff;border-radius:14px;max-width:560px;width:100%;max-height:88vh;overflow-y:auto"></div></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var sb = document.getElementById('appSidebar');
+  var bd = document.getElementById('sidebarBackdrop');
+  var hb = document.getElementById('hamburgerBtn');
+  function setOpen(open){
+    if (sb) sb.classList.toggle('open', open);
+    if (bd) bd.classList.toggle('open', open);
+  }
+  if (hb) hb.addEventListener('click', function(){ setOpen(!(sb && sb.classList.contains('open'))); });
+  if (bd) bd.addEventListener('click', function(){ setOpen(false); });
+})();
+</script>
+<script>
+// CPQ Config — the admin catalog page behind Value CPQ's Configure step.
+// Full CRUD over cpq_products: every card here is exactly what a rep sees
+// (and can select) on Configure. There is no separate "publish" step —
+// saving here changes what Configure shows immediately, since both screens
+// read the same table.
+//
+// Access: open to every role for now. Roles & permissions doesn't exist yet
+// (see roles.html) — once it does, this page should be gated (Sales VP /
+// Pricing & Finance, most likely), same "permissive until a real role
+// exists" pattern already used for RLS across this whole app. The banner at
+// the top of the page says so explicitly rather than pretending this is a
+// permanent design decision.
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function esc(s){
+    s = (s == null ? '' : String(s));
+    return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+  function fmtUsd(v){
+    var n = Number(v || 0);
+    if (isNaN(n)) n = 0;
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  // Mirrors clients.segment's check constraint in schema.sql — kept as a
+  // literal list here (not fetched) since it's a fixed, rarely-changing set
+  // and every eligibility check elsewhere in CPQ already assumes it's fixed.
+  var SEGMENTS = [
+    'Banking / Centralized Banking',
+    'Wholesale Lending / TPO',
+    'Distributed Retail Lending',
+    'Credit Union',
+    'Private Lending',
+    'Other'
+  ];
+
+  // `family` is a display/grouping taxonomy layered on top of the existing
+  // `category` ('product'|'addon') mechanic Configure and Rules check
+  // already branch on — every family maps to exactly one category, so
+  // choosing a family here fully determines how the item behaves elsewhere.
+  var FAMILY_META = {
+    appraisal_offering:   { label: 'Appraisal Offering',        category: 'product', defaultUnitLabel: 'order' },
+    alternative_valuation:{ label: 'Alternative Valuation',     category: 'product', defaultUnitLabel: 'order' },
+    addon_solution:       { label: 'Add-on & Service Level',    category: 'addon',   defaultUnitLabel: 'month' }
+  };
+  var FAMILY_ORDER = ['appraisal_offering', 'alternative_valuation', 'addon_solution'];
+  var UNIT_LABEL_META = { order: 'Per order', month: 'Per month (flat)', account: 'Custom-priced per account' };
+
+  var INPUT_STYLE = 'width:100%;height:38px;border:1px solid #DCE2EC;border-radius:8px;padding:0 11px;font-size:13.5px;font-family:inherit;box-sizing:border-box;outline:none';
+  var TEXTAREA_STYLE = 'width:100%;border:1px solid #DCE2EC;border-radius:8px;padding:9px 11px;font-size:13.5px;font-family:inherit;box-sizing:border-box;outline:none;resize:vertical';
+
+  var state = {
+    db: null,
+    products: [],
+    showInactive: false
+  };
+
+  function available(){
+    return typeof window.supabase !== 'undefined'
+      && !!window.SUPABASE_CONFIG && !!window.SUPABASE_CONFIG.url && !!window.SUPABASE_CONFIG.anonKey;
+  }
+  function mount(){ return $('cpq-config-app-mount'); }
+
+  // ---------------------------------------------------------------------
+  // rendering — catalog cards
+  // ---------------------------------------------------------------------
+  function priceLine(p){
+    if (Number(p.unit_price) > 0){
+      var suffix = p.unit_label === 'month' ? '/ mo' : (p.unit_label === 'account' ? '/ account' : '/ order');
+      return fmtUsd(p.unit_price) + ' ' + suffix;
+    }
+    return 'Custom-priced';
+  }
+  function segmentsLine(p){
+    if (!p.eligible_segments || !p.eligible_segments.length) return 'All segments';
+    return p.eligible_segments.join(', ');
+  }
+
+  function renderAdminCard(p){
+    var inactive = p.active === false;
+    return '<div class="cfg-card" style="border:1px solid ' + (inactive ? '#E3E8F0' : '#DCE2EC') + ';background:' + (inactive ? '#F7F8FA' : '#F8FBFF') + ';border-radius:11px;padding:14px 15px;display:flex;flex-direction:column;gap:9px;opacity:' + (inactive ? '.6' : '1') + '">'
+      + '<div style="display:flex;align-items:flex-start;gap:10px">'
+      + '<div style="min-width:0;flex:1 1 0">'
+      + '<div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">'
+      + '<div style="font-size:14.5px;font-weight:600">' + esc(p.name) + '</div>'
+      + (inactive ? '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.08em;color:#8B95A6;border:1px solid #DCE2EC;border-radius:5px;padding:2px 6px">INACTIVE</span>' : '')
+      + (p.data_ready === false ? '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.08em;color:#8A5A12;background:#FDF3E0;border:1px solid #F1DFBC;border-radius:5px;padding:2px 6px">NOT DATA-READY</span>' : '')
+      + '</div>'
+      + '<div style="margin-top:4px;font-size:12.5px;color:#6B7686;line-height:1.45">' + esc(p.description || '—') + '</div>'
+      + '</div>'
+      + '<div style="text-align:right;flex:0 0 auto"><div style="font-size:14.5px;font-weight:600;white-space:nowrap">' + priceLine(p) + '</div></div>'
+      + '</div>'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:9px;border-top:1px dashed #E3E8F0">'
+      + '<div style="min-width:0;font-size:11.5px;color:#8B95A6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(segmentsLine(p)) + (p.requires_note ? ' &middot; ' + esc(p.requires_note) : '') + '</div>'
+      + '<button type="button" class="cfg-edit-btn" data-id="' + esc(p.id) + '" style="flex:0 0 auto;height:28px;padding:0 12px;border-radius:7px;border:1px solid #DCE2EC;background:#fff;font-size:12px;font-weight:600;cursor:pointer">Edit</button>'
+      + '</div></div>';
+  }
+
+  function visible(list){ return list.filter(function(p){ return state.showInactive || p.active !== false; }); }
+
+  function renderProductsSection(){
+    var products = state.products.filter(function(p){ return p.category === 'product'; });
+    var groupsHtml = ['appraisal_offering', 'alternative_valuation'].map(function(famKey){
+      var items = visible(products.filter(function(p){ return (p.family || 'appraisal_offering') === famKey; }))
+        .sort(function(a, b){ return (a.sort_order || 0) - (b.sort_order || 0); });
+      if (!items.length) return '';
+      return '<div style="margin-top:14px">'
+        + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:.1em;color:#8B95A6;margin-bottom:8px">' + FAMILY_META[famKey].label.toUpperCase() + 'S</div>'
+        + '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">' + items.map(renderAdminCard).join('') + '</div>'
+        + '</div>';
+    }).join('');
+    var anyVisible = visible(products).length > 0;
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
+      + '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">'
+      + '<div><div style="font-size:16px;font-weight:600">Products &amp; services</div>'
+      + '<div style="margin-top:4px;font-size:13px;color:#6B7686">Appraisal offerings and alternative valuations — pricing and eligibility set per card. This is exactly what Configure (step 2) offers.</div></div>'
+      + '<button type="button" class="cfg-add-btn" data-family="appraisal_offering" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">+ Add product</button>'
+      + '</div>'
+      + (anyVisible ? groupsHtml : '<div style="margin-top:14px;font-size:12.5px;color:#97A1B2">Nothing here yet.</div>')
+      + '</div>';
+  }
+
+  function renderAddonsSection(){
+    var addons = visible(state.products.filter(function(p){ return p.category === 'addon'; }))
+      .sort(function(a, b){ return (a.sort_order || 0) - (b.sort_order || 0); });
+    var body = addons.length
+      ? '<div style="margin-top:16px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px">' + addons.map(renderAdminCard).join('') + '</div>'
+      : '<div style="margin-top:14px;font-size:12.5px;color:#97A1B2">Nothing here yet.</div>';
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
+      + '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">'
+      + '<div><div style="font-size:16px;font-weight:600">Add-ons &amp; service levels</div>'
+      + '<div style="margin-top:4px;font-size:13px;color:#6B7686">Flat or custom-priced extras — this is Configure’s add-on list, in the same order.</div></div>'
+      + '<button type="button" class="cfg-add-btn" data-family="addon_solution" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">+ Add add-on</button>'
+      + '</div>' + body + '</div>';
+  }
+
+  function renderRoot(){
+    var m = mount();
+    if (!m) return;
+    m.innerHTML = '<div style="padding:20px 28px 48px;max-width:1400px">'
+      + '<div style="margin-bottom:14px">'
+      + '<div class="cfg-back-link" style="cursor:pointer;font-size:12.5px;color:#6B7686;margin-bottom:8px">&larr; Value CPQ</div>'
+      + '<div style="font-size:20px;font-weight:600">CPQ Config</div>'
+      + '<div style="font-size:13px;color:#6B7686;margin-top:2px">The product, pricing and add-on catalog Value CPQ’s Configure step reads from. Edits here take effect immediately.</div>'
+      + '</div>'
+      + '<div style="background:#EAF1FB;border:1px solid #D8E5F5;border-radius:10px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start;margin-bottom:16px">'
+      + '<div style="width:18px;height:18px;border-radius:99px;background:#013E90;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px">i</div>'
+      + '<div style="font-size:13px;line-height:1.55;color:#3E4A5C">Open to every role for now — Roles &amp; permissions (see Platform / Roles &amp; permissions) doesn’t exist yet. Once it does, this page should be gated to whoever owns pricing (e.g. Sales VP / Pricing &amp; Finance), not left open like this.</div>'
+      + '</div>'
+      + '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#5A6474;margin-bottom:14px;cursor:pointer;width:max-content">'
+      + '<input type="checkbox" id="cfg-show-inactive" ' + (state.showInactive ? 'checked' : '') + ' style="width:15px;height:15px"> Show inactive'
+      + '</label>'
+      + '<div style="display:flex;flex-direction:column;gap:14px">' + renderProductsSection() + renderAddonsSection() + '</div>'
+      + '</div>';
+  }
+
+  function renderNotConnected(){
+    var m = mount();
+    if (!m) return;
+    m.innerHTML = '<div style="padding:20px 28px 48px;max-width:1200px">'
+      + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px">'
+      + '<div style="font-size:14px;font-weight:600;margin-bottom:4px">CPQ Config</div>'
+      + '<div style="font-size:12.5px;color:#97A1B2">Connect Supabase (see <code>supabase-config.js</code>) to manage the catalog here — the same connection Value CPQ uses.</div>'
+      + '</div></div>';
+  }
+
+  // ---------------------------------------------------------------------
+  // modal — one form for both create and edit, since every field applies
+  // to both. Uncontrolled inputs (read from the DOM on Save, not re-rendered
+  // on every keystroke) — same pattern as Demand Management's modals.
+  // ---------------------------------------------------------------------
+  function fieldBlock(label, inputHtml){
+    return '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">' + esc(label) + '</div>' + inputHtml + '</div>';
+  }
+  function familyOptions(selected){
+    return FAMILY_ORDER.map(function(k){
+      return '<option value="' + k + '" ' + (k === selected ? 'selected' : '') + '>' + esc(FAMILY_META[k].label) + '</option>';
+    }).join('');
+  }
+  function unitLabelOptions(selected){
+    return Object.keys(UNIT_LABEL_META).map(function(k){
+      return '<option value="' + k + '" ' + (k === selected ? 'selected' : '') + '>' + esc(UNIT_LABEL_META[k]) + '</option>';
+    }).join('');
+  }
+  function segmentCheckboxes(selected){
+    return SEGMENTS.map(function(s){
+      var checked = selected.indexOf(s) !== -1;
+      return '<label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:#3E4A5C;padding:4px 0">'
+        + '<input type="checkbox" class="cfg-f-segment" value="' + esc(s) + '" ' + (checked ? 'checked' : '') + ' style="width:15px;height:15px"> ' + esc(s)
+        + '</label>';
+    }).join('');
+  }
+
+  function nextSortOrder(category){
+    var items = state.products.filter(function(p){ return p.category === category; });
+    return items.reduce(function(m, p){ return Math.max(m, Number(p.sort_order) || 0); }, 0) + 1;
+  }
+
+  function openCreateModal(defaultFamily){
+    var fam = FAMILY_META[defaultFamily] ? defaultFamily : 'appraisal_offering';
+    var meta = FAMILY_META[fam];
+    var draft = {
+      family: fam, category: meta.category, unit_label: meta.defaultUnitLabel,
+      unit_price: 0, sort_order: nextSortOrder(meta.category), data_ready: true,
+      active: true, eligible_segments: [], name: '', description: '', requires_note: ''
+    };
+    renderModal('create', null, draft);
+  }
+  function openEditModal(id){
+    var p = state.products.filter(function(x){ return x.id === id; })[0];
+    if (!p) return;
+    var draft = Object.assign({}, p, { eligible_segments: (p.eligible_segments || []).slice() });
+    renderModal('edit', p, draft);
+  }
+
+  function renderModal(mode, existing, draft){
+    var title = mode === 'create' ? ('Add ' + (draft.category === 'addon' ? 'add-on' : 'product')) : ('Edit ' + existing.name);
+    var deactivateBtn = mode === 'edit'
+      ? '<button type="button" id="cfg-modal-toggle-active" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid ' + (existing.active === false ? '#B8DB92' : '#F1C4BC') + ';background:#fff;color:' + (existing.active === false ? '#3C6B1D' : '#8A2A12') + ';font-size:13px;font-weight:600;cursor:pointer;margin-right:auto">' + (existing.active === false ? 'Reactivate' : 'Deactivate') + '</button>'
+      : '';
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">' + esc(title) + '</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">Saves straight to the live catalog — Configure reflects this on its next load.</div></div>'
+      + '<div style="padding:18px 22px;display:flex;flex-direction:column;gap:14px">'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
+      + fieldBlock('Category', '<select id="cfg-f-family" style="' + INPUT_STYLE + '">' + familyOptions(draft.family) + '</select>')
+      + fieldBlock('Pricing basis', '<select id="cfg-f-unit-label" style="' + INPUT_STYLE + '">' + unitLabelOptions(draft.unit_label) + '</select>')
+      + '</div>'
+      + fieldBlock('Name', '<input id="cfg-f-name" type="text" value="' + esc(draft.name || '') + '" placeholder="e.g. Traditional Appraisal" style="' + INPUT_STYLE + '">')
+      + fieldBlock('Description', '<textarea id="cfg-f-description" rows="2" placeholder="One line a rep will see on the Configure card" style="' + TEXTAREA_STYLE + '">' + esc(draft.description || '') + '</textarea>')
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
+      + fieldBlock('Unit price ($, 0 = custom-priced)', '<input id="cfg-f-price" type="number" min="0" step="1" value="' + esc(draft.unit_price != null ? draft.unit_price : 0) + '" style="' + INPUT_STYLE + '">')
+      + fieldBlock('Sort order', '<input id="cfg-f-sort-order" type="number" step="1" value="' + esc(draft.sort_order != null ? draft.sort_order : 0) + '" style="' + INPUT_STYLE + '">')
+      + '</div>'
+      + fieldBlock('Requires note / caveat (optional)', '<input id="cfg-f-requires-note" type="text" value="' + esc(draft.requires_note || '') + '" placeholder="Shown on the card as a caveat, and as a Rules check warning if selected" style="' + INPUT_STYLE + '">')
+      + fieldBlock('Eligible segments (none checked = all segments)', '<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;border:1px solid #E3E8F0;border-radius:8px;padding:8px 12px">' + segmentCheckboxes(draft.eligible_segments || []) + '</div>')
+      + '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#3E4A5C;cursor:pointer;width:max-content"><input type="checkbox" id="cfg-f-data-ready" ' + (draft.data_ready !== false ? 'checked' : '') + ' style="width:15px;height:15px"> Data ready</label>'
+      + '</div>'
+      + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
+      + deactivateBtn
+      + '<button type="button" id="cfg-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+      + '<button type="button" id="cfg-modal-save" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">' + (mode === 'create' ? 'Create' : 'Save changes') + '</button>'
+      + '</div>';
+    $('cfg-modal-box').innerHTML = html;
+    $('cfg-modal-overlay').style.display = 'flex';
+
+    $('cfg-f-family').addEventListener('change', function(){
+      var meta = FAMILY_META[this.value];
+      if (meta) $('cfg-f-unit-label').value = meta.defaultUnitLabel;
+    });
+    $('cfg-modal-cancel').addEventListener('click', closeModal);
+    if (mode === 'edit'){
+      $('cfg-modal-toggle-active').addEventListener('click', function(){ toggleActive(existing); });
+    }
+    $('cfg-modal-save').addEventListener('click', function(){ saveModal(mode, existing); });
+  }
+
+  function closeModal(){
+    var overlay = $('cfg-modal-overlay');
+    if (overlay) overlay.style.display = 'none';
+    var box = $('cfg-modal-box');
+    if (box) box.innerHTML = '';
+  }
+
+  function readFormDraft(){
+    var fam = $('cfg-f-family').value;
+    var meta = FAMILY_META[fam];
+    var segs = Array.prototype.slice.call(document.querySelectorAll('.cfg-f-segment:checked')).map(function(el){ return el.value; });
+    return {
+      family: fam,
+      category: meta.category,
+      name: $('cfg-f-name').value.trim(),
+      description: $('cfg-f-description').value.trim() || null,
+      unit_price: Number($('cfg-f-price').value) || 0,
+      unit_label: $('cfg-f-unit-label').value,
+      eligible_segments: segs.length ? segs : null,
+      requires_note: $('cfg-f-requires-note').value.trim() || null,
+      sort_order: Number($('cfg-f-sort-order').value) || 0,
+      data_ready: $('cfg-f-data-ready').checked
+    };
+  }
+
+  function saveModal(mode, existing){
+    var draft = readFormDraft();
+    if (!draft.name){ showToast('Name is required.'); return; }
+    var db = state.db;
+    var req = mode === 'create'
+      ? db.from('cpq_products').insert(draft).select().single()
+      : db.from('cpq_products').update(draft).eq('id', existing.id).select().single();
+    Promise.resolve(req).then(function(r){
+      if (r.error) throw r.error;
+      closeModal();
+      return loadData();
+    }).catch(function(e){ showToast('Could not save: ' + (e.message || e)); });
+  }
+
+  function toggleActive(existing){
+    Promise.resolve(state.db.from('cpq_products').update({ active: existing.active === false }).eq('id', existing.id)).then(function(r){
+      if (r.error) throw r.error;
+      closeModal();
+      return loadData();
+    }).catch(function(e){ showToast('Could not update: ' + (e.message || e)); });
+  }
+
+  function showToast(msg){
+    var existingEl = document.getElementById('cfg-toast');
+    if (existingEl) existingEl.parentNode.removeChild(existingEl);
+    var el = document.createElement('div');
+    el.id = 'cfg-toast';
+    el.textContent = msg;
+    el.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#131A26;color:#fff;font-size:13px;padding:10px 16px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:999;max-width:90vw;text-align:center';
+    document.body.appendChild(el);
+    setTimeout(function(){ if (el.parentNode) el.parentNode.removeChild(el); }, 3500);
+  }
+
+  // ---------------------------------------------------------------------
+  // events + data
+  // ---------------------------------------------------------------------
+  function wireEvents(){
+    var m = mount();
+    if (!m || m.__cfgWired) return;
+    m.__cfgWired = true;
+
+    m.addEventListener('click', function(e){
+      var back = e.target.closest && e.target.closest('.cfg-back-link');
+      if (back){
+        if (window.showView) window.showView('cpq');
+        else window.location.href = 'cpq.html';
+        return;
+      }
+      var addBtn = e.target.closest && e.target.closest('.cfg-add-btn');
+      if (addBtn){ openCreateModal(addBtn.getAttribute('data-family')); return; }
+
+      var editBtn = e.target.closest && e.target.closest('.cfg-edit-btn');
+      if (editBtn){ openEditModal(editBtn.getAttribute('data-id')); return; }
+    });
+
+    m.addEventListener('change', function(e){
+      if (e.target && e.target.id === 'cfg-show-inactive'){
+        state.showInactive = e.target.checked;
+        renderRoot();
+      }
+    });
+
+    var overlay = $('cfg-modal-overlay');
+    if (overlay){
+      overlay.addEventListener('click', function(e){ if (e.target.id === 'cfg-modal-overlay') closeModal(); });
+    }
+  }
+
+  function loadData(){
+    return Promise.resolve(state.db.from('cpq_products').select('*').order('sort_order')).then(function(r){
+      if (r.error) throw r.error;
+      state.products = r.data || [];
+      renderRoot();
+    }).catch(function(e){ console.error('CPQ Config: could not load', e); renderNotConnected(); });
+  }
+
+  // Same re-entry pattern as CpqModule.init(): templates aren't a thing here,
+  // but connecting to Supabase is retried on every call until it succeeds,
+  // and re-entering the view (nav or "Manage catalog" link) always refreshes
+  // the list so a change made elsewhere isn't stale.
+  function init(){
+    if (!state.db){
+      if (!available()){ renderNotConnected(); return; }
+      try { state.db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
+      catch(e){ renderNotConnected(); return; }
+      wireEvents();
+      loadData();
+      return;
+    }
+    loadData();
+  }
+
+  window.CpqConfigModule = { init: init };
+})();
+
+window.CpqConfigModule.init();
+</script>
+</body>
+</html>

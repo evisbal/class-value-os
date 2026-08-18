@@ -732,9 +732,10 @@
         + '</div>';
     }
     m.innerHTML = '<div style="padding:20px 28px 48px;max-width:1400px">'
-      + '<div style="margin-bottom:14px">'
-      + '<div style="font-size:20px;font-weight:600">Value CPQ</div>'
-      + '<div style="font-size:13px;color:#6B7686;margin-top:2px">Configure &amp; quote Converted demands. Client &amp; demand and Configure are live below — Rules check, Pricing &amp; terms and Quote &amp; approvals are still design previews.</div>'
+      + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:14px">'
+      + '<div><div style="font-size:20px;font-weight:600">Value CPQ</div>'
+      + '<div style="font-size:13px;color:#6B7686;margin-top:2px">Configure &amp; quote Converted demands. Client &amp; demand and Configure are live below — Rules check is real too; Pricing &amp; terms and Quote &amp; approvals are still design previews.</div></div>'
+      + '<a href="cpq-config.html" class="cpq-manage-catalog-link" style="flex:0 0 auto;height:32px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;color:#3E4A5C;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:6px;white-space:nowrap">&#9881; Manage catalog</a>'
       + '</div>'
       + body
       + '</div>';
@@ -1002,7 +1003,7 @@
       + '<div class="cpq-addon-check" data-product="' + esc(p.id) + '" style="width:17px;height:17px;border-radius:5px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;' + checkboxStyle + '">' + (selected ? '&check;' : '') + '</div>'
       + '<div><div style="font-size:13.5px;font-weight:600">' + esc(p.name) + '</div><div style="font-size:12px;color:#8B95A6;margin-top:2px">' + esc(p.description||'') + '</div></div>'
       + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:#6B7686">' + esc((p.requires_note||'').toUpperCase()) + '</div>'
-      + '<div style="text-align:right;font-size:13.5px;font-weight:600">' + fmtUsd(p.unit_price) + ' / mo</div>'
+      + '<div style="text-align:right;font-size:13.5px;font-weight:600">' + (Number(p.unit_price) > 0 ? fmtUsd(p.unit_price) + ' / mo' : 'Custom-priced') + '</div>'
       + '</div>';
   }
 
@@ -1170,6 +1171,12 @@
     m.__cpqWired = true;
 
     m.addEventListener('click', function(e){
+      var manageCatalog = e.target.closest && e.target.closest('.cpq-manage-catalog-link');
+      if (manageCatalog){
+        if (window.showView){ e.preventDefault(); window.showView('cpq-config'); }
+        return;
+      }
+
       var openBtn = e.target.closest && e.target.closest('.cpq-open-btn');
       if (openBtn){ openQuote(openBtn.getAttribute('data-demand')); return; }
 
