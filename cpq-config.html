@@ -595,40 +595,32 @@
     var n = Number(trimmed);
     return isNaN(n) ? NaN : n;
   }
-  function computePctOff(raw, basePrice){
+  // Live preview shown above the field — same visual language as Configure's
+  // product cards (struck-through base + resolved price in green) — rather
+  // than rewriting the field itself. Whatever the admin typed (a flat price
+  // or a "10%" shorthand) stays legible in the field; this is just a preview
+  // of what it resolves to. Nothing here is saved — resolveOverridePrice()
+  // re-parses the field fresh at save time.
+  function fmtRatePreview(raw, basePrice){
     var trimmed = (raw || '').trim();
-    if (trimmed === '' || !basePrice) return null;
-    if (trimmed.indexOf('%') !== -1){
-      var pct = parseFloat(trimmed.replace('%', ''));
-      return isNaN(pct) ? null : Math.abs(pct);
+    if (trimmed === '') return '';
+    var price = resolveOverridePrice(trimmed, basePrice);
+    if (price == null || isNaN(price) || price < 0) return '<span style="color:#C4472C">not a valid price or percent</span>';
+    var pct = basePrice ? ((basePrice - price) / basePrice) * 100 : 0;
+    if (Math.abs(pct) < 0.05){
+      return '<span style="color:#8B95A6">' + fmtUsd(price) + ' — matches base</span>';
     }
-    var n = Number(trimmed);
-    if (isNaN(n)) return null;
-    return ((basePrice - n) / basePrice) * 100;
+    var pctLabel = pct > 0 ? '–' + pct.toFixed(1) + '%' : '+' + Math.abs(pct).toFixed(1) + '%';
+    return '<span style="text-decoration:line-through;color:#97A1B2;margin-right:6px">' + fmtUsd(basePrice) + '</span>'
+      + '<span style="color:#8A5A12;font-weight:600">' + fmtUsd(price) + '</span>'
+      + '<span style="color:#8B95A6;margin-left:6px;font-family:\'IBM Plex Mono\',monospace">' + pctLabel + '</span>';
   }
-  function fmtPctBadge(pct){
-    if (pct == null || isNaN(pct)) return '';
-    if (pct >= 0.05) return '–' + pct.toFixed(1) + '% off base';
-    if (pct <= -0.05) return '+' + Math.abs(pct).toFixed(1) + '% above base';
-    return 'matches base';
-  }
-  function updateRatePctBadge(inputEl){
-    var badge = inputEl.nextElementSibling;
-    if (!badge || !badge.classList || !badge.classList.contains('cfg-rate-pct')) return;
+  function updateRatePreview(inputEl){
+    var row = inputEl.closest('.cfg-rate-row');
+    var preview = row && row.querySelector('.cfg-rate-preview');
+    if (!preview) return;
     var base = Number(inputEl.getAttribute('data-base-price')) || 0;
-    badge.textContent = fmtPctBadge(computePctOff(inputEl.value, base));
-  }
-  // On blur, a "%" entry is normalized into the dollar amount it resolves to
-  // — the field always shows/saves a real price, the percent was just a
-  // faster way to type it.
-  function normalizeRateInput(inputEl){
-    var base = Number(inputEl.getAttribute('data-base-price')) || 0;
-    var raw = inputEl.value.trim();
-    if (raw.indexOf('%') !== -1){
-      var resolved = resolveOverridePrice(raw, base);
-      if (resolved != null && !isNaN(resolved)) inputEl.value = resolved;
-    }
-    updateRatePctBadge(inputEl);
+    preview.innerHTML = fmtRatePreview(inputEl.value, base);
   }
 
   function openRateCardModal(tierId){
@@ -639,16 +631,16 @@
     var rows = products.map(function(p){
       var existing = state.tierRates.filter(function(r){ return r.tier_id === tierId && r.product_id === p.id; })[0];
       var initialValue = existing ? existing.override_price : '';
-      var initialBadge = existing ? fmtPctBadge(computePctOff(String(existing.override_price), Number(p.unit_price))) : '';
-      return '<div style="display:grid;grid-template-columns:1fr 130px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #F1F4F9">'
+      var initialPreview = existing ? fmtRatePreview(String(existing.override_price), Number(p.unit_price)) : '';
+      return '<div class="cfg-rate-row" style="display:grid;grid-template-columns:1fr 190px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #F1F4F9">'
         + '<div><div style="font-size:13px;font-weight:600">' + esc(p.name) + '</div><div style="font-size:11px;color:#97A1B2">' + fmtUsd(p.unit_price) + ' base</div></div>'
-        + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">'
+        + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">'
+        + '<div class="cfg-rate-preview" style="font-size:11.5px;min-height:15px;line-height:1.3;white-space:nowrap">' + initialPreview + '</div>'
         + '<input type="text" inputmode="decimal" class="cfg-rate-input" data-product="' + esc(p.id) + '" data-base-price="' + esc(p.unit_price) + '" value="' + esc(initialValue) + '" placeholder="no override" style="width:100%;height:34px;border:1px solid #DCE2EC;border-radius:7px;padding:0 9px;font-size:13px;text-align:right;box-sizing:border-box">'
-        + '<span class="cfg-rate-pct" style="font-size:10px;color:#8B95A6;font-family:\'IBM Plex Mono\',monospace">' + esc(initialBadge) + '</span>'
         + '</div></div>';
     }).join('');
     var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">' + esc(tier.name) + ' rate card</div>'
-      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">Leave a field blank to use the catalog base price at this tier. Type a price (495) or a percent off (10% or -10%, same thing) — either way it saves as a price, so a later base-price change never silently moves it.</div></div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">Leave a field blank to use the catalog base price at this tier. Type a price (495) or a percent off (10% or -10%, same thing) — the field keeps whatever you typed; the preview above it shows what that resolves to, and that resolved price is what actually saves.</div></div>'
       + '<div style="padding:14px 22px;max-height:52vh;overflow-y:auto">'
       + (products.length ? rows : '<div style="font-size:12.5px;color:#97A1B2;padding:10px 0">No active products to price.</div>')
       + '</div>'
@@ -732,18 +724,15 @@
       overlay.addEventListener('click', function(e){ if (e.target.id === 'cfg-modal-overlay') closeModal(); });
     }
 
-    // Rate-card % badge (live) + %-to-$ normalization (on blur) — bound once
-    // on the persistent modal box, delegated, so it works no matter how many
-    // times the rate card modal gets closed and reopened.
+    // Rate-card live preview (struck-through base + resolved price) — bound
+    // once on the persistent modal box, delegated, so it works no matter how
+    // many times the rate card modal gets closed and reopened. The field
+    // itself is never rewritten — only this preview updates as they type.
     var box = $('cfg-modal-box');
     if (box){
       box.addEventListener('input', function(e){
         if (!e.target.classList || !e.target.classList.contains('cfg-rate-input')) return;
-        updateRatePctBadge(e.target);
-      });
-      box.addEventListener('change', function(e){
-        if (!e.target.classList || !e.target.classList.contains('cfg-rate-input')) return;
-        normalizeRateInput(e.target);
+        updateRatePreview(e.target);
       });
     }
   }
