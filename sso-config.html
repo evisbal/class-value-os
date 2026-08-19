@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSO configuration — Class Value OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+</head>
+<body>
+<div class="app-shell">
+<div id="appSidebar" class="app-sidebar" style="background:#01285E;display:flex;flex-direction:column;overflow:hidden">
+    <div style="padding:18px 18px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.08)">
+      <div style="width:26px;height:26px;border-radius:6px;background:#85C341;flex:0 0 auto"></div>
+      <div>
+        <div style="color:#fff;font-size:13.5px;font-weight:700;letter-spacing:.1em;line-height:1.1">VALUE OS</div>
+        <div style="color:#7E97BD;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;margin-top:2px">CLASS VALUATION</div>
+      </div>
+    </div>
+    <div style="flex:1 1 0;overflow-y:auto;padding:12px 10px 18px">
+      <div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">PIPELINE</div>
+          <a href="index.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-home">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">My work</span>
+              
+            </div>
+          </a>
+<a href="demand.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-demand">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Demand Management</span>
+              
+            </div>
+          </a>
+<a href="cpq.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-cpq">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Value CPQ</span>
+              
+            </div>
+          </a>
+        </div>
+<div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">DELIVERY</div>
+          <a href="plan.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-plan">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Plan Builder</span>
+              
+            </div>
+          </a>
+<a href="studio.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-studio">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Integration Studio</span>
+              
+            </div>
+          </a>
+<a href="delivery.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-delivery">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Delivery</span>
+              <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9.5px;background:rgba(133,195,65,.16);color:#A8DB6E;padding:2px 6px;border-radius:5px">2</span>
+            </div>
+          </a>
+<a href="reporting.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-reporting">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Status Reporting</span>
+              
+            </div>
+          </a>
+        </div>
+<div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">CLIENT</div>
+          <a href="engagement.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-engagement">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Engagement Mgmt</span>
+              
+            </div>
+          </a>
+        </div>
+<div style="margin-bottom:16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#5D7CAA;padding:0 8px 7px">PLATFORM</div>
+          <a href="roles.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-roles">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Roles &amp; permissions</span>
+              
+            </div>
+          </a>
+<a href="sso-config.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:rgba(133,195,65,.14);color:#FFFFFF" class="nav-item" id="nav-sso">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#85C341" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:600;letter-spacing:-.005em" class="nav-label">SSO configuration</span>
+              
+            </div>
+          </a>
+<a href="states.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-states">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">System states</span>
+              
+            </div>
+          </a>
+        </div>
+    </div>
+    <div style="position:relative;padding:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px" id="sidebarUserFooter">
+      <div style="width:30px;height:30px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">DM</div>
+      <div style="min-width:0">
+        <div style="color:#E8EEF8;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Dana Mercer</div>
+        <div style="color:#7E97BD;font-size:11px">Solutions Engineer</div>
+      </div>
+    </div>
+  </div>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+  <div class="right-col">
+<div style="height:56px;flex:0 0 auto;background:#fff;border-bottom:1px solid #DCE2EC;display:flex;align-items:center;gap:14px;padding:0 20px">
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#6B7686">
+        <span id="crumbGroup">Platform</span><span style="color:#C4CBD8">/</span>
+        <span style="color:#131A26;font-weight:600" id="crumbScreen">SSO configuration</span>
+      </div>
+      <div id="topbarSearch" style="margin-left:18px;flex:1 1 0;max-width:420px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;gap:9px;padding:0 11px;color:#97A1B2;font-size:13.5px;cursor:pointer;background:#FAFBFD">
+        <span style="font-size:13px">&#8981;</span><span>Search clients, demands, quotes&hellip;</span>
+        <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;border:1px solid #DCE2EC;border-radius:4px;padding:1px 5px;background:#fff">&#8984;K</span>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <div style="position:relative;width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">
+          &#9684;<span style="position:absolute;top:-5px;right:-5px;min-width:16px;height:16px;border-radius:99px;background:#C4472C;color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;padding:0 4px">3</span>
+        </div>
+        <div id="hamburgerBtn" class="topbar-hamburger" style="width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">&#9776;</div>
+      </div>
+    </div>
+
+    <div class="content-viewport" id="contentViewport">
+<div id="sso-app-mount"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var sb = document.getElementById('appSidebar');
+  var bd = document.getElementById('sidebarBackdrop');
+  var hb = document.getElementById('hamburgerBtn');
+  function setOpen(open){
+    if (sb) sb.classList.toggle('open', open);
+    if (bd) bd.classList.toggle('open', open);
+  }
+  if (hb) hb.addEventListener('click', function(){ setOpen(!(sb && sb.classList.contains('open'))); });
+  if (bd) bd.addEventListener('click', function(){ setOpen(false); });
+})();
+</script>
+<script>
+// Role context — a shared, provisional stand-in for real login. There is no
+// authentication anywhere in Class Value OS yet (every module runs on one
+// shared Supabase anon key); real SSO is intentionally sequenced last since
+// it needs a real identity provider to test against, which this project
+// doesn't have. Until then, "who's using the app" is this switcher: pick a
+// seeded user from app_users, and every capability check in the app reads
+// whatever role(s) that user is assigned in Supabase — real data, real
+// gating logic, just not yet tied to a real signed-in identity. Swapping in
+// real SSO later means replacing how currentUserId gets set (JIT-provisioned
+// from the IdP instead of a localStorage pick), not touching the data model
+// or any of the can()/isAdmin() call sites that already depend on it.
+//
+// Loaded on every functional page (cpq.html, cpq-config.html, roles.html)
+// BEFORE that page's own module script, so RoleContext.can()/isAdmin() are
+// available by the time the page module renders. Renders into a
+// #sidebarUserFooter element the page shell already has an id on — see
+// build_mpa.js's buildSidebar().
+(function(){
+  var STORAGE_KEY = 'classValueOs.actingAsUserId';
+  var MODULE_LABELS = {
+    demand: 'Demand Management', cpq: 'Value CPQ', 'cpq-config': 'CPQ Config',
+    plan: 'Plan Builder', studio: 'Integration Studio', delivery: 'Delivery',
+    reporting: 'Status Reporting', engagement: 'Engagement Mgmt',
+    roles: 'Roles & permissions', sso: 'SSO configuration'
+  };
+
+  var state = {
+    db: null,
+    users: [],
+    roles: [],
+    roleCapabilities: [],
+    userRoles: [],
+    currentUserId: null,
+    popoverOpen: false,
+    listeners: [],
+    loaded: false
+  };
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){
+    s = (s == null ? '' : String(s));
+    return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+  function initials(name){
+    if (!name) return '—';
+    var parts = name.trim().split(/\s+/);
+    return ((parts[0] || '')[0] || '') + ((parts[1] || '')[0] || '');
+  }
+
+  function available(){
+    return typeof window.supabase !== 'undefined'
+      && !!window.SUPABASE_CONFIG && !!window.SUPABASE_CONFIG.url && !!window.SUPABASE_CONFIG.anonKey;
+  }
+
+  function currentUser(){
+    return state.users.filter(function(u){ return u.id === state.currentUserId; })[0] || null;
+  }
+  function currentRoleIds(){
+    return state.userRoles.filter(function(ur){ return ur.user_id === state.currentUserId; }).map(function(ur){ return ur.role_id; });
+  }
+  function currentRoles(){
+    var ids = currentRoleIds();
+    return state.roles.filter(function(r){ return ids.indexOf(r.id) !== -1; });
+  }
+  // The one function every other module actually calls: does whoever is
+  // currently "acting as" have this capability on this module? A user with
+  // multiple roles gets the union of what any of their roles grant — same
+  // "most permissive role wins" convention as most RBAC systems.
+  function can(module, action){
+    if (!state.loaded) return true; // fail open before roles data has loaded at all, not mid-render
+    var ids = currentRoleIds();
+    if (!ids.length) return false;
+    var field = 'can_' + action;
+    return state.roleCapabilities.some(function(c){
+      return ids.indexOf(c.role_id) !== -1 && c.module === module && c[field] === true;
+    });
+  }
+  function isAdmin(){
+    return currentRoles().some(function(r){ return r.is_admin === true; });
+  }
+  function onChange(fn){ if (typeof fn === 'function') state.listeners.push(fn); }
+  function notify(){ state.listeners.forEach(function(fn){ try { fn(); } catch(e){ console.error('RoleContext listener error', e); } }); }
+
+  function roleNamesLine(){
+    var roles = currentRoles();
+    if (!roles.length) return 'No role assigned';
+    return roles.map(function(r){ return r.name; }).join(', ');
+  }
+
+  function renderSwitcher(){
+    var el = $('sidebarUserFooter');
+    if (!el) return;
+    var u = currentUser();
+    if (!u){
+      el.innerHTML = '<div style="font-size:11.5px;color:#7E97BD">No users seeded yet — add one from Roles &amp; permissions.</div>';
+      return;
+    }
+    el.style.cursor = 'pointer';
+    el.setAttribute('title', 'Switch who you\'re acting as (test mode — no real login yet)');
+    el.innerHTML = '<div style="width:30px;height:30px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex:0 0 auto">' + esc(initials(u.name)) + '</div>'
+      + '<div style="min-width:0;flex:1 1 0">'
+      + '<div style="color:#E8EEF8;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(u.name) + '</div>'
+      + '<div style="color:#7E97BD;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(roleNamesLine()) + '</div>'
+      + '</div>'
+      + '<div style="margin-left:auto;color:#7E97BD;font-size:11px;flex:0 0 auto">&#9662;</div>';
+  }
+
+  function renderPopover(){
+    var existing = $('rc-popover');
+    if (existing) existing.parentNode.removeChild(existing);
+    if (!state.popoverOpen) return;
+    var footer = $('sidebarUserFooter');
+    if (!footer) return;
+    var rowsHtml = state.users.map(function(u){
+      var active = u.id === state.currentUserId;
+      var uRoleIds = state.userRoles.filter(function(ur){ return ur.user_id === u.id; }).map(function(ur){ return ur.role_id; });
+      var uRoles = state.roles.filter(function(r){ return uRoleIds.indexOf(r.id) !== -1; });
+      var label = uRoles.length ? uRoles.map(function(r){ return r.name; }).join(', ') : 'No role assigned';
+      return '<div class="rc-user-row" data-user-id="' + esc(u.id) + '" style="display:flex;align-items:center;gap:9px;padding:9px 12px;cursor:pointer;border-radius:7px;background:' + (active ? 'rgba(1,62,144,.08)' : 'transparent') + '">'
+        + '<div style="width:24px;height:24px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;flex:0 0 auto">' + esc(initials(u.name)) + '</div>'
+        + '<div style="min-width:0;flex:1 1 0">'
+        + '<div style="font-size:12.5px;font-weight:600;color:#131A26;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(u.name) + '</div>'
+        + '<div style="font-size:11px;color:#8B95A6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(label) + '</div>'
+        + '</div>'
+        + (active ? '<div style="color:#013E90;font-size:12px;flex:0 0 auto">&check;</div>' : '')
+        + '</div>';
+    }).join('');
+    var pop = document.createElement('div');
+    pop.id = 'rc-popover';
+    pop.style.cssText = 'position:absolute;left:12px;right:12px;bottom:70px;background:#fff;border:1px solid #DCE2EC;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.28);z-index:60;overflow:hidden';
+    pop.innerHTML = '<div style="padding:9px 12px;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:10px;font-family:\'IBM Plex Mono\',monospace;letter-spacing:.06em">TEST MODE &mdash; NOT REAL LOGIN. STANDS IN UNTIL SSO IS BUILT.</div>'
+      + '<div style="padding:6px;display:flex;flex-direction:column;gap:2px;max-height:280px;overflow-y:auto">' + (rowsHtml || '<div style="padding:10px;font-size:12px;color:#97A1B2">No users yet.</div>') + '</div>'
+      + '<a href="roles.html" style="display:block;padding:9px 12px;border-top:1px solid #EDF0F6;font-size:12px;color:#013E90;text-decoration:none">Manage users &amp; roles &rarr;</a>';
+    var sidebar = document.getElementById('appSidebar');
+    (sidebar || document.body).appendChild(pop);
+  }
+
+  function togglePopover(open){
+    state.popoverOpen = (open != null) ? open : !state.popoverOpen;
+    renderPopover();
+  }
+
+  function switchTo(userId){
+    state.currentUserId = userId;
+    try { window.localStorage.setItem(STORAGE_KEY, userId); } catch(e){}
+    state.popoverOpen = false;
+    renderPopover();
+    renderSwitcher();
+    notify();
+  }
+
+  function wireEvents(){
+    if (document.__roleContextWired) return;
+    document.__roleContextWired = true;
+    document.addEventListener('click', function(e){
+      var footer = e.target.closest && e.target.closest('#sidebarUserFooter');
+      if (footer){ togglePopover(); return; }
+      var row = e.target.closest && e.target.closest('.rc-user-row');
+      if (row){ switchTo(row.getAttribute('data-user-id')); return; }
+      var pop = $('rc-popover');
+      if (pop && !pop.contains(e.target)) togglePopover(false);
+    });
+  }
+
+  function loadData(){
+    // reload() is exposed for other modules to call after they mutate roles/
+    // capabilities/users data (see roles_module.js) — guard against it firing
+    // before RoleContext itself has ever connected (e.g. Supabase isn't
+    // configured at all), rather than throwing on a null state.db.
+    if (!state.db) return Promise.resolve();
+    return Promise.all([
+      Promise.resolve(state.db.from('app_users').select('*').eq('active', true).order('name')),
+      Promise.resolve(state.db.from('roles').select('*').eq('active', true).order('sort_order')),
+      Promise.resolve(state.db.from('role_capabilities').select('*')),
+      Promise.resolve(state.db.from('user_roles').select('*'))
+    ]).then(function(results){
+      var ur = results[0], rr = results[1], cr = results[2], urr = results[3];
+      if (ur.error) throw ur.error;
+      if (rr.error) throw rr.error;
+      if (cr.error) throw cr.error;
+      if (urr.error) throw urr.error;
+      state.users = ur.data || [];
+      state.roles = rr.data || [];
+      state.roleCapabilities = cr.data || [];
+      state.userRoles = urr.data || [];
+      var saved = null;
+      try { saved = window.localStorage.getItem(STORAGE_KEY); } catch(e){}
+      var stillValid = saved && state.users.some(function(u){ return u.id === saved; });
+      state.currentUserId = stillValid ? saved : (state.users[0] ? state.users[0].id : null);
+      state.loaded = true;
+      renderSwitcher();
+      notify();
+    }).catch(function(e){ console.error('RoleContext: could not load', e); });
+  }
+
+  // Re-entrant the same way every other module's init() is: safe to call
+  // repeatedly (e.g. once per page nav in the merged artifact build), only
+  // (re)connects if it hasn't already, always refreshes data.
+  function init(){
+    wireEvents();
+    if (!state.db){
+      if (!available()) return Promise.resolve();
+      try { state.db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
+      catch(e){ return Promise.resolve(); }
+    }
+    return loadData();
+  }
+
+  window.RoleContext = {
+    init: init,
+    can: can,
+    isAdmin: isAdmin,
+    currentUser: currentUser,
+    currentRoles: currentRoles,
+    onChange: onChange,
+    reload: loadData,
+    MODULE_LABELS: MODULE_LABELS
+  };
+})();
+
+window.RoleContext.init();
+</script>
+<script>
+// SSO configuration — inert shell for the eventual SAML connection to the
+// company's identity provider (Entra ID / AD via ADFS, Okta, etc). This page
+// exists so an IT admin has somewhere real to paste connection details when
+// there's an actual IdP to test against — nothing on this page authenticates
+// anyone yet, and `enabled` is not read anywhere else in the app. That's
+// intentional: real SSO/JIT-provisioned login is sequenced last in this
+// project because it needs a real IdP to test against, which doesn't exist
+// yet. See fragments/role_context.js for how login is stood in for today
+// (the "acting as" switcher), and Roles & permissions for where AD-driven
+// users would ultimately land once JIT provisioning is wired up.
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function esc(s){
+    s = (s == null ? '' : String(s));
+    return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+
+  var INPUT_STYLE = 'width:100%;height:38px;border:1px solid #DCE2EC;border-radius:8px;padding:0 11px;font-size:13.5px;font-family:inherit;box-sizing:border-box;outline:none';
+  var TEXTAREA_STYLE = 'width:100%;border:1px solid #DCE2EC;border-radius:8px;padding:9px 11px;font-size:12.5px;font-family:\'IBM Plex Mono\',monospace;box-sizing:border-box;outline:none;resize:vertical;line-height:1.5';
+
+  var state = { db: null, config: null };
+
+  function available(){
+    return typeof window.supabase !== 'undefined'
+      && !!window.SUPABASE_CONFIG && !!window.SUPABASE_CONFIG.url && !!window.SUPABASE_CONFIG.anonKey;
+  }
+  function mount(){ return $('sso-app-mount'); }
+
+  function fieldBlock(label, hint, inputHtml){
+    return '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">' + esc(label) + '</div>'
+      + inputHtml
+      + (hint ? '<div style="font-size:11.5px;color:#97A1B2;margin-top:5px">' + esc(hint) + '</div>' : '')
+      + '</div>';
+  }
+
+  function renderRoot(){
+    var m = mount();
+    if (!m) return;
+    var c = state.config || {};
+    var enabled = c.enabled === true;
+    m.innerHTML = '<div style="padding:20px 28px 48px;max-width:760px">'
+      + '<div style="margin-bottom:14px">'
+      + '<div style="font-size:20px;font-weight:600">SSO configuration</div>'
+      + '<div style="font-size:13px;color:#6B7686;margin-top:2px">Connection details for the company identity provider. For IT admins.</div>'
+      + '</div>'
+
+      + '<div style="background:#FDF3E0;border:1px solid #F1DFBC;border-radius:10px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start;margin-bottom:16px">'
+      + '<div style="width:18px;height:18px;border-radius:99px;background:#8A5A12;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px">!</div>'
+      + '<div style="font-size:13px;line-height:1.55;color:#6E4A11">Nothing on this page authenticates anyone yet. Saving these fields just records them — no login flow reads them, and <b>Enabled</b> cannot be turned on until this has been tested end-to-end against a real identity provider. Until then, the sidebar\'s "acting as" picker stands in for login (see any page under Value CPQ or Roles &amp; permissions).</div>'
+      + '</div>'
+
+      + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px;margin-bottom:16px">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px">'
+      + '<div style="font-size:15.5px;font-weight:600">Status</div>'
+      + '<div style="display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:' + (enabled ? '#3C6B1D' : '#8B95A6') + '">'
+      + '<div style="width:8px;height:8px;border-radius:99px;background:' + (enabled ? '#5F9A34' : '#C4CBD8') + '"></div>' + (enabled ? 'Enabled' : 'Not connected') + '</div></div>'
+      + '<div style="font-size:12.5px;color:#97A1B2;line-height:1.5">' + (enabled
+          ? 'Marked enabled — verify this was done after a real end-to-end test, not just to clear this banner.'
+          : 'No identity provider has been connected. Fill in the fields below once your IdP (Entra ID, Okta, etc.) issues them, then save.') + '</div>'
+      + '</div>'
+
+      + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:14px;margin-bottom:16px">'
+      + '<div style="font-size:15.5px;font-weight:600">Identity provider</div>'
+      + fieldBlock('IdP name', 'e.g. "Contoso Entra ID" — just a label for this page.', '<input id="sso-f-idp-name" type="text" value="' + esc(c.idp_name || '') + '" placeholder="Microsoft Entra ID" style="' + INPUT_STYLE + '">')
+      + fieldBlock('Entity ID / Issuer', 'From your IdP\'s SAML application registration.', '<input id="sso-f-entity-id" type="text" value="' + esc(c.entity_id || '') + '" placeholder="https://sts.windows.net/&hellip;/" style="' + INPUT_STYLE + ';font-family:\'IBM Plex Mono\',monospace;font-size:12.5px">')
+      + fieldBlock('SSO URL', 'The SAML sign-on endpoint your IdP provides.', '<input id="sso-f-sso-url" type="text" value="' + esc(c.sso_url || '') + '" placeholder="https://login.microsoftonline.com/&hellip;/saml2" style="' + INPUT_STYLE + ';font-family:\'IBM Plex Mono\',monospace;font-size:12.5px">')
+      + fieldBlock('X.509 certificate', 'Paste the full PEM-formatted signing certificate from your IdP.', '<textarea id="sso-f-cert" rows="5" placeholder="-----BEGIN CERTIFICATE-----&#10;&hellip;&#10;-----END CERTIFICATE-----" style="' + TEXTAREA_STYLE + '">' + esc(c.certificate || '') + '</textarea>')
+      + '</div>'
+
+      + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px;margin-bottom:16px">'
+      + '<label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer">'
+      + '<input type="checkbox" id="sso-f-enabled" ' + (enabled ? 'checked' : '') + ' style="width:16px;height:16px;margin-top:2px">'
+      + '<div><div style="font-size:13.5px;font-weight:600">Enabled</div>'
+      + '<div style="font-size:12px;color:#97A1B2;margin-top:2px">Turning this on has no effect yet — enforcement isn\'t wired up. Kept here so the field exists in the schema for when it is.</div></div>'
+      + '</label></div>'
+
+      + '<div style="display:flex;align-items:center;gap:10px">'
+      + '<button type="button" id="sso-save-btn" style="height:38px;padding:0 18px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Save configuration</button>'
+      + '<div style="font-size:12px;color:#97A1B2">' + (c.updated_at ? ('Last saved ' + formatDate(c.updated_at)) : 'Never saved') + '</div>'
+      + '</div>'
+
+      + '<div style="margin-top:22px;padding-top:18px;border-top:1px solid #EDF0F6">'
+      + '<div style="font-size:13px;font-weight:600;margin-bottom:8px">What still needs building, once there\'s a real IdP to test against</div>'
+      + '<div style="font-size:12.5px;color:#6B7686;line-height:1.7">'
+      + '1. A real login screen that redirects to the IdP and handles the SAML assertion coming back.<br>'
+      + '2. Just-in-time provisioning — create or update the matching row in <code>app_users</code> automatically on first SSO sign-in, instead of the manual "add user" flow in Roles &amp; permissions.<br>'
+      + '3. A session model tied to the SSO identity, replacing the <code>localStorage</code> "acting as" picker everywhere it\'s currently read.<br>'
+      + '4. A way to reject sign-in for anyone not present in the IdP directory, so access always tracks AD membership.'
+      + '</div></div>'
+      + '</div>';
+  }
+
+  function formatDate(iso){
+    try {
+      var d = new Date(iso);
+      return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) + ' at ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+    } catch(e){ return iso; }
+  }
+
+  function renderNotConnected(){
+    var m = mount();
+    if (!m) return;
+    m.innerHTML = '<div style="padding:20px 28px 48px;max-width:760px">'
+      + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px">'
+      + '<div style="font-size:14px;font-weight:600;margin-bottom:4px">SSO configuration</div>'
+      + '<div style="font-size:12.5px;color:#97A1B2">Connect Supabase (see <code>supabase-config.js</code>) to manage this here.</div>'
+      + '</div></div>';
+  }
+
+  function showToast(msg){
+    var existingEl = document.getElementById('sso-toast');
+    if (existingEl) existingEl.parentNode.removeChild(existingEl);
+    var el = document.createElement('div');
+    el.id = 'sso-toast';
+    el.textContent = msg;
+    el.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#131A26;color:#fff;font-size:13px;padding:10px 16px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:999;max-width:90vw;text-align:center';
+    document.body.appendChild(el);
+    setTimeout(function(){ if (el.parentNode) el.parentNode.removeChild(el); }, 3500);
+  }
+
+  function wireEvents(){
+    var m = mount();
+    if (!m || m.__ssoWired) return;
+    m.__ssoWired = true;
+    m.addEventListener('click', function(e){
+      var saveBtn = e.target.closest && e.target.closest('#sso-save-btn');
+      if (saveBtn) save();
+    });
+  }
+
+  function save(){
+    var enabled = $('sso-f-enabled').checked;
+    var certRaw = $('sso-f-cert').value.trim();
+    if (enabled && (!$('sso-f-entity-id').value.trim() || !$('sso-f-sso-url').value.trim() || !certRaw)){
+      showToast('Fill in entity ID, SSO URL, and certificate before enabling.');
+      return;
+    }
+    var patch = {
+      idp_name: $('sso-f-idp-name').value.trim() || null,
+      entity_id: $('sso-f-entity-id').value.trim() || null,
+      sso_url: $('sso-f-sso-url').value.trim() || null,
+      certificate: certRaw || null,
+      enabled: enabled,
+      updated_at: new Date().toISOString()
+    };
+    Promise.resolve(state.db.from('sso_config').update(patch).eq('id', 1)).then(function(r){
+      if (r.error) throw r.error;
+      state.config = Object.assign({}, state.config, patch);
+      renderRoot();
+      showToast('Saved. This does not change how anyone signs in yet.');
+    }).catch(function(e){ showToast('Could not save: ' + (e.message || e)); });
+  }
+
+  function loadData(){
+    return Promise.resolve(state.db.from('sso_config').select('*').eq('id', 1).single()).then(function(r){
+      state.config = (r && !r.error && r.data) ? r.data : { enabled: false };
+      renderRoot();
+    }).catch(function(e){ console.error('SsoConfigModule: could not load', e); renderNotConnected(); });
+  }
+
+  function init(){
+    if (!state.db){
+      if (!available()){ renderNotConnected(); return; }
+      try { state.db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
+      catch(e){ renderNotConnected(); return; }
+      wireEvents();
+      loadData();
+      return;
+    }
+    loadData();
+  }
+
+  window.SsoConfigModule = { init: init };
+})();
+
+window.SsoConfigModule.init();
+</script>
+</body>
+</html>

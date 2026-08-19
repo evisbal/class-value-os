@@ -6,7 +6,7 @@ gets connected.
 
 **Each module is its own page with its own URL** — `index.html`, `demand.html`, `cpq.html`,
 `cpq-config.html`, `plan.html`, `studio.html`, `delivery.html`, `reporting.html`, `engagement.html`,
-`roles.html`, `states.html` — sharing a common sidebar/top bar (`shared.css`). This means:
+`roles.html`, `sso-config.html`, `states.html` — sharing a common sidebar/top bar (`shared.css`). This means:
 
 - Every module is directly linkable and bookmarkable (e.g. `.../demand.html` opens straight into Demand
   Management), and browser back/forward works normally between modules.
@@ -34,15 +34,19 @@ them.
 
 - `index.html` — My work (home).
 - `demand.html` — Demand Management. Real, database-backed (see below).
-- `cpq.html` — Value CPQ. Client & demand, Configure and Rules check are real, database-backed (see below);
-  Pricing & terms and Quote & approvals are still static design previews.
+- `cpq.html` — Value CPQ. Client & demand, Configure, Pricing & terms and Rules check are all real,
+  database-backed (see below); only Quote & approvals is still a static design preview.
 - `cpq-config.html` — CPQ Config, a subpage of Value CPQ (reached via the "Manage catalog" link on the
   CPQ list, not the main sidebar). Full CRUD admin catalog for every product, add-on and pricing rule
   Configure reads from — see below.
 - `plan.html` — Plan Builder. Real, fully-functional; embeds `class-plan-builder.html` via iframe.
-- `studio.html`, `delivery.html`, `reporting.html`, `engagement.html`, `roles.html`, `states.html` — static
+- `roles.html` — Roles & permissions. Real CRUD — see "Roles & permissions" below.
+- `sso-config.html` — SSO configuration, a Platform subpage for IT admins. Real form, deliberately inert —
+  see "SSO configuration" below.
+- `studio.html`, `delivery.html`, `reporting.html`, `engagement.html`, `states.html` — static
   design previews with sample data, waiting to be built out the same way Demand Management was.
-- `shared.css` — the one file all ten pages link to for the shared sidebar/top bar/layout styling.
+- `shared.css` — the one file every page links to for the shared sidebar/top bar/layout styling, including
+  the "acting as" role switcher in the sidebar footer (see "Roles & permissions" below).
 - `class-plan-builder.html` — the real, fully-functional Class Plan Builder application. Works standalone
   or embedded inside `plan.html`. Saves projects to the browser's `localStorage` under the key
   `classPlanBuilder.projects.v1` (per-browser, not shared across users yet).
@@ -66,36 +70,79 @@ at all, so they have nothing to configure and nothing that can fail to connect.
   by segment/source/owner/score/created date/stage, saved-view tabs (My demands / Unscored / Awaiting
   decision / All open), a transparent 5-input weighted scoring model, an activity/notes thread per demand,
   and a portfolio matrix (value vs. integration effort). Demands are never hard-deleted.
-- **Value CPQ** — Phases 1 & 2 are real (see `CPQ_requirements_scope.md` for the full plan): every Converted
-  demand gets a "Configure quote" action that creates a real, versioned `quotes` record and opens a quote
-  editor. **Client & demand** shows the demand's real context (client, segment, source demand, est. monthly
+- **Value CPQ** — every Converted demand gets a "Configure quote" action that creates a real, versioned
+  `quotes` record and opens a quote editor (see `CPQ_requirements_scope.md` for the full plan). Steps run
+  **Client & demand → Configure → Pricing & terms → Rules check → Quote & approvals** — pricing is settled
+  before the rules/compatibility check runs against it. Tab checkmarks reflect real captured data on that
+  step (a selection made, a question answered, a discount set), not just "comes before whichever tab is
+  active." **Client & demand** shows the demand's real context (client, segment, source demand, est. monthly
   volume) read-only from Demand Management, plus a guided-questions panel that saves to the quote.
   **Configure** is a real product/add-on catalog (`cpq_products`) — selections and monthly volumes persist
   to `quote_line_items`, eligibility is filtered live by the client's actual segment (no separate, redundant
-  segment question), and a live pricing panel totals it all up. **Rules check** is a real rule engine
-  computed live from Configure's selections — configuration-completeness, a live segment/entitlement
+  segment question), and a live pricing panel totals it all up. **Pricing & terms** is real (see below) —
+  an ad hoc blended discount, a real gross-margin check against catalog cost data, commercial terms, and the
+  approval gate the rest of the flow reads. **Rules check** is a real rule engine computed live from
+  Configure's and Pricing & terms' actual state — configuration-completeness, a live segment/entitlement
   re-check (catches a product going ineligible after selection, not just at selection time), product data
-  readiness, and a generic "requirement to confirm" row for any selected add-on with a catalog caveat. A
-  hard stop blocks Continue (only a "Request exception" placeholder is offered, honest that routing isn't
-  built yet); a warning doesn't block. Discount authority is shown as an honest "not evaluated yet" row —
-  it needs a real discount, which Pricing & terms (next phase) will capture. **Pricing & terms** and
-  **Quote & approvals** are still the original static mockup steps, shown with an inline "not built yet"
-  notice.
+  readiness, a generic "requirement to confirm" row for any selected add-on with a catalog caveat, and
+  discount authority (real now — flags any ad hoc discount or margin-floor breach as a warning, not a hard
+  stop, since Quote & approvals doesn't exist yet to route it anywhere). A hard stop blocks Continue (only a
+  "Request exception" placeholder is offered, honest that routing isn't built yet); a warning doesn't block.
+  **Quote & approvals** is still the original static mockup step, shown with an inline "not built yet"
+  notice — including its stakeholders panel of named reviewers. Roles & permissions is real now (see below),
+  so the *who* (Deal desk, Pricing & finance, VP Sales all exist as real approval-capable roles) is in place;
+  what's still missing is the approval-routing engine itself — persisting a decision, notifying the right
+  approver, and recording their response — which is a separate, not-yet-built piece.
+
+- **Pricing & terms** — real. An **ad hoc blended discount** (0–30%, one rate for the whole quote) applies
+  on top of whatever price is already in effect — catalog base, or tier-adjusted where a pricing tier
+  applies — and stacks with it rather than replacing it; if a tier is already bringing prices down, an
+  inline notice says so before the rep adds anything further. **The auto-approve cap defaults to 0%** — a
+  rate-card tier is the only "discount" that doesn't need sign-off by default; the moment the ad hoc slider
+  crosses the cap, a banner explains that Pricing & finance approval is required, live as it's dragged.
+  **Gross margin** is computed from `cpq_products.unit_cost` (new column, editable in CPQ Config right next
+  to unit price) — margin lives per product, not per client or per bundle, because cost to deliver genuinely
+  varies by product (a licensed-appraiser dispatch costs far more than an automated AVM) and doesn't move
+  with whatever tier or discount gets applied; the quote's blended margin is a volume-weighted rollup of
+  whatever's actually selected, computed live, never a separately-configured number. A selected item with no
+  cost data yet shows an honest "margin not verified" state rather than assuming it's fine. This margin bar
+  (and its "below/within floor" verdict) is explicitly labeled **internal only, never shown on the quote or
+  PDF** — the "Live pricing" panel on the right (the one closer to what a client would eventually see) shows
+  monthly/annual totals, blended discount, and a **Total contract value** figure once a contract term is set
+  (monthly total × term length), but deliberately does not surface margin anywhere in it. **The margin floor
+  and discount auto-approve cap are real, editable settings** (`cpq_pricing_policy`, a singleton row — see
+  CPQ Config below), not code constants — defaults are 42% and 0%, same as the placeholder values these
+  replaced. Crossing either threshold — or having unknown cost data — sets `quotes.status` to
+  `needs_pricing_approval` live (the header badge reflects this immediately) and clears back to `draft` the
+  moment the condition no longer applies. **Commercial structure** (Tiered volume / Annual commitment / Pure
+  consumption) is informational only — a label saved on the quote for the PDF/context, not a second pricing
+  mechanic layered on top of Pricing tiers. **Terms** (contract length, payment terms, price review cadence,
+  volume commitment, Pay Later) are plain fields, uniformly sized, that save on change. The line items table
+  and live pricing panel show list vs. net (after tier + discount) side by side, so nobody negotiates
+  against stale numbers.
 - **CPQ Config** — a subpage of Value CPQ (the "⚙ Manage catalog" link on the CPQ list header), and fully
   real: full CRUD over the exact `cpq_products` catalog Configure reads from, with no separate publish
-  step — a change here is live on Configure's next load. Three sections: "Products & services" (grouped
-  into Appraisal Offerings / Alternative Valuations), "Add-ons & service levels," and **"Pricing tiers"**
-  (see below). The product/add-on create/edit modal covers every field Configure or Rules check can use:
+  step — a change here is live on Configure's next load. Four sections: "Products & services" (grouped
+  into Appraisal Offerings / Alternative Valuations), "Add-ons & service levels," **"Pricing tiers"**
+  (see below), and **"Pricing policy"** — two fields, the discount auto-approve cap and margin floor
+  (`cpq_pricing_policy`), that Pricing & terms checks every quote against; saves on change and applies to
+  every quote immediately, same as everything else here. Distinct from Pricing tiers (rate cards by volume
+  band — sets the price itself) and a product's own Unit cost (sets that one product's cost) — this section
+  sets the threshold at which a rep needs sign-off on top of whatever price is already in effect. The
+  product/add-on create/edit modal covers every field Configure or Rules check can use:
   category (which also sets the underlying product/add-on mechanic and a sensible pricing-basis default),
   name, description, unit price (0 = shown as "Custom-priced," for things like Guaranteed Pricing or CVUE
-  that are negotiated per account), pricing basis (per order / per month / custom-priced per account),
+  that are negotiated per account), **unit cost** (what it costs to deliver one unit — drives the real
+  margin check on Pricing & terms, shown live on the card and in the modal as you type; left blank means
+  "not yet costed," not zero), pricing basis (per order / per month / custom-priced per account),
   eligible segments (checkboxes — none checked means every segment), a requires-note caveat (the same field
   Rules check already surfaces as a warning), a data-ready flag, and sort order. Nothing is ever
   hard-deleted — "Deactivate" sets `active = false` (Configure already only shows active rows), and a "Show
-  inactive" toggle brings deactivated rows back into view for review or reactivation. **Access:** open to
-  every role for now — an inline banner at the top says so explicitly. Roles & permissions doesn't exist
-  yet; once it does, this page should be gated to whoever owns pricing (Sales VP / Pricing & Finance are the
-  obvious candidates), not left open like this.
+  inactive" toggle brings deactivated rows back into view for review or reactivation. **Access:** real now —
+  gated on Edit access to the `cpq-config` module (see "Roles & permissions" below). Whoever is "acting as"
+  without that capability gets a read-only view (no Add/Edit/Rate card buttons, pricing policy fields shown
+  but disabled) and a banner naming who to ask; Pricing & finance and Deal desk / Sales ops are the two seeded
+  roles with View, and only Pricing & finance seeds with Edit.
 
 - **Pricing tiers (volume-based rate cards)** — a real, working piece of the Phase 3 "Pricing & terms"
   concept, built ahead of the rest of that phase. A tier (`pricing_tiers`: name, min/max monthly volume,
@@ -107,15 +154,75 @@ at all, so they have nothing to configure and nothing that can fail to connect.
   Each tier is a **per-product rate card** (`pricing_tier_rates`: tier + product + override price), not a
   blanket discount — a product with no override at a given tier simply falls back to its catalog base
   price, so admin effort only grows with how many prices actually differ per tier. Manage tiers and their
-  rate cards from CPQ Config's "Pricing tiers" section. Configure shows the tier-adjusted price (struck
+  rate cards from CPQ Config's "Pricing tiers" section — each field there accepts either a flat dollar price
+  (`495`) or a percent-off shorthand (`10%` or `-10%`, both read as "10% off," never a markup); typing a
+  percent shows a live "X% off base" badge and resolves to its dollar amount on blur, but what's actually
+  stored is always the dollar price, so a later base-price change on the product can never silently move an
+  already-set tier price. Configure shows the tier-adjusted price (struck
   through against the base price) wherever a rate-card entry exists, and the frozen price a client actually
   gets is written to `quote_line_items.unit_price_snapshot` at the moment an item is selected — same
   snapshot pattern as everything else in quoting, so a client's tier changing later never rewrites an
-  already-quoted price. Rules check's discount-authority row names the applied tier when one is set.
+  already-quoted price. A tier discount is pre-approved rate-card pricing, so Rules check's discount-authority
+  row doesn't need to call it out — only the tier badge on the live pricing panel and Pricing & terms'
+  "tier already applied" notice do that; the discount-authority row itself reacts to what's captured on
+  Pricing & terms (ad hoc discount, margin) instead.
   **The volume ranges seeded (Standard 0–149, Preferred 150–349, Enterprise 350+ orders/mo) are an informed
   placeholder**, not real historical order data — swap them for real breakpoints once that data exists.
-- Everything else (Integration Studio, Delivery, Status Reporting, Engagement Management, Roles &
-  permissions, System states) is still a static mockup with sample data, waiting to be built the same way.
+- Everything else (Integration Studio, Delivery, Status Reporting, Engagement Management, System states) is
+  still a static mockup with sample data, waiting to be built the same way.
+
+## Roles & permissions
+
+Real now — `roles.html` is full CRUD over who can do what, not a mockup. Four tables back it
+(`supabase/schema.sql`): **`roles`** (name, description, an `is_admin` flag, soft-delete `active`),
+**`role_capabilities`** (one row per role × module the role has *any* access to, with `can_view` /
+`can_create` / `can_edit` / `can_approve` / `can_export` booleans — a module with no row for a role means
+zero access, not "everything off" spelled out), **`app_users`** (name, email, soft-delete `active`), and
+**`user_roles`** (many-to-many — a user can hold more than one role, and gets the union of what any of them
+grant). The schema seeds **9 roles**, reconciled against both the original Roles & permissions mockup's 6
+and the separate Quote & approvals mockup's 4-stage approval chain (which named two approver stages — Deal
+desk, Operations capacity — that had no home in the original 6): Account executive, Solutions engineer, Deal
+desk / Sales ops, Pricing & finance, Implementation PM, VP Sales, Engagement manager, Executive / portfolio,
+and Platform admin (the only role flagged `is_admin` — deliberately kept separate from any approval role,
+so people who approve deals don't automatically also control who has access to the app). A starting
+32-row capability matrix is seeded too, editable from the page afterward — it's a sensible default, not a
+fixed rule.
+
+From the role list, selecting a role shows its capability matrix (with an "Edit capabilities" modal) and the
+users currently assigned to it, with controls to add an existing user or create a new one by name + email,
+remove a user from the role, and deactivate/reactivate the role itself (soft-delete, same pattern as
+`cpq_products`). "+ Request new role" creates one from scratch. Nothing here is ever hard-deleted.
+
+**There is no real login yet.** Every page's sidebar footer is a shared switcher
+(`fragments/role_context.js`) — click it to see every seeded user and pick who you're "acting as," clearly
+labeled **TEST MODE — NOT REAL LOGIN**. Whoever is picked persists in the browser's `localStorage`
+(`classValueOs.actingAsUserId`) and is what every capability check in the app (`RoleContext.can(module,
+action)`, `RoleContext.isAdmin()`) reads. This is a deliberate, honest stand-in — the same "permissive until
+something real exists" pattern already used for CPQ Config's and Pricing policy's access before this arc —
+designed so wiring up real SSO later only means changing *how* the current user gets set (JIT-provisioned
+from the identity provider on sign-in, instead of a manual pick), not touching any of the `can()`/`isAdmin()`
+call sites that already depend on it. CPQ Config is the first (and so far only) page with real capability
+gating wired in — see above; extending the same `RoleContext.can(...)` pattern to other modules as they get
+built for real is the natural next step.
+
+## SSO configuration
+
+`sso-config.html`, a new Platform subpage, for IT admins to record connection details for the company's
+identity provider (Entra ID / AD via ADFS, Okta, or similar — Supabase Auth supports SAML 2.0 against all
+three) once the organization is ready to connect one. The form (IdP name, entity ID / issuer, SSO URL, X.509
+certificate, and an `enabled` toggle) saves real values to a real table (`sso_config`, a singleton row, same
+pattern as `cpq_pricing_policy`) — but it is **deliberately inert**: nothing anywhere in the app reads this
+table to authenticate anyone, and the page says so explicitly. Enabling is blocked client-side until entity
+ID, SSO URL, and certificate are all filled in, but even a successful "enable" has no effect yet.
+
+This is intentional sequencing, not an oversight: real SSO needs a real identity provider to test against,
+which didn't exist at the time this was built, so it's the one piece of the login story left for last. The
+page itself lists what's still needed once a real IdP is available to test against: a real login screen that
+redirects to the IdP and handles the SAML assertion, just-in-time provisioning into `app_users` on first
+sign-in (replacing the manual "add user" flow in Roles & permissions), a session model tied to the SSO
+identity (replacing the `localStorage` "acting as" picker), and rejecting sign-in for anyone not present in
+the IdP directory so access always tracks AD/IdP membership — the hard security requirement this whole
+feature was built toward.
 
 ### The catalog itself was revised against classvaluation.com
 
@@ -170,8 +277,10 @@ review those from CPQ Config).
 2. Once the project finishes provisioning, open **SQL Editor** in the left sidebar → **New query**, paste
    in the entire contents of `supabase/schema.sql` from this folder, and click **Run**. This creates the
    tables (`clients`, `demands`, `demand_activity`, `demand_attachments`, `demand_scoring_weights`,
-   `cpq_products`, `quotes`, `quote_line_items`), their constraints, starter Row Level Security policies, and
-   the CPQ product/add-on catalog. It's safe to re-run if you ever need to.
+   `cpq_products`, `quotes`, `quote_line_items`, `pricing_tiers`, `pricing_tier_rates`, `cpq_pricing_policy`,
+   `roles`, `role_capabilities`, `app_users`, `user_roles`, `sso_config`), their constraints, starter Row
+   Level Security policies, the CPQ product/add-on catalog, and the seeded roles/capabilities/users described
+   under "Roles & permissions" above. It's safe to re-run if you ever need to.
 3. Open **Project Settings → API**. Copy the **Project URL** and the **`anon` `public`** key (not the
    `service_role` key — that one must never go into client-side code).
 4. Open `supabase-config.js` and fill in both values:
@@ -187,11 +296,13 @@ review those from CPQ Config).
 
 ### About the current access model
 
-Row Level Security is **on**, but every policy is permissive (`using (true)`) — anyone with the anon key
-can read and write. That's intentional for now: Roles & permissions (who can see or do what) hasn't been
-designed yet, and you said that's a later step once more modules exist. Every policy in `schema.sql` is
-written so tightening it later is a small, targeted change (e.g. swapping `using (true)` for a real
-`auth.uid()` check) rather than a rewrite.
+Row Level Security is **on**, but every policy is still permissive (`using (true)`) at the database level —
+anyone with the anon key can read and write every table. Roles & permissions (see above) now exists and
+CPQ Config enforces its capability matrix in the UI, but that's app-level gating, not database-level: the
+underlying Postgres policies aren't tied to a real signed-in identity yet, because there is no real login yet
+(see "Roles & permissions" → the "acting as" switcher, and "SSO configuration"). Every policy in
+`schema.sql` is written so tightening it later — swapping `using (true)` for a real `auth.uid()` check once
+real SSO exists — is a small, targeted change per table rather than a rewrite.
 
 ## Deploying to GitHub Pages
 

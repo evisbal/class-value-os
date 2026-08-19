@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -94,6 +96,13 @@
               
             </div>
           </a>
+<a href="sso-config.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-sso">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">SSO configuration</span>
+              
+            </div>
+          </a>
 <a href="states.html" style="text-decoration:none;display:block">
             <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-states">
               <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
@@ -103,13 +112,12 @@
           </a>
         </div>
     </div>
-    <div style="padding:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px">
+    <div style="position:relative;padding:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px" id="sidebarUserFooter">
       <div style="width:30px;height:30px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">DM</div>
       <div style="min-width:0">
         <div style="color:#E8EEF8;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Dana Mercer</div>
         <div style="color:#7E97BD;font-size:11px">Solutions Engineer</div>
       </div>
-      <div title="Sign out" style="margin-left:auto;color:#7E97BD;font-size:15px;cursor:pointer;padding:0 2px">&#9211;</div>
     </div>
   </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -130,269 +138,10 @@
         <div id="hamburgerBtn" class="topbar-hamburger" style="width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">&#9776;</div>
       </div>
     </div>
-<div id="previewBanner" style="position:sticky;top:0;z-index:50;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:11.5px;padding:7px 20px;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em">STATIC DESIGN PREVIEW — this module is a non-functional mockup with sample data.</div>
+
     <div class="content-viewport" id="contentViewport">
-<div style="padding: 22px 28px 44px; max-width: 1400px;">
-          <div>
-            <div style="font-size: 22px; font-weight: 600; letter-spacing: -0.01em;">Roles &amp; permissions</div>
-            <div style="margin-top: 5px; font-size: 13px; color: rgb(107, 118, 134);">Six roles, fixed by design. Approval thresholds are data here, not code — finance can tighten the cap without a release.</div>
-          </div>
-
-          <div style="margin-top: 16px; display: grid; grid-template-columns: 268px 1fr; gap: 14px; align-items: start;">
-            <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; overflow: hidden;">
-              <div style="padding: 13px 16px; border-bottom: 1px solid rgb(237, 240, 246); font-size: 15.5px; font-weight: 600;">Roles</div>
-              
-                <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid rgb(241, 244, 249); cursor: pointer; background: rgb(245, 249, 255); border-left: 3px solid rgb(1, 62, 144);">
-                  <div style="min-width: 0px;">
-                    <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Account executive</span></div>
-                    <div style="font-size: 11.5px; color: rgb(151, 161, 178); margin-top: 2px;"><span class="sc-interp">24 users</span></div>
-                  </div>
-                  <div style="margin-left: auto; color: rgb(196, 203, 216); font-size: 12px;">›</div>
-                </div>
-              
-                <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid rgb(241, 244, 249); cursor: pointer; background: rgb(255, 255, 255); border-left: 3px solid transparent;">
-                  <div style="min-width: 0px;">
-                    <div style="font-size: 13.5px; font-weight: 500;"><span class="sc-interp">Solutions engineer</span></div>
-                    <div style="font-size: 11.5px; color: rgb(151, 161, 178); margin-top: 2px;"><span class="sc-interp">9 users</span></div>
-                  </div>
-                  <div style="margin-left: auto; color: rgb(196, 203, 216); font-size: 12px;">›</div>
-                </div>
-              
-                <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid rgb(241, 244, 249); cursor: pointer; background: rgb(255, 255, 255); border-left: 3px solid transparent;">
-                  <div style="min-width: 0px;">
-                    <div style="font-size: 13.5px; font-weight: 500;"><span class="sc-interp">Pricing &amp; finance</span></div>
-                    <div style="font-size: 11.5px; color: rgb(151, 161, 178); margin-top: 2px;"><span class="sc-interp">6 users</span></div>
-                  </div>
-                  <div style="margin-left: auto; color: rgb(196, 203, 216); font-size: 12px;">›</div>
-                </div>
-              
-                <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid rgb(241, 244, 249); cursor: pointer; background: rgb(255, 255, 255); border-left: 3px solid transparent;">
-                  <div style="min-width: 0px;">
-                    <div style="font-size: 13.5px; font-weight: 500;"><span class="sc-interp">Implementation PM</span></div>
-                    <div style="font-size: 11.5px; color: rgb(151, 161, 178); margin-top: 2px;"><span class="sc-interp">11 users</span></div>
-                  </div>
-                  <div style="margin-left: auto; color: rgb(196, 203, 216); font-size: 12px;">›</div>
-                </div>
-              
-                <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid rgb(241, 244, 249); cursor: pointer; background: rgb(255, 255, 255); border-left: 3px solid transparent;">
-                  <div style="min-width: 0px;">
-                    <div style="font-size: 13.5px; font-weight: 500;"><span class="sc-interp">Engagement manager</span></div>
-                    <div style="font-size: 11.5px; color: rgb(151, 161, 178); margin-top: 2px;"><span class="sc-interp">8 users</span></div>
-                  </div>
-                  <div style="margin-left: auto; color: rgb(196, 203, 216); font-size: 12px;">›</div>
-                </div>
-              
-                <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid rgb(241, 244, 249); cursor: pointer; background: rgb(255, 255, 255); border-left: 3px solid transparent;">
-                  <div style="min-width: 0px;">
-                    <div style="font-size: 13.5px; font-weight: 500;"><span class="sc-interp">Executive / portfolio</span></div>
-                    <div style="font-size: 11.5px; color: rgb(151, 161, 178); margin-top: 2px;"><span class="sc-interp">5 users</span></div>
-                  </div>
-                  <div style="margin-left: auto; color: rgb(196, 203, 216); font-size: 12px;">›</div>
-                </div>
-              
-              <div style="padding: 13px 16px;">
-                <button style="width: 100%; height: 34px; border-radius: 8px; border: 1px dashed rgb(196, 203, 216); background: rgb(255, 255, 255); font-size: 13px; font-weight: 600; color: rgb(107, 118, 134); cursor: pointer;">Request new role</button>
-              </div>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 14px;">
-              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; overflow: hidden;">
-                <div style="padding: 15px 18px; border-bottom: 1px solid rgb(237, 240, 246); display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                  <div style="font-size: 15.5px; font-weight: 600;">Account executive — capabilities</div>
-                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">24 USERS · LAST CHANGED 12 JUN</div>
-                  <button style="margin-left: auto; height: 31px; padding: 0px 12px; border-radius: 7px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 12.5px; font-weight: 600; cursor: pointer;">Edit capabilities</button>
-                </div>
-                <div style="display: grid; grid-template-columns: 1.6fr repeat(5,.6fr); gap: 10px; padding: 10px 18px; background: rgb(250, 251, 253); font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">
-                  <div>MODULE</div>
-                  
-                    <div style="text-align: center;"><span class="sc-interp">VIEW</span></div>
-                  
-                    <div style="text-align: center;"><span class="sc-interp">CREATE</span></div>
-                  
-                    <div style="text-align: center;"><span class="sc-interp">EDIT</span></div>
-                  
-                    <div style="text-align: center;"><span class="sc-interp">APPROVE</span></div>
-                  
-                    <div style="text-align: center;"><span class="sc-interp">EXPORT</span></div>
-                  
-                </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.6fr repeat(5,.6fr); gap: 10px; padding: 11px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center;">
-                    <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Demand Management</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.6fr repeat(5,.6fr); gap: 10px; padding: 11px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center;">
-                    <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Value CPQ</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(138, 90, 18); font-family: &quot;IBM Plex Mono&quot;, monospace;"><span class="sc-interp">≤12%</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.6fr repeat(5,.6fr); gap: 10px; padding: 11px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center;">
-                    <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Plan Builder</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.6fr repeat(5,.6fr); gap: 10px; padding: 11px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center;">
-                    <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Integration Studio</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.6fr repeat(5,.6fr); gap: 10px; padding: 11px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center;">
-                    <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Delivery</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.6fr repeat(5,.6fr); gap: 10px; padding: 11px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center;">
-                    <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Status Reporting</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.6fr repeat(5,.6fr); gap: 10px; padding: 11px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center;">
-                    <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Engagement Mgmt</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(1, 62, 144); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">✓</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.6fr repeat(5,.6fr); gap: 10px; padding: 11px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center;">
-                    <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Admin &amp; roles</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                      <div style="text-align: center; font-size: 12.5px; font-weight: 600; color: rgb(196, 203, 216); font-family: &quot;Barlow&quot;, sans-serif;"><span class="sc-interp">—</span></div>
-                    
-                  </div>
-                
-              </div>
-
-              <div style="display: grid; grid-template-columns: 1.25fr 1fr; gap: 14px;">
-                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 16px 18px;">
-                  <div style="font-size: 15.5px; font-weight: 600;">Field-level rules</div>
-                  <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 9px;">
-                    
-                      <div style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid rgb(239, 207, 199); background: rgb(253, 244, 242); border-radius: 9px;">
-                        <div style="font-size: 13px; font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">Unit cost &amp; gross margin</span></div>
-                        <div style="margin-left: auto; font-size: 12.5px; color: rgb(168, 57, 43); font-weight: 600;"><span class="sc-interp">Pricing &amp; finance only</span></div>
-                      </div>
-                    
-                      <div style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid rgb(241, 223, 188); background: rgb(254, 250, 242); border-radius: 9px;">
-                        <div style="font-size: 13px; font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">Discount above 12%</span></div>
-                        <div style="margin-left: auto; font-size: 12.5px; color: rgb(138, 90, 18); font-weight: 600;"><span class="sc-interp">Requires finance approval</span></div>
-                      </div>
-                    
-                      <div style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid rgb(241, 223, 188); background: rgb(254, 250, 242); border-radius: 9px;">
-                        <div style="font-size: 13px; font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">Client-identifiable export</span></div>
-                        <div style="margin-left: auto; font-size: 12.5px; color: rgb(138, 90, 18); font-weight: 600;"><span class="sc-interp">Finance, exec, engagement mgr</span></div>
-                      </div>
-                    
-                      <div style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid rgb(239, 207, 199); background: rgb(253, 244, 242); border-radius: 9px;">
-                        <div style="font-size: 13px; font-weight: 600; color: rgb(19, 26, 38);"><span class="sc-interp">Ruleset editing</span></div>
-                        <div style="margin-left: auto; font-size: 12.5px; color: rgb(168, 57, 43); font-weight: 600;"><span class="sc-interp">Product engineering only</span></div>
-                      </div>
-                    
-                  </div>
-                </div>
-                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 16px 18px;">
-                  <div style="font-size: 15.5px; font-weight: 600;">Access review</div>
-                  <div style="margin-top: 3px; font-size: 12.5px; color: rgb(139, 149, 166);">SOC 2 quarterly attestation.</div>
-                  <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px;">
-                    
-                      <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="font-size: 12.5px; color: rgb(90, 100, 116);"><span class="sc-interp">Last attestation</span></div>
-                        <div style="margin-left: auto; font-size: 12.5px; font-weight: 600; text-align: right;"><span class="sc-interp">Q2 2026 · 12 Jun</span></div>
-                      </div>
-                    
-                      <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="font-size: 12.5px; color: rgb(90, 100, 116);"><span class="sc-interp">Next due</span></div>
-                        <div style="margin-left: auto; font-size: 12.5px; font-weight: 600; text-align: right;"><span class="sc-interp">Q3 2026 · 15 Sep</span></div>
-                      </div>
-                    
-                      <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="font-size: 12.5px; color: rgb(90, 100, 116);"><span class="sc-interp">Exceptions open</span></div>
-                        <div style="margin-left: auto; font-size: 12.5px; font-weight: 600; text-align: right;"><span class="sc-interp">1 — temporary deal-desk delegation</span></div>
-                      </div>
-                    
-                  </div>
-                  <button style="margin-top: 13px; width: 100%; height: 34px; border-radius: 8px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 13px; font-weight: 600; cursor: pointer;">Export attestation</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+<div id="roles-app-mount"></div>
+<div id="rl-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(19,26,38,.45);z-index:80;align-items:center;justify-content:center;padding:20px"><div id="rl-modal-box" style="background:#fff;border-radius:14px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto"></div></div>
     </div>
   </div>
 </div>
@@ -409,6 +158,701 @@
   if (bd) bd.addEventListener('click', function(){ setOpen(false); });
 })();
 </script>
+<script>
+// Role context — a shared, provisional stand-in for real login. There is no
+// authentication anywhere in Class Value OS yet (every module runs on one
+// shared Supabase anon key); real SSO is intentionally sequenced last since
+// it needs a real identity provider to test against, which this project
+// doesn't have. Until then, "who's using the app" is this switcher: pick a
+// seeded user from app_users, and every capability check in the app reads
+// whatever role(s) that user is assigned in Supabase — real data, real
+// gating logic, just not yet tied to a real signed-in identity. Swapping in
+// real SSO later means replacing how currentUserId gets set (JIT-provisioned
+// from the IdP instead of a localStorage pick), not touching the data model
+// or any of the can()/isAdmin() call sites that already depend on it.
+//
+// Loaded on every functional page (cpq.html, cpq-config.html, roles.html)
+// BEFORE that page's own module script, so RoleContext.can()/isAdmin() are
+// available by the time the page module renders. Renders into a
+// #sidebarUserFooter element the page shell already has an id on — see
+// build_mpa.js's buildSidebar().
+(function(){
+  var STORAGE_KEY = 'classValueOs.actingAsUserId';
+  var MODULE_LABELS = {
+    demand: 'Demand Management', cpq: 'Value CPQ', 'cpq-config': 'CPQ Config',
+    plan: 'Plan Builder', studio: 'Integration Studio', delivery: 'Delivery',
+    reporting: 'Status Reporting', engagement: 'Engagement Mgmt',
+    roles: 'Roles & permissions', sso: 'SSO configuration'
+  };
 
+  var state = {
+    db: null,
+    users: [],
+    roles: [],
+    roleCapabilities: [],
+    userRoles: [],
+    currentUserId: null,
+    popoverOpen: false,
+    listeners: [],
+    loaded: false
+  };
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){
+    s = (s == null ? '' : String(s));
+    return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+  function initials(name){
+    if (!name) return '—';
+    var parts = name.trim().split(/\s+/);
+    return ((parts[0] || '')[0] || '') + ((parts[1] || '')[0] || '');
+  }
+
+  function available(){
+    return typeof window.supabase !== 'undefined'
+      && !!window.SUPABASE_CONFIG && !!window.SUPABASE_CONFIG.url && !!window.SUPABASE_CONFIG.anonKey;
+  }
+
+  function currentUser(){
+    return state.users.filter(function(u){ return u.id === state.currentUserId; })[0] || null;
+  }
+  function currentRoleIds(){
+    return state.userRoles.filter(function(ur){ return ur.user_id === state.currentUserId; }).map(function(ur){ return ur.role_id; });
+  }
+  function currentRoles(){
+    var ids = currentRoleIds();
+    return state.roles.filter(function(r){ return ids.indexOf(r.id) !== -1; });
+  }
+  // The one function every other module actually calls: does whoever is
+  // currently "acting as" have this capability on this module? A user with
+  // multiple roles gets the union of what any of their roles grant — same
+  // "most permissive role wins" convention as most RBAC systems.
+  function can(module, action){
+    if (!state.loaded) return true; // fail open before roles data has loaded at all, not mid-render
+    var ids = currentRoleIds();
+    if (!ids.length) return false;
+    var field = 'can_' + action;
+    return state.roleCapabilities.some(function(c){
+      return ids.indexOf(c.role_id) !== -1 && c.module === module && c[field] === true;
+    });
+  }
+  function isAdmin(){
+    return currentRoles().some(function(r){ return r.is_admin === true; });
+  }
+  function onChange(fn){ if (typeof fn === 'function') state.listeners.push(fn); }
+  function notify(){ state.listeners.forEach(function(fn){ try { fn(); } catch(e){ console.error('RoleContext listener error', e); } }); }
+
+  function roleNamesLine(){
+    var roles = currentRoles();
+    if (!roles.length) return 'No role assigned';
+    return roles.map(function(r){ return r.name; }).join(', ');
+  }
+
+  function renderSwitcher(){
+    var el = $('sidebarUserFooter');
+    if (!el) return;
+    var u = currentUser();
+    if (!u){
+      el.innerHTML = '<div style="font-size:11.5px;color:#7E97BD">No users seeded yet — add one from Roles &amp; permissions.</div>';
+      return;
+    }
+    el.style.cursor = 'pointer';
+    el.setAttribute('title', 'Switch who you\'re acting as (test mode — no real login yet)');
+    el.innerHTML = '<div style="width:30px;height:30px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex:0 0 auto">' + esc(initials(u.name)) + '</div>'
+      + '<div style="min-width:0;flex:1 1 0">'
+      + '<div style="color:#E8EEF8;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(u.name) + '</div>'
+      + '<div style="color:#7E97BD;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(roleNamesLine()) + '</div>'
+      + '</div>'
+      + '<div style="margin-left:auto;color:#7E97BD;font-size:11px;flex:0 0 auto">&#9662;</div>';
+  }
+
+  function renderPopover(){
+    var existing = $('rc-popover');
+    if (existing) existing.parentNode.removeChild(existing);
+    if (!state.popoverOpen) return;
+    var footer = $('sidebarUserFooter');
+    if (!footer) return;
+    var rowsHtml = state.users.map(function(u){
+      var active = u.id === state.currentUserId;
+      var uRoleIds = state.userRoles.filter(function(ur){ return ur.user_id === u.id; }).map(function(ur){ return ur.role_id; });
+      var uRoles = state.roles.filter(function(r){ return uRoleIds.indexOf(r.id) !== -1; });
+      var label = uRoles.length ? uRoles.map(function(r){ return r.name; }).join(', ') : 'No role assigned';
+      return '<div class="rc-user-row" data-user-id="' + esc(u.id) + '" style="display:flex;align-items:center;gap:9px;padding:9px 12px;cursor:pointer;border-radius:7px;background:' + (active ? 'rgba(1,62,144,.08)' : 'transparent') + '">'
+        + '<div style="width:24px;height:24px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;flex:0 0 auto">' + esc(initials(u.name)) + '</div>'
+        + '<div style="min-width:0;flex:1 1 0">'
+        + '<div style="font-size:12.5px;font-weight:600;color:#131A26;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(u.name) + '</div>'
+        + '<div style="font-size:11px;color:#8B95A6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(label) + '</div>'
+        + '</div>'
+        + (active ? '<div style="color:#013E90;font-size:12px;flex:0 0 auto">&check;</div>' : '')
+        + '</div>';
+    }).join('');
+    var pop = document.createElement('div');
+    pop.id = 'rc-popover';
+    pop.style.cssText = 'position:absolute;left:12px;right:12px;bottom:70px;background:#fff;border:1px solid #DCE2EC;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.28);z-index:60;overflow:hidden';
+    pop.innerHTML = '<div style="padding:9px 12px;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:10px;font-family:\'IBM Plex Mono\',monospace;letter-spacing:.06em">TEST MODE &mdash; NOT REAL LOGIN. STANDS IN UNTIL SSO IS BUILT.</div>'
+      + '<div style="padding:6px;display:flex;flex-direction:column;gap:2px;max-height:280px;overflow-y:auto">' + (rowsHtml || '<div style="padding:10px;font-size:12px;color:#97A1B2">No users yet.</div>') + '</div>'
+      + '<a href="roles.html" style="display:block;padding:9px 12px;border-top:1px solid #EDF0F6;font-size:12px;color:#013E90;text-decoration:none">Manage users &amp; roles &rarr;</a>';
+    var sidebar = document.getElementById('appSidebar');
+    (sidebar || document.body).appendChild(pop);
+  }
+
+  function togglePopover(open){
+    state.popoverOpen = (open != null) ? open : !state.popoverOpen;
+    renderPopover();
+  }
+
+  function switchTo(userId){
+    state.currentUserId = userId;
+    try { window.localStorage.setItem(STORAGE_KEY, userId); } catch(e){}
+    state.popoverOpen = false;
+    renderPopover();
+    renderSwitcher();
+    notify();
+  }
+
+  function wireEvents(){
+    if (document.__roleContextWired) return;
+    document.__roleContextWired = true;
+    document.addEventListener('click', function(e){
+      var footer = e.target.closest && e.target.closest('#sidebarUserFooter');
+      if (footer){ togglePopover(); return; }
+      var row = e.target.closest && e.target.closest('.rc-user-row');
+      if (row){ switchTo(row.getAttribute('data-user-id')); return; }
+      var pop = $('rc-popover');
+      if (pop && !pop.contains(e.target)) togglePopover(false);
+    });
+  }
+
+  function loadData(){
+    // reload() is exposed for other modules to call after they mutate roles/
+    // capabilities/users data (see roles_module.js) — guard against it firing
+    // before RoleContext itself has ever connected (e.g. Supabase isn't
+    // configured at all), rather than throwing on a null state.db.
+    if (!state.db) return Promise.resolve();
+    return Promise.all([
+      Promise.resolve(state.db.from('app_users').select('*').eq('active', true).order('name')),
+      Promise.resolve(state.db.from('roles').select('*').eq('active', true).order('sort_order')),
+      Promise.resolve(state.db.from('role_capabilities').select('*')),
+      Promise.resolve(state.db.from('user_roles').select('*'))
+    ]).then(function(results){
+      var ur = results[0], rr = results[1], cr = results[2], urr = results[3];
+      if (ur.error) throw ur.error;
+      if (rr.error) throw rr.error;
+      if (cr.error) throw cr.error;
+      if (urr.error) throw urr.error;
+      state.users = ur.data || [];
+      state.roles = rr.data || [];
+      state.roleCapabilities = cr.data || [];
+      state.userRoles = urr.data || [];
+      var saved = null;
+      try { saved = window.localStorage.getItem(STORAGE_KEY); } catch(e){}
+      var stillValid = saved && state.users.some(function(u){ return u.id === saved; });
+      state.currentUserId = stillValid ? saved : (state.users[0] ? state.users[0].id : null);
+      state.loaded = true;
+      renderSwitcher();
+      notify();
+    }).catch(function(e){ console.error('RoleContext: could not load', e); });
+  }
+
+  // Re-entrant the same way every other module's init() is: safe to call
+  // repeatedly (e.g. once per page nav in the merged artifact build), only
+  // (re)connects if it hasn't already, always refreshes data.
+  function init(){
+    wireEvents();
+    if (!state.db){
+      if (!available()) return Promise.resolve();
+      try { state.db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
+      catch(e){ return Promise.resolve(); }
+    }
+    return loadData();
+  }
+
+  window.RoleContext = {
+    init: init,
+    can: can,
+    isAdmin: isAdmin,
+    currentUser: currentUser,
+    currentRoles: currentRoles,
+    onChange: onChange,
+    reload: loadData,
+    MODULE_LABELS: MODULE_LABELS
+  };
+})();
+
+window.RoleContext.init();
+</script>
+<script>
+// Roles & permissions — real CRUD now, not the original static mockup.
+// Manages roles, their per-module capability matrix (View/Create/Edit/
+// Approve/Export), and which users are assigned to each role. This is the
+// data every RoleContext.can()/isAdmin() check across the app reads — see
+// fragments/role_context.js for the read side (the sidebar switcher) and
+// CPQ_requirements_scope.md for how this fits the overall phasing.
+//
+// Access: open to every role for now, same pattern as CPQ Config — real
+// gating (only a Platform admin should reach this page) needs real
+// authentication, which doesn't exist yet. The banner at the top says so.
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function esc(s){
+    s = (s == null ? '' : String(s));
+    return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+  function initials(name){
+    if (!name) return '—';
+    var parts = name.trim().split(/\s+/);
+    return ((parts[0] || '')[0] || '') + ((parts[1] || '')[0] || '');
+  }
+
+  // Every module this app has (or is about to have) a capability surface
+  // for. Reuses RoleContext's copy of the same map so the two files can't
+  // silently drift apart.
+  var MODULE_ORDER = ['demand', 'cpq', 'cpq-config', 'plan', 'studio', 'delivery', 'reporting', 'engagement', 'roles', 'sso'];
+  function moduleLabel(m){
+    return (window.RoleContext && window.RoleContext.MODULE_LABELS && window.RoleContext.MODULE_LABELS[m]) || m;
+  }
+  var ACTIONS = [
+    { key: 'can_view', label: 'View' },
+    { key: 'can_create', label: 'Create' },
+    { key: 'can_edit', label: 'Edit' },
+    { key: 'can_approve', label: 'Approve' },
+    { key: 'can_export', label: 'Export' }
+  ];
+
+  var INPUT_STYLE = 'width:100%;height:38px;border:1px solid #DCE2EC;border-radius:8px;padding:0 11px;font-size:13.5px;font-family:inherit;box-sizing:border-box;outline:none';
+  var TEXTAREA_STYLE = 'width:100%;border:1px solid #DCE2EC;border-radius:8px;padding:9px 11px;font-size:13.5px;font-family:inherit;box-sizing:border-box;outline:none;resize:vertical';
+
+  var state = {
+    db: null,
+    roles: [],
+    capabilities: [],
+    users: [],
+    userRoles: [],
+    selectedRoleId: null,
+    showInactiveRoles: false
+  };
+
+  function available(){
+    return typeof window.supabase !== 'undefined'
+      && !!window.SUPABASE_CONFIG && !!window.SUPABASE_CONFIG.url && !!window.SUPABASE_CONFIG.anonKey;
+  }
+  function mount(){ return $('roles-app-mount'); }
+
+  function activeRoles(){
+    return state.roles.filter(function(r){ return state.showInactiveRoles || r.active !== false; });
+  }
+  function selectedRole(){
+    return state.roles.filter(function(r){ return r.id === state.selectedRoleId; })[0] || null;
+  }
+  function capsForRole(roleId){
+    var byModule = {};
+    state.capabilities.filter(function(c){ return c.role_id === roleId; }).forEach(function(c){ byModule[c.module] = c; });
+    return byModule;
+  }
+  function usersForRole(roleId){
+    var userIds = state.userRoles.filter(function(ur){ return ur.role_id === roleId; }).map(function(ur){ return ur.user_id; });
+    return state.users.filter(function(u){ return userIds.indexOf(u.id) !== -1; });
+  }
+  function userCount(roleId){
+    return state.userRoles.filter(function(ur){ return ur.role_id === roleId; }).length;
+  }
+  function rolesForUser(userId){
+    var roleIds = state.userRoles.filter(function(ur){ return ur.user_id === userId; }).map(function(ur){ return ur.role_id; });
+    return state.roles.filter(function(r){ return roleIds.indexOf(r.id) !== -1; });
+  }
+
+  // ---------------------------------------------------------------------
+  // rendering
+  // ---------------------------------------------------------------------
+  function renderRoleListItem(r){
+    var active = r.id === state.selectedRoleId;
+    var inactive = r.active === false;
+    return '<div class="rl-role-row" data-id="' + esc(r.id) + '" style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid #F1F4F9;cursor:pointer;background:' + (active ? '#F5F9FF' : '#fff') + ';border-left:3px solid ' + (active ? '#013E90' : 'transparent') + ';opacity:' + (inactive ? '.55' : '1') + '">'
+      + '<div style="min-width:0;flex:1 1 0">'
+      + '<div style="font-size:13.5px;font-weight:' + (active ? '600' : '500') + ';display:flex;align-items:center;gap:6px">' + esc(r.name)
+      + (r.is_admin ? '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:8.5px;letter-spacing:.08em;color:#012E6B;background:#EAF1FB;border:1px solid #C9DCF2;border-radius:5px;padding:1px 5px">ADMIN</span>' : '')
+      + (inactive ? '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:8.5px;letter-spacing:.08em;color:#8B95A6;border:1px solid #DCE2EC;border-radius:5px;padding:1px 5px">INACTIVE</span>' : '')
+      + '</div>'
+      + '<div style="font-size:11.5px;color:#97A1B2;margin-top:2px">' + userCount(r.id) + ' user' + (userCount(r.id) === 1 ? '' : 's') + '</div>'
+      + '</div>'
+      + '<div style="color:#C4CBD8;font-size:12px">&rsaquo;</div>'
+      + '</div>';
+  }
+
+  function renderRoleList(){
+    var roles = activeRoles().slice().sort(function(a, b){ return (a.sort_order || 0) - (b.sort_order || 0); });
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;overflow:hidden">'
+      + '<div style="padding:13px 16px;border-bottom:1px solid #EDF0F6;font-size:15.5px;font-weight:600">Roles</div>'
+      + roles.map(renderRoleListItem).join('')
+      + '<div style="padding:10px 12px;border-top:1px solid #F1F4F9">'
+      + '<label style="display:flex;align-items:center;gap:7px;font-size:11.5px;color:#7E97BD;cursor:pointer;padding:4px 4px 8px"><input type="checkbox" id="rl-show-inactive" ' + (state.showInactiveRoles ? 'checked' : '') + ' style="width:13px;height:13px"> Show inactive</label>'
+      + '<button type="button" id="rl-add-role-btn" style="width:100%;height:34px;border-radius:8px;border:1px dashed #C4CBD8;background:#fff;font-size:13px;font-weight:600;color:#6B7686;cursor:pointer">+ Request new role</button>'
+      + '</div></div>';
+  }
+
+  function renderCapabilityRow(module, caps){
+    var c = caps[module] || {};
+    var cells = ACTIONS.map(function(a){
+      var on = c[a.key] === true;
+      return '<div style="text-align:center;font-size:12.5px;font-weight:600;color:' + (on ? '#013E90' : '#C4CBD8') + '">' + (on ? '&check;' : '&mdash;') + '</div>';
+    }).join('');
+    return '<div style="display:grid;grid-template-columns:1.6fr repeat(5,.7fr);gap:10px;padding:11px 18px;border-top:1px solid #F1F4F9;align-items:center">'
+      + '<div style="font-size:13.5px;font-weight:600">' + esc(moduleLabel(module)) + '</div>'
+      + cells + '</div>';
+  }
+
+  function renderCapabilitiesCard(role){
+    var caps = capsForRole(role.id);
+    var header = '<div style="display:grid;grid-template-columns:1.6fr repeat(5,.7fr);gap:10px;padding:10px 18px;background:#FAFBFD;font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.1em;color:#8B95A6">'
+      + '<div>MODULE</div>' + ACTIONS.map(function(a){ return '<div style="text-align:center">' + a.label.toUpperCase() + '</div>'; }).join('') + '</div>';
+    var rows = MODULE_ORDER.map(function(m){ return renderCapabilityRow(m, caps); }).join('');
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;overflow:hidden">'
+      + '<div style="padding:15px 18px;border-bottom:1px solid #EDF0F6;display:flex;align-items:center;gap:12px;flex-wrap:wrap">'
+      + '<div style="font-size:15.5px;font-weight:600">' + esc(role.name) + ' &mdash; capabilities</div>'
+      + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.1em;color:#8B95A6">' + userCount(role.id) + ' USER' + (userCount(role.id) === 1 ? '' : 'S') + '</div>'
+      + '<button type="button" class="rl-edit-caps-btn" data-id="' + esc(role.id) + '" style="margin-left:auto;height:31px;padding:0 12px;border-radius:7px;border:1px solid #DCE2EC;background:#fff;font-size:12.5px;font-weight:600;cursor:pointer">Edit capabilities</button>'
+      + '</div>' + header + rows + '</div>';
+  }
+
+  function renderUsersCard(role){
+    var users = usersForRole(role.id);
+    var rows = users.length ? users.map(function(u){
+      return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid #F1F4F9">'
+        + '<div style="width:26px;height:26px;border-radius:99px;background:#EAF1FB;color:#012E6B;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex:0 0 auto">' + esc(initials(u.name)) + '</div>'
+        + '<div style="min-width:0;flex:1 1 0"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(u.name) + '</div>'
+        + '<div style="font-size:11px;color:#97A1B2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(u.email) + (u.active === false ? ' &middot; deactivated' : '') + '</div></div>'
+        + '<button type="button" class="rl-remove-user-btn" data-user="' + esc(u.id) + '" data-role="' + esc(role.id) + '" style="flex:0 0 auto;height:26px;padding:0 9px;border-radius:6px;border:1px solid #EFCFC7;background:#fff;color:#8A2A12;font-size:11px;font-weight:600;cursor:pointer">Remove</button>'
+        + '</div>';
+    }).join('') : '<div style="padding:10px 0;font-size:12.5px;color:#97A1B2">No users assigned to this role yet.</div>';
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px">'
+      + '<div style="display:flex;align-items:center;gap:10px">'
+      + '<div style="font-size:15.5px;font-weight:600">Users in this role</div>'
+      + '<button type="button" class="rl-add-user-btn" data-id="' + esc(role.id) + '" style="margin-left:auto;height:30px;padding:0 12px;border-radius:7px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">+ Add user</button>'
+      + '</div>' + rows + '</div>';
+  }
+
+  function renderRoleDetail(){
+    var role = selectedRole();
+    if (!role){
+      return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:30px;text-align:center;color:#97A1B2;font-size:13px">Select a role on the left.</div>';
+    }
+    var deactivateBtn = '<button type="button" id="rl-toggle-role-active" style="height:30px;padding:0 12px;border-radius:7px;border:1px solid ' + (role.active === false ? '#B8DB92' : '#F1C4BC') + ';background:#fff;color:' + (role.active === false ? '#3C6B1D' : '#8A2A12') + ';font-size:12px;font-weight:600;cursor:pointer">' + (role.active === false ? 'Reactivate role' : 'Deactivate role') + '</button>';
+    var editBtn = '<button type="button" id="rl-edit-role-btn" style="height:30px;padding:0 12px;border-radius:7px;border:1px solid #DCE2EC;background:#fff;font-size:12px;font-weight:600;cursor:pointer">Edit role</button>';
+    return '<div style="display:flex;flex-direction:column;gap:14px">'
+      + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">'
+      + '<div><div style="font-size:13px;color:#6B7686;line-height:1.5;max-width:560px">' + esc(role.description || 'No description yet.') + '</div></div>'
+      + '<div style="display:flex;gap:8px;flex:0 0 auto">' + editBtn + deactivateBtn + '</div>'
+      + '</div>'
+      + renderCapabilitiesCard(role)
+      + renderUsersCard(role)
+      + '</div>';
+  }
+
+  function renderRoot(){
+    var m = mount();
+    if (!m) return;
+    m.innerHTML = '<div style="padding:20px 28px 48px;max-width:1400px">'
+      + '<div style="margin-bottom:14px">'
+      + '<div style="font-size:20px;font-weight:600">Roles &amp; permissions</div>'
+      + '<div style="font-size:13px;color:#6B7686;margin-top:2px">Nine roles. Capabilities are data here, not code — a capability change takes effect the moment it\'s saved, no release needed.</div>'
+      + '</div>'
+      + '<div style="background:#FDF3E0;border:1px solid #F1DFBC;border-radius:10px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start;margin-bottom:16px">'
+      + '<div style="width:18px;height:18px;border-radius:99px;background:#8A5A12;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px">!</div>'
+      + '<div style="font-size:13px;line-height:1.55;color:#6E4A11">There is no real login yet — the "acting as" picker in the sidebar stands in for it. What\'s real here: the roles, their capabilities, and who\'s assigned to them. Real enforcement (stopping someone, not just hiding a button) needs the SSO integration under Platform &rarr; SSO configuration, which is intentionally being built last.</div>'
+      + '</div>'
+      + '<div style="display:grid;grid-template-columns:280px 1fr;gap:14px;align-items:start">'
+      + renderRoleList()
+      + renderRoleDetail()
+      + '</div></div>';
+  }
+
+  function renderNotConnected(){
+    var m = mount();
+    if (!m) return;
+    m.innerHTML = '<div style="padding:20px 28px 48px;max-width:1200px">'
+      + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px">'
+      + '<div style="font-size:14px;font-weight:600;margin-bottom:4px">Roles &amp; permissions</div>'
+      + '<div style="font-size:12.5px;color:#97A1B2">Connect Supabase (see <code>supabase-config.js</code>) to manage roles here.</div>'
+      + '</div></div>';
+  }
+
+  // ---------------------------------------------------------------------
+  // modal — role create/edit
+  // ---------------------------------------------------------------------
+  function fieldBlock(label, inputHtml){
+    return '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">' + esc(label) + '</div>' + inputHtml + '</div>';
+  }
+  function closeModal(){
+    var overlay = $('rl-modal-overlay');
+    if (overlay) overlay.style.display = 'none';
+    var box = $('rl-modal-box');
+    if (box) box.innerHTML = '';
+  }
+  function showToast(msg){
+    var existingEl = document.getElementById('rl-toast');
+    if (existingEl) existingEl.parentNode.removeChild(existingEl);
+    var el = document.createElement('div');
+    el.id = 'rl-toast';
+    el.textContent = msg;
+    el.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#131A26;color:#fff;font-size:13px;padding:10px 16px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:999;max-width:90vw;text-align:center';
+    document.body.appendChild(el);
+    setTimeout(function(){ if (el.parentNode) el.parentNode.removeChild(el); }, 3500);
+  }
+
+  function openCreateRoleModal(){
+    renderRoleModal('create', null, { name: '', description: '', is_admin: false });
+  }
+  function openEditRoleModal(id){
+    var r = state.roles.filter(function(x){ return x.id === id; })[0];
+    if (!r) return;
+    renderRoleModal('edit', r, Object.assign({}, r));
+  }
+  function renderRoleModal(mode, existing, draft){
+    var title = mode === 'create' ? 'Request new role' : ('Edit ' + existing.name);
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">' + esc(title) + '</div></div>'
+      + '<div style="padding:18px 22px;display:flex;flex-direction:column;gap:14px">'
+      + fieldBlock('Name', '<input id="rl-f-name" type="text" value="' + esc(draft.name || '') + '" placeholder="e.g. Regional pricing lead" style="' + INPUT_STYLE + '">')
+      + fieldBlock('Description', '<textarea id="rl-f-description" rows="2" style="' + TEXTAREA_STYLE + '">' + esc(draft.description || '') + '</textarea>')
+      + '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#3E4A5C;cursor:pointer;width:max-content"><input type="checkbox" id="rl-f-is-admin" ' + (draft.is_admin ? 'checked' : '') + ' style="width:15px;height:15px"> Platform admin (can manage roles &amp; permissions and SSO configuration)</label>'
+      + '</div>'
+      + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
+      + '<button type="button" id="rl-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+      + '<button type="button" id="rl-modal-save" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">' + (mode === 'create' ? 'Create role' : 'Save changes') + '</button>'
+      + '</div>';
+    $('rl-modal-box').innerHTML = html;
+    $('rl-modal-overlay').style.display = 'flex';
+    $('rl-modal-cancel').addEventListener('click', closeModal);
+    $('rl-modal-save').addEventListener('click', function(){ saveRoleModal(mode, existing); });
+  }
+  function nextSortOrder(){
+    return state.roles.reduce(function(m, r){ return Math.max(m, Number(r.sort_order) || 0); }, 0) + 1;
+  }
+  function saveRoleModal(mode, existing){
+    var name = $('rl-f-name').value.trim();
+    if (!name){ showToast('Name is required.'); return; }
+    var draft = {
+      name: name,
+      description: $('rl-f-description').value.trim() || null,
+      is_admin: $('rl-f-is-admin').checked
+    };
+    var db = state.db;
+    var req = mode === 'create'
+      ? db.from('roles').insert(Object.assign({ sort_order: nextSortOrder() }, draft)).select().single()
+      : db.from('roles').update(draft).eq('id', existing.id).select().single();
+    Promise.resolve(req).then(function(r){
+      if (r.error) throw r.error;
+      if (mode === 'create' && r.data) state.selectedRoleId = r.data.id;
+      closeModal();
+      return loadData();
+    }).catch(function(e){ showToast('Could not save: ' + (e.message || e)); });
+  }
+  function toggleRoleActive(role){
+    Promise.resolve(state.db.from('roles').update({ active: role.active === false }).eq('id', role.id)).then(function(r){
+      if (r.error) throw r.error;
+      return loadData();
+    }).catch(function(e){ showToast('Could not update: ' + (e.message || e)); });
+  }
+
+  // ---------------------------------------------------------------------
+  // modal — capabilities editor
+  // ---------------------------------------------------------------------
+  function openCapabilitiesModal(roleId){
+    var role = state.roles.filter(function(r){ return r.id === roleId; })[0];
+    if (!role) return;
+    var caps = capsForRole(roleId);
+    var rows = MODULE_ORDER.map(function(m){
+      var c = caps[m] || {};
+      var cells = ACTIONS.map(function(a){
+        return '<div style="text-align:center"><input type="checkbox" class="rl-cap-check" data-module="' + esc(m) + '" data-action="' + a.key + '" ' + (c[a.key] ? 'checked' : '') + ' style="width:16px;height:16px"></div>';
+      }).join('');
+      return '<div style="display:grid;grid-template-columns:1.5fr repeat(5,.7fr);gap:8px;padding:8px 4px;border-top:1px solid #F1F4F9;align-items:center">'
+        + '<div style="font-size:12.5px;font-weight:600">' + esc(moduleLabel(m)) + '</div>' + cells + '</div>';
+    }).join('');
+    var header = '<div style="display:grid;grid-template-columns:1.5fr repeat(5,.7fr);gap:8px;padding:6px 4px;font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.08em;color:#8B95A6">'
+      + '<div></div>' + ACTIONS.map(function(a){ return '<div style="text-align:center">' + a.label.toUpperCase() + '</div>'; }).join('') + '</div>';
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">' + esc(role.name) + ' &mdash; edit capabilities</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">Saves immediately for everyone acting as this role.</div></div>'
+      + '<div style="padding:14px 22px;max-height:56vh;overflow-y:auto">' + header + rows + '</div>'
+      + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
+      + '<button type="button" id="rl-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+      + '<button type="button" id="rl-caps-save" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Save capabilities</button>'
+      + '</div>';
+    $('rl-modal-box').innerHTML = html;
+    $('rl-modal-overlay').style.display = 'flex';
+    $('rl-modal-cancel').addEventListener('click', closeModal);
+    $('rl-caps-save').addEventListener('click', function(){ saveCapabilities(roleId); });
+  }
+  function saveCapabilities(roleId){
+    var checks = Array.prototype.slice.call(document.querySelectorAll('.rl-cap-check'));
+    var byModule = {};
+    MODULE_ORDER.forEach(function(m){ byModule[m] = { role_id: roleId, module: m, can_view: false, can_create: false, can_edit: false, can_approve: false, can_export: false }; });
+    checks.forEach(function(el){
+      var m = el.getAttribute('data-module'), a = el.getAttribute('data-action');
+      if (byModule[m]) byModule[m][a] = el.checked;
+    });
+    var db = state.db;
+    var existing = capsForRole(roleId);
+    var ops = MODULE_ORDER.map(function(m){
+      var payload = byModule[m];
+      var row = existing[m];
+      if (row) return Promise.resolve(db.from('role_capabilities').update(payload).eq('id', row.id));
+      return Promise.resolve(db.from('role_capabilities').insert(payload));
+    });
+    Promise.all(ops).then(function(results){
+      var failed = results.filter(function(r){ return r && r.error; })[0];
+      if (failed) throw failed.error;
+      closeModal();
+      return loadData();
+    }).catch(function(e){ showToast('Could not save capabilities: ' + (e.message || e)); });
+  }
+
+  // ---------------------------------------------------------------------
+  // modal — add user to role (create-or-assign, single flow)
+  // ---------------------------------------------------------------------
+  function openAddUserModal(roleId){
+    var role = state.roles.filter(function(r){ return r.id === roleId; })[0];
+    if (!role) return;
+    var assignedIds = state.userRoles.filter(function(ur){ return ur.role_id === roleId; }).map(function(ur){ return ur.user_id; });
+    var candidates = state.users.filter(function(u){ return assignedIds.indexOf(u.id) === -1; });
+    var options = candidates.map(function(u){ return '<option value="' + esc(u.id) + '">' + esc(u.name) + ' (' + esc(u.email) + ')</option>'; }).join('');
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">Add a user to ' + esc(role.name) + '</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">Pick an existing user, or type a name and email to create one (no self-serve sign-up — accounts are only ever created here or, once built, by SSO on first login).</div></div>'
+      + '<div style="padding:18px 22px;display:flex;flex-direction:column;gap:14px">'
+      + fieldBlock('Existing user', '<select id="rl-au-existing" style="' + INPUT_STYLE + '"><option value="">— create a new user instead —</option>' + options + '</select>')
+      + '<div style="font-size:11.5px;color:#97A1B2;text-align:center">or</div>'
+      + fieldBlock('New user — name', '<input id="rl-au-name" type="text" style="' + INPUT_STYLE + '" placeholder="Full name">')
+      + fieldBlock('New user — email', '<input id="rl-au-email" type="email" style="' + INPUT_STYLE + '" placeholder="name@classvaluation.com">')
+      + '</div>'
+      + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
+      + '<button type="button" id="rl-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+      + '<button type="button" id="rl-au-save" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Add to role</button>'
+      + '</div>';
+    $('rl-modal-box').innerHTML = html;
+    $('rl-modal-overlay').style.display = 'flex';
+    $('rl-modal-cancel').addEventListener('click', closeModal);
+    $('rl-au-save').addEventListener('click', function(){ saveAddUser(roleId); });
+  }
+  function saveAddUser(roleId){
+    var db = state.db;
+    var existingId = $('rl-au-existing').value;
+    function assign(userId){
+      return Promise.resolve(db.from('user_roles').insert({ user_id: userId, role_id: roleId })).then(function(r){
+        if (r.error) throw r.error;
+        closeModal();
+        return loadData();
+      });
+    }
+    if (existingId){
+      assign(existingId).catch(function(e){ showToast('Could not assign: ' + (e.message || e)); });
+      return;
+    }
+    var name = $('rl-au-name').value.trim();
+    var email = $('rl-au-email').value.trim();
+    if (!name || !email){ showToast('Pick an existing user, or fill in both name and email for a new one.'); return; }
+    var existingByEmail = state.users.filter(function(u){ return u.email.toLowerCase() === email.toLowerCase(); })[0];
+    var createOrFind = existingByEmail
+      ? Promise.resolve({ data: existingByEmail, error: null })
+      : Promise.resolve(db.from('app_users').insert({ name: name, email: email }).select().single());
+    createOrFind.then(function(r){
+      if (r.error) throw r.error;
+      return assign(r.data.id);
+    }).catch(function(e){ showToast('Could not add user: ' + (e.message || e)); });
+  }
+  function removeUserFromRole(userId, roleId){
+    Promise.resolve(state.db.from('user_roles').delete().eq('user_id', userId).eq('role_id', roleId)).then(function(r){
+      if (r.error) throw r.error;
+      return loadData();
+    }).catch(function(e){ showToast('Could not remove: ' + (e.message || e)); });
+  }
+
+  // ---------------------------------------------------------------------
+  // events + data
+  // ---------------------------------------------------------------------
+  function wireEvents(){
+    var m = mount();
+    if (!m || m.__rolesWired) return;
+    m.__rolesWired = true;
+
+    m.addEventListener('click', function(e){
+      var roleRow = e.target.closest && e.target.closest('.rl-role-row');
+      if (roleRow){ state.selectedRoleId = roleRow.getAttribute('data-id'); renderRoot(); return; }
+
+      var addRoleBtn = e.target.closest && e.target.closest('#rl-add-role-btn');
+      if (addRoleBtn){ openCreateRoleModal(); return; }
+
+      var editRoleBtn = e.target.closest && e.target.closest('#rl-edit-role-btn');
+      if (editRoleBtn){ openEditRoleModal(state.selectedRoleId); return; }
+
+      var toggleActiveBtn = e.target.closest && e.target.closest('#rl-toggle-role-active');
+      if (toggleActiveBtn){ var role = selectedRole(); if (role) toggleRoleActive(role); return; }
+
+      var editCapsBtn = e.target.closest && e.target.closest('.rl-edit-caps-btn');
+      if (editCapsBtn){ openCapabilitiesModal(editCapsBtn.getAttribute('data-id')); return; }
+
+      var addUserBtn = e.target.closest && e.target.closest('.rl-add-user-btn');
+      if (addUserBtn){ openAddUserModal(addUserBtn.getAttribute('data-id')); return; }
+
+      var removeUserBtn = e.target.closest && e.target.closest('.rl-remove-user-btn');
+      if (removeUserBtn){ removeUserFromRole(removeUserBtn.getAttribute('data-user'), removeUserBtn.getAttribute('data-role')); return; }
+    });
+
+    m.addEventListener('change', function(e){
+      if (e.target && e.target.id === 'rl-show-inactive'){
+        state.showInactiveRoles = e.target.checked;
+        renderRoot();
+      }
+    });
+
+    var overlay = $('rl-modal-overlay');
+    if (overlay){
+      overlay.addEventListener('click', function(e){ if (e.target.id === 'rl-modal-overlay') closeModal(); });
+    }
+  }
+
+  function loadData(){
+    return Promise.all([
+      Promise.resolve(state.db.from('roles').select('*').order('sort_order')),
+      Promise.resolve(state.db.from('role_capabilities').select('*')),
+      Promise.resolve(state.db.from('app_users').select('*').order('name')),
+      Promise.resolve(state.db.from('user_roles').select('*'))
+    ]).then(function(results){
+      var rr = results[0], cr = results[1], ur = results[2], urr = results[3];
+      if (rr.error) throw rr.error;
+      if (cr.error) throw cr.error;
+      if (ur.error) throw ur.error;
+      if (urr.error) throw urr.error;
+      state.roles = rr.data || [];
+      state.capabilities = cr.data || [];
+      state.users = ur.data || [];
+      state.userRoles = urr.data || [];
+      if (!state.selectedRoleId || !state.roles.some(function(r){ return r.id === state.selectedRoleId; })){
+        var firstActive = state.roles.filter(function(r){ return r.active !== false; })[0];
+        state.selectedRoleId = firstActive ? firstActive.id : (state.roles[0] ? state.roles[0].id : null);
+      }
+      renderRoot();
+      // Roles/capabilities data just changed — RoleContext's own copy (used
+      // by every capability check elsewhere in the app) is now stale until
+      // it reloads, so nudge it rather than waiting for a full page nav.
+      if (window.RoleContext && window.RoleContext.reload) window.RoleContext.reload();
+    }).catch(function(e){ console.error('RolesModule: could not load', e); renderNotConnected(); });
+  }
+
+  function init(){
+    if (!state.db){
+      if (!available()){ renderNotConnected(); return; }
+      try { state.db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
+      catch(e){ renderNotConnected(); return; }
+      wireEvents();
+      loadData();
+      return;
+    }
+    loadData();
+  }
+
+  window.RolesModule = { init: init };
+})();
+
+window.RolesModule.init();
+</script>
 </body>
 </html>
