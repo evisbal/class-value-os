@@ -613,7 +613,7 @@
 // the quote list, quote lifecycle, and the first two real steps.
 (function(){
   var CURRENT_USER = 'Dana Mercer';
-  var CPQ_STEPS = ['client_demand','configure','rules_check','pricing_terms','quote_approvals'];
+  var CPQ_STEPS = ['client_demand','configure','pricing_terms','rules_check','quote_approvals'];
   var STEP_LABEL = { client_demand:'Client & demand', configure:'Configure', rules_check:'Rules check', pricing_terms:'Pricing & terms', quote_approvals:'Quote & approvals' };
   var GUIDED_QUESTIONS = [
     { key:'use_case', label:'Primary use case', options:['Origination','Home equity','Servicing','New construction'] },
@@ -940,7 +940,7 @@
       + '<div style="display:flex;justify-content:space-between;gap:10px;font-size:13px"><div style="color:#5A6474">Products (<span id="cpq-lp-pcount">' + t.productsCount + '</span>)</div><div id="cpq-lp-products" style="font-weight:600">' + fmtUsd(t.productsSubtotal) + '</div></div>'
       + '<div style="display:flex;justify-content:space-between;gap:10px;font-size:13px"><div style="color:#5A6474">Add-ons (<span id="cpq-lp-acount">' + t.addonsCount + '</span>)</div><div id="cpq-lp-addons" style="font-weight:600">' + fmtUsd(t.addonsSubtotal) + '</div></div>'
       + '</div>'
-      + '<div style="margin-top:14px;padding-top:14px;border-top:1px dashed #E3E8F0;font-size:12px;color:#8B95A6;line-height:1.5">Discounts, margin floor and pricing model are configured in Pricing &amp; terms (step 4) — not built yet in this phase.</div>'
+      + '<div style="margin-top:14px;padding-top:14px;border-top:1px dashed #E3E8F0;font-size:12px;color:#8B95A6;line-height:1.5">Discounts, margin floor and pricing model are configured in Pricing &amp; terms (step 3) — not built yet in this phase.</div>'
       + '</div></div>';
   }
 
@@ -957,14 +957,42 @@
   // ---------------------------------------------------------------------
   // editor: header + tabs
   // ---------------------------------------------------------------------
+  // Tab checkmarks reflect real captured data on that step — not just
+  // "comes before the tab I'm currently on" — mirroring the plan builder's
+  // stepper. A step earns a check the moment it has something in it, and
+  // keeps it even if you jump ahead and back; a step you've merely scrolled
+  // past without entering anything stays unchecked.
+  function stepHasData(step){
+    var q = state.currentQuote;
+    if (step === 'client_demand'){
+      // guided_answers keeps a key with a null value once a chip's been
+      // toggled off, so check for a truthy answer rather than just key
+      // presence — otherwise a deselected chip would still "count".
+      var answered = q && q.guided_answers && Object.keys(q.guided_answers).some(function(k){ return !!q.guided_answers[k]; });
+      return !!(q && (q.pricing_tier_id || answered));
+    }
+    if (step === 'configure'){
+      return selectedLineItems().length > 0;
+    }
+    if (step === 'rules_check'){
+      // Rules check is computed live from Configure — it only reflects a
+      // real evaluation once something's actually configured.
+      return selectedLineItems().length > 0;
+    }
+    // pricing_terms and quote_approvals are still static design previews —
+    // there's no real data model behind them yet, so they never earn a check.
+    return false;
+  }
+
   function renderHeader(){
     var q = state.currentQuote, d = state.currentDemand, c = state.currentClient;
-    var idx = CPQ_STEPS.indexOf(state.activeTab);
     var tabs = CPQ_STEPS.map(function(s, i){
-      var border = i === idx ? '2px solid #013E90' : '2px solid transparent';
+      var active = s === state.activeTab;
+      var done = !active && stepHasData(s);
+      var border = active ? '2px solid #013E90' : '2px solid transparent';
       var bg, color, borderC, labelColor, labelWeight, markerText;
-      if (i < idx){ bg='#EAF1FB'; color='#012E6B'; borderC='#C9DCF2'; labelColor='#6B7686'; labelWeight='500'; markerText='&check;'; }
-      else if (i === idx){ bg='#013E90'; color='#fff'; borderC='#013E90'; labelColor='#131A26'; labelWeight='600'; markerText=String(i+1); }
+      if (active){ bg='#013E90'; color='#fff'; borderC='#013E90'; labelColor='#131A26'; labelWeight='600'; markerText=String(i+1); }
+      else if (done){ bg='#EAF1FB'; color='#012E6B'; borderC='#C9DCF2'; labelColor='#6B7686'; labelWeight='500'; markerText='&check;'; }
       else { bg='#fff'; color='#97A1B2'; borderC='#DCE2EC'; labelColor='#6B7686'; labelWeight='500'; markerText=String(i+1); }
       return '<div class="cpq-tab-btn" data-tab="' + s + '" style="display:flex;align-items:center;gap:9px;padding:11px 16px 12px;border-bottom:' + border + ';cursor:pointer">'
         + '<span style="width:20px;height:20px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;background:' + bg + ';color:' + color + ';border:1px solid ' + borderC + '">' + markerText + '</span>'
@@ -1196,8 +1224,8 @@
     var appliedTier = activeTier();
     rules.push({ id:'discount_authority', title:'Discount authority', severity:'info',
       description: appliedTier
-        ? (appliedTier.name + ' tier applied — line items above use its rate card where one exists. Any discount beyond the tier still isn’t evaluated until Pricing & terms (next phase).')
-        : 'Not evaluated yet — no pricing tier applied, and ad hoc discounts are captured in Pricing & terms (next phase).' });
+        ? (appliedTier.name + ' tier applied — line items above use its rate card where one exists. Any discount beyond the tier still isn’t evaluated — Pricing & terms doesn’t capture real discount data yet.')
+        : 'Not evaluated yet — no pricing tier applied, and Pricing & terms (previous step) doesn’t capture ad hoc discounts yet — it’s still a design preview.' });
 
     return rules;
   }
