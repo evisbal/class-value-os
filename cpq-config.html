@@ -200,6 +200,12 @@
   };
   var FAMILY_ORDER = ['appraisal_offering', 'alternative_valuation', 'addon_solution'];
   var UNIT_LABEL_META = { order: 'Per order', month: 'Per month (flat)', account: 'Custom-priced per account' };
+  // Mirrors cpq_module.js's MARGIN_FLOOR_PCT — kept as a duplicated literal
+  // (no shared module system between these two files) rather than fetched,
+  // since it's a fixed placeholder pending the future Sales-VP configurator.
+  // Only used here to color the margin preview; the actual floor check and
+  // approval trigger live in Pricing & terms, not here.
+  var MARGIN_FLOOR_PCT = 42;
 
   var INPUT_STYLE = 'width:100%;height:38px;border:1px solid #DCE2EC;border-radius:8px;padding:0 11px;font-size:13.5px;font-family:inherit;box-sizing:border-box;outline:none';
   var TEXTAREA_STYLE = 'width:100%;border:1px solid #DCE2EC;border-radius:8px;padding:9px 11px;font-size:13.5px;font-family:inherit;box-sizing:border-box;outline:none;resize:vertical';
@@ -228,6 +234,24 @@
     }
     return 'Custom-priced';
   }
+  // Margin lives here (list price vs. cost to deliver), not at the client or
+  // bundle level — cost varies by product (a licensed-appraiser dispatch
+  // costs far more than an automated AVM) and doesn't change with whatever
+  // tier or ad hoc discount gets applied later in Pricing & terms, so this is
+  // the one place it needs to be entered and kept current. null = not yet
+  // costed, shown honestly rather than assumed to be 0.
+  function marginPct(p){
+    var cost = p.unit_cost;
+    var price = Number(p.unit_price);
+    if (cost == null || cost === '' || !price) return null;
+    return ((price - Number(cost)) / price) * 100;
+  }
+  function marginLine(p){
+    var m = marginPct(p);
+    if (m == null) return '<span style="color:#97A1B2">No cost set — margin unknown</span>';
+    var color = m < MARGIN_FLOOR_PCT ? '#C4472C' : '#3C6B1D';
+    return fmtUsd(p.unit_cost) + ' cost &middot; <span style="color:' + color + ';font-weight:600">' + m.toFixed(1) + '% margin</span>';
+  }
   function segmentsLine(p){
     if (!p.eligible_segments || !p.eligible_segments.length) return 'All segments';
     return p.eligible_segments.join(', ');
@@ -245,7 +269,8 @@
       + '</div>'
       + '<div style="margin-top:4px;font-size:12.5px;color:#6B7686;line-height:1.45">' + esc(p.description || '—') + '</div>'
       + '</div>'
-      + '<div style="text-align:right;flex:0 0 auto"><div style="font-size:14.5px;font-weight:600;white-space:nowrap">' + priceLine(p) + '</div></div>'
+      + '<div style="text-align:right;flex:0 0 auto"><div style="font-size:14.5px;font-weight:600;white-space:nowrap">' + priceLine(p) + '</div>'
+      + '<div style="margin-top:2px;font-size:11px;white-space:nowrap">' + marginLine(p) + '</div></div>'
       + '</div>'
       + '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:9px;border-top:1px dashed #E3E8F0">'
       + '<div style="min-width:0;font-size:11.5px;color:#8B95A6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(segmentsLine(p)) + (p.requires_note ? ' &middot; ' + esc(p.requires_note) : '') + '</div>'
@@ -396,7 +421,7 @@
     var meta = FAMILY_META[fam];
     var draft = {
       family: fam, category: meta.category, unit_label: meta.defaultUnitLabel,
-      unit_price: 0, sort_order: nextSortOrder(meta.category), data_ready: true,
+      unit_price: 0, unit_cost: null, sort_order: nextSortOrder(meta.category), data_ready: true,
       active: true, eligible_segments: [], name: '', description: '', requires_note: ''
     };
     renderModal('create', null, draft);
@@ -426,6 +451,11 @@
       + fieldBlock('Unit price ($, 0 = custom-priced)', '<input id="cfg-f-price" type="number" min="0" step="1" value="' + esc(draft.unit_price != null ? draft.unit_price : 0) + '" style="' + INPUT_STYLE + '">')
       + fieldBlock('Sort order', '<input id="cfg-f-sort-order" type="number" step="1" value="' + esc(draft.sort_order != null ? draft.sort_order : 0) + '" style="' + INPUT_STYLE + '">')
       + '</div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end">'
+      + fieldBlock('Unit cost ($, blank = not yet costed)', '<input id="cfg-f-cost" type="number" min="0" step="1" value="' + esc(draft.unit_cost != null ? draft.unit_cost : '') + '" placeholder="cost to deliver one unit" style="' + INPUT_STYLE + '">')
+      + '<div id="cfg-f-margin-preview" style="height:38px;display:flex;align-items:center;font-size:12.5px">' + marginLine(draft) + '</div>'
+      + '</div>'
+      + '<div style="font-size:11.5px;color:#97A1B2;margin-top:-8px">Drives the margin Pricing &amp; terms checks against the ' + MARGIN_FLOOR_PCT + '% floor — doesn’t change what the client is charged.</div>'
       + fieldBlock('Requires note / caveat (optional)', '<input id="cfg-f-requires-note" type="text" value="' + esc(draft.requires_note || '') + '" placeholder="Shown on the card as a caveat, and as a Rules check warning if selected" style="' + INPUT_STYLE + '">')
       + fieldBlock('Eligible segments (none checked = all segments)', '<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;border:1px solid #E3E8F0;border-radius:8px;padding:8px 12px">' + segmentCheckboxes(draft.eligible_segments || []) + '</div>')
       + '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#3E4A5C;cursor:pointer;width:max-content"><input type="checkbox" id="cfg-f-data-ready" ' + (draft.data_ready !== false ? 'checked' : '') + ' style="width:15px;height:15px"> Data ready</label>'
@@ -442,6 +472,15 @@
       var meta = FAMILY_META[this.value];
       if (meta) $('cfg-f-unit-label').value = meta.defaultUnitLabel;
     });
+    function refreshMarginPreview(){
+      var priceRaw = $('cfg-f-price').value, costRaw = $('cfg-f-cost').value;
+      $('cfg-f-margin-preview').innerHTML = marginLine({
+        unit_price: priceRaw === '' ? 0 : Number(priceRaw),
+        unit_cost: costRaw === '' ? null : Number(costRaw)
+      });
+    }
+    $('cfg-f-price').addEventListener('input', refreshMarginPreview);
+    $('cfg-f-cost').addEventListener('input', refreshMarginPreview);
     $('cfg-modal-cancel').addEventListener('click', closeModal);
     if (mode === 'edit'){
       $('cfg-modal-toggle-active').addEventListener('click', function(){ toggleActive(existing); });
@@ -466,6 +505,7 @@
       name: $('cfg-f-name').value.trim(),
       description: $('cfg-f-description').value.trim() || null,
       unit_price: Number($('cfg-f-price').value) || 0,
+      unit_cost: $('cfg-f-cost').value.trim() === '' ? null : Number($('cfg-f-cost').value),
       unit_label: $('cfg-f-unit-label').value,
       eligible_segments: segs.length ? segs : null,
       requires_note: $('cfg-f-requires-note').value.trim() || null,
