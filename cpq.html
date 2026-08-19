@@ -406,16 +406,20 @@
   ];
 
   // ---------------------------------------------------------------------
-  // Pricing & terms (step 3) constants — fixed/seeded placeholders pending
-  // the real Sales-VP-owned pricing configurator (see CPQ_requirements_scope.md).
-  // DISCOUNT_AUTO_APPROVE_CAP_PCT = 0 means any ad hoc discount at all is
-  // outside standard authority and needs Pricing & finance sign-off — there's
-  // no auto-approve band, since rate-card/tier pricing already covers the
-  // "discount without approval" case. MARGIN_FLOOR_PCT mirrors CPQ Config's
-  // copy of the same constant (no shared module system between the two files).
+  // Pricing & terms (step 3) — the discount auto-approve cap and margin
+  // floor are real, editable settings now (cpq_pricing_policy, a singleton
+  // table — see schema.sql), managed from CPQ Config's "Pricing policy"
+  // section. discountCap()/marginFloor() read the live value with a
+  // 0% / 42% fallback if state.pricingPolicy hasn't loaded yet (e.g. before
+  // loadData() resolves) — same defaults the table itself seeds with, so the
+  // fallback and the DB default always agree. A 0% cap means any ad hoc
+  // discount at all is outside standard authority and needs Pricing &
+  // finance sign-off — there's no auto-approve band by default, since
+  // rate-card/tier pricing already covers the "discount without approval"
+  // case; raise the cap from CPQ Config if that should change.
   // ---------------------------------------------------------------------
-  var DISCOUNT_AUTO_APPROVE_CAP_PCT = 0;
-  var MARGIN_FLOOR_PCT = 42;
+  function discountCap(){ return state.pricingPolicy ? Number(state.pricingPolicy.discount_auto_approve_cap_pct) : 0; }
+  function marginFloor(){ return state.pricingPolicy ? Number(state.pricingPolicy.margin_floor_pct) : 42; }
   // "Commercial structure" is informational only — it doesn't change any
   // pricing math (that's Configure + any applied tier + the discount below);
   // it's a label captured for the quote/PDF. Predates, and now sits next to,
@@ -428,7 +432,7 @@
   var PAYMENT_TERMS_OPTIONS = ['Net 15', 'Net 30', 'Net 45', 'Net 60'];
   var PRICE_REVIEW_OPTIONS = ['Annual (CPI-capped)', 'Annual', 'Biennial', 'None'];
   var CONTRACT_TERM_OPTIONS = [12, 24, 36, 48, 60];
-  var SELECT_STYLE = 'height:32px;border:1px solid #DCE2EC;border-radius:7px;padding:0 8px;font-size:12.5px;background:#fff;font-family:inherit';
+  var SELECT_STYLE = 'height:32px;width:100%;box-sizing:border-box;border:1px solid #DCE2EC;border-radius:7px;padding:0 8px;font-size:12.5px;background:#fff;font-family:inherit';
   // Quote lifecycle badge — 'approved'/'locked' aren't reachable from app UI
   // yet (that's Quote & approvals), but rendering them here means a status
   // set directly in Supabase during that build-out already displays right.
@@ -479,6 +483,7 @@
     products: [],
     tiers: [],             // active pricing_tiers, sorted by min_volume
     tierRates: [],          // pricing_tier_rates rows — per-(tier,product) override prices
+    pricingPolicy: null,    // cpq_pricing_policy singleton row — discountCap()/marginFloor() read this
     quotesByDemand: {},   // demand_id -> latest quote row
     staticBodies: {},     // step id -> raw HTML string (from <template> fragments)
     mode: 'list',         // 'list' | 'editor'
@@ -1026,13 +1031,17 @@
   // sets the quote's status and explains why, honestly, until that routing exists.
   function approvalReasons(math){
     var reasons = [];
-    if (math.discountPct > DISCOUNT_AUTO_APPROVE_CAP_PCT){
-      reasons.push('An ad hoc discount of ' + math.discountPct.toFixed(1) + '% is applied — any discount beyond rate-card/tier pricing requires Pricing & finance approval.');
+    var cap = discountCap();
+    if (math.discountPct > cap){
+      reasons.push(cap > 0
+        ? ('An ad hoc discount of ' + math.discountPct.toFixed(1) + '% is applied — above the ' + cap + '% auto-approve cap, so Pricing & finance approval is required.')
+        : ('An ad hoc discount of ' + math.discountPct.toFixed(1) + '% is applied — any discount beyond rate-card/tier pricing requires Pricing & finance approval.'));
     }
+    var floor = marginFloor();
     if (math.lines.length > 0 && math.missingCostCount > 0){
       reasons.push(math.missingCostCount + ' selected item' + (math.missingCostCount === 1 ? '' : 's') + ' ' + (math.missingCostCount === 1 ? 'has' : 'have') + ' no cost data in the catalog, so margin can’t be verified — flagged for approval until it’s costed in CPQ Config.');
-    } else if (math.marginPct != null && math.marginPct < MARGIN_FLOOR_PCT){
-      reasons.push('Blended gross margin ' + math.marginPct.toFixed(1) + '% is below the ' + MARGIN_FLOOR_PCT + '% floor.');
+    } else if (math.marginPct != null && math.marginPct < floor){
+      reasons.push('Blended gross margin ' + math.marginPct.toFixed(1) + '% is below the ' + floor + '% floor.');
     }
     return reasons;
   }
@@ -1087,22 +1096,24 @@
     }
     var m = math.marginPct;
     var pct = Math.max(0, Math.min(100, m));
-    var below = m < MARGIN_FLOOR_PCT;
+    var floor = marginFloor();
+    var below = m < floor;
     return '<div style="padding:12px 14px;border-radius:9px;border:1px solid ' + (below ? '#EFCFC7' : '#DCE2EC') + ';background:' + (below ? '#FDF4F2' : '#F8FBFF') + '">'
       + '<div style="display:flex;align-items:center;justify-content:space-between">'
       + '<div style="font-size:13px;font-weight:600;color:' + (below ? '#C4472C' : '#131A26') + '">Gross margin ' + m.toFixed(1) + '%</div>'
-      + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10.5px;color:' + (below ? '#C4472C' : '#8B95A6') + '">FLOOR ' + MARGIN_FLOOR_PCT + '%</div>'
+      + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10.5px;color:' + (below ? '#C4472C' : '#8B95A6') + '">FLOOR ' + floor + '%</div>'
       + '</div>'
       + '<div style="margin-top:9px;height:7px;border-radius:99px;background:#E6EAF2;overflow:hidden"><div style="height:100%;width:' + pct.toFixed(1) + '%;background:' + (below ? '#C4472C' : '#3C6B1D') + ';border-radius:99px"></div></div>'
       + '<div style="margin-top:9px;font-size:12.5px;line-height:1.45;color:#5A6474">' + (below
-        ? ('Below the ' + MARGIN_FLOOR_PCT + '% margin floor. Pricing &amp; finance approval is required before this can move forward.')
-        : ('Within the ' + MARGIN_FLOOR_PCT + '% margin floor.')) + '</div>'
+        ? ('Below the ' + floor + '% margin floor. Pricing &amp; finance approval is required before this can move forward.')
+        : ('Within the ' + floor + '% margin floor.')) + '</div>'
+      + '<div style="margin-top:8px;font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.08em;color:#97A1B2">INTERNAL ONLY &middot; NEVER SHOWN ON THE QUOTE OR PDF</div>'
       + '</div>';
   }
   function fieldRow(label, inputHtml){
     return '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border:1px solid #EDF0F6;border-radius:8px;padding:8px 11px">'
       + '<div style="font-size:12.5px;color:#4E5866;flex:0 0 auto">' + esc(label) + '</div>'
-      + '<div style="flex:0 0 auto;min-width:150px;text-align:right">' + inputHtml + '</div>'
+      + '<div style="flex:0 0 190px;text-align:right">' + inputHtml + '</div>'
       + '</div>';
   }
   function renderTermsColumn(){
@@ -1121,13 +1132,15 @@
       + fieldRow('Contract term', '<select class="cpq-term-field" data-field="contract_term_months" style="' + SELECT_STYLE + '"><option value="">—</option>' + contractOptions + '</select>')
       + fieldRow('Payment terms', '<select class="cpq-term-field" data-field="payment_terms" style="' + SELECT_STYLE + '"><option value="">—</option>' + paymentOptions + '</select>')
       + fieldRow('Price review', '<select class="cpq-term-field" data-field="price_review_cadence" style="' + SELECT_STYLE + '"><option value="">—</option>' + reviewOptions + '</select>')
-      + fieldRow('Volume commitment', '<input type="number" min="0" class="cpq-term-field" data-field="volume_commitment" value="' + esc(q.volume_commitment != null ? q.volume_commitment : '') + '" placeholder="' + esc(state.currentDemand.est_monthly_volume || '') + '" style="' + SELECT_STYLE + ';width:100px;text-align:right">')
-      + fieldRow('Pay Later enabled', '<label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" class="cpq-term-field" data-field="pay_later_enabled" ' + (q.pay_later_enabled ? 'checked' : '') + ' style="width:16px;height:16px"><span style="font-size:12.5px;color:#5A6474">' + (q.pay_later_enabled ? 'Yes' : 'No') + '</span></label>')
+      + fieldRow('Volume commitment', '<input type="number" min="0" class="cpq-term-field" data-field="volume_commitment" value="' + esc(q.volume_commitment != null ? q.volume_commitment : '') + '" placeholder="' + esc(state.currentDemand.est_monthly_volume || '') + '" style="' + SELECT_STYLE + ';text-align:right">')
+      + fieldRow('Pay Later enabled', '<label style="display:inline-flex;align-items:center;justify-content:flex-end;gap:8px;width:100%;cursor:pointer"><input type="checkbox" class="cpq-term-field" data-field="pay_later_enabled" ' + (q.pay_later_enabled ? 'checked' : '') + ' style="width:16px;height:16px;flex:0 0 auto"><span style="font-size:12.5px;color:#5A6474">' + (q.pay_later_enabled ? 'Yes' : 'No') + '</span></label>')
       + '</div>';
   }
   function renderDiscountCard(math){
     var discountPct = math.discountPct;
-    var approvalNeeded = discountPct > DISCOUNT_AUTO_APPROVE_CAP_PCT;
+    var cap = discountCap();
+    var approvalNeeded = discountPct > cap;
+    var sliderMidLabel = cap > 0 ? ('AUTO-APPROVED UP TO ' + cap + '%') : 'ANY DISCOUNT REQUIRES APPROVAL';
     return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
       + '<div style="font-size:16px;font-weight:600">Pricing &amp; commercial terms</div>'
       + '<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">' + COMMERCIAL_STRUCTURES.map(function(s){ return renderStructureCard(state.currentQuote.commercial_structure, s); }).join('') + '</div>'
@@ -1140,10 +1153,12 @@
       + '<div id="cpq-discount-value" style="font-size:20px;font-weight:600">' + discountPct.toFixed(1) + '%</div>'
       + '</div>'
       + '<input type="range" min="0" max="30" step="0.5" class="cpq-discount-slider" value="' + discountPct + '" style="width:100%;margin-top:10px;accent-color:#013E90">'
-      + '<div style="display:flex;justify-content:space-between;font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#97A1B2;margin-top:2px"><span>0%</span><span>ANY DISCOUNT REQUIRES APPROVAL</span><span>30%</span></div>'
+      + '<div style="display:flex;justify-content:space-between;font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#97A1B2;margin-top:2px"><span>0%</span><span>' + sliderMidLabel + '</span><span>30%</span></div>'
       + '<div id="cpq-discount-approval-banner" style="display:' + (approvalNeeded ? 'flex' : 'none') + ';margin-top:14px;gap:10px;padding:11px 13px;border-radius:9px;border:1px solid #F1C4BC;background:#FDEDEA">'
       + '<div style="color:#8A2A12;font-weight:700;font-size:12px">!</div>'
-      + '<div style="font-size:12.5px;line-height:1.45;color:#8A2A12">Any discount here is outside the tier/rate-card pricing already applied — Pricing &amp; finance sign-off is required before this quote can move forward.</div>'
+      + '<div id="cpq-discount-approval-banner-text" style="font-size:12.5px;line-height:1.45;color:#8A2A12">' + (cap > 0
+          ? ('This discount is above the ' + cap + '% auto-approve cap — Pricing &amp; finance sign-off is required before this quote can move forward.')
+          : 'Any discount here is outside the tier/rate-card pricing already applied — Pricing &amp; finance sign-off is required before this quote can move forward.') + '</div>'
       + '</div>'
       + '<div id="cpq-margin-container" style="margin-top:14px">' + renderMarginBar(math) + '</div>'
       + '</div>'
@@ -1181,6 +1196,11 @@
     var reasons = approvalReasons(math);
     var productLines = math.lines.filter(function(l){ return l.product.category === 'product'; });
     var addonLines = math.lines.filter(function(l){ return l.product.category === 'addon'; });
+    var q = state.currentQuote;
+    var termMonths = q.contract_term_months != null && q.contract_term_months !== '' ? Number(q.contract_term_months) : null;
+    var contractTotalRow = termMonths
+      ? rightRow('Total contract value (' + termMonths + ' mo)', '<span id="cpq-pt-contract-total">' + fmtUsd(math.totalRevenue * termMonths) + '</span>')
+      : '';
     var banner = reasons.length
       ? ('<div style="margin-top:14px;padding-top:14px;border-top:1px dashed #E3E8F0;display:flex;flex-direction:column;gap:9px">'
         + reasons.map(function(r){
@@ -1197,12 +1217,12 @@
       + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:.1em;color:#013E90">RECALCULATED</div></div>'
       + '<div style="padding:16px">'
       + '<div id="cpq-pt-total-monthly" style="font-size:32px;font-weight:600;letter-spacing:-.02em">' + fmtUsd(math.totalRevenue) + '</div>'
-      + '<div style="font-size:12.5px;color:#6B7686;margin-top:2px">estimated monthly &middot; <span id="cpq-pt-total-annual">' + fmtUsd(math.totalRevenue * 12) + '</span> annual</div>'
+      + '<div style="font-size:12.5px;color:#6B7686;margin-top:2px">estimated monthly (tier + discount applied) &middot; <span id="cpq-pt-total-annual">' + fmtUsd(math.totalRevenue * 12) + '</span> annual</div>'
       + '<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">'
       + rightRow('Products (' + productLines.length + ')', fmtUsd(productLines.reduce(function(s, l){ return s + l.revenue; }, 0)))
       + rightRow('Add-ons (' + addonLines.length + ')', fmtUsd(addonLines.reduce(function(s, l){ return s + l.revenue; }, 0)))
       + rightRow('Blended discount vs. list', '<span id="cpq-pt-discount" style="color:#8A5A12">' + (math.blendedDiscountVsList > 0.05 ? '−' + math.blendedDiscountVsList.toFixed(1) + '%' : '0%') + '</span>')
-      + rightRow('Gross margin', '<span id="cpq-pt-margin">' + (math.marginPct == null ? 'Unknown' : math.marginPct.toFixed(1) + '%') + '</span>')
+      + (contractTotalRow ? contractTotalRow : '')
       + rightRow('Commercial structure', commercialStructureLabel(state.currentQuote.commercial_structure))
       + '</div>'
       + banner
@@ -1249,13 +1269,15 @@
     var math = pricingMath(discountOverride);
     if ($('cpq-discount-value')) $('cpq-discount-value').textContent = discountOverride.toFixed(1) + '%';
     var banner = $('cpq-discount-approval-banner');
-    if (banner) banner.style.display = (discountOverride > DISCOUNT_AUTO_APPROVE_CAP_PCT) ? 'flex' : 'none';
+    if (banner) banner.style.display = (discountOverride > discountCap()) ? 'flex' : 'none';
     var marginContainer = $('cpq-margin-container');
     if (marginContainer) marginContainer.innerHTML = renderMarginBar(math);
     if ($('cpq-pt-total-monthly')) $('cpq-pt-total-monthly').textContent = fmtUsd(math.totalRevenue);
     if ($('cpq-pt-total-annual')) $('cpq-pt-total-annual').textContent = fmtUsd(math.totalRevenue * 12);
     if ($('cpq-pt-discount')) $('cpq-pt-discount').textContent = (math.blendedDiscountVsList > 0.05 ? '−' + math.blendedDiscountVsList.toFixed(1) + '%' : '0%');
-    if ($('cpq-pt-margin')) $('cpq-pt-margin').textContent = (math.marginPct == null ? 'Unknown' : math.marginPct.toFixed(1) + '%');
+    var q = state.currentQuote;
+    var termMonths = q.contract_term_months != null && q.contract_term_months !== '' ? Number(q.contract_term_months) : null;
+    if ($('cpq-pt-contract-total') && termMonths) $('cpq-pt-contract-total').textContent = fmtUsd(math.totalRevenue * termMonths);
   }
 
   function renderStaticTab(step){
@@ -1598,15 +1620,20 @@
       Promise.resolve(state.db.from('cpq_products').select('*').eq('active', true).order('sort_order')),
       Promise.resolve(state.db.from('quotes').select('*').order('created_at', {ascending:false})),
       Promise.resolve(state.db.from('pricing_tiers').select('*').eq('active', true).order('sort_order')),
-      Promise.resolve(state.db.from('pricing_tier_rates').select('*'))
+      Promise.resolve(state.db.from('pricing_tier_rates').select('*')),
+      Promise.resolve(state.db.from('cpq_pricing_policy').select('*').eq('id', 1).single())
     ]).then(function(results){
-      var dr = results[0], cr = results[1], pr = results[2], qr = results[3], tr = results[4], rr = results[5];
+      var dr = results[0], cr = results[1], pr = results[2], qr = results[3], tr = results[4], rr = results[5], ppr = results[6];
       if (dr.error) throw dr.error;
       if (cr.error) throw cr.error;
       if (pr.error) throw pr.error;
       if (qr.error) throw qr.error;
       if (tr.error) throw tr.error;
       if (rr.error) throw rr.error;
+      // Pricing policy: a missing row (ppr.error, e.g. schema.sql's seed insert
+      // hasn't run yet) falls back to the same 0% / 42% defaults the table
+      // itself seeds with, rather than failing the whole page load over it.
+      state.pricingPolicy = (ppr && !ppr.error && ppr.data) ? ppr.data : { discount_auto_approve_cap_pct: 0, margin_floor_pct: 42 };
       state.demands = dr.data || [];
       state.clients = cr.data || [];
       state.products = pr.data || [];
@@ -1645,6 +1672,8 @@
 
   window.CpqModule = { init: init };
 })();
+
+
 
 window.CpqModule.init();
 </script>

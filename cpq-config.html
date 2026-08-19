@@ -200,12 +200,14 @@
   };
   var FAMILY_ORDER = ['appraisal_offering', 'alternative_valuation', 'addon_solution'];
   var UNIT_LABEL_META = { order: 'Per order', month: 'Per month (flat)', account: 'Custom-priced per account' };
-  // Mirrors cpq_module.js's MARGIN_FLOOR_PCT — kept as a duplicated literal
-  // (no shared module system between these two files) rather than fetched,
-  // since it's a fixed placeholder pending the future Sales-VP configurator.
-  // Only used here to color the margin preview; the actual floor check and
-  // approval trigger live in Pricing & terms, not here.
-  var MARGIN_FLOOR_PCT = 42;
+  // Discount auto-approve cap and margin floor are real, editable settings
+  // (cpq_pricing_policy, a singleton row — see schema.sql and the "Pricing
+  // policy" section below), not code constants. marginFloor() reads the live
+  // value with a 42% fallback if state.pricingPolicy hasn't loaded yet, same
+  // default the table itself seeds with. Used here only to color the margin
+  // preview on product cards — the actual floor check and approval trigger
+  // live in Pricing & terms (cpq_module.js), which reads the same table.
+  function marginFloor(){ return state.pricingPolicy ? Number(state.pricingPolicy.margin_floor_pct) : 42; }
 
   var INPUT_STYLE = 'width:100%;height:38px;border:1px solid #DCE2EC;border-radius:8px;padding:0 11px;font-size:13.5px;font-family:inherit;box-sizing:border-box;outline:none';
   var TEXTAREA_STYLE = 'width:100%;border:1px solid #DCE2EC;border-radius:8px;padding:9px 11px;font-size:13.5px;font-family:inherit;box-sizing:border-box;outline:none;resize:vertical';
@@ -215,6 +217,7 @@
     products: [],
     tiers: [],
     tierRates: [],
+    pricingPolicy: null, // cpq_pricing_policy singleton row
     showInactive: false
   };
 
@@ -249,7 +252,7 @@
   function marginLine(p){
     var m = marginPct(p);
     if (m == null) return '<span style="color:#97A1B2">No cost set — margin unknown</span>';
-    var color = m < MARGIN_FLOOR_PCT ? '#C4472C' : '#3C6B1D';
+    var color = m < marginFloor() ? '#C4472C' : '#3C6B1D';
     return fmtUsd(p.unit_cost) + ' cost &middot; <span style="color:' + color + ';font-weight:600">' + m.toFixed(1) + '% margin</span>';
   }
   function segmentsLine(p){
@@ -305,6 +308,39 @@
       + '</div></div></div>';
   }
 
+  // Pricing policy — the discount auto-approve cap and margin floor that
+  // Pricing & terms (cpq_module.js) checks every ad hoc discount and blended
+  // margin against. Distinct from both Pricing tiers (per-product rate cards
+  // by volume band, below) and a product's own Unit cost (above): those two
+  // change what price is actually in effect; this section changes the
+  // threshold at which a rep needs Pricing & finance sign-off on top of
+  // whatever price that is. Saves on blur, same pattern as Pricing & terms'
+  // own terms fields in cpq_module.js.
+  function renderPricingPolicySection(){
+    var pp = state.pricingPolicy || { discount_auto_approve_cap_pct: 0, margin_floor_pct: 42 };
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
+      + '<div><div style="font-size:16px;font-weight:600">Pricing policy</div>'
+      + '<div style="margin-top:4px;font-size:13px;color:#6B7686;max-width:640px">The thresholds Pricing &amp; terms checks every quote against — cross either one and the quote flags for Pricing &amp; finance approval. Not the same as Pricing tiers (rate cards by volume band) or a product’s Unit cost above — those set the price itself; these set when a rep needs sign-off on top of it.</div></div>'
+      + '<div style="margin-top:16px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:640px">'
+      + '<div style="border:1px solid #EDF0F6;border-radius:9px;padding:12px 14px">'
+      + '<div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase">Discount auto-approve cap</div>'
+      + '<div style="margin-top:8px;display:flex;align-items:center;gap:6px">'
+      + '<input type="number" min="0" max="100" step="0.5" id="cfg-policy-discount-cap" class="cfg-policy-field" data-field="discount_auto_approve_cap_pct" value="' + esc(pp.discount_auto_approve_cap_pct) + '" style="width:90px;height:36px;border:1px solid #DCE2EC;border-radius:7px;padding:0 10px;font-size:14px;font-family:inherit;box-sizing:border-box">'
+      + '<span style="font-size:14px;color:#5A6474">%</span>'
+      + '</div>'
+      + '<div style="margin-top:6px;font-size:11.5px;color:#97A1B2;line-height:1.4">Ad hoc discount reps can apply on Pricing &amp; terms without approval. 0 means any discount at all needs sign-off.</div>'
+      + '</div>'
+      + '<div style="border:1px solid #EDF0F6;border-radius:9px;padding:12px 14px">'
+      + '<div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase">Margin floor</div>'
+      + '<div style="margin-top:8px;display:flex;align-items:center;gap:6px">'
+      + '<input type="number" min="0" max="100" step="0.5" id="cfg-policy-margin-floor" class="cfg-policy-field" data-field="margin_floor_pct" value="' + esc(pp.margin_floor_pct) + '" style="width:90px;height:36px;border:1px solid #DCE2EC;border-radius:7px;padding:0 10px;font-size:14px;font-family:inherit;box-sizing:border-box">'
+      + '<span style="font-size:14px;color:#5A6474">%</span>'
+      + '</div>'
+      + '<div style="margin-top:6px;font-size:11.5px;color:#97A1B2;line-height:1.4">Minimum blended gross margin (from unit cost above) before a quote needs sign-off, regardless of discount.</div>'
+      + '</div>'
+      + '</div>'
+      + '</div>';
+  }
   function renderTiersSection(){
     var tiers = visible(state.tiers).sort(function(a, b){ return (a.min_volume || 0) - (b.min_volume || 0); });
     var body = tiers.length
@@ -370,7 +406,7 @@
       + '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#5A6474;margin-bottom:14px;cursor:pointer;width:max-content">'
       + '<input type="checkbox" id="cfg-show-inactive" ' + (state.showInactive ? 'checked' : '') + ' style="width:15px;height:15px"> Show inactive'
       + '</label>'
-      + '<div style="display:flex;flex-direction:column;gap:14px">' + renderProductsSection() + renderAddonsSection() + renderTiersSection() + '</div>'
+      + '<div style="display:flex;flex-direction:column;gap:14px">' + renderProductsSection() + renderAddonsSection() + renderTiersSection() + renderPricingPolicySection() + '</div>'
       + '</div>';
   }
 
@@ -455,7 +491,7 @@
       + fieldBlock('Unit cost ($, blank = not yet costed)', '<input id="cfg-f-cost" type="number" min="0" step="1" value="' + esc(draft.unit_cost != null ? draft.unit_cost : '') + '" placeholder="cost to deliver one unit" style="' + INPUT_STYLE + '">')
       + '<div id="cfg-f-margin-preview" style="height:38px;display:flex;align-items:center;font-size:12.5px">' + marginLine(draft) + '</div>'
       + '</div>'
-      + '<div style="font-size:11.5px;color:#97A1B2;margin-top:-8px">Drives the margin Pricing &amp; terms checks against the ' + MARGIN_FLOOR_PCT + '% floor — doesn’t change what the client is charged.</div>'
+      + '<div style="font-size:11.5px;color:#97A1B2;margin-top:-8px">Drives the margin Pricing &amp; terms checks against the ' + marginFloor() + '% floor (set below, under Pricing policy) — doesn’t change what the client is charged.</div>'
       + fieldBlock('Requires note / caveat (optional)', '<input id="cfg-f-requires-note" type="text" value="' + esc(draft.requires_note || '') + '" placeholder="Shown on the card as a caveat, and as a Rules check warning if selected" style="' + INPUT_STYLE + '">')
       + fieldBlock('Eligible segments (none checked = all segments)', '<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;border:1px solid #E3E8F0;border-radius:8px;padding:8px 12px">' + segmentCheckboxes(draft.eligible_segments || []) + '</div>')
       + '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#3E4A5C;cursor:pointer;width:max-content"><input type="checkbox" id="cfg-f-data-ready" ' + (draft.data_ready !== false ? 'checked' : '') + ' style="width:15px;height:15px"> Data ready</label>'
@@ -617,6 +653,29 @@
     }).catch(function(e){ showToast('Could not update: ' + (e.message || e)); });
   }
 
+  // Pricing policy — persists on change (blur/commit), same pattern as
+  // Pricing & terms' own terms fields in cpq_module.js. Re-renders the whole
+  // page on success so every margin preview on this page (product cards, the
+  // create/edit modal) picks up the new floor immediately, not just the two
+  // fields that changed.
+  function savePricingPolicy(inputEl){
+    var field = inputEl.getAttribute('data-field');
+    var raw = inputEl.value;
+    var val = raw === '' ? 0 : Number(raw);
+    if (isNaN(val) || val < 0){ showToast('Enter a percent of 0 or more.'); renderRoot(); return; }
+    var patch = {};
+    patch[field] = val;
+    state.pricingPolicy = Object.assign({}, state.pricingPolicy || { discount_auto_approve_cap_pct: 0, margin_floor_pct: 42 }, patch);
+    Promise.resolve(state.db.from('cpq_pricing_policy').update(patch).eq('id', 1)).then(function(r){
+      if (r.error) throw r.error;
+      renderRoot();
+      // showToast() appends to document.body, not the mount element renderRoot()
+      // just replaced — has to run after that replacement or it'd be wiped
+      // immediately, same reason the old in-page note approach didn't survive.
+      showToast('Saved — applies to every quote in Pricing & terms immediately.');
+    }).catch(function(e){ showToast('Could not save pricing policy: ' + (e.message || e)); });
+  }
+
   // A rate-card field accepts either a flat dollar override ("495") or a
   // percent-off shorthand ("10%" / "-10%", both mean "10% off base" — typing
   // a bare positive percent in a discount field reads as a discount, not a
@@ -756,6 +815,10 @@
       if (e.target && e.target.id === 'cfg-show-inactive'){
         state.showInactive = e.target.checked;
         renderRoot();
+        return;
+      }
+      if (e.target && e.target.classList && e.target.classList.contains('cfg-policy-field')){
+        savePricingPolicy(e.target);
       }
     });
 
@@ -781,15 +844,20 @@
     return Promise.all([
       Promise.resolve(state.db.from('cpq_products').select('*').order('sort_order')),
       Promise.resolve(state.db.from('pricing_tiers').select('*').order('sort_order')),
-      Promise.resolve(state.db.from('pricing_tier_rates').select('*'))
+      Promise.resolve(state.db.from('pricing_tier_rates').select('*')),
+      Promise.resolve(state.db.from('cpq_pricing_policy').select('*').eq('id', 1).single())
     ]).then(function(results){
-      var pr = results[0], tr = results[1], rr = results[2];
+      var pr = results[0], tr = results[1], rr = results[2], ppr = results[3];
       if (pr.error) throw pr.error;
       if (tr.error) throw tr.error;
       if (rr.error) throw rr.error;
       state.products = pr.data || [];
       state.tiers = tr.data || [];
       state.tierRates = rr.data || [];
+      // Same missing-row fallback as cpq_module.js — don't fail the whole
+      // page load over a row that schema.sql's seed insert would have
+      // created (e.g. on a project that hasn't re-run schema.sql yet).
+      state.pricingPolicy = (ppr && !ppr.error && ppr.data) ? ppr.data : { discount_auto_approve_cap_pct: 0, margin_floor_pct: 42 };
       renderRoot();
     }).catch(function(e){ console.error('CPQ Config: could not load', e); renderNotConnected(); });
   }
@@ -812,6 +880,8 @@
 
   window.CpqConfigModule = { init: init };
 })();
+
+
 
 window.CpqConfigModule.init();
 </script>
