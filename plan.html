@@ -40,12 +40,6 @@
   .project-bar-label{ font-size:11px; font-weight:700; color:var(--teal); text-transform:uppercase; letter-spacing:.05em; }
   .project-bar select{ padding:7px 10px; border-radius:8px; border:1px solid var(--border); font-size:13.5px; min-width:200px; background:#fff; color:var(--text); }
 
-  details.quickref{ margin:16px 32px 0; background:#fff; border:1px solid var(--border); border-radius:10px; }
-  details.quickref summary{ padding:12px 16px; font-weight:600; cursor:pointer; color:var(--teal); font-size:14px; }
-  .quickref-body{ padding:0 16px 16px; font-size:13px; color:var(--muted); line-height:1.6; }
-  .quickref-body b{ color:var(--text); }
-  .phase-chain{ display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 14px; }
-  .phase-chip{ background:#EAF1FB; border:1px solid var(--border); border-radius:16px; padding:4px 10px; font-size:12px; }
 
   .tabs{ display:flex; gap:6px; padding:20px 32px 0; }
   .tab-btn{ padding:10px 18px; border-radius:8px 8px 0 0; border:1px solid var(--border); border-bottom:none; background:#EDF0F6; cursor:pointer; font-weight:600; color:var(--muted); font-size:14px; }
@@ -246,7 +240,7 @@
   @media (max-width:640px){
     header{ padding:16px 18px; }
     header .actions{ width:100%; }
-    .project-bar, details.quickref, .tabs, .tab-content{ padding-left:16px; padding-right:16px; }
+    .project-bar, .tabs, .tab-content{ padding-left:16px; padding-right:16px; }
     .tabs{ overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch; }
     .tab-btn{ flex:0 0 auto; }
     .grid, .plan-row, .gantt-row, .risk-row, .stakeholder-row, .comms-row-grid{ grid-template-columns:1fr !important; }
@@ -417,22 +411,6 @@
   <button class="mini-btn" id="newProjectBtn">New plan</button>
   <button class="mini-btn" id="deleteProjectBtn">Delete plan</button>
 </div>
-
-<details class="quickref">
-  <summary>Quick reference — phases &amp; change method</summary>
-  <div class="quickref-body">
-    <b>Client engagement lifecycle:</b>
-    <div class="phase-chain">
-      <span class="phase-chip">0–1 Intake &amp; Design</span>
-      <span class="phase-chip">2 Onboarding</span>
-      <span class="phase-chip">3 Go-Live</span>
-      <span class="phase-chip">4 CVUE Enablement</span>
-      <span class="phase-chip">5 Verify &amp; Report</span>
-      <span class="phase-chip">6 Sustain &amp; Scale</span>
-    </div>
-    <b>When something changes:</b> name it → assess impact (scope / schedule / budget / quality / risk) → reprioritize around outcome KPIs → re-baseline with options → communicate → document.
-  </div>
-</details>
 
 <div class="tabs">
   <div class="tab-btn active" data-tab="baseline">1 · Build Baseline Plan</div>
