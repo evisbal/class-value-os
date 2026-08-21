@@ -237,6 +237,25 @@ a JIRA ticket is ever read back and written here.
 `integration_requirement_docs` — same print/PDF pattern as Plan Builder's exports, and same append-only
 version history (generating a new one never rewrites an earlier version).
 
+**Move to Delivery** is the answer to a real problem: without it, every client onboarded through Studio would
+pile up in the client picker forever, with no signal that a PM had actually handed the plan off to execution.
+It's a one-row-per-client status (`client_integration_status`, `status` = `planning` | `in_delivery`) that a PM
+sets explicitly with a "Move to Delivery →" button on the client workspace — never automatic, since Studio has
+no other signal for "onboarding is actually done" to key off of. Moving a client to Delivery **freezes** their
+plan: OOO checkboxes, Custom add/edit/remove, and Push to JIRA all become read-only, so the plan stays exactly
+as a record of what was decided during onboarding. CSV export, PDF generation, and moving back to Planning all
+stay available regardless, since none of them mutate the committed plan. Clients in Delivery drop out of the
+default client picker list (an "IN DELIVERY" badge + a "Show clients in Delivery (N)" toggle reveal them again
+— same default-hidden pattern already used for archived demands and inactive catalog items) so the picker
+stays focused on active onboarding work instead of accumulating completed ones.
+
+The move is reversible: **"Move back to Planning"** on the frozen banner un-freezes the plan and clears it from
+the "in Delivery" bucket, for a PM who triggered the move by mistake or needs to correct something before
+handoff is really ready. Moving back doesn't erase the original handoff record — `moved_to_delivery_at` /
+`moved_to_delivery_by` stay on file alongside the new `moved_back_at` / `moved_back_by`, so the audit trail
+shows the full history rather than just the current state. Nothing in this feature ever deletes a task,
+document, or JIRA link — the status flag only ever gates editability of what's already there.
+
 ## Roles & permissions
 
 Real now — `roles.html` is full CRUD over who can do what, not a mockup. Four tables back it

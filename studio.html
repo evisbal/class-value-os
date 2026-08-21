@@ -433,6 +433,17 @@ window.RoleContext.init();
   // without necessarily being the one who ships the JIRA file or the doc.
   function canEdit(){ return window.RoleContext ? window.RoleContext.can('studio', 'edit') : true; }
   function canExport(){ return window.RoleContext ? window.RoleContext.can('studio', 'export') : true; }
+  // Handoff to Delivery — PM-triggered, not automatic (see schema.sql's
+  // client_integration_status comment for why). Once a client is
+  // 'in_delivery', the plan freezes: no more OOO toggles, Custom add/edit/
+  // remove, or JIRA pushes — Delivery becomes the one place execution
+  // changes happen. CSV export, PDF generation and "Move back to Planning"
+  // all stay available regardless, since none of them mutate the committed
+  // plan itself (or, for the move-back, are the intentional escape hatch).
+  function projectFor(clientId){ return state.projects[clientId] || null; }
+  function projectStatus(clientId){ var p = projectFor(clientId); return p ? p.status : 'planning'; }
+  function isFrozen(clientId){ return projectStatus(clientId != null ? clientId : state.selectedClientId) === 'in_delivery'; }
+  function canMutate(){ return canEdit() && !isFrozen(); }
 
   var INPUT_STYLE = 'width:100%;height:38px;border:1px solid #DCE2EC;border-radius:8px;padding:0 11px;font-size:13.5px;font-family:inherit;box-sizing:border-box;outline:none';
   var TEXTAREA_STYLE = 'width:100%;border:1px solid #DCE2EC;border-radius:8px;padding:9px 11px;font-size:13.5px;font-family:inherit;box-sizing:border-box;outline:none;resize:vertical';
@@ -445,6 +456,8 @@ window.RoleContext.init();
     tab: 'ooo',                 // within 'client': 'ooo' | 'custom' | 'jira' | 'docs'
     clients: [],
     clientTaskCounts: {},       // client_id -> { ooo, custom, weeks }
+    projects: {},                // client_id -> client_integration_status row (absent = 'planning')
+    showInDelivery: false,
     clientSearch: '',
     templates: [],
     showInactiveTemplates: false,
@@ -500,12 +513,18 @@ window.RoleContext.init();
     var m = mount();
     if (!m) return;
     var q = (state.clientSearch || '').toLowerCase();
-    var list = state.clients.filter(function(c){ return !q || c.name.toLowerCase().indexOf(q) !== -1; });
+    var searched = state.clients.filter(function(c){ return !q || c.name.toLowerCase().indexOf(q) !== -1; });
+    var inDeliveryCount = searched.filter(function(c){ return projectStatus(c.id) === 'in_delivery'; }).length;
+    var list = searched.filter(function(c){ return state.showInDelivery || projectStatus(c.id) !== 'in_delivery'; });
     var cards = list.map(function(c){
       var counts = state.clientTaskCounts[c.id] || { ooo: 0, custom: 0, weeks: 0 };
       var total = counts.ooo + counts.custom;
-      return '<div class="stu-client-card" data-client-id="' + esc(c.id) + '" style="cursor:pointer;border:1px solid #DCE2EC;background:#fff;border-radius:11px;padding:15px 16px;display:flex;flex-direction:column;gap:8px">'
+      var inDelivery = projectStatus(c.id) === 'in_delivery';
+      return '<div class="stu-client-card" data-client-id="' + esc(c.id) + '" style="cursor:pointer;border:1px solid #DCE2EC;background:#fff;border-radius:11px;padding:15px 16px;display:flex;flex-direction:column;gap:8px;opacity:' + (inDelivery ? '.75' : '1') + '">'
+        + '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
         + '<div style="font-size:14.5px;font-weight:600">' + esc(c.name) + '</div>'
+        + (inDelivery ? '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.06em;color:#5A2E8A;background:#F1E8FB;border-radius:5px;padding:2px 6px">IN DELIVERY</span>' : '')
+        + '</div>'
         + '<div style="font-size:11.5px;color:#8B95A6">' + esc(c.segment) + '</div>'
         + '<div style="display:flex;gap:14px;margin-top:4px;padding-top:9px;border-top:1px dashed #E3E8F0;font-size:12px;color:#5A6474">'
         + '<div><b>' + counts.ooo + '</b> standard</div>'
@@ -523,10 +542,15 @@ window.RoleContext.init();
       + '<div class="stu-manage-library-link" style="cursor:pointer;flex:0 0 auto;height:32px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;color:#013E90;font-size:12.5px;font-weight:600;display:flex;align-items:center">Manage task library</div>'
       + '</div></div>'
       + renderAccessBanner()
-      + '<input type="text" id="stu-client-search" placeholder="Search clients…" value="' + esc(state.clientSearch) + '" style="' + INPUT_STYLE + ';max-width:360px;margin-bottom:16px">'
+      + '<div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:16px">'
+      + '<input type="text" id="stu-client-search" placeholder="Search clients…" value="' + esc(state.clientSearch) + '" style="' + INPUT_STYLE + ';max-width:360px">'
+      + '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#5A6474;cursor:pointer;white-space:nowrap">'
+      + '<input type="checkbox" id="stu-show-in-delivery" ' + (state.showInDelivery ? 'checked' : '') + ' style="width:15px;height:15px"> Show clients in Delivery' + (inDeliveryCount ? ' (' + inDeliveryCount + ')' : '')
+      + '</label>'
+      + '</div>'
       + (list.length
           ? '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">' + cards + '</div>'
-          : '<div style="font-size:12.5px;color:#97A1B2;padding:20px 0">' + (state.clients.length ? 'No clients match this search.' : 'No clients yet — clients are created from Demand Management.') + '</div>')
+          : '<div style="font-size:12.5px;color:#97A1B2;padding:20px 0">' + (searched.length ? 'Every matching client has moved to Delivery — check "Show clients in Delivery" to see them.' : (state.clients.length ? 'No clients match this search.' : 'No clients yet — clients are created from Demand Management.')) + '</div>')
       + '</div>';
   }
 
@@ -581,8 +605,8 @@ window.RoleContext.init();
     tasks.filter(function(t){ return t.offering_type === 'ooo'; }).forEach(function(t){ if (t.template_id) byTemplate[t.template_id] = t; });
     var rows = eligible.map(function(tpl){
       var picked = !!byTemplate[tpl.id];
-      return '<label class="stu-ooo-row" style="display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid #F1F4F9;cursor:' + (canEdit() ? 'pointer' : 'default') + '">'
-        + '<input type="checkbox" class="stu-ooo-check" data-template-id="' + esc(tpl.id) + '" ' + (picked ? 'checked' : '') + ' ' + (canEdit() ? '' : 'disabled') + ' style="width:16px;height:16px;margin-top:2px;flex:0 0 auto">'
+      return '<label class="stu-ooo-row" style="display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid #F1F4F9;cursor:' + (canMutate() ? 'pointer' : 'default') + '">'
+        + '<input type="checkbox" class="stu-ooo-check" data-template-id="' + esc(tpl.id) + '" ' + (picked ? 'checked' : '') + ' ' + (canMutate() ? '' : 'disabled') + ' style="width:16px;height:16px;margin-top:2px;flex:0 0 auto">'
         + '<div style="flex:1 1 0;min-width:0">'
         + '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
         + '<div style="font-size:13.5px;font-weight:600">' + esc(tpl.title) + '</div>'
@@ -604,7 +628,7 @@ window.RoleContext.init();
   }
 
   function toggleOoo(templateId, checked){
-    if (!canEdit()){ showToast("You don't have Edit access to Integration Studio."); renderClientWorkspace(); return; }
+    if (!canMutate()){ showToast(isFrozen() ? 'This plan is frozen — move it back to Planning to edit.' : "You don't have Edit access to Integration Studio."); renderClientWorkspace(); return; }
     var tpl = state.templates.filter(function(t){ return t.id === templateId; })[0];
     if (!tpl) return;
     var existing = state.tasks.filter(function(t){ return t.offering_type === 'ooo' && t.template_id === templateId; })[0];
@@ -656,7 +680,7 @@ window.RoleContext.init();
       + '<div><b style="color:#8B95A6;font-weight:600">Client dependency</b><br>' + esc(t.client_dependency || '—') + '</div>'
       + '<div style="grid-column:1 / -1"><b style="color:#8B95A6;font-weight:600">Acceptance criteria</b><br>' + esc(t.acceptance_criteria || '—') + '</div>'
       + '</div>'
-      + (canEdit() ? ('<div style="display:flex;gap:8px;justify-content:flex-end;padding-top:2px">'
+      + (canMutate() ? ('<div style="display:flex;gap:8px;justify-content:flex-end;padding-top:2px">'
         + '<button type="button" class="stu-custom-edit-btn" data-id="' + esc(t.id) + '" style="height:28px;padding:0 12px;border-radius:7px;border:1px solid #DCE2EC;background:#fff;font-size:12px;font-weight:600;cursor:pointer">Edit</button>'
         + '<button type="button" class="stu-custom-remove-btn" data-id="' + esc(t.id) + '" style="height:28px;padding:0 12px;border-radius:7px;border:1px solid #F1C4BC;background:#fff;color:#8A2A12;font-size:12px;font-weight:600;cursor:pointer">Remove</button>'
         + '</div>') : '')
@@ -672,7 +696,7 @@ window.RoleContext.init();
       + '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">'
       + '<div><div style="font-size:15px;font-weight:600">Custom Configuration Canvas</div>'
       + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686;max-width:640px">For clients with their own systems and custom mapping needs. Start from the same task library or add a requirement from scratch.</div></div>'
-      + (canEdit() ? '<button type="button" id="stu-add-custom-btn" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">+ Add custom requirement</button>' : '')
+      + (canMutate() ? '<button type="button" id="stu-add-custom-btn" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">+ Add custom requirement</button>' : '')
       + '</div>' + body + '</div>';
   }
 
@@ -751,7 +775,7 @@ window.RoleContext.init();
     if (box) box.innerHTML = '';
   }
   function saveCustomModal(mode, existing){
-    if (!canEdit()){ showToast("You don't have Edit access to Integration Studio."); return; }
+    if (!canMutate()){ showToast(isFrozen() ? 'This plan is frozen — move it back to Planning to edit.' : "You don't have Edit access to Integration Studio."); return; }
     var title = $('stu-c-f-title').value.trim();
     if (!title){ showToast('Title is required.'); return; }
     var templateSel = mode === 'create' && $('stu-c-f-template') ? $('stu-c-f-template').value : (existing ? existing.template_id : null);
@@ -783,7 +807,7 @@ window.RoleContext.init();
     }).catch(function(e){ showToast('Could not save: ' + (e.message || e)); });
   }
   function removeCustomTask(id){
-    if (!canEdit()){ showToast("You don't have Edit access to Integration Studio."); return; }
+    if (!canMutate()){ showToast(isFrozen() ? 'This plan is frozen — move it back to Planning to edit.' : "You don't have Edit access to Integration Studio."); return; }
     Promise.resolve(state.db.from('client_integration_tasks').delete().eq('id', id)).then(function(r){
       if (r.error) throw r.error;
       closeModal();
@@ -861,7 +885,7 @@ window.RoleContext.init();
       + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686;max-width:640px">One Epic per client, one Story per task. Effort maps to JIRA\'s Original Estimate as working days — not story points, since these are already time-based estimates. Studio stays the system of record for intent; nothing pushed back from JIRA is ever written here.</div></div>'
       + '<div style="display:flex;gap:8px">'
       + (canExport() ? '<button type="button" id="stu-export-csv-btn" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;color:#013E90;font-size:12.5px;font-weight:600;cursor:pointer">Download JIRA import (.csv)</button>' : '')
-      + (canExport() ? '<button type="button" id="stu-push-jira-btn" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">Push to JIRA</button>' : '')
+      + (canExport() && !isFrozen() ? '<button type="button" id="stu-push-jira-btn" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">Push to JIRA</button>' : '')
       + '</div></div>'
       + (tasks.length
           ? '<table style="width:100%;border-collapse:collapse;margin-top:14px"><thead><tr>'
@@ -925,6 +949,7 @@ window.RoleContext.init();
   // error comes back in any environment without a real, reachable JIRA site
   // and a valid token — that's surfaced via showToast, not swallowed.
   function pushToJira(client, tasks, epicKey){
+    if (isFrozen(client.id)){ showToast('This plan is frozen — move it back to Planning to push to JIRA.'); closeModal(); return; }
     var jc = state.jiraConfig;
     var authHeader = 'Basic ' + btoa(jc.api_email + ':' + jc.api_token);
     var base = jc.base_url.replace(/\/$/, '');
@@ -1051,6 +1076,28 @@ window.RoleContext.init();
   }
 
   // ---- client workspace root ----
+  // Handoff banner — shown instead of (below) the access banner once a
+  // client has moved to Delivery, plus the Move to Delivery / Move back
+  // action itself. Kept as its own function since it's the one place the
+  // "frozen" state is actually explained to whoever's looking at it.
+  function renderHandoffBar(client){
+    var proj = projectFor(client.id);
+    var frozen = isFrozen(client.id);
+    if (frozen){
+      return '<div style="background:#F1E8FB;border:1px solid #E3D2F5;border-radius:10px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px">'
+        + '<div style="display:flex;gap:12px;align-items:flex-start">'
+        + '<div style="width:18px;height:18px;border-radius:99px;background:#5A2E8A;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px">&#10003;</div>'
+        + '<div style="font-size:13px;line-height:1.55;color:#432467"><b>In Delivery</b> since ' + esc(fmtDate(proj && proj.moved_to_delivery_at)) + (proj && proj.moved_to_delivery_by ? (' — moved by <b>' + esc(proj.moved_to_delivery_by) + '</b>') : '') + '. This plan is frozen as a record of what was decided during onboarding; make execution changes in Delivery.</div>'
+        + '</div>'
+        + (canEdit() ? '<button type="button" id="stu-move-back-btn" style="flex:0 0 auto;height:30px;padding:0 12px;border-radius:7px;border:1px solid #C9AEE8;background:#fff;color:#5A2E8A;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">Move back to Planning</button>' : '')
+        + '</div>';
+    }
+    if (!canEdit()) return '';
+    return '<div style="display:flex;justify-content:flex-end;margin:-6px 0 16px">'
+      + '<button type="button" id="stu-move-to-delivery-btn" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#fff;color:#013E90;font-size:12.5px;font-weight:600;cursor:pointer">Move to Delivery &rarr;</button>'
+      + '</div>';
+  }
+
   function renderClientWorkspace(){
     var client = state.clients.filter(function(c){ return c.id === state.selectedClientId; })[0];
     if (!client){ state.view = 'clients'; renderClientPicker(); return; }
@@ -1070,10 +1117,73 @@ window.RoleContext.init();
       + '<div style="margin-bottom:14px"><div style="font-size:20px;font-weight:600">' + esc(client.name) + '</div>'
       + '<div style="font-size:13px;color:#6B7686;margin-top:2px">' + esc(client.segment) + '</div></div>'
       + renderAccessBanner()
+      + renderHandoffBar(client)
       + renderRollup(summary)
       + renderTabs()
       + body
       + '</div>';
+  }
+
+  function currentActorName(){
+    var u = window.RoleContext && window.RoleContext.currentUser ? window.RoleContext.currentUser() : null;
+    return u ? u.name : null;
+  }
+
+  function openMoveToDeliveryModal(client){
+    var summary = effortSummary(state.tasks);
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">Move ' + esc(client.name) + ' to Delivery?</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">This freezes the plan below — no more checking off Standard items, editing Custom requirements, or pushing to JIRA. Everything committed stays exactly as a record of what was decided during onboarding. Generating the requirement doc, exporting the JIRA CSV, and moving back to Planning all stay available.</div></div>'
+      + '<div style="padding:16px 22px;font-size:12.5px;color:#5A6474">' + (summary.ooo.length + summary.custom.length) + ' task' + ((summary.ooo.length + summary.custom.length) === 1 ? '' : 's') + ' committed &middot; ' + fmtWeeks(summary.totalWeeks) + ' total effort.</div>'
+      + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
+      + '<button type="button" id="stu-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+      + '<button type="button" id="stu-move-confirm" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Move to Delivery</button>'
+      + '</div>';
+    $('studio-modal-box').innerHTML = html;
+    $('studio-modal-overlay').style.display = 'flex';
+    $('stu-modal-cancel').addEventListener('click', closeModal);
+    $('stu-move-confirm').addEventListener('click', function(){ moveToDelivery(client); });
+  }
+  function openMoveBackModal(client){
+    var proj = projectFor(client.id);
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">Move ' + esc(client.name) + ' back to Planning?</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">Unfreezes the plan — Standard items, Custom requirements, and JIRA push become editable again. The original move-to-Delivery record (' + esc(fmtDate(proj && proj.moved_to_delivery_at)) + (proj && proj.moved_to_delivery_by ? (' by ' + esc(proj.moved_to_delivery_by)) : '') + ') stays on file.</div></div>'
+      + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
+      + '<button type="button" id="stu-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+      + '<button type="button" id="stu-move-back-confirm" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Move back to Planning</button>'
+      + '</div>';
+    $('studio-modal-box').innerHTML = html;
+    $('studio-modal-overlay').style.display = 'flex';
+    $('stu-modal-cancel').addEventListener('click', closeModal);
+    $('stu-move-back-confirm').addEventListener('click', function(){ moveBackToPlanning(client); });
+  }
+  function loadClientProject(clientId){
+    return Promise.resolve(state.db.from('client_integration_status').select('*').eq('client_id', clientId)).then(function(r){
+      if (r.error) throw r.error;
+      if (r.data && r.data.length) state.projects[clientId] = r.data[0];
+      else delete state.projects[clientId];
+    });
+  }
+  function moveToDelivery(client){
+    if (!canEdit()){ showToast("You don't have Edit access to Integration Studio."); return; }
+    var patch = { status: 'in_delivery', moved_to_delivery_at: new Date().toISOString(), moved_to_delivery_by: currentActorName() };
+    var existing = projectFor(client.id);
+    var req = existing
+      ? state.db.from('client_integration_status').update(patch).eq('client_id', client.id)
+      : state.db.from('client_integration_status').insert(Object.assign({ client_id: client.id }, patch));
+    Promise.resolve(req).then(function(r){
+      if (r.error) throw r.error;
+      closeModal();
+      return loadClientProject(client.id).then(function(){ renderClientWorkspace(); showToast('Moved to Delivery — this plan is now frozen.'); });
+    }).catch(function(e){ showToast('Could not move to Delivery: ' + (e.message || e)); });
+  }
+  function moveBackToPlanning(client){
+    if (!canEdit()){ showToast("You don't have Edit access to Integration Studio."); return; }
+    var patch = { status: 'planning', moved_back_at: new Date().toISOString(), moved_back_by: currentActorName() };
+    Promise.resolve(state.db.from('client_integration_status').update(patch).eq('client_id', client.id)).then(function(r){
+      if (r.error) throw r.error;
+      closeModal();
+      return loadClientProject(client.id).then(function(){ renderClientWorkspace(); showToast('Moved back to Planning — editable again.'); });
+    }).catch(function(e){ showToast('Could not move back: ' + (e.message || e)); });
   }
 
   // =======================================================================
@@ -1272,6 +1382,19 @@ window.RoleContext.init();
       if (tplAddBtn){ openTemplateCreateModal(); return; }
       var tplEditBtn = e.target.closest && e.target.closest('.stu-tpl-edit-btn');
       if (tplEditBtn){ openTemplateEditModal(tplEditBtn.getAttribute('data-id')); return; }
+
+      var moveToDeliveryBtn = e.target.closest && e.target.closest('#stu-move-to-delivery-btn');
+      if (moveToDeliveryBtn){
+        var client4 = state.clients.filter(function(c){ return c.id === state.selectedClientId; })[0];
+        if (client4) openMoveToDeliveryModal(client4);
+        return;
+      }
+      var moveBackBtn = e.target.closest && e.target.closest('#stu-move-back-btn');
+      if (moveBackBtn){
+        var client5 = state.clients.filter(function(c){ return c.id === state.selectedClientId; })[0];
+        if (client5) openMoveBackModal(client5);
+        return;
+      }
     });
 
     m.addEventListener('change', function(e){
@@ -1281,6 +1404,7 @@ window.RoleContext.init();
         return;
       }
       if (e.target && e.target.id === 'stu-tpl-show-inactive'){ state.showInactiveTemplates = e.target.checked; renderTaskLibrary(); return; }
+      if (e.target && e.target.id === 'stu-show-in-delivery'){ state.showInDelivery = e.target.checked; renderClientPicker(); return; }
     });
 
     m.addEventListener('input', function(e){
@@ -1309,7 +1433,8 @@ window.RoleContext.init();
   }
   function loadClientWorkspace(){
     renderClientWorkspace(); // render immediately with stale/empty state, then refresh
-    return Promise.all([loadClientTasks(), loadClientDocs()]);
+    return Promise.all([loadClientTasks(), loadClientDocs(), loadClientProject(state.selectedClientId)])
+      .then(function(){ renderClientWorkspace(); }); // final render once every piece (incl. handoff status) has landed
   }
   function loadTemplates(){
     return Promise.resolve(state.db.from('integration_task_templates').select('*').order('sort_order')).then(function(r){
@@ -1321,9 +1446,10 @@ window.RoleContext.init();
   function loadClientPicker(){
     return Promise.all([
       Promise.resolve(state.db.from('clients').select('*').order('name')),
-      Promise.resolve(state.db.from('client_integration_tasks').select('client_id, offering_type, estimated_weeks'))
+      Promise.resolve(state.db.from('client_integration_tasks').select('client_id, offering_type, estimated_weeks')),
+      Promise.resolve(state.db.from('client_integration_status').select('*'))
     ]).then(function(results){
-      var cr = results[0], tr = results[1];
+      var cr = results[0], tr = results[1], pr = results[2];
       if (cr.error) throw cr.error;
       if (tr.error) throw tr.error;
       state.clients = cr.data || [];
@@ -1334,6 +1460,12 @@ window.RoleContext.init();
         counts[t.client_id].weeks += Number(t.estimated_weeks) || 0;
       });
       state.clientTaskCounts = counts;
+      // Missing-table fallback (same convention as jiraConfig below) — a
+      // project that hasn't re-run schema.sql yet just sees every client as
+      // 'planning', not a hard failure.
+      var projects = {};
+      if (pr && !pr.error){ (pr.data || []).forEach(function(p){ projects[p.client_id] = p; }); }
+      state.projects = projects;
       renderRoot();
     }).catch(function(e){ console.error('Integration Studio: could not load', e); renderNotConnected(); });
   }
