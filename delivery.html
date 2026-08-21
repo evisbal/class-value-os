@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -64,7 +66,7 @@
             <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:rgba(133,195,65,.14);color:#FFFFFF" class="nav-item" id="nav-delivery">
               <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#85C341" class="nav-dot"></span>
               <span style="font-size:13.5px;font-weight:600;letter-spacing:-.005em" class="nav-label">Delivery</span>
-              <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9.5px;background:rgba(133,195,65,.16);color:#A8DB6E;padding:2px 6px;border-radius:5px">2</span>
+              
             </div>
           </a>
 <a href="reporting.html" style="text-decoration:none;display:block">
@@ -94,6 +96,13 @@
               
             </div>
           </a>
+<a href="sso-config.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-sso">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">SSO configuration</span>
+              
+            </div>
+          </a>
 <a href="states.html" style="text-decoration:none;display:block">
             <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-states">
               <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
@@ -103,13 +112,12 @@
           </a>
         </div>
     </div>
-    <div style="padding:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px">
+    <div style="position:relative;padding:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px" id="sidebarUserFooter">
       <div style="width:30px;height:30px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">DM</div>
       <div style="min-width:0">
         <div style="color:#E8EEF8;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Dana Mercer</div>
         <div style="color:#7E97BD;font-size:11px">Solutions Engineer</div>
       </div>
-      <div title="Sign out" style="margin-left:auto;color:#7E97BD;font-size:15px;cursor:pointer;padding:0 2px">&#9211;</div>
     </div>
   </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -130,332 +138,10 @@
         <div id="hamburgerBtn" class="topbar-hamburger" style="width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">&#9776;</div>
       </div>
     </div>
-<div id="previewBanner" style="position:sticky;top:0;z-index:50;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:11.5px;padding:7px 20px;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em">STATIC DESIGN PREVIEW — this module is a non-functional mockup with sample data.</div>
+
     <div class="content-viewport" id="contentViewport">
-<div style="padding: 22px 28px 44px; max-width: 1460px;">
-          <div style="display: flex; align-items: flex-start; gap: 18px; flex-wrap: wrap;">
-            <div>
-              <div style="font-size: 22px; font-weight: 600; letter-spacing: -0.01em;">Delivery</div>
-              <div style="margin-top: 5px; font-size: 13px; color: rgb(107, 118, 134);">Read-mostly cockpit over live JIRA work. 20 implementations · 2 blocked · 3 go-lives this month.</div>
-            </div>
-            <div style="margin-left: auto; display: flex; gap: 8px;">
-              <button style="height: 36px; padding: 0px 14px; border-radius: 8px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 13.5px; font-weight: 600; cursor: pointer;">Sort by risk</button>
-              <button style="height: 36px; padding: 0px 14px; border-radius: 8px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 13.5px; font-weight: 600; cursor: pointer;">Open in JIRA</button>
-            </div>
-          </div>
-
-          <div style="margin-top: 16px; background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; overflow: hidden;">
-            <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.3fr .5fr .5fr .6fr .7fr; gap: 12px; padding: 10px 18px; background: rgb(250, 251, 253); font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">
-              <div>CLIENT</div><div>PHASE</div><div>PROGRESS VS BASELINE</div><div style="text-align: right;">DAYS</div><div style="text-align: right;">BLOCK</div><div>PM</div><div style="text-align: right;">STATE</div>
-            </div>
-            
-              <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.3fr .5fr .5fr .6fr .7fr; gap: 12px; padding: 13px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(245, 249, 255);" class="scp5">
-                <div style="font-weight: 600; font-size: 13.5px;"><span class="sc-interp">Harbor Point Lending</span></div>
-                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Training &amp; pilot</span></div>
-                <div style="display: flex; align-items: center; gap: 9px;">
-                  <div style="flex: 1 1 0%; height: 7px; border-radius: 99px; background: rgb(237, 240, 246); position: relative; overflow: hidden;">
-                    <div style="position: absolute; top: 0px; bottom: 0px; left: 0px; width: 68%; background: rgb(197, 138, 28); border-radius: 99px;"></div>
-                    <div style="position: absolute; top: -2px; bottom: -2px; left: 74%; width: 2px; background: rgb(1, 40, 94);"></div>
-                  </div>
-                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102); width: 30px; text-align: right;"><span class="sc-interp">68%</span></div>
-                </div>
-                <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">27</span></div>
-                <div style="text-align: right; font-weight: 600; color: rgb(168, 57, 43);"><span class="sc-interp">2</span></div>
-                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">J. Okafor</span></div>
-                <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(253, 243, 224); color: rgb(138, 90, 18);"><span class="sc-interp">AT RISK</span></span></div>
-              </div>
-            
-              <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.3fr .5fr .5fr .6fr .7fr; gap: 12px; padding: 13px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(255, 255, 255);" class="scp5">
-                <div style="font-weight: 600; font-size: 13.5px;"><span class="sc-interp">Summit Ridge Bank</span></div>
-                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">LOS integration</span></div>
-                <div style="display: flex; align-items: center; gap: 9px;">
-                  <div style="flex: 1 1 0%; height: 7px; border-radius: 99px; background: rgb(237, 240, 246); position: relative; overflow: hidden;">
-                    <div style="position: absolute; top: 0px; bottom: 0px; left: 0px; width: 22%; background: rgb(1, 62, 144); border-radius: 99px;"></div>
-                    <div style="position: absolute; top: -2px; bottom: -2px; left: 20%; width: 2px; background: rgb(1, 40, 94);"></div>
-                  </div>
-                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102); width: 30px; text-align: right;"><span class="sc-interp">22%</span></div>
-                </div>
-                <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">75</span></div>
-                <div style="text-align: right; font-weight: 600; color: rgb(151, 161, 178);"><span class="sc-interp">0</span></div>
-                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">J. Okafor</span></div>
-                <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(234, 241, 251); color: rgb(1, 46, 107);"><span class="sc-interp">ON TRACK</span></span></div>
-              </div>
-            
-              <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.3fr .5fr .5fr .6fr .7fr; gap: 12px; padding: 13px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(255, 255, 255);" class="scp5">
-                <div style="font-weight: 600; font-size: 13.5px;"><span class="sc-interp">Meridian Trust</span></div>
-                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Product configuration</span></div>
-                <div style="display: flex; align-items: center; gap: 9px;">
-                  <div style="flex: 1 1 0%; height: 7px; border-radius: 99px; background: rgb(237, 240, 246); position: relative; overflow: hidden;">
-                    <div style="position: absolute; top: 0px; bottom: 0px; left: 0px; width: 41%; background: rgb(197, 138, 28); border-radius: 99px;"></div>
-                    <div style="position: absolute; top: -2px; bottom: -2px; left: 55%; width: 2px; background: rgb(1, 40, 94);"></div>
-                  </div>
-                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102); width: 30px; text-align: right;"><span class="sc-interp">41%</span></div>
-                </div>
-                <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">19</span></div>
-                <div style="text-align: right; font-weight: 600; color: rgb(168, 57, 43);"><span class="sc-interp">3</span></div>
-                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">L. Ruiz</span></div>
-                <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(253, 244, 242); color: rgb(168, 57, 43);"><span class="sc-interp">BLOCKED</span></span></div>
-              </div>
-            
-              <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.3fr .5fr .5fr .6fr .7fr; gap: 12px; padding: 13px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(255, 255, 255);" class="scp5">
-                <div style="font-weight: 600; font-size: 13.5px;"><span class="sc-interp">Riverbend CU</span></div>
-                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Go-live &amp; hypercare</span></div>
-                <div style="display: flex; align-items: center; gap: 9px;">
-                  <div style="flex: 1 1 0%; height: 7px; border-radius: 99px; background: rgb(237, 240, 246); position: relative; overflow: hidden;">
-                    <div style="position: absolute; top: 0px; bottom: 0px; left: 0px; width: 94%; background: rgb(1, 62, 144); border-radius: 99px;"></div>
-                    <div style="position: absolute; top: -2px; bottom: -2px; left: 92%; width: 2px; background: rgb(1, 40, 94);"></div>
-                  </div>
-                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102); width: 30px; text-align: right;"><span class="sc-interp">94%</span></div>
-                </div>
-                <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">4</span></div>
-                <div style="text-align: right; font-weight: 600; color: rgb(151, 161, 178);"><span class="sc-interp">0</span></div>
-                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">D. Vance</span></div>
-                <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(234, 241, 251); color: rgb(1, 46, 107);"><span class="sc-interp">ON TRACK</span></span></div>
-              </div>
-            
-              <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.3fr .5fr .5fr .6fr .7fr; gap: 12px; padding: 13px 18px; border-top: 1px solid rgb(241, 244, 249); align-items: center; font-size: 13px; cursor: pointer; background: rgb(255, 255, 255);" class="scp5">
-                <div style="font-weight: 600; font-size: 13.5px;"><span class="sc-interp">Latitude Home Loans</span></div>
-                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">Discovery</span></div>
-                <div style="display: flex; align-items: center; gap: 9px;">
-                  <div style="flex: 1 1 0%; height: 7px; border-radius: 99px; background: rgb(237, 240, 246); position: relative; overflow: hidden;">
-                    <div style="position: absolute; top: 0px; bottom: 0px; left: 0px; width: 8%; background: rgb(1, 62, 144); border-radius: 99px;"></div>
-                    <div style="position: absolute; top: -2px; bottom: -2px; left: 8%; width: 2px; background: rgb(1, 40, 94);"></div>
-                  </div>
-                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102); width: 30px; text-align: right;"><span class="sc-interp">8%</span></div>
-                </div>
-                <div style="text-align: right; color: rgb(90, 100, 116);"><span class="sc-interp">96</span></div>
-                <div style="text-align: right; font-weight: 600; color: rgb(168, 57, 43);"><span class="sc-interp">1</span></div>
-                <div style="color: rgb(90, 100, 116);"><span class="sc-interp">L. Ruiz</span></div>
-                <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(234, 241, 251); color: rgb(1, 46, 107);"><span class="sc-interp">ON TRACK</span></span></div>
-              </div>
-            
-          </div>
-
-          <div style="margin-top: 14px; display: grid; grid-template-columns: 1.45fr 1fr; gap: 14px; align-items: start;">
-            <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 16px 18px;">
-              <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                <div style="font-size: 15.5px; font-weight: 600;"><span class="sc-interp">Harbor Point Lending</span></div>
-                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 5px; background: rgb(253, 243, 224); color: rgb(138, 90, 18);"><span class="sc-interp">AT RISK</span></div>
-                <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(151, 161, 178);"><span class="sc-interp">SYNCED 2 MIN AGO</span></div>
-              </div>
-              <div style="margin-top: 14px; display: flex; align-items: flex-end; gap: 8px; height: 150px; padding: 0px 2px; border-bottom: 1px solid rgb(237, 240, 246);">
-                
-                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
-                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
-                      <div style="width: 42%; height: 12%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
-                      <div style="width: 42%; height: 10%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
-                    </div>
-                  </div>
-                
-                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
-                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
-                      <div style="width: 42%; height: 24%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
-                      <div style="width: 42%; height: 22%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
-                    </div>
-                  </div>
-                
-                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
-                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
-                      <div style="width: 42%; height: 33%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
-                      <div style="width: 42%; height: 36%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
-                    </div>
-                  </div>
-                
-                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
-                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
-                      <div style="width: 42%; height: 44%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
-                      <div style="width: 42%; height: 50%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
-                    </div>
-                  </div>
-                
-                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
-                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
-                      <div style="width: 42%; height: 52%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
-                      <div style="width: 42%; height: 62%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
-                    </div>
-                  </div>
-                
-                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
-                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
-                      <div style="width: 42%; height: 61%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
-                      <div style="width: 42%; height: 72%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
-                    </div>
-                  </div>
-                
-                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
-                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
-                      <div style="width: 42%; height: 68%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
-                      <div style="width: 42%; height: 84%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
-                    </div>
-                  </div>
-                
-                  <div style="flex: 1 1 0%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; height: 100%;">
-                    <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%;">
-                      <div style="width: 42%; height: 0%; background: rgb(1, 62, 144); border-radius: 3px 3px 0 0;"></div>
-                      <div style="width: 42%; height: 96%; background: rgb(216, 229, 245); border-radius: 3px 3px 0 0;"></div>
-                    </div>
-                  </div>
-                
-              </div>
-              <div style="display: flex; gap: 8px; margin-top: 6px;">
-                
-                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W1</span></div>
-                
-                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W2</span></div>
-                
-                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W3</span></div>
-                
-                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W4</span></div>
-                
-                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W5</span></div>
-                
-                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W6</span></div>
-                
-                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W7</span></div>
-                
-                  <div style="flex: 1 1 0%; text-align: center; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; color: rgb(151, 161, 178);"><span class="sc-interp">W8</span></div>
-                
-              </div>
-              <div style="margin-top: 10px; display: flex; gap: 16px; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; color: rgb(139, 149, 166);">
-                <div style="display: flex; align-items: center; gap: 5px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: rgb(1, 62, 144);"></span>ACTUAL</div>
-                <div style="display: flex; align-items: center; gap: 5px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: rgb(216, 229, 245);"></span>BASELINE PLAN</div>
-                <div style="margin-left: auto; color: rgb(168, 57, 43);">TRACKING 16 POINTS BEHIND</div>
-              </div>
-              <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 1px; background: rgb(237, 240, 246); border-radius: 9px; overflow: hidden;">
-                
-                  <div style="display: grid; grid-template-columns: 1.7fr .9fr .6fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; align-items: center;">
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(31, 85, 112);"><span class="sc-interp">SRB-12 Encompass integration</span></div>
-                    <div style="display: flex; align-items: center; gap: 9px;">
-                      <div style="flex: 1 1 0%; height: 6px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 78%; background: rgb(133, 195, 65); border-radius: 99px;"></div></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(107, 118, 134);"><span class="sc-interp">14/18</span></div>
-                    </div>
-                    <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(234, 240, 244); color: rgb(31, 85, 112);"><span class="sc-interp">IN PROGRESS</span></span></div>
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.7fr .9fr .6fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; align-items: center;">
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(31, 85, 112);"><span class="sc-interp">SRB-19 Product configuration</span></div>
-                    <div style="display: flex; align-items: center; gap: 9px;">
-                      <div style="flex: 1 1 0%; height: 6px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 100%; background: rgb(133, 195, 65); border-radius: 99px;"></div></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(107, 118, 134);"><span class="sc-interp">9/9</span></div>
-                    </div>
-                    <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(234, 241, 251); color: rgb(1, 46, 107);"><span class="sc-interp">DONE</span></span></div>
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.7fr .9fr .6fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; align-items: center;">
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(31, 85, 112);"><span class="sc-interp">SRB-24 Panel onboarding</span></div>
-                    <div style="display: flex; align-items: center; gap: 9px;">
-                      <div style="flex: 1 1 0%; height: 6px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 36%; background: rgb(133, 195, 65); border-radius: 99px;"></div></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(107, 118, 134);"><span class="sc-interp">4/11</span></div>
-                    </div>
-                    <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(234, 240, 244); color: rgb(31, 85, 112);"><span class="sc-interp">IN PROGRESS</span></span></div>
-                  </div>
-                
-                  <div style="display: grid; grid-template-columns: 1.7fr .9fr .6fr; gap: 12px; background: rgb(255, 255, 255); padding: 11px 13px; align-items: center;">
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11.5px; color: rgb(31, 85, 112);"><span class="sc-interp">SRB-31 Training &amp; pilot</span></div>
-                    <div style="display: flex; align-items: center; gap: 9px;">
-                      <div style="flex: 1 1 0%; height: 6px; border-radius: 99px; background: rgb(237, 240, 246); overflow: hidden;"><div style="height: 100%; width: 14%; background: rgb(133, 195, 65); border-radius: 99px;"></div></div>
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(107, 118, 134);"><span class="sc-interp">1/7</span></div>
-                    </div>
-                    <div style="text-align: right;"><span style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 5px; background: rgb(253, 244, 242); color: rgb(168, 57, 43);"><span class="sc-interp">BLOCKED</span></span></div>
-                  </div>
-                
-              </div>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 14px;">
-              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 15px 17px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                  <div style="font-size: 15.5px; font-weight: 600;">Blockers</div>
-                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">CLASS VS CLIENT SIDE</div>
-                </div>
-                <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px;">
-                  
-                    <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 11px 13px;">
-                      <div style="display: flex; align-items: center; gap: 8px;">
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.1em; color: rgb(107, 118, 134); border: 1px solid rgb(227, 232, 240); border-radius: 4px; padding: 2px 5px;"><span class="sc-interp">CLIENT-SIDE</span></div>
-                        <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 6px; border-radius: 5px; background: rgb(253, 244, 242); color: rgb(168, 57, 43);"><span class="sc-interp">ESCALATED</span></div>
-                      </div>
-                      <div style="margin-top: 7px; font-size: 13px; font-weight: 600; line-height: 1.35;"><span class="sc-interp">Client has not returned UAT credentials</span></div>
-                      <div style="margin-top: 4px; font-size: 12px; color: rgb(139, 149, 166);"><span class="sc-interp">Client IT</span> · open <span class="sc-interp">9d</span></div>
-                    </div>
-                  
-                    <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 11px 13px;">
-                      <div style="display: flex; align-items: center; gap: 8px;">
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.1em; color: rgb(107, 118, 134); border: 1px solid rgb(227, 232, 240); border-radius: 4px; padding: 2px 5px;"><span class="sc-interp">CLASS-SIDE</span></div>
-                        <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 6px; border-radius: 5px; background: rgb(253, 243, 224); color: rgb(138, 90, 18);"><span class="sc-interp">OPEN</span></div>
-                      </div>
-                      <div style="margin-top: 7px; font-size: 13px; font-weight: 600; line-height: 1.35;"><span class="sc-interp">Panel capacity short in Wayne County</span></div>
-                      <div style="margin-top: 4px; font-size: 12px; color: rgb(139, 149, 166);"><span class="sc-interp">Operations</span> · open <span class="sc-interp">4d</span></div>
-                    </div>
-                  
-                    <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 11px 13px;">
-                      <div style="display: flex; align-items: center; gap: 8px;">
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.1em; color: rgb(107, 118, 134); border: 1px solid rgb(227, 232, 240); border-radius: 4px; padding: 2px 5px;"><span class="sc-interp">CLIENT-SIDE</span></div>
-                        <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 6px; border-radius: 5px; background: rgb(253, 243, 224); color: rgb(138, 90, 18);"><span class="sc-interp">OPEN</span></div>
-                      </div>
-                      <div style="margin-top: 7px; font-size: 13px; font-weight: 600; line-height: 1.35;"><span class="sc-interp">Fee routing AC awaiting compliance sign-off</span></div>
-                      <div style="margin-top: 4px; font-size: 12px; color: rgb(139, 149, 166);"><span class="sc-interp">Client compliance</span> · open <span class="sc-interp">3d</span></div>
-                    </div>
-                  
-                    <div style="border: 1px solid rgb(227, 232, 240); border-radius: 10px; padding: 11px 13px;">
-                      <div style="display: flex; align-items: center; gap: 8px;">
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.1em; color: rgb(107, 118, 134); border: 1px solid rgb(227, 232, 240); border-radius: 4px; padding: 2px 5px;"><span class="sc-interp">CLASS-SIDE</span></div>
-                        <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 6px; border-radius: 5px; background: rgb(234, 240, 244); color: rgb(31, 85, 112);"><span class="sc-interp">NEW</span></div>
-                      </div>
-                      <div style="margin-top: 7px; font-size: 13px; font-weight: 600; line-height: 1.35;"><span class="sc-interp">Imaging endpoint returns 502 on batch delivery</span></div>
-                      <div style="margin-top: 4px; font-size: 12px; color: rgb(139, 149, 166);"><span class="sc-interp">Engineering</span> · open <span class="sc-interp">1d</span></div>
-                    </div>
-                  
-                </div>
-              </div>
-              <div style="background: rgb(253, 244, 242); border: 1px solid rgb(239, 207, 199); border-radius: 12px; padding: 15px 17px;">
-                <div style="display: flex; align-items: center; gap: 9px;">
-                  <div style="width: 18px; height: 18px; border-radius: 99px; background: rgb(196, 71, 44); color: rgb(255, 255, 255); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;">!</div>
-                  <div style="font-size: 14.5px; font-weight: 600; color: rgb(138, 46, 31);">JIRA sync failed — Meridian Trust</div>
-                </div>
-                <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.5; color: rgb(122, 53, 39);">Custom field “Effort (weeks)” missing on project MTB. 3 stories rejected. Last successful sync 09:14 — every % on this row is stale until resolved.</div>
-                <div style="margin-top: 11px; display: flex; gap: 8px; align-items: center;">
-                  <button style="height: 31px; padding: 0px 12px; border-radius: 7px; border: medium; background: rgb(168, 57, 43); color: rgb(255, 255, 255); font-size: 12.5px; font-weight: 600; cursor: pointer;">Retry sync</button>
-                  <button style="height: 31px; padding: 0px 12px; border-radius: 7px; border: 1px solid rgb(227, 190, 181); background: rgb(255, 255, 255); font-size: 12.5px; font-weight: 600; cursor: pointer;">View payload</button>
-                  <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; color: rgb(168, 57, 43);">TRACE 8F2C-41</div>
-                </div>
-              </div>
-              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 15px 17px;">
-                <div style="font-size: 15.5px; font-weight: 600;">Go-live checklist</div>
-                <div style="margin-top: 11px; display: flex; flex-direction: column; gap: 9px;">
-                  
-                    <div style="display: flex; align-items: flex-start; gap: 10px;">
-                      <div style="width: 16px; height: 16px; border-radius: 5px; flex: 0 0 auto; margin-top: 1px; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 10px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
-                      <div style="font-size: 12.5px; color: rgb(62, 74, 92); line-height: 1.4;"><span class="sc-interp">All epics closed or descoped with approval</span></div>
-                    </div>
-                  
-                    <div style="display: flex; align-items: flex-start; gap: 10px;">
-                      <div style="width: 16px; height: 16px; border-radius: 5px; flex: 0 0 auto; margin-top: 1px; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 10px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
-                      <div style="font-size: 12.5px; color: rgb(62, 74, 92); line-height: 1.4;"><span class="sc-interp">25 pilot orders completed end-to-end</span></div>
-                    </div>
-                  
-                    <div style="display: flex; align-items: flex-start; gap: 10px;">
-                      <div style="width: 16px; height: 16px; border-radius: 5px; flex: 0 0 auto; margin-top: 1px; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 10px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
-                      <div style="font-size: 12.5px; color: rgb(151, 161, 178); line-height: 1.4;"><span class="sc-interp">Client training attested by loan officers</span></div>
-                    </div>
-                  
-                    <div style="display: flex; align-items: flex-start; gap: 10px;">
-                      <div style="width: 16px; height: 16px; border-radius: 5px; flex: 0 0 auto; margin-top: 1px; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 10px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
-                      <div style="font-size: 12.5px; color: rgb(62, 74, 92); line-height: 1.4;"><span class="sc-interp">Panel capacity confirmed in all counties</span></div>
-                    </div>
-                  
-                    <div style="display: flex; align-items: flex-start; gap: 10px;">
-                      <div style="width: 16px; height: 16px; border-radius: 5px; flex: 0 0 auto; margin-top: 1px; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 10px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
-                      <div style="font-size: 12.5px; color: rgb(151, 161, 178); line-height: 1.4;"><span class="sc-interp">Invoicing and billing configuration verified</span></div>
-                    </div>
-                  
-                </div>
-                <button style="margin-top: 13px; width: 100%; height: 38px; border-radius: 8px; border: 1px solid rgb(220, 226, 236); background: rgb(244, 246, 250); color: rgb(151, 161, 178); font-size: 13.5px; font-weight: 600; cursor: not-allowed;">Mark complete → Engagement</button>
-                <div style="margin-top: 7px; font-size: 11.5px; color: rgb(151, 161, 178); line-height: 1.45;">Disabled until the checklist clears. This is the only trigger that changes a client’s lifecycle state.</div>
-              </div>
-            </div>
-          </div>
-        </div>
+<div id="delivery-app-mount"></div>
+<div id="delivery-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(19,26,38,.45);z-index:80;align-items:center;justify-content:center;padding:20px"><div id="delivery-modal-box" style="background:#fff;border-radius:14px;max-width:560px;width:100%;max-height:88vh;overflow-y:auto"></div></div>
     </div>
   </div>
 </div>
@@ -472,6 +158,974 @@
   if (bd) bd.addEventListener('click', function(){ setOpen(false); });
 })();
 </script>
+<script>
+// Role context — a shared, provisional stand-in for real login. There is no
+// authentication anywhere in Class Value OS yet (every module runs on one
+// shared Supabase anon key); real SSO is intentionally sequenced last since
+// it needs a real identity provider to test against, which this project
+// doesn't have. Until then, "who's using the app" is this switcher: pick a
+// seeded user from app_users, and every capability check in the app reads
+// whatever role(s) that user is assigned in Supabase — real data, real
+// gating logic, just not yet tied to a real signed-in identity. Swapping in
+// real SSO later means replacing how currentUserId gets set (JIT-provisioned
+// from the IdP instead of a localStorage pick), not touching the data model
+// or any of the can()/isAdmin() call sites that already depend on it.
+//
+// Loaded on every functional page (cpq.html, cpq-config.html, roles.html)
+// BEFORE that page's own module script, so RoleContext.can()/isAdmin() are
+// available by the time the page module renders. Renders into a
+// #sidebarUserFooter element the page shell already has an id on — see
+// build_mpa.js's buildSidebar().
+(function(){
+  var STORAGE_KEY = 'classValueOs.actingAsUserId';
+  var MODULE_LABELS = {
+    demand: 'Demand Management', cpq: 'Value CPQ', 'cpq-config': 'CPQ Config',
+    plan: 'Plan Builder', studio: 'Integration Studio', delivery: 'Delivery',
+    reporting: 'Status Reporting', engagement: 'Engagement Mgmt',
+    roles: 'Roles & permissions', sso: 'SSO configuration'
+  };
 
+  var state = {
+    db: null,
+    users: [],
+    roles: [],
+    roleCapabilities: [],
+    userRoles: [],
+    currentUserId: null,
+    popoverOpen: false,
+    listeners: [],
+    loaded: false
+  };
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){
+    s = (s == null ? '' : String(s));
+    return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+  function initials(name){
+    if (!name) return '—';
+    var parts = name.trim().split(/\s+/);
+    return ((parts[0] || '')[0] || '') + ((parts[1] || '')[0] || '');
+  }
+
+  function available(){
+    return typeof window.supabase !== 'undefined'
+      && !!window.SUPABASE_CONFIG && !!window.SUPABASE_CONFIG.url && !!window.SUPABASE_CONFIG.anonKey;
+  }
+
+  function currentUser(){
+    return state.users.filter(function(u){ return u.id === state.currentUserId; })[0] || null;
+  }
+  function currentRoleIds(){
+    return state.userRoles.filter(function(ur){ return ur.user_id === state.currentUserId; }).map(function(ur){ return ur.role_id; });
+  }
+  function currentRoles(){
+    var ids = currentRoleIds();
+    return state.roles.filter(function(r){ return ids.indexOf(r.id) !== -1; });
+  }
+  // The one function every other module actually calls: does whoever is
+  // currently "acting as" have this capability on this module? A user with
+  // multiple roles gets the union of what any of their roles grant — same
+  // "most permissive role wins" convention as most RBAC systems.
+  function can(module, action){
+    if (!state.loaded) return true; // fail open before roles data has loaded at all, not mid-render
+    var ids = currentRoleIds();
+    if (!ids.length) return false;
+    var field = 'can_' + action;
+    return state.roleCapabilities.some(function(c){
+      return ids.indexOf(c.role_id) !== -1 && c.module === module && c[field] === true;
+    });
+  }
+  function isAdmin(){
+    return currentRoles().some(function(r){ return r.is_admin === true; });
+  }
+  function onChange(fn){ if (typeof fn === 'function') state.listeners.push(fn); }
+  function notify(){ state.listeners.forEach(function(fn){ try { fn(); } catch(e){ console.error('RoleContext listener error', e); } }); }
+
+  function roleNamesLine(){
+    var roles = currentRoles();
+    if (!roles.length) return 'No role assigned';
+    return roles.map(function(r){ return r.name; }).join(', ');
+  }
+
+  function renderSwitcher(){
+    var el = $('sidebarUserFooter');
+    if (!el) return;
+    var u = currentUser();
+    if (!u){
+      el.innerHTML = '<div style="font-size:11.5px;color:#7E97BD">No users seeded yet — add one from Roles &amp; permissions.</div>';
+      return;
+    }
+    el.style.cursor = 'pointer';
+    el.setAttribute('title', 'Switch who you\'re acting as (test mode — no real login yet)');
+    el.innerHTML = '<div style="width:30px;height:30px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex:0 0 auto">' + esc(initials(u.name)) + '</div>'
+      + '<div style="min-width:0;flex:1 1 0">'
+      + '<div style="color:#E8EEF8;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(u.name) + '</div>'
+      + '<div style="color:#7E97BD;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(roleNamesLine()) + '</div>'
+      + '</div>'
+      + '<div style="margin-left:auto;color:#7E97BD;font-size:11px;flex:0 0 auto">&#9662;</div>';
+  }
+
+  function renderPopover(){
+    var existing = $('rc-popover');
+    if (existing) existing.parentNode.removeChild(existing);
+    if (!state.popoverOpen) return;
+    var footer = $('sidebarUserFooter');
+    if (!footer) return;
+    var rowsHtml = state.users.map(function(u){
+      var active = u.id === state.currentUserId;
+      var uRoleIds = state.userRoles.filter(function(ur){ return ur.user_id === u.id; }).map(function(ur){ return ur.role_id; });
+      var uRoles = state.roles.filter(function(r){ return uRoleIds.indexOf(r.id) !== -1; });
+      var label = uRoles.length ? uRoles.map(function(r){ return r.name; }).join(', ') : 'No role assigned';
+      return '<div class="rc-user-row" data-user-id="' + esc(u.id) + '" style="display:flex;align-items:center;gap:9px;padding:9px 12px;cursor:pointer;border-radius:7px;background:' + (active ? 'rgba(1,62,144,.08)' : 'transparent') + '">'
+        + '<div style="width:24px;height:24px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;flex:0 0 auto">' + esc(initials(u.name)) + '</div>'
+        + '<div style="min-width:0;flex:1 1 0">'
+        + '<div style="font-size:12.5px;font-weight:600;color:#131A26;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(u.name) + '</div>'
+        + '<div style="font-size:11px;color:#8B95A6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(label) + '</div>'
+        + '</div>'
+        + (active ? '<div style="color:#013E90;font-size:12px;flex:0 0 auto">&check;</div>' : '')
+        + '</div>';
+    }).join('');
+    var pop = document.createElement('div');
+    pop.id = 'rc-popover';
+    // Shrink-to-content width (not a left+right stretch) — capped so a long
+    // name/role combo still wraps sensibly instead of overflowing the
+    // sidebar. #appSidebar carries position:relative (see shared.css /
+    // assemble_final.js's inline shell CSS) specifically so this anchors to
+    // the sidebar's own bounds — without that, position:absolute here falls
+    // back to the page's initial containing block and the popover stretches
+    // across the full viewport width instead of sitting inside the sidebar.
+    // max-width:212px = the sidebar's 236px width minus the 12px this sits
+    // in from both edges — the same footprint the old left:12px;right:12px
+    // stretch produced, just shrink-to-fit instead of always stretching to it.
+    pop.style.cssText = 'position:absolute;left:12px;width:max-content;max-width:212px;min-width:180px;bottom:70px;background:#fff;border:1px solid #DCE2EC;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.28);z-index:60;overflow:hidden';
+    pop.innerHTML = '<div style="padding:9px 12px;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:10px;font-family:\'IBM Plex Mono\',monospace;letter-spacing:.06em">TEST MODE &mdash; NOT REAL LOGIN. STANDS IN UNTIL SSO IS BUILT.</div>'
+      + '<div style="padding:6px;display:flex;flex-direction:column;gap:2px;max-height:280px;overflow-y:auto">' + (rowsHtml || '<div style="padding:10px;font-size:12px;color:#97A1B2">No users yet.</div>') + '</div>'
+      + '<a href="roles.html" style="display:block;padding:9px 12px;border-top:1px solid #EDF0F6;font-size:12px;color:#013E90;text-decoration:none">Manage users &amp; roles &rarr;</a>';
+    var sidebar = document.getElementById('appSidebar');
+    (sidebar || document.body).appendChild(pop);
+  }
+
+  function togglePopover(open){
+    state.popoverOpen = (open != null) ? open : !state.popoverOpen;
+    renderPopover();
+  }
+
+  function switchTo(userId){
+    state.currentUserId = userId;
+    try { window.localStorage.setItem(STORAGE_KEY, userId); } catch(e){}
+    state.popoverOpen = false;
+    renderPopover();
+    renderSwitcher();
+    notify();
+  }
+
+  function wireEvents(){
+    if (document.__roleContextWired) return;
+    document.__roleContextWired = true;
+    document.addEventListener('click', function(e){
+      var footer = e.target.closest && e.target.closest('#sidebarUserFooter');
+      if (footer){ togglePopover(); return; }
+      var row = e.target.closest && e.target.closest('.rc-user-row');
+      if (row){ switchTo(row.getAttribute('data-user-id')); return; }
+      var pop = $('rc-popover');
+      if (pop && !pop.contains(e.target)) togglePopover(false);
+    });
+  }
+
+  function loadData(){
+    // reload() is exposed for other modules to call after they mutate roles/
+    // capabilities/users data (see roles_module.js) — guard against it firing
+    // before RoleContext itself has ever connected (e.g. Supabase isn't
+    // configured at all), rather than throwing on a null state.db.
+    if (!state.db) return Promise.resolve();
+    return Promise.all([
+      Promise.resolve(state.db.from('app_users').select('*').eq('active', true).order('name')),
+      Promise.resolve(state.db.from('roles').select('*').eq('active', true).order('sort_order')),
+      Promise.resolve(state.db.from('role_capabilities').select('*')),
+      Promise.resolve(state.db.from('user_roles').select('*'))
+    ]).then(function(results){
+      var ur = results[0], rr = results[1], cr = results[2], urr = results[3];
+      if (ur.error) throw ur.error;
+      if (rr.error) throw rr.error;
+      if (cr.error) throw cr.error;
+      if (urr.error) throw urr.error;
+      state.users = ur.data || [];
+      state.roles = rr.data || [];
+      state.roleCapabilities = cr.data || [];
+      state.userRoles = urr.data || [];
+      var saved = null;
+      try { saved = window.localStorage.getItem(STORAGE_KEY); } catch(e){}
+      var stillValid = saved && state.users.some(function(u){ return u.id === saved; });
+      state.currentUserId = stillValid ? saved : (state.users[0] ? state.users[0].id : null);
+      state.loaded = true;
+      renderSwitcher();
+      notify();
+    }).catch(function(e){ console.error('RoleContext: could not load', e); });
+  }
+
+  // Re-entrant the same way every other module's init() is: safe to call
+  // repeatedly (e.g. once per page nav in the merged artifact build), only
+  // (re)connects if it hasn't already, always refreshes data.
+  function init(){
+    wireEvents();
+    if (!state.db){
+      if (!available()) return Promise.resolve();
+      try { state.db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
+      catch(e){ return Promise.resolve(); }
+    }
+    return loadData();
+  }
+
+  window.RoleContext = {
+    init: init,
+    can: can,
+    isAdmin: isAdmin,
+    currentUser: currentUser,
+    currentRoles: currentRoles,
+    onChange: onChange,
+    reload: loadData,
+    MODULE_LABELS: MODULE_LABELS
+  };
+})();
+
+window.RoleContext.init();
+</script>
+<script>
+// Delivery (Module 05) — real data, replacing the static design mockup.
+// Design context (2026-08-21 conversation): Delivery was originally meant to
+// be a read-mostly cockpit over live JIRA work, but there's no real JIRA
+// connection yet, and even once there is one, JIRA's own scope can drift
+// from what Integration Studio committed at handoff (engineers split
+// stories, add work) — so "% of JIRA done" and "% of the Studio plan done"
+// are two honestly different numbers. Rather than fake a JIRA-shaped stat,
+// everything on this screen is computed from data Class Value OS already
+// has for real:
+//   - The worklist is exactly the clients Integration Studio has moved to
+//     Delivery (client_integration_status.status = 'in_delivery') — the two
+//     modules share one handoff record, not two disconnected ideas of
+//     "who's in delivery."
+//   - Plan completion is computed live from client_integration_tasks (the
+//     same frozen plan Move-to-Delivery committed) — never stored, so it
+//     can't go stale. Labeled "plan completion," not "JIRA progress," and
+//     Delivery is where a PM now updates each task's status — Studio froze
+//     the *plan*, Delivery is where the *execution* status lives from here.
+//   - Risk (the ON TRACK / AT RISK / BLOCKED badge, and "Sort by risk") is
+//     also computed — from open/escalated blockers, blocked tasks, and pace
+//     vs. a target or implied go-live date — never hand-typed, so it can't
+//     disagree with the blocker list sitting right next to it. See
+//     computeRisk() below for the exact, documented thresholds.
+//   - Blockers and the go-live checklist are the two things that genuinely
+//     need a human either way: "is this stuck on our side or the client's"
+//     and "were the pilot orders actually completed end-to-end" aren't
+//     things a ticket system reliably knows on its own, JIRA or not.
+// "Open in JIRA" / "Open Epic in JIRA" are real deep links once jira_config
+// is enabled (same singleton table Integration Studio's JIRA tab writes to)
+// — until then, clicking explains what's missing instead of pretending to
+// work, the same honesty pattern used for SSO configuration and Studio's
+// "Push to JIRA."
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function esc(s){
+    s = (s == null ? '' : String(s));
+    return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+  function fmtWeeks(n){
+    var v = Number(n);
+    if (n == null || isNaN(v)) return '—';
+    var r = Math.round(v * 10) / 10;
+    return r + ' wk' + (r === 1 ? '' : 's');
+  }
+  function fmtDate(s){
+    if (!s) return '—';
+    var d = new Date(s);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+  function fmtDays(n){
+    if (n == null) return '—';
+    return n < 0 ? (Math.abs(n) + 'd overdue') : (n + 'd');
+  }
+  // The one gate for the manual controls this screen has (blockers,
+  // checklist checkboxes, task status, target go-live date) — mirrors
+  // canEdit() in Studio/CPQ Config. "Mark complete → Engagement" is gated
+  // separately on can_approve, since it's the one lifecycle transition this
+  // module makes — a bigger, one-way action than day-to-day status updates.
+  function canEdit(){ return window.RoleContext ? window.RoleContext.can('delivery', 'edit') : true; }
+  function canApprove(){ return window.RoleContext ? window.RoleContext.can('delivery', 'approve') : true; }
+
+  var INPUT_STYLE = 'width:100%;height:36px;border:1px solid #DCE2EC;border-radius:8px;padding:0 10px;font-size:13px;font-family:inherit;box-sizing:border-box;outline:none';
+  var SELECT_STYLE = INPUT_STYLE;
+  var PHASE_ORDER = ['Discovery', 'Mapping', 'Testing', 'Go-live'];
+  var TASK_STATUS_META = {
+    not_started: { label: 'Not started', color: '#8B95A6', bg: '#F4F6FA' },
+    in_progress: { label: 'In progress', color: '#012E6B', bg: '#EAF1FB' },
+    blocked:     { label: 'Blocked',     color: '#A8392B', bg: '#FDF4F2' },
+    done:        { label: 'Done',        color: '#3C6B1D', bg: '#EDF6E4' }
+  };
+  var RISK_META = {
+    on_track: { label: 'ON TRACK', color: '#012E6B', bg: '#EAF1FB' },
+    at_risk:  { label: 'AT RISK',  color: '#8A5A12', bg: '#FDF3E0' },
+    blocked:  { label: 'BLOCKED',  color: '#A8392B', bg: '#FDF4F2' }
+  };
+
+  var state = {
+    db: null,
+    view: 'list',              // 'list' | 'client'
+    clients: [],                // all clients rows (id -> name/segment lookup)
+    statuses: [],                // client_integration_status rows with status = 'in_delivery' — the Delivery worklist
+    tasksByClient: {},           // client_id -> client_integration_tasks[]
+    blockersByClient: {},        // client_id -> delivery_blockers[]
+    checklistByClient: {},       // client_id -> delivery_checklist_items[] (loaded per-client, lazily seeded)
+    checklistTemplates: [],      // delivery_checklist_templates (active), loaded once
+    jiraConfig: null,
+    sortByRisk: false,
+    selectedClientId: null
+  };
+
+  function mount(){ return $('delivery-app-mount'); }
+  function available(){
+    return typeof window.supabase !== 'undefined'
+      && !!window.SUPABASE_CONFIG && !!window.SUPABASE_CONFIG.url && !!window.SUPABASE_CONFIG.anonKey;
+  }
+  function showToast(msg){
+    var existingEl = document.getElementById('delivery-toast');
+    if (existingEl) existingEl.parentNode.removeChild(existingEl);
+    var el = document.createElement('div');
+    el.id = 'delivery-toast';
+    el.textContent = msg;
+    el.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#131A26;color:#fff;font-size:13px;padding:10px 16px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:999;max-width:90vw;text-align:center';
+    document.body.appendChild(el);
+    setTimeout(function(){ if (el.parentNode) el.parentNode.removeChild(el); }, 4000);
+  }
+  function closeModal(){
+    var overlay = $('delivery-modal-overlay');
+    if (overlay) overlay.style.display = 'none';
+  }
+  function currentActorName(){
+    var u = window.RoleContext && window.RoleContext.currentUser ? window.RoleContext.currentUser() : null;
+    return u ? u.name : null;
+  }
+
+  // ---------------------------------------------------------------------
+  // Computation — progress, pace, risk. See the file header for why these
+  // are computed instead of pulled from JIRA or hand-typed.
+  // ---------------------------------------------------------------------
+  function clientTasks(clientId){ return state.tasksByClient[clientId] || []; }
+  function clientBlockers(clientId){ return state.blockersByClient[clientId] || []; }
+
+  function computeProgress(clientId){
+    var tasks = clientTasks(clientId);
+    var totalWeeks = tasks.reduce(function(a, t){ return a + (Number(t.estimated_weeks) || 0); }, 0);
+    var doneWeeks = tasks.filter(function(t){ return t.status === 'done'; })
+      .reduce(function(a, t){ return a + (Number(t.estimated_weeks) || 0); }, 0);
+    var pct = totalWeeks > 0 ? Math.round((doneWeeks / totalWeeks) * 100) : 0;
+    return { totalWeeks: totalWeeks, doneWeeks: doneWeeks, pct: pct, taskCount: tasks.length };
+  }
+
+  // Expected pace: if the PM has set a target go-live date, that's the
+  // honest baseline. If not, the baseline falls back to the plan's own
+  // total committed effort (converted to working days, same 5-day/week
+  // convention Studio's JIRA export already uses) as an *implied* duration
+  // from the moment the client moved to Delivery — clearly flagged as
+  // implied, not confirmed, wherever it's shown.
+  function computePace(status, progress){
+    if (!status || !status.moved_to_delivery_at) return { basePct: 0, daysRemaining: null, source: 'unknown', endAt: null };
+    var movedAt = new Date(status.moved_to_delivery_at);
+    var now = new Date();
+    var targetAt = status.target_go_live_at ? new Date(status.target_go_live_at) : null;
+    var source, totalDurationDays;
+    if (targetAt){
+      totalDurationDays = Math.max(1, Math.round((targetAt - movedAt) / 86400000));
+      source = 'target';
+    } else {
+      totalDurationDays = Math.max(1, Math.round((progress.totalWeeks || 0) * 5));
+      source = 'implied';
+    }
+    var endAt = targetAt || new Date(movedAt.getTime() + totalDurationDays * 86400000);
+    var elapsedDays = Math.round((now - movedAt) / 86400000);
+    var basePct = Math.round(Math.min(1, Math.max(0, elapsedDays / totalDurationDays)) * 100);
+    var daysRemaining = Math.round((endAt - now) / 86400000);
+    return { basePct: basePct, daysRemaining: daysRemaining, source: source, endAt: endAt };
+  }
+
+  // Risk thresholds — deliberately simple and stated plainly so they can be
+  // explained to a PM in one sentence, not a black box:
+  //   BLOCKED  — any escalated blocker, OR past the target/implied go-live
+  //              date, OR 3+ combined open blockers/escalations/blocked tasks
+  //   AT RISK  — any open blocker or blocked task, OR more than 15 points
+  //              behind the expected pace
+  //   ON TRACK — none of the above
+  // riskScore drives "Sort by risk" — escalated blockers and being overdue
+  // dominate, so BLOCKED clients always sort above AT RISK, which always
+  // sorts above ON TRACK.
+  function computeRisk(clientId, status){
+    var progress = computeProgress(clientId);
+    var pace = computePace(status, progress);
+    var blockers = clientBlockers(clientId);
+    var openBlockers = blockers.filter(function(b){ return b.status === 'new' || b.status === 'open'; });
+    var escalated = blockers.filter(function(b){ return b.status === 'escalated'; });
+    var blockedTasks = clientTasks(clientId).filter(function(t){ return t.status === 'blocked'; });
+    var paceDeficit = Math.max(0, pace.basePct - progress.pct);
+    var overdue = pace.daysRemaining != null && pace.daysRemaining < 0;
+    var troubleCount = openBlockers.length + escalated.length + blockedTasks.length;
+    var riskState = 'on_track';
+    if (escalated.length > 0 || overdue || troubleCount >= 3) riskState = 'blocked';
+    else if (troubleCount > 0 || paceDeficit > 15) riskState = 'at_risk';
+    var score = escalated.length * 100 + openBlockers.length * 20 + blockedTasks.length * 15 + paceDeficit + (overdue ? 50 : 0);
+    return {
+      state: riskState, score: score, progress: progress, pace: pace,
+      openCount: openBlockers.length, escalatedCount: escalated.length, blockedTaskCount: blockedTasks.length
+    };
+  }
+
+  function riskBadgeHtml(riskState, extraStyle){
+    var meta = RISK_META[riskState] || RISK_META.on_track;
+    return '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.1em;padding:3px 7px;border-radius:5px;background:' + meta.bg + ';color:' + meta.color + ';' + (extraStyle || '') + '">' + meta.label + '</span>';
+  }
+
+  function currentPhaseFor(clientId){
+    var tasks = clientTasks(clientId).slice().sort(function(a, b){ return (a.sort_order || 0) - (b.sort_order || 0); });
+    var open = tasks.filter(function(t){ return t.status !== 'done'; });
+    if (!tasks.length) return 'No tasks committed';
+    if (!open.length) return 'Go-live';
+    return open[0].phase || 'Unphased';
+  }
+
+  function epicKeyFor(client){
+    return 'INT-' + (client.name || '').toUpperCase().replace(/[^A-Z0-9]+/g, '').slice(0, 18);
+  }
+  function jiraReady(){
+    var jc = state.jiraConfig;
+    return !!(jc && jc.enabled && jc.base_url && jc.project_key);
+  }
+  function openInJira(client){
+    if (!jiraReady()){
+      var jc = state.jiraConfig || {};
+      var missing = [];
+      if (!jc.enabled) missing.push('enable the connection');
+      if (!jc.base_url) missing.push('a base URL');
+      if (!jc.project_key) missing.push('a project key');
+      showToast("This client doesn't have a live JIRA connection yet — " + missing.join(', ') + ' from Integration Studio’s JIRA Mapping & Export tab.');
+      return;
+    }
+    var url = state.jiraConfig.base_url.replace(/\/+$/, '') + '/browse/' + (client ? epicKeyFor(client) : '');
+    window.open(url, '_blank', 'noopener');
+  }
+
+  // ---------------------------------------------------------------------
+  // Screen 1 — Delivery list
+  // ---------------------------------------------------------------------
+  function renderDeliveryList(){
+    var m = mount();
+    if (!m) return;
+    var rows = state.statuses.map(function(status){
+      var client = state.clients.filter(function(c){ return c.id === status.client_id; })[0];
+      if (!client) return null;
+      var risk = computeRisk(client.id, status);
+      return { status: status, client: client, risk: risk };
+    }).filter(Boolean);
+
+    var blockedCount = rows.filter(function(r){ return r.risk.state === 'blocked'; }).length;
+    var now = new Date();
+    var goLivesThisMonth = rows.filter(function(r){
+      if (!r.status.target_go_live_at) return false;
+      var d = new Date(r.status.target_go_live_at);
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    }).length;
+
+    var sorted = rows.slice();
+    if (state.sortByRisk) sorted.sort(function(a, b){ return b.risk.score - a.risk.score; });
+    else sorted.sort(function(a, b){ return (a.client.name || '').localeCompare(b.client.name || ''); });
+
+    var tableRows = sorted.map(function(r){
+      var client = r.client, risk = r.risk, status = r.status;
+      var markerLeft = Math.max(0, Math.min(100, risk.pace.basePct));
+      var barColor = risk.state === 'blocked' ? '#A8392B' : (risk.state === 'at_risk' ? '#C58A1C' : '#013E90');
+      return '<div class="dv-client-row" data-client-id="' + esc(client.id) + '" style="display:grid;grid-template-columns:1.2fr 1fr 1.3fr .5fr .5fr .6fr .7fr;gap:12px;padding:13px 18px;border-top:1px solid #F1F4F9;align-items:center;font-size:13px;cursor:pointer">'
+        + '<div style="font-weight:600;font-size:13.5px">' + esc(client.name) + '</div>'
+        + '<div style="color:#5A6474">' + esc(currentPhaseFor(client.id)) + '</div>'
+        + '<div style="display:flex;align-items:center;gap:9px">'
+        + '<div style="flex:1 1 0;height:7px;border-radius:99px;background:#EDF0F6;position:relative;overflow:hidden">'
+        + '<div style="position:absolute;top:0;bottom:0;left:0;width:' + risk.progress.pct + '%;background:' + barColor + ';border-radius:99px"></div>'
+        + '<div style="position:absolute;top:-2px;bottom:-2px;left:' + markerLeft + '%;width:2px;background:#01285E" title="Expected pace"></div>'
+        + '</div>'
+        + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:#4E5866;width:32px;text-align:right">' + risk.progress.pct + '%</div>'
+        + '</div>'
+        + '<div style="text-align:right;color:#5A6474">' + fmtDays(risk.pace.daysRemaining) + '</div>'
+        + '<div style="text-align:right;font-weight:600;color:' + (risk.openCount + risk.escalatedCount > 0 ? '#A8392B' : '#97A1B2') + '">' + (risk.openCount + risk.escalatedCount) + '</div>'
+        + '<div style="color:#5A6474">' + esc(status.moved_to_delivery_by || '—') + '</div>'
+        + '<div style="text-align:right">' + riskBadgeHtml(risk.state) + '</div>'
+        + '</div>';
+    }).join('');
+
+    m.innerHTML = '<div style="padding:22px 28px 44px;max-width:1460px">'
+      + '<div style="display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap">'
+      + '<div><div style="font-size:22px;font-weight:600;letter-spacing:-.01em">Delivery</div>'
+      + '<div style="margin-top:5px;font-size:13px;color:#6B7686">' + rows.length + ' implementation' + (rows.length === 1 ? '' : 's') + ' in Delivery · ' + blockedCount + ' blocked · ' + goLivesThisMonth + ' target go-live' + (goLivesThisMonth === 1 ? '' : 's') + ' this month.</div></div>'
+      + '<div style="margin-left:auto;display:flex;gap:8px">'
+      + '<button type="button" id="dv-sort-risk-btn" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid ' + (state.sortByRisk ? '#013E90' : '#DCE2EC') + ';background:' + (state.sortByRisk ? '#EAF1FB' : '#fff') + ';color:' + (state.sortByRisk ? '#012E6B' : '#131A26') + ';font-size:13.5px;font-weight:600;cursor:pointer">Sort by risk' + (state.sortByRisk ? ' ✓' : '') + '</button>'
+      + '<button type="button" id="dv-open-jira-btn" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Open in JIRA</button>'
+      + '</div></div>'
+      + '<div style="margin-top:16px;background:#fff;border:1px solid #DCE2EC;border-radius:12px;overflow:hidden">'
+      + '<div style="display:grid;grid-template-columns:1.2fr 1fr 1.3fr .5fr .5fr .6fr .7fr;gap:12px;padding:10px 18px;background:#FAFBFD;font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.12em;color:#8B95A6">'
+      + '<div>CLIENT</div><div>PHASE</div><div>PLAN COMPLETION</div><div style="text-align:right">DAYS LEFT</div><div style="text-align:right">BLOCK</div><div>PM</div><div style="text-align:right">STATE</div>'
+      + '</div>'
+      + (tableRows || '<div style="padding:24px 18px;font-size:12.5px;color:#97A1B2">No clients in Delivery yet — move one from Integration Studio once its plan is committed.</div>')
+      + '</div>'
+      + '</div>';
+  }
+
+  // ---------------------------------------------------------------------
+  // Screen 2 — client workspace
+  // ---------------------------------------------------------------------
+  function renderTaskRow(t){
+    var meta = TASK_STATUS_META[t.status] || TASK_STATUS_META.not_started;
+    var opts = Object.keys(TASK_STATUS_META).map(function(k){
+      return '<option value="' + k + '" ' + (t.status === k ? 'selected' : '') + '>' + TASK_STATUS_META[k].label + '</option>';
+    }).join('');
+    return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #F1F4F9">'
+      + '<div style="flex:1 1 0;min-width:0">'
+      + '<div style="font-size:13px;font-weight:600">' + esc(t.title) + '</div>'
+      + '<div style="margin-top:1px;font-size:11px;color:#97A1B2">' + esc(t.offering_type === 'custom' ? 'Custom' : 'Standard') + ' · ' + fmtWeeks(t.estimated_weeks) + '</div>'
+      + '</div>'
+      + (canEdit()
+          ? '<select class="dv-task-status-select" data-task-id="' + esc(t.id) + '" style="' + SELECT_STYLE + ';width:140px;height:32px;font-size:12px">' + opts + '</select>'
+          : '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.08em;padding:3px 7px;border-radius:5px;background:' + meta.bg + ';color:' + meta.color + '">' + meta.label.toUpperCase() + '</span>')
+      + '</div>';
+  }
+
+  function renderTaskList(clientId){
+    var tasks = clientTasks(clientId).slice().sort(function(a, b){
+      var pa = PHASE_ORDER.indexOf(a.phase), pb = PHASE_ORDER.indexOf(b.phase);
+      if (pa === -1) pa = PHASE_ORDER.length; if (pb === -1) pb = PHASE_ORDER.length;
+      if (pa !== pb) return pa - pb;
+      return (a.sort_order || 0) - (b.sort_order || 0);
+    });
+    if (!tasks.length) return '<div style="font-size:12.5px;color:#97A1B2;padding:14px 0">No tasks were committed for this client in Integration Studio.</div>';
+    var groups = {};
+    var order = [];
+    tasks.forEach(function(t){
+      var key = t.phase || 'Unphased';
+      if (!groups[key]){ groups[key] = []; order.push(key); }
+      groups[key].push(t);
+    });
+    return order.map(function(phase){
+      return '<div style="margin-top:10px">'
+        + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.1em;color:#8B95A6;margin-bottom:4px">' + esc(phase.toUpperCase()) + '</div>'
+        + groups[phase].map(renderTaskRow).join('')
+        + '</div>';
+    }).join('');
+  }
+
+  function renderPlanCompletionPanel(client, status, risk){
+    var pace = risk.pace, progress = risk.progress;
+    var barColor = risk.state === 'blocked' ? '#A8392B' : (risk.state === 'at_risk' ? '#C58A1C' : '#013E90');
+    var paceNote = pace.source === 'target'
+      ? 'Pace vs. the target go-live date set below.'
+      : 'No target go-live date set — pace is estimated from the plan’s ' + fmtWeeks(progress.totalWeeks) + ' of committed effort, not confirmed.';
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px">'
+      + '<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">'
+      + '<div style="font-size:15.5px;font-weight:600">' + esc(client.name) + '</div>'
+      + riskBadgeHtml(risk.state)
+      + (jiraReady() ? '<button type="button" id="dv-open-epic-btn" style="margin-left:auto;height:28px;padding:0 12px;border-radius:7px;border:1px solid #DCE2EC;background:#fff;font-size:12px;font-weight:600;cursor:pointer">Open Epic in JIRA →</button>'
+          : '<span style="margin-left:auto;font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;color:#97A1B2">JIRA NOT CONNECTED</span>')
+      + '</div>'
+      + '<div style="margin-top:14px;display:flex;align-items:center;gap:10px">'
+      + '<div style="flex:1 1 0;height:9px;border-radius:99px;background:#EDF0F6;position:relative;overflow:hidden">'
+      + '<div style="position:absolute;top:0;bottom:0;left:0;width:' + progress.pct + '%;background:' + barColor + ';border-radius:99px"></div>'
+      + '<div style="position:absolute;top:-2px;bottom:-2px;left:' + Math.max(0, Math.min(100, pace.basePct)) + '%;width:2px;background:#01285E" title="Expected pace"></div>'
+      + '</div>'
+      + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;font-weight:600;width:42px;text-align:right">' + progress.pct + '%</div>'
+      + '</div>'
+      + '<div style="margin-top:6px;font-size:11.5px;color:#97A1B2">Plan completion — computed from committed Studio tasks (' + fmtWeeks(progress.doneWeeks) + ' of ' + fmtWeeks(progress.totalWeeks) + ' done), not synced to JIRA. ' + paceNote + '</div>'
+      + '<div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px">'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Target go-live date</div>'
+      + (canEdit()
+          ? '<input type="date" id="dv-target-go-live" value="' + esc(status.target_go_live_at || '') + '" style="' + INPUT_STYLE + '">'
+          : '<div style="font-size:13px;padding:8px 0">' + fmtDate(status.target_go_live_at) + '</div>')
+      + '</div>'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Days remaining</div>'
+      + '<div style="font-size:13px;padding:8px 0;font-weight:600;color:' + (pace.daysRemaining != null && pace.daysRemaining < 0 ? '#A8392B' : '#131A26') + '">' + fmtDays(pace.daysRemaining) + '</div></div>'
+      + '</div>'
+      + '<div style="margin-top:16px;font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase">Tasks</div>'
+      + renderTaskList(client.id)
+      + '</div>';
+  }
+
+  function renderBlockerCard(b){
+    var sideLabel = b.side === 'client' ? 'CLIENT-SIDE' : 'CLASS-SIDE';
+    var statusMeta = {
+      new: { label: 'NEW', color: '#1F5570', bg: '#EAF0F4' },
+      open: { label: 'OPEN', color: '#8A5A12', bg: '#FDF3E0' },
+      escalated: { label: 'ESCALATED', color: '#A8392B', bg: '#FDF4F2' },
+      resolved: { label: 'RESOLVED', color: '#3C6B1D', bg: '#EDF6E4' }
+    }[b.status] || { label: b.status.toUpperCase(), color: '#5A6474', bg: '#F4F6FA' };
+    var days = Math.max(0, Math.round((new Date() - new Date(b.opened_at)) / 86400000));
+    return '<div style="border:1px solid #E3E8F0;border-radius:10px;padding:11px 13px">'
+      + '<div style="display:flex;align-items:center;gap:8px">'
+      + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.1em;color:#6B7686;border:1px solid #E3E8F0;border-radius:4px;padding:2px 5px">' + sideLabel + '</div>'
+      + '<div style="margin-left:auto;font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.1em;padding:2px 6px;border-radius:5px;background:' + statusMeta.bg + ';color:' + statusMeta.color + '">' + statusMeta.label + '</div>'
+      + '</div>'
+      + '<div style="margin-top:7px;font-size:13px;font-weight:600;line-height:1.35">' + esc(b.title) + '</div>'
+      + '<div style="margin-top:4px;font-size:12px;color:#8B95A6">' + esc(b.owner_team || 'Unassigned') + ' · open ' + days + 'd' + (b.linked_jira_key ? (' · <span style="font-family:\'IBM Plex Mono\',monospace">' + esc(b.linked_jira_key) + '</span>') : '') + '</div>'
+      + (canEdit() && b.status !== 'resolved'
+          ? ('<div style="margin-top:9px;display:flex;gap:7px">'
+            + (b.status !== 'escalated' ? '<button type="button" class="dv-blocker-escalate-btn" data-id="' + esc(b.id) + '" style="height:27px;padding:0 10px;border-radius:6px;border:1px solid #E3C0B7;background:#fff;color:#A8392B;font-size:11.5px;font-weight:600;cursor:pointer">Escalate</button>' : '')
+            + '<button type="button" class="dv-blocker-resolve-btn" data-id="' + esc(b.id) + '" style="height:27px;padding:0 10px;border-radius:6px;border:1px solid #DCE2EC;background:#fff;font-size:11.5px;font-weight:600;cursor:pointer">Resolve</button>'
+            + '</div>')
+          : '')
+      + '</div>';
+  }
+
+  function renderBlockersBox(clientId){
+    var blockers = clientBlockers(clientId).slice().sort(function(a, b){ return new Date(b.opened_at) - new Date(a.opened_at); });
+    var active = blockers.filter(function(b){ return b.status !== 'resolved'; });
+    var resolved = blockers.filter(function(b){ return b.status === 'resolved'; });
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:15px 17px">'
+      + '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">'
+      + '<div style="font-size:15.5px;font-weight:600">Blockers</div>'
+      + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.1em;color:#8B95A6">CLASS VS CLIENT SIDE</div>'
+      + (canEdit() ? '<button type="button" id="dv-add-blocker-btn" style="margin-left:auto;height:28px;padding:0 12px;border-radius:7px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12px;font-weight:600;cursor:pointer">+ Add blocker</button>' : '')
+      + '</div>'
+      + '<div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">'
+      + (active.length ? active.map(renderBlockerCard).join('') : '<div style="font-size:12.5px;color:#97A1B2;padding:6px 0">No open blockers.</div>')
+      + '</div>'
+      + (resolved.length ? ('<details style="margin-top:10px"><summary style="cursor:pointer;font-size:11.5px;color:#8B95A6">Show resolved (' + resolved.length + ')</summary>'
+          + '<div style="margin-top:8px;display:flex;flex-direction:column;gap:8px">' + resolved.map(renderBlockerCard).join('') + '</div></details>') : '')
+      + '</div>';
+  }
+
+  function renderJiraNotice(){
+    if (jiraReady()) return '';
+    return '<div style="background:#F4F6FA;border:1px solid #DCE2EC;border-radius:12px;padding:14px 16px">'
+      + '<div style="font-size:13px;font-weight:600;color:#3E4A5C">JIRA not connected</div>'
+      + '<div style="margin-top:6px;font-size:12px;line-height:1.5;color:#6B7686">This cockpit runs on plan data from Integration Studio until a live JIRA connection exists. Configure the connection from Integration Studio’s JIRA Mapping &amp; Export tab to link Epics here.</div>'
+      + '</div>';
+  }
+
+  function renderChecklistBox(client, status){
+    var items = (state.checklistByClient[client.id] || []).slice().sort(function(a, b){ return (a.sort_order || 0) - (b.sort_order || 0); });
+    var allChecked = items.length > 0 && items.every(function(i){ return i.checked; });
+    var rows = items.map(function(item){
+      return '<label style="display:flex;align-items:flex-start;gap:10px;cursor:' + (canEdit() ? 'pointer' : 'default') + '">'
+        + '<input type="checkbox" class="dv-checklist-check" data-id="' + esc(item.id) + '" ' + (item.checked ? 'checked' : '') + ' ' + (canEdit() ? '' : 'disabled') + ' style="width:16px;height:16px;margin-top:1px;flex:0 0 auto">'
+        + '<div style="font-size:12.5px;line-height:1.4;color:' + (item.checked ? '#97A1B2' : '#3E4A5C') + '">' + esc(item.label) + '</div>'
+        + '</label>';
+    }).join('');
+    var btnEnabled = allChecked && canApprove();
+    var noteText = !items.length
+      ? 'Loading checklist…'
+      : !allChecked
+        ? 'Disabled until the checklist clears. This is the only trigger that changes a client’s lifecycle state.'
+        : (!canApprove() ? 'Checklist is clear — ask someone with Delivery approval capability to confirm the move.' : 'All items attested — ready to hand off to Engagement.');
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:15px 17px">'
+      + '<div style="font-size:15.5px;font-weight:600">Go-live checklist</div>'
+      + '<div style="margin-top:11px;display:flex;flex-direction:column;gap:9px">' + (rows || '<div style="font-size:12px;color:#97A1B2">Loading…</div>') + '</div>'
+      + '<button type="button" id="dv-mark-complete-btn" ' + (btnEnabled ? '' : 'disabled') + ' style="margin-top:13px;width:100%;height:38px;border-radius:8px;border:1px solid ' + (btnEnabled ? '#013E90' : '#DCE2EC') + ';background:' + (btnEnabled ? '#013E90' : '#F4F6FA') + ';color:' + (btnEnabled ? '#fff' : '#97A1B2') + ';font-size:13.5px;font-weight:600;cursor:' + (btnEnabled ? 'pointer' : 'not-allowed') + '">Mark complete → Engagement</button>'
+      + '<div style="margin-top:7px;font-size:11.5px;color:#97A1B2;line-height:1.45">' + noteText + '</div>'
+      + '</div>';
+  }
+
+  function renderClientWorkspace(){
+    var m = mount();
+    if (!m) return;
+    var status = state.statuses.filter(function(s){ return s.client_id === state.selectedClientId; })[0];
+    var client = state.clients.filter(function(c){ return c.id === state.selectedClientId; })[0];
+    if (!status || !client){ state.view = 'list'; renderDeliveryList(); return; }
+    var risk = computeRisk(client.id, status);
+    m.innerHTML = '<div style="padding:20px 28px 48px;max-width:1460px">'
+      + '<div class="dv-back-link" style="cursor:pointer;font-size:12.5px;color:#6B7686;margin-bottom:8px">← Delivery</div>'
+      + '<div style="display:grid;grid-template-columns:1.45fr 1fr;gap:14px;align-items:start">'
+      + renderPlanCompletionPanel(client, status, risk)
+      + '<div style="display:flex;flex-direction:column;gap:14px">'
+      + renderBlockersBox(client.id)
+      + renderJiraNotice()
+      + renderChecklistBox(client, status)
+      + '</div>'
+      + '</div>'
+      + '</div>';
+  }
+
+  // ---------------------------------------------------------------------
+  // Modals
+  // ---------------------------------------------------------------------
+  function openAddBlockerModal(client){
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">Add a blocker — ' + esc(client.name) + '</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">Class-side and client-side blockers both go here — whoever’s looking at this screen should be able to tell at a glance who needs to unstick it.</div></div>'
+      + '<div style="padding:18px 22px;display:flex;flex-direction:column;gap:14px">'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Side</div>'
+      + '<select id="dv-b-f-side" style="' + SELECT_STYLE + '"><option value="client">Client-side</option><option value="class">Class-side</option></select></div>'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">What’s blocking</div>'
+      + '<input id="dv-b-f-title" type="text" placeholder="e.g. Client has not returned UAT credentials" style="' + INPUT_STYLE + '"></div>'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Owner / team</div>'
+      + '<input id="dv-b-f-owner" type="text" placeholder="e.g. Client IT, Operations, Engineering" style="' + INPUT_STYLE + '"></div>'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Linked JIRA issue (optional)</div>'
+      + '<input id="dv-b-f-jira" type="text" placeholder="e.g. INT-123" style="' + INPUT_STYLE + '"></div>'
+      + '</div>'
+      + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
+      + '<button type="button" id="dv-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+      + '<button type="button" id="dv-modal-save" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Add blocker</button>'
+      + '</div>';
+    $('delivery-modal-box').innerHTML = html;
+    $('delivery-modal-overlay').style.display = 'flex';
+    $('dv-modal-cancel').addEventListener('click', closeModal);
+    $('dv-modal-save').addEventListener('click', function(){
+      var title = $('dv-b-f-title').value.trim();
+      if (!title){ showToast('A blocker needs a description.'); return; }
+      addBlocker(client, {
+        side: $('dv-b-f-side').value,
+        title: title,
+        owner_team: $('dv-b-f-owner').value.trim() || null,
+        linked_jira_key: $('dv-b-f-jira').value.trim() || null
+      });
+    });
+  }
+
+  function openMarkCompleteModal(client){
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">Mark ' + esc(client.name) + ' complete → Engagement?</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">This is the one lifecycle transition this screen makes, and it’s one-way from here — the client leaves Delivery’s active list. Everything committed (tasks, blockers, checklist history) stays on record.</div></div>'
+      + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
+      + '<button type="button" id="dv-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+      + '<button type="button" id="dv-mark-complete-confirm" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Mark complete → Engagement</button>'
+      + '</div>';
+    $('delivery-modal-box').innerHTML = html;
+    $('delivery-modal-overlay').style.display = 'flex';
+    $('dv-modal-cancel').addEventListener('click', closeModal);
+    $('dv-mark-complete-confirm').addEventListener('click', function(){ markCompleteToEngagement(client); });
+  }
+
+  // ---------------------------------------------------------------------
+  // Data loading + mutations
+  // ---------------------------------------------------------------------
+  function loadDeliveryList(){
+    return Promise.all([
+      Promise.resolve(state.db.from('clients').select('*')),
+      Promise.resolve(state.db.from('client_integration_status').select('*').eq('status', 'in_delivery')),
+      Promise.resolve(state.db.from('client_integration_tasks').select('*')),
+      Promise.resolve(state.db.from('delivery_blockers').select('*')),
+      Promise.resolve(state.db.from('jira_config').select('*').eq('id', 1).single())
+    ]).then(function(results){
+      var cr = results[0], sr = results[1], tr = results[2], br = results[3], jr = results[4];
+      if (cr.error) throw cr.error;
+      if (sr.error) throw sr.error;
+      if (tr.error) throw tr.error;
+      if (br.error) throw br.error;
+      state.clients = cr.data || [];
+      state.statuses = sr.data || [];
+      var tasksByClient = {};
+      (tr.data || []).forEach(function(t){ (tasksByClient[t.client_id] = tasksByClient[t.client_id] || []).push(t); });
+      state.tasksByClient = tasksByClient;
+      var blockersByClient = {};
+      (br.data || []).forEach(function(b){ (blockersByClient[b.client_id] = blockersByClient[b.client_id] || []).push(b); });
+      state.blockersByClient = blockersByClient;
+      state.jiraConfig = (jr && !jr.error && jr.data) ? jr.data : { enabled: false };
+      renderRoot();
+    }).catch(function(e){ console.error('Delivery: could not load', e); renderNotConnected(); });
+  }
+
+  function loadChecklistTemplates(){
+    return Promise.resolve(state.db.from('delivery_checklist_templates').select('*').order('sort_order')).then(function(r){
+      if (r.error) throw r.error;
+      state.checklistTemplates = (r.data || []).filter(function(t){ return t.active !== false; });
+    });
+  }
+
+  function ensureChecklistForClient(clientId){
+    return Promise.resolve(state.db.from('delivery_checklist_items').select('*').eq('client_id', clientId)).then(function(r){
+      if (r.error) throw r.error;
+      if (r.data && r.data.length){ state.checklistByClient[clientId] = r.data; return; }
+      var inserts = state.checklistTemplates.map(function(t){
+        return Promise.resolve(state.db.from('delivery_checklist_items').insert({
+          client_id: clientId, template_id: t.id, label: t.label, sort_order: t.sort_order || 0
+        }));
+      });
+      return Promise.all(inserts).then(function(){
+        return Promise.resolve(state.db.from('delivery_checklist_items').select('*').eq('client_id', clientId));
+      }).then(function(r2){
+        if (r2.error) throw r2.error;
+        state.checklistByClient[clientId] = r2.data || [];
+      });
+    });
+  }
+
+  function reloadClientBlockers(clientId){
+    return Promise.resolve(state.db.from('delivery_blockers').select('*').eq('client_id', clientId)).then(function(r){
+      if (r.error) throw r.error;
+      state.blockersByClient[clientId] = r.data || [];
+    });
+  }
+  function reloadClientTasks(clientId){
+    return Promise.resolve(state.db.from('client_integration_tasks').select('*').eq('client_id', clientId)).then(function(r){
+      if (r.error) throw r.error;
+      state.tasksByClient[clientId] = r.data || [];
+    });
+  }
+
+  function openClientWorkspace(clientId){
+    state.selectedClientId = clientId;
+    state.view = 'client';
+    renderClientWorkspace();
+    ensureChecklistForClient(clientId).then(function(){ renderClientWorkspace(); })
+      .catch(function(e){ showToast('Could not load checklist: ' + (e.message || e)); });
+  }
+
+  function addBlocker(client, payload){
+    Promise.resolve(state.db.from('delivery_blockers').insert(Object.assign({ client_id: client.id }, payload)))
+      .then(function(r){
+        if (r.error) throw r.error;
+        closeModal();
+        return reloadClientBlockers(client.id).then(function(){ renderClientWorkspace(); showToast('Blocker added.'); });
+      }).catch(function(e){ showToast('Could not add blocker: ' + (e.message || e)); });
+  }
+  function escalateBlocker(clientId, id){
+    if (!canEdit()) return;
+    Promise.resolve(state.db.from('delivery_blockers').update({ status: 'escalated' }).eq('id', id))
+      .then(function(r){ if (r.error) throw r.error; return reloadClientBlockers(clientId).then(function(){ renderClientWorkspace(); }); })
+      .catch(function(e){ showToast('Could not escalate: ' + (e.message || e)); });
+  }
+  function resolveBlocker(clientId, id){
+    if (!canEdit()) return;
+    Promise.resolve(state.db.from('delivery_blockers').update({ status: 'resolved', resolved_at: new Date().toISOString() }).eq('id', id))
+      .then(function(r){ if (r.error) throw r.error; return reloadClientBlockers(clientId).then(function(){ renderClientWorkspace(); }); })
+      .catch(function(e){ showToast('Could not resolve: ' + (e.message || e)); });
+  }
+  function toggleChecklistItem(clientId, id, checked){
+    if (!canEdit()) return;
+    var patch = checked
+      ? { checked: true, checked_by: currentActorName(), checked_at: new Date().toISOString() }
+      : { checked: false, checked_by: null, checked_at: null };
+    Promise.resolve(state.db.from('delivery_checklist_items').update(patch).eq('id', id))
+      .then(function(r){
+        if (r.error) throw r.error;
+        return Promise.resolve(state.db.from('delivery_checklist_items').select('*').eq('client_id', clientId));
+      }).then(function(r2){
+        if (r2.error) throw r2.error;
+        state.checklistByClient[clientId] = r2.data || [];
+        renderClientWorkspace();
+      }).catch(function(e){ showToast('Could not update checklist: ' + (e.message || e)); });
+  }
+  function updateTaskStatus(clientId, taskId, newStatus){
+    if (!canEdit()) return;
+    Promise.resolve(state.db.from('client_integration_tasks').update({ status: newStatus }).eq('id', taskId))
+      .then(function(r){ if (r.error) throw r.error; return reloadClientTasks(clientId).then(function(){ renderClientWorkspace(); }); })
+      .catch(function(e){ showToast('Could not update task: ' + (e.message || e)); });
+  }
+  function setTargetGoLive(client, dateStr){
+    if (!canEdit()) return;
+    Promise.resolve(state.db.from('client_integration_status').update({ target_go_live_at: dateStr || null }).eq('client_id', client.id))
+      .then(function(r){
+        if (r.error) throw r.error;
+        var row = state.statuses.filter(function(s){ return s.client_id === client.id; })[0];
+        if (row) row.target_go_live_at = dateStr || null;
+        renderClientWorkspace();
+      }).catch(function(e){ showToast('Could not set target date: ' + (e.message || e)); });
+  }
+  function markCompleteToEngagement(client){
+    if (!canApprove()){ showToast("You don't have approval capability for Delivery."); return; }
+    var items = state.checklistByClient[client.id] || [];
+    if (!items.length || !items.every(function(i){ return i.checked; })){ showToast('Every checklist item needs to be checked first.'); return; }
+    Promise.resolve(state.db.from('client_integration_status').update({
+      status: 'in_engagement', moved_to_engagement_at: new Date().toISOString(), moved_to_engagement_by: currentActorName()
+    }).eq('client_id', client.id)).then(function(r){
+      if (r.error) throw r.error;
+      closeModal();
+      state.view = 'list';
+      return loadDeliveryList().then(function(){ showToast(client.name + ' moved to Engagement.'); });
+    }).catch(function(e){ showToast('Could not complete: ' + (e.message || e)); });
+  }
+
+  function renderNotConnected(){
+    var m = mount();
+    if (!m) return;
+    m.innerHTML = '<div style="padding:20px 28px 48px;max-width:1200px">'
+      + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px">'
+      + '<div style="font-size:14px;font-weight:600;margin-bottom:4px">Delivery</div>'
+      + '<div style="font-size:12.5px;color:#97A1B2">Connect Supabase (see <code>supabase-config.js</code>) to see live implementations here — the same connection every other module uses.</div>'
+      + '</div></div>';
+  }
+  function renderRoot(){
+    if (state.view === 'client' && state.selectedClientId) renderClientWorkspace();
+    else { state.view = 'list'; renderDeliveryList(); }
+  }
+
+  // ---------------------------------------------------------------------
+  // Events
+  // ---------------------------------------------------------------------
+  function wireEvents(){
+    var m = mount();
+    if (!m || m.__wired) return;
+    m.__wired = true;
+    m.addEventListener('click', function(e){
+      var row = e.target.closest && e.target.closest('.dv-client-row');
+      if (row){ openClientWorkspace(row.getAttribute('data-client-id')); return; }
+
+      var back = e.target.closest && e.target.closest('.dv-back-link');
+      if (back){ state.selectedClientId = null; state.view = 'list'; renderDeliveryList(); return; }
+
+      var sortBtn = e.target.closest && e.target.closest('#dv-sort-risk-btn');
+      if (sortBtn){ state.sortByRisk = !state.sortByRisk; renderDeliveryList(); return; }
+
+      var jiraBtn = e.target.closest && e.target.closest('#dv-open-jira-btn');
+      if (jiraBtn){ openInJira(null); return; }
+
+      var epicBtn = e.target.closest && e.target.closest('#dv-open-epic-btn');
+      if (epicBtn){ var c = state.clients.filter(function(x){ return x.id === state.selectedClientId; })[0]; if (c) openInJira(c); return; }
+
+      var addBlockerBtn = e.target.closest && e.target.closest('#dv-add-blocker-btn');
+      if (addBlockerBtn){ var c2 = state.clients.filter(function(x){ return x.id === state.selectedClientId; })[0]; if (c2) openAddBlockerModal(c2); return; }
+
+      var escBtn = e.target.closest && e.target.closest('.dv-blocker-escalate-btn');
+      if (escBtn){ escalateBlocker(state.selectedClientId, escBtn.getAttribute('data-id')); return; }
+
+      var resBtn = e.target.closest && e.target.closest('.dv-blocker-resolve-btn');
+      if (resBtn){ resolveBlocker(state.selectedClientId, resBtn.getAttribute('data-id')); return; }
+
+      var markBtn = e.target.closest && e.target.closest('#dv-mark-complete-btn');
+      if (markBtn && !markBtn.disabled){ var c3 = state.clients.filter(function(x){ return x.id === state.selectedClientId; })[0]; if (c3) openMarkCompleteModal(c3); return; }
+
+      var cancelBtn = e.target.closest && e.target.closest('#dv-modal-cancel');
+      if (cancelBtn){ closeModal(); return; }
+    });
+    m.addEventListener('change', function(e){
+      if (e.target && e.target.classList && e.target.classList.contains('dv-checklist-check')){
+        toggleChecklistItem(state.selectedClientId, e.target.getAttribute('data-id'), e.target.checked);
+        return;
+      }
+      if (e.target && e.target.classList && e.target.classList.contains('dv-task-status-select')){
+        updateTaskStatus(state.selectedClientId, e.target.getAttribute('data-task-id'), e.target.value);
+        return;
+      }
+      if (e.target && e.target.id === 'dv-target-go-live'){
+        var c = state.clients.filter(function(x){ return x.id === state.selectedClientId; })[0];
+        if (c) setTargetGoLive(c, e.target.value);
+        return;
+      }
+    });
+  }
+
+  var roleContextHooked = false;
+  function hookRoleContext(){
+    if (roleContextHooked || !window.RoleContext || !window.RoleContext.onChange) return;
+    roleContextHooked = true;
+    window.RoleContext.onChange(function(){ if (state.db) renderRoot(); });
+  }
+
+  function init(){
+    hookRoleContext();
+    if (!state.db){
+      if (!available()){ renderNotConnected(); return; }
+      try { state.db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
+      catch(e){ renderNotConnected(); return; }
+      wireEvents();
+    }
+    loadChecklistTemplates().then(function(){ return loadDeliveryList(); })
+      .catch(function(e){ console.error('Delivery: could not load', e); renderNotConnected(); });
+  }
+
+  window.DeliveryModule = { init: init };
+})();
+
+window.DeliveryModule.init();
+</script>
 </body>
 </html>

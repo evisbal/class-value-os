@@ -179,8 +179,11 @@ at all, so they have nothing to configure and nothing that can fail to connect.
 - **Integration Studio** — real (see "Integration Studio" below): a configurable Task Library driving both
   the Standard Offering Library and Custom Configuration Canvas, an effort roll-up, JIRA CSV export + a
   wired-but-credential-gated JIRA API push, and versioned requirement-doc PDF generation.
-- Everything else (Delivery, Status Reporting, Engagement Management, System states) is still a static
-  mockup with sample data, waiting to be built the same way.
+- **Delivery** — real now (see "Delivery" below): a cockpit over exactly the clients Integration Studio has
+  moved to Delivery, with computed (not JIRA-sourced, not hand-typed) plan completion and risk, manual
+  blockers and a go-live checklist, and the one lifecycle transition into Engagement.
+- Everything else (Status Reporting, Engagement Management, System states) is still a static mockup with
+  sample data, waiting to be built the same way.
 
 ## Plan Builder
 
@@ -255,6 +258,56 @@ handoff is really ready. Moving back doesn't erase the original handoff record �
 `moved_to_delivery_by` stay on file alongside the new `moved_back_at` / `moved_back_by`, so the audit trail
 shows the full history rather than just the current state. Nothing in this feature ever deletes a task,
 document, or JIRA link — the status flag only ever gates editability of what's already there.
+
+## Delivery
+
+Real now — `delivery.html` (`fragments/delivery_module.js`) replaces the static design mockup. Delivery was
+originally scoped as a read-mostly cockpit over live JIRA work, but there's no real JIRA connection yet, and
+even once there is one, JIRA's own scope can drift from what Integration Studio committed at handoff (engineers
+split stories, add work) — so "% of JIRA done" and "% of the Studio plan done" are two honestly different
+numbers. Rather than fake a JIRA-shaped stat, this cockpit runs entirely on data Class Value OS already has:
+
+The **worklist is exactly the clients Integration Studio has moved to Delivery** —
+`client_integration_status.status = 'in_delivery'` — so the two modules share one handoff record instead of
+two disconnected ideas of "who's in delivery." **Plan completion** is computed live from
+`client_integration_tasks` (the same frozen plan Move-to-Delivery committed), weighted by each task's
+estimated effort, and labeled "plan completion" rather than "JIRA progress" so it's never mistaken for live
+dev-side data. Delivery is also where a PM now updates each task's status (Not started / In progress /
+Blocked / Done) — Studio froze the *plan*, Delivery is where the *execution* status lives from here on.
+
+**Risk** (the ON TRACK / AT RISK / BLOCKED badge, and "Sort by risk") is computed too, from open/escalated
+blockers, blocked tasks, and pace against a target or implied go-live date — never hand-typed, so it can't
+disagree with the blocker list sitting next to it. Pace uses a PM-set **target go-live date** when one exists;
+if not, it falls back to an *implied* duration from the plan's own committed effort (5 working days per week,
+same convention Studio's JIRA export already uses), and the UI says plainly when it's using the implied
+fallback rather than a confirmed date. The exact thresholds (see `computeRisk()` in the module) are
+deliberately simple: BLOCKED means any escalated blocker, being past the target/implied go-live date, or 3+
+combined open blockers/escalations/blocked tasks; AT RISK means any open blocker or blocked task, or being
+more than 15 points behind the expected pace; otherwise ON TRACK.
+
+**Blockers** and the **go-live checklist** are the two things that genuinely need a human either way — "is
+this stuck on our side or the client's" and "were the pilot orders actually completed end-to-end" aren't
+things a ticket system reliably knows on its own, JIRA or not. Blockers (`delivery_blockers`) capture a
+class-side/client-side split, an owner team, a status (new/open/escalated/resolved), and an optional
+`linked_jira_key` for later — resolved blockers collapse into a "Show resolved" disclosure instead of
+disappearing. The checklist (`delivery_checklist_templates` / `delivery_checklist_items`) uses the same
+template-vs-instance split as Integration Studio's task library: a fixed, institution-wide checklist that's
+copied into independently-checkable items the moment a client's Delivery workspace is first opened, so editing
+a template later never rewrites an already-checked client's history.
+
+**"Mark complete → Engagement"** is the one lifecycle transition this screen makes, gated on `can_approve`
+(not just `can_edit`) since it's a bigger, one-way action than day-to-day status updates — disabled until every
+checklist item is checked, and confirmed through a modal since there's no "move back" from Engagement the way
+Studio's Planning⇄Delivery move has. Confirming sets `client_integration_status.status = 'in_engagement'` (with
+`moved_to_engagement_at`/`_by`), which is also what drops the client off Delivery's worklist — everything
+committed (tasks, blockers, checklist history) stays on record regardless.
+
+**"Open in JIRA" / "Open Epic in JIRA"** are real deep links once `jira_config` (the same singleton table
+Integration Studio's JIRA tab writes to) is enabled with a base URL and project key — the per-client Epic link
+reuses Studio's exact `epicKeyFor()` convention (`INT-` + the client name, uppercased and stripped to
+alphanumerics) so the same Epic key resolves from either module. Until JIRA is configured, clicking explains
+what's missing instead of failing silently — the same honesty pattern already used for SSO configuration and
+Studio's "Push to JIRA."
 
 ## Roles & permissions
 
