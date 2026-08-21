@@ -1,8 +1,8 @@
 # Class Value OS
 
-Front-end for Class Valuation's internal Value OS platform. Plan Builder and Demand Management are real,
-database-backed modules; the rest are static design previews, built out module by module as the backend
-gets connected.
+Front-end for Class Valuation's internal Value OS platform. Demand Management, Value CPQ, Plan Builder,
+Roles & permissions, SSO configuration and Integration Studio are real, database-backed modules; the rest
+are static design previews, built out module by module as the backend gets connected.
 
 **Each module is its own page with its own URL** — `index.html`, `demand.html`, `cpq.html`,
 `cpq-config.html`, `plan.html`, `studio.html`, `delivery.html`, `reporting.html`, `engagement.html`,
@@ -24,11 +24,14 @@ before. Below 860px, list/detail and multi-column layouts stack into a single co
 off — this includes Demand Management's table, which becomes a stack of cards (its column-header row hides
 itself there since it stops meaning anything once stacked) and its detail panel, which moves below the list
 instead of sitting beside it. Value CPQ's step tabs scroll horizontally on narrow screens instead of
-wrapping, since wrapping would break the numbered stepper look. Plan Builder's own tool got the same
-treatment (tab bar scrolls, its internal grids stack) since it's a real, separately-built tool embedded via
-iframe, not generated from this shell. The six static preview modules got the same stacking treatment as a
-baseline — they'll likely want a closer pass once they're built out for real, same as everything else about
-them.
+wrapping, since wrapping would break the numbered stepper look. Plan Builder is inlined directly into
+`plan.html` now (see below) — its own two-column layout collapses to one column under 920px via its own CSS,
+same as everywhere else, but its tab bar doesn't have its own scroll/wrap behavior; on very narrow phones
+(under ~420px) it can run wider than the screen, and the page falls back to horizontal scroll rather than
+clipping it (the same last-resort safety net every other screen here uses) — a real gap in Plan Builder's own
+responsive design, not something introduced by inlining it, worth a closer pass at some point. The six static
+preview modules got the same stacking treatment as a baseline — they'll likely want a closer pass once
+they're built out for real, same as everything else about them.
 
 ## Files
 
@@ -39,17 +42,22 @@ them.
 - `cpq-config.html` — CPQ Config, a subpage of Value CPQ (reached via the "Manage catalog" link on the
   CPQ list, not the main sidebar). Full CRUD admin catalog for every product, add-on and pricing rule
   Configure reads from — see below.
-- `plan.html` — Plan Builder. Real, fully-functional; embeds `class-plan-builder.html` via iframe.
+- `plan.html` — Plan Builder. Real, fully-functional, inlined directly into the page (no iframe) — see below.
 - `roles.html` — Roles & permissions. Real CRUD — see "Roles & permissions" below.
 - `sso-config.html` — SSO configuration, a Platform subpage for IT admins. Real form, deliberately inert —
   see "SSO configuration" below.
-- `studio.html`, `delivery.html`, `reporting.html`, `engagement.html`, `states.html` — static
+- `studio.html` — Integration Studio. Real, database-backed — see "Integration Studio" below.
+- `delivery.html`, `reporting.html`, `engagement.html`, `states.html` — static
   design previews with sample data, waiting to be built out the same way Demand Management was.
 - `shared.css` — the one file every page links to for the shared sidebar/top bar/layout styling, including
   the "acting as" role switcher in the sidebar footer (see "Roles & permissions" below).
-- `class-plan-builder.html` — the real, fully-functional Class Plan Builder application. Works standalone
-  or embedded inside `plan.html`. Saves projects to the browser's `localStorage` under the key
-  `classPlanBuilder.projects.v1` (per-browser, not shared across users yet).
+- `class-plan-builder.html` — the same Class Plan Builder application as `plan.html`, as a standalone,
+  bookmarkable page (its own `<html>/<head>/<body>`, no Value OS sidebar/topbar). `plan.html` no longer
+  embeds this file — the two are independent files built from the same source (see "Plan Builder" below);
+  editing one doesn't change the other. Both save projects to the browser's `localStorage` under the same key
+  (`classPlanBuilder.projects.v1`), and since `localStorage` is scoped per origin, not per page, once this
+  deploys to GitHub Pages the two pages actually **share** that data (same site, same key) — a plan created on
+  one shows up on the other, on the same browser.
 - `supabase-config.js` — where you paste your Supabase project's URL and anon key. `demand.html`, `cpq.html`
   and `cpq-config.html` all read this file to connect. Ships blank; every module shows a clear "needs a
   database connection" state until it's filled in, rather than failing silently.
@@ -168,8 +176,66 @@ at all, so they have nothing to configure and nothing that can fail to connect.
   Pricing & terms (ad hoc discount, margin) instead.
   **The volume ranges seeded (Standard 0–149, Preferred 150–349, Enterprise 350+ orders/mo) are an informed
   placeholder**, not real historical order data — swap them for real breakpoints once that data exists.
-- Everything else (Integration Studio, Delivery, Status Reporting, Engagement Management, System states) is
-  still a static mockup with sample data, waiting to be built the same way.
+- **Integration Studio** — real (see "Integration Studio" below): a configurable Task Library driving both
+  the Standard Offering Library and Custom Configuration Canvas, an effort roll-up, JIRA CSV export + a
+  wired-but-credential-gated JIRA API push, and versioned requirement-doc PDF generation.
+- Everything else (Delivery, Status Reporting, Engagement Management, System states) is still a static
+  mockup with sample data, waiting to be built the same way.
+
+## Plan Builder
+
+`plan.html` used to embed Plan Builder via `<iframe src="class-plan-builder.html">` — a full extra HTML
+document loaded inside a bordered card. It's inlined directly into the page now: no iframe, no card, no
+fixed height. Plan Builder's own header/tabs/panels render flush in the content area, the same way Demand
+Management or Value CPQ do, and it scrolls with the rest of the page instead of having its own separate
+scroll region.
+
+The style/body/script split lives in `fragments/plan_builder_*` (extracted from `Class_Plan_Builder.html` at
+build time, not hand-edited) and gets pulled into both `plan.html` and the merged Cowork-artifact build.
+Before inlining, every element ID, CSS class, and DOM-wide script query in Plan Builder was checked against
+everything else in this app for collisions, since inlining means it now shares one DOM and one global script
+scope with every other module instead of living in its own isolated iframe document. One real collision was
+found and fixed: Plan Builder redefined `.info-icon` tooltip styling identically to what `shared.css` already
+provides — its copy is dropped at extraction time so there's only one definition. Everything else (58 element
+IDs, its CSS classes, its four `document.querySelectorAll` calls) was already clean. `Class_Plan_Builder.html`
+itself is untouched by this — it's also a separately published, standalone Cowork artifact and needs to keep
+working on its own (see "Files" above for how the two now relate).
+
+One thing this surfaced rather than caused: Plan Builder's tab bar has no responsive behavior of its own
+(no wrap, no internal scroll), so on very narrow phones it can run wider than the screen — the page falls
+back to horizontal scroll, same safety net every other screen here uses, rather than clipping content. This
+existed before too, just contained inside the iframe's own scroll area instead of the page's; a closer
+responsive pass on Plan Builder's tab bar is worth doing at some point but wasn't part of this change.
+
+## Integration Studio
+
+Real now — `studio.html` (`fragments/studio_module.js`) replaces the static design mockup. One configurable
+**Task Library** (`integration_task_templates`) feeds two views over the same data instead of two
+disconnected lists: the **Standard Offering Library** ("out of box" onboarding, known effort — check items
+off for a client) and the **Custom Configuration Canvas** (for clients needing their own mapping —
+start from the same library or add a requirement from scratch, with systems touched / acceptance criteria /
+confidence / client dependency fields). Each template can be eligible for either section, both, or neither.
+A client's task list can freely **mix** OOO and Custom items — not a mode the whole client is locked into.
+
+Selecting a task copies it from the template into `client_integration_tasks` (client-scoped instances, same
+catalog-vs-line-item split CPQ already uses) — editing a template later never rewrites an already-selected
+client task. The **Effort roll-up** panel sums Standard vs. Custom vs. Total from real task data; it
+deliberately does not show a comparison against a "CPQ-assumed" estimate, since no quote in this schema
+carries an implementation-effort figure to compare against yet — that's flagged in the UI rather than faked.
+
+**JIRA Mapping & Export**: one Epic per client, one Story per task. Effort maps to JIRA's own Original
+Estimate field (as working days) rather than story points, since these are already time-based estimates.
+"Download JIRA import (.csv)" produces a real file in exactly the shape JIRA's own CSV importer consumes —
+works today, no live connection needed. "Push to JIRA" is wired to make a real API call (Basic auth against
+JIRA's REST API v3), but checks `jira_config` (base URL, project key, API email/token, an `enabled` flag —
+a Platform admin fills these in from the JIRA connection panel on the same tab) before ever attempting one,
+and explains what's missing instead of silently failing or pretending to succeed — same honesty pattern as
+SSO configuration above. Studio stays the system of record for intent, never JIRA: nothing pushed back from
+a JIRA ticket is ever read back and written here.
+
+**Requirement Doc** generates a PDF snapshot of a client's full task list (Standard + Custom), versioned in
+`integration_requirement_docs` — same print/PDF pattern as Plan Builder's exports, and same append-only
+version history (generating a new one never rewrites an earlier version).
 
 ## Roles & permissions
 

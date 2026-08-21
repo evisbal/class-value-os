@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -94,6 +96,13 @@
               
             </div>
           </a>
+<a href="sso-config.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-sso">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">SSO configuration</span>
+              
+            </div>
+          </a>
 <a href="states.html" style="text-decoration:none;display:block">
             <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-states">
               <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
@@ -103,13 +112,12 @@
           </a>
         </div>
     </div>
-    <div style="padding:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px">
+    <div style="position:relative;padding:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px" id="sidebarUserFooter">
       <div style="width:30px;height:30px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">DM</div>
       <div style="min-width:0">
         <div style="color:#E8EEF8;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Dana Mercer</div>
         <div style="color:#7E97BD;font-size:11px">Solutions Engineer</div>
       </div>
-      <div title="Sign out" style="margin-left:auto;color:#7E97BD;font-size:15px;cursor:pointer;padding:0 2px">&#9211;</div>
     </div>
   </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -130,275 +138,10 @@
         <div id="hamburgerBtn" class="topbar-hamburger" style="width:34px;height:34px;border:1px solid #DCE2EC;border-radius:8px;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:14px">&#9776;</div>
       </div>
     </div>
-<div id="previewBanner" style="position:sticky;top:0;z-index:50;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:11.5px;padding:7px 20px;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em">STATIC DESIGN PREVIEW — this module is a non-functional mockup with sample data.</div>
+
     <div class="content-viewport" id="contentViewport">
-<div style="padding: 22px 28px 44px; max-width: 1460px;">
-          <div style="display: flex; align-items: flex-start; gap: 18px; flex-wrap: wrap;">
-            <div>
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-size: 22px; font-weight: 600; letter-spacing: -0.01em;">Integration Studio — Summit Ridge Bank</div>
-                <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; padding: 3px 8px; border-radius: 5px; background: rgb(234, 241, 251); color: rgb(1, 46, 107);"><span class="sc-interp">SYNCED · 09:41</span></div>
-              </div>
-              <div style="margin-top: 6px; font-size: 13px; color: rgb(107, 118, 134);">SPEC-0349 v3 · <span class="sc-interp">JIRA · SRB board</span> · <span class="sc-interp">6 epics · 41 stories</span> · intent lives here, execution lives in JIRA.</div>
-            </div>
-            <div style="margin-left: auto; display: flex; gap: 8px;">
-              <button style="height: 36px; padding: 0px 14px; border-radius: 8px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 13.5px; font-weight: 600; cursor: pointer;">Generate requirement doc</button>
-              <button style="height: 36px; padding: 0px 16px; border-radius: 8px; border: medium; background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 13.5px; font-weight: 600; cursor: pointer;">Push 2 changes to JIRA</button>
-            </div>
-          </div>
-
-          <div style="margin-top: 16px; display: grid; grid-template-columns: 352px 1fr; gap: 14px; align-items: start;">
-            <div style="display: flex; flex-direction: column; gap: 14px;">
-              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; overflow: hidden;">
-                <div style="padding: 14px 16px; border-bottom: 1px solid rgb(237, 240, 246);">
-                  <div style="font-size: 15.5px; font-weight: 600;">Standard offering library</div>
-                  <div style="margin-top: 3px; font-size: 12.5px; color: rgb(139, 149, 166);">Known effort, known implementation time. Selecting is a decision, not a workshop.</div>
-                </div>
-                
-                  <div style="display: flex; align-items: flex-start; gap: 11px; padding: 12px 16px; border-bottom: 1px solid rgb(241, 244, 249); cursor: pointer; background: rgb(248, 251, 255);">
-                    <div style="width: 17px; height: 17px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
-                    <div style="min-width: 0px; flex: 1 1 0%;">
-                      <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Encompass order integration</span></div>
-                      <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">Standard connector, certified</span></div>
-                    </div>
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(78, 88, 102); flex: 0 0 auto;"><span class="sc-interp">3 wks</span></div>
-                  </div>
-                
-                  <div style="display: flex; align-items: flex-start; gap: 11px; padding: 12px 16px; border-bottom: 1px solid rgb(241, 244, 249); cursor: pointer; background: rgb(248, 251, 255);">
-                    <div style="width: 17px; height: 17px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
-                    <div style="min-width: 0px; flex: 1 1 0%;">
-                      <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">SSO — Okta / SAML 2.0</span></div>
-                      <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">Standard</span></div>
-                    </div>
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(78, 88, 102); flex: 0 0 auto;"><span class="sc-interp">1 wk</span></div>
-                  </div>
-                
-                  <div style="display: flex; align-items: flex-start; gap: 11px; padding: 12px 16px; border-bottom: 1px solid rgb(241, 244, 249); cursor: pointer; background: rgb(248, 251, 255);">
-                    <div style="width: 17px; height: 17px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
-                    <div style="min-width: 0px; flex: 1 1 0%;">
-                      <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Order status webhooks</span></div>
-                      <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">Standard</span></div>
-                    </div>
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(78, 88, 102); flex: 0 0 auto;"><span class="sc-interp">1 wk</span></div>
-                  </div>
-                
-                  <div style="display: flex; align-items: flex-start; gap: 11px; padding: 12px 16px; border-bottom: 1px solid rgb(241, 244, 249); cursor: pointer; background: rgb(255, 255, 255);">
-                    <div style="width: 17px; height: 17px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
-                    <div style="min-width: 0px; flex: 1 1 0%;">
-                      <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Nightly volume reconciliation</span></div>
-                      <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">Standard</span></div>
-                    </div>
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(78, 88, 102); flex: 0 0 auto;"><span class="sc-interp">2 wks</span></div>
-                  </div>
-                
-                  <div style="display: flex; align-items: flex-start; gap: 11px; padding: 12px 16px; border-bottom: 1px solid rgb(241, 244, 249); cursor: pointer; background: rgb(248, 251, 255);">
-                    <div style="width: 17px; height: 17px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; border: 1.5px solid rgb(1, 62, 144); background: rgb(1, 62, 144); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp">✓</span></div>
-                    <div style="min-width: 0px; flex: 1 1 0%;">
-                      <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Client analytics portal setup</span></div>
-                      <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">Requires add-on on quote</span></div>
-                    </div>
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(78, 88, 102); flex: 0 0 auto;"><span class="sc-interp">1 wk</span></div>
-                  </div>
-                
-                  <div style="display: flex; align-items: flex-start; gap: 11px; padding: 12px 16px; border-bottom: 1px solid rgb(241, 244, 249); cursor: pointer; background: rgb(255, 255, 255);">
-                    <div style="width: 17px; height: 17px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; border: 1.5px solid rgb(196, 203, 216); background: rgb(255, 255, 255); color: rgb(255, 255, 255); font-size: 11px; display: flex; align-items: center; justify-content: center;"><span class="sc-interp"></span></div>
-                    <div style="min-width: 0px; flex: 1 1 0%;">
-                      <div style="font-size: 13.5px; font-weight: 600;"><span class="sc-interp">Document delivery to imaging</span></div>
-                      <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">Standard</span></div>
-                    </div>
-                    <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(78, 88, 102); flex: 0 0 auto;"><span class="sc-interp">2 wks</span></div>
-                  </div>
-                
-              </div>
-              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 15px 17px;">
-                <div style="font-size: 15.5px; font-weight: 600;">Effort roll-up</div>
-                <div style="margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                  
-                    <div style="border: 1px solid rgb(227, 232, 240); background: rgb(255, 255, 255); border-radius: 9px; padding: 10px 12px;">
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.12em; color: rgb(139, 149, 166);"><span class="sc-interp">Standard</span></div>
-                      <div style="font-size: 19px; font-weight: 600; margin-top: 3px; color: rgb(19, 26, 38);"><span class="sc-interp">6 wks</span></div>
-                    </div>
-                  
-                    <div style="border: 1px solid rgb(227, 232, 240); background: rgb(255, 255, 255); border-radius: 9px; padding: 10px 12px;">
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.12em; color: rgb(139, 149, 166);"><span class="sc-interp">Custom</span></div>
-                      <div style="font-size: 19px; font-weight: 600; margin-top: 3px; color: rgb(19, 26, 38);"><span class="sc-interp">5 wks</span></div>
-                    </div>
-                  
-                    <div style="border: 1px solid rgb(216, 229, 245); background: rgb(234, 241, 251); border-radius: 9px; padding: 10px 12px;">
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.12em; color: rgb(139, 149, 166);"><span class="sc-interp">Total</span></div>
-                      <div style="font-size: 19px; font-weight: 600; margin-top: 3px; color: rgb(19, 26, 38);"><span class="sc-interp">11 wks</span></div>
-                    </div>
-                  
-                    <div style="border: 1px solid rgb(227, 232, 240); background: rgb(255, 255, 255); border-radius: 9px; padding: 10px 12px;">
-                      <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.12em; color: rgb(139, 149, 166);"><span class="sc-interp">CPQ assumed</span></div>
-                      <div style="font-size: 19px; font-weight: 600; margin-top: 3px; color: rgb(138, 90, 18);"><span class="sc-interp">10 wks</span></div>
-                    </div>
-                  
-                </div>
-                <div style="margin-top: 11px; padding: 10px 12px; background: rgb(253, 243, 224); border: 1px solid rgb(241, 223, 188); border-radius: 9px; font-size: 12.5px; line-height: 1.45; color: rgb(110, 74, 17);">11 weeks against 10 assumed in CPQ. Deal desk notified — this is the flag that catches under-scoped deals before delivery does.</div>
-              </div>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 14px; min-width: 0px;">
-              <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 16px 18px;">
-                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                  <div style="font-size: 15.5px; font-weight: 600;">Custom configuration</div>
-                  <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">3 REQUIREMENTS · 1 UNESTIMATED</div>
-                  <button style="margin-left: auto; height: 31px; padding: 0px 12px; border-radius: 7px; border: 1px solid rgb(220, 226, 236); background: rgb(255, 255, 255); font-size: 12.5px; font-weight: 600; cursor: pointer;">Add requirement</button>
-                </div>
-                <div style="margin-top: 13px; display: flex; flex-direction: column; gap: 11px;">
-                  
-                    <div style="border: 1px solid rgb(227, 232, 240); border-radius: 11px; padding: 14px 16px;">
-                      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178);"><span class="sc-interp">REQ-014</span></div>
-                        <div style="font-size: 14px; font-weight: 600;"><span class="sc-interp">Branch-level fee routing</span></div>
-                        <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 5px; background: rgb(234, 241, 251); color: rgb(1, 46, 107);"><span class="sc-interp">ESTIMATED</span></div>
-                      </div>
-                      <div style="margin-top: 9px; display: grid; grid-template-columns: 1.6fr .6fr .6fr; gap: 12px;">
-                        <div>
-                          <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">SYSTEMS TOUCHED</div>
-                          <div style="font-size: 13px; margin-top: 3px; color: rgb(62, 74, 92);"><span class="sc-interp">Encompass → Class order API</span></div>
-                        </div>
-                        <div>
-                          <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">ESTIMATE</div>
-                          <div style="font-size: 13px; margin-top: 3px; font-weight: 600;"><span class="sc-interp">3 wks</span></div>
-                        </div>
-                        <div>
-                          <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">CONFIDENCE</div>
-                          <div style="font-size: 13px; margin-top: 3px; font-weight: 600;"><span class="sc-interp">MEDIUM</span></div>
-                        </div>
-                      </div>
-                      <div style="margin-top: 11px; padding: 10px 12px; background: rgb(250, 251, 253); border: 1px solid rgb(237, 240, 246); border-radius: 8px;">
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">ACCEPTANCE CRITERIA → USER STORY BODY</div>
-                        <div style="font-size: 12.5px; line-height: 1.5; margin-top: 5px; color: rgb(62, 74, 92); text-wrap: pretty;"><span class="sc-interp">Fees resolve by branch cost centre on every order; mismatch rejects with a named reason.</span></div>
-                      </div>
-                    </div>
-                  
-                    <div style="border: 1px solid rgb(227, 232, 240); border-radius: 11px; padding: 14px 16px;">
-                      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178);"><span class="sc-interp">REQ-015</span></div>
-                        <div style="font-size: 14px; font-weight: 600;"><span class="sc-interp">Dual-appraisal rule for jumbo &gt; $2M</span></div>
-                        <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 5px; background: rgb(234, 241, 251); color: rgb(1, 46, 107);"><span class="sc-interp">ESTIMATED</span></div>
-                      </div>
-                      <div style="margin-top: 9px; display: grid; grid-template-columns: 1.6fr .6fr .6fr; gap: 12px;">
-                        <div>
-                          <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">SYSTEMS TOUCHED</div>
-                          <div style="font-size: 13px; margin-top: 3px; color: rgb(62, 74, 92);"><span class="sc-interp">Rules engine</span></div>
-                        </div>
-                        <div>
-                          <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">ESTIMATE</div>
-                          <div style="font-size: 13px; margin-top: 3px; font-weight: 600;"><span class="sc-interp">2 wks</span></div>
-                        </div>
-                        <div>
-                          <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">CONFIDENCE</div>
-                          <div style="font-size: 13px; margin-top: 3px; font-weight: 600;"><span class="sc-interp">HIGH</span></div>
-                        </div>
-                      </div>
-                      <div style="margin-top: 11px; padding: 10px 12px; background: rgb(250, 251, 253); border: 1px solid rgb(237, 240, 246); border-radius: 8px;">
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">ACCEPTANCE CRITERIA → USER STORY BODY</div>
-                        <div style="font-size: 12.5px; line-height: 1.5; margin-top: 5px; color: rgb(62, 74, 92); text-wrap: pretty;"><span class="sc-interp">Orders above threshold auto-create a second appraisal assignment and one merged report package.</span></div>
-                      </div>
-                    </div>
-                  
-                    <div style="border: 1px solid rgb(227, 232, 240); border-radius: 11px; padding: 14px 16px;">
-                      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10.5px; color: rgb(151, 161, 178);"><span class="sc-interp">REQ-016</span></div>
-                        <div style="font-size: 14px; font-weight: 600;"><span class="sc-interp">Reconsideration intake from client portal</span></div>
-                        <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 5px; background: rgb(253, 243, 224); color: rgb(138, 90, 18);"><span class="sc-interp">NEEDS CLIENT INPUT</span></div>
-                      </div>
-                      <div style="margin-top: 9px; display: grid; grid-template-columns: 1.6fr .6fr .6fr; gap: 12px;">
-                        <div>
-                          <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">SYSTEMS TOUCHED</div>
-                          <div style="font-size: 13px; margin-top: 3px; color: rgb(62, 74, 92);"><span class="sc-interp">Client portal → ROV workflow</span></div>
-                        </div>
-                        <div>
-                          <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">ESTIMATE</div>
-                          <div style="font-size: 13px; margin-top: 3px; font-weight: 600;"><span class="sc-interp">?</span></div>
-                        </div>
-                        <div>
-                          <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">CONFIDENCE</div>
-                          <div style="font-size: 13px; margin-top: 3px; font-weight: 600;"><span class="sc-interp">LOW</span></div>
-                        </div>
-                      </div>
-                      <div style="margin-top: 11px; padding: 10px 12px; background: rgb(250, 251, 253); border: 1px solid rgb(237, 240, 246); border-radius: 8px;">
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 9px; letter-spacing: 0.12em; color: rgb(139, 149, 166);">ACCEPTANCE CRITERIA → USER STORY BODY</div>
-                        <div style="font-size: 12.5px; line-height: 1.5; margin-top: 5px; color: rgb(62, 74, 92); text-wrap: pretty;"><span class="sc-interp">Awaiting client compliance review of ROV evidence requirements before estimating.</span></div>
-                      </div>
-                    </div>
-                  
-                </div>
-              </div>
-
-              <div style="display: grid; grid-template-columns: 1.25fr 1fr; gap: 14px;">
-                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 16px 18px;">
-                  <div style="font-size: 15.5px; font-weight: 600;">JIRA mapping</div>
-                  <div style="margin-top: 3px; font-size: 12.5px; color: rgb(139, 149, 166);">Requirement group → epic, requirement → story, estimate → points.</div>
-                  <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 1px; background: rgb(237, 240, 246); border-radius: 9px; overflow: hidden;">
-                    
-                      <div style="display: grid; grid-template-columns: 1.1fr 1.1fr .3fr; gap: 10px; background: rgb(255, 255, 255); padding: 10px 12px; align-items: center;">
-                        <div style="font-size: 12.5px; color: rgb(62, 74, 92);"><span class="sc-interp">Integration group · LOS</span></div>
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(31, 85, 112);"><span class="sc-interp">EPIC · SRB-12 Encompass integration</span></div>
-                        <div style="text-align: right; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102);"><span class="sc-interp">21</span></div>
-                      </div>
-                    
-                      <div style="display: grid; grid-template-columns: 1.1fr 1.1fr .3fr; gap: 10px; background: rgb(255, 255, 255); padding: 10px 12px; align-items: center;">
-                        <div style="font-size: 12.5px; color: rgb(62, 74, 92);"><span class="sc-interp">REQ-014 Branch-level fee routing</span></div>
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(31, 85, 112);"><span class="sc-interp">STORY · SRB-38</span></div>
-                        <div style="text-align: right; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102);"><span class="sc-interp">13</span></div>
-                      </div>
-                    
-                      <div style="display: grid; grid-template-columns: 1.1fr 1.1fr .3fr; gap: 10px; background: rgb(255, 255, 255); padding: 10px 12px; align-items: center;">
-                        <div style="font-size: 12.5px; color: rgb(62, 74, 92);"><span class="sc-interp">REQ-015 Dual-appraisal rule</span></div>
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(31, 85, 112);"><span class="sc-interp">STORY · SRB-39</span></div>
-                        <div style="text-align: right; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102);"><span class="sc-interp">8</span></div>
-                      </div>
-                    
-                      <div style="display: grid; grid-template-columns: 1.1fr 1.1fr .3fr; gap: 10px; background: rgb(255, 255, 255); padding: 10px 12px; align-items: center;">
-                        <div style="font-size: 12.5px; color: rgb(62, 74, 92);"><span class="sc-interp">REQ-016 Reconsideration intake</span></div>
-                        <div style="font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(31, 85, 112);"><span class="sc-interp">NOT PUSHED · unestimated</span></div>
-                        <div style="text-align: right; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 11px; color: rgb(78, 88, 102);"><span class="sc-interp">—</span></div>
-                      </div>
-                    
-                  </div>
-                </div>
-                <div style="background: rgb(255, 255, 255); border: 1px solid rgb(220, 226, 236); border-radius: 12px; padding: 16px 18px;">
-                  <div style="font-size: 15.5px; font-weight: 600;">Requirement document</div>
-                  <div style="margin-top: 3px; font-size: 12.5px; color: rgb(139, 149, 166);">Same data as the tickets, versioned together.</div>
-                  <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px;">
-                    
-                      <div style="display: flex; gap: 10px; align-items: flex-start;">
-                        <div style="width: 8px; height: 8px; border-radius: 99px; background: rgb(1, 62, 144); margin-top: 5px; flex: 0 0 auto;"></div>
-                        <div style="min-width: 0px;">
-                          <div style="font-size: 13px; font-weight: 600;"><span class="sc-interp">v3 · current</span></div>
-                          <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">Adds REQ-015, revises fee routing AC</span></div>
-                        </div>
-                        <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(151, 161, 178); flex: 0 0 auto;"><span class="sc-interp">today 09:38</span></div>
-                      </div>
-                    
-                      <div style="display: flex; gap: 10px; align-items: flex-start;">
-                        <div style="width: 8px; height: 8px; border-radius: 99px; background: rgb(151, 161, 178); margin-top: 5px; flex: 0 0 auto;"></div>
-                        <div style="min-width: 0px;">
-                          <div style="font-size: 13px; font-weight: 600;"><span class="sc-interp">v2</span></div>
-                          <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">Client review comments incorporated</span></div>
-                        </div>
-                        <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(151, 161, 178); flex: 0 0 auto;"><span class="sc-interp">11 Aug</span></div>
-                      </div>
-                    
-                      <div style="display: flex; gap: 10px; align-items: flex-start;">
-                        <div style="width: 8px; height: 8px; border-radius: 99px; background: rgb(151, 161, 178); margin-top: 5px; flex: 0 0 auto;"></div>
-                        <div style="min-width: 0px;">
-                          <div style="font-size: 13px; font-weight: 600;"><span class="sc-interp">v1</span></div>
-                          <div style="font-size: 12px; color: rgb(139, 149, 166); margin-top: 2px;"><span class="sc-interp">Generated from plan baseline v1</span></div>
-                        </div>
-                        <div style="margin-left: auto; font-family: &quot;IBM Plex Mono&quot;, monospace; font-size: 10px; color: rgb(151, 161, 178); flex: 0 0 auto;"><span class="sc-interp">5 Aug</span></div>
-                      </div>
-                    
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+<div id="studio-app-mount"></div>
+<div id="studio-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(19,26,38,.45);z-index:80;align-items:center;justify-content:center;padding:20px"><div id="studio-modal-box" style="background:#fff;border-radius:14px;max-width:600px;width:100%;max-height:88vh;overflow-y:auto"></div></div>
     </div>
   </div>
 </div>
@@ -415,6 +158,1226 @@
   if (bd) bd.addEventListener('click', function(){ setOpen(false); });
 })();
 </script>
+<script>
+// Role context — a shared, provisional stand-in for real login. There is no
+// authentication anywhere in Class Value OS yet (every module runs on one
+// shared Supabase anon key); real SSO is intentionally sequenced last since
+// it needs a real identity provider to test against, which this project
+// doesn't have. Until then, "who's using the app" is this switcher: pick a
+// seeded user from app_users, and every capability check in the app reads
+// whatever role(s) that user is assigned in Supabase — real data, real
+// gating logic, just not yet tied to a real signed-in identity. Swapping in
+// real SSO later means replacing how currentUserId gets set (JIT-provisioned
+// from the IdP instead of a localStorage pick), not touching the data model
+// or any of the can()/isAdmin() call sites that already depend on it.
+//
+// Loaded on every functional page (cpq.html, cpq-config.html, roles.html)
+// BEFORE that page's own module script, so RoleContext.can()/isAdmin() are
+// available by the time the page module renders. Renders into a
+// #sidebarUserFooter element the page shell already has an id on — see
+// build_mpa.js's buildSidebar().
+(function(){
+  var STORAGE_KEY = 'classValueOs.actingAsUserId';
+  var MODULE_LABELS = {
+    demand: 'Demand Management', cpq: 'Value CPQ', 'cpq-config': 'CPQ Config',
+    plan: 'Plan Builder', studio: 'Integration Studio', delivery: 'Delivery',
+    reporting: 'Status Reporting', engagement: 'Engagement Mgmt',
+    roles: 'Roles & permissions', sso: 'SSO configuration'
+  };
 
+  var state = {
+    db: null,
+    users: [],
+    roles: [],
+    roleCapabilities: [],
+    userRoles: [],
+    currentUserId: null,
+    popoverOpen: false,
+    listeners: [],
+    loaded: false
+  };
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){
+    s = (s == null ? '' : String(s));
+    return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+  function initials(name){
+    if (!name) return '—';
+    var parts = name.trim().split(/\s+/);
+    return ((parts[0] || '')[0] || '') + ((parts[1] || '')[0] || '');
+  }
+
+  function available(){
+    return typeof window.supabase !== 'undefined'
+      && !!window.SUPABASE_CONFIG && !!window.SUPABASE_CONFIG.url && !!window.SUPABASE_CONFIG.anonKey;
+  }
+
+  function currentUser(){
+    return state.users.filter(function(u){ return u.id === state.currentUserId; })[0] || null;
+  }
+  function currentRoleIds(){
+    return state.userRoles.filter(function(ur){ return ur.user_id === state.currentUserId; }).map(function(ur){ return ur.role_id; });
+  }
+  function currentRoles(){
+    var ids = currentRoleIds();
+    return state.roles.filter(function(r){ return ids.indexOf(r.id) !== -1; });
+  }
+  // The one function every other module actually calls: does whoever is
+  // currently "acting as" have this capability on this module? A user with
+  // multiple roles gets the union of what any of their roles grant — same
+  // "most permissive role wins" convention as most RBAC systems.
+  function can(module, action){
+    if (!state.loaded) return true; // fail open before roles data has loaded at all, not mid-render
+    var ids = currentRoleIds();
+    if (!ids.length) return false;
+    var field = 'can_' + action;
+    return state.roleCapabilities.some(function(c){
+      return ids.indexOf(c.role_id) !== -1 && c.module === module && c[field] === true;
+    });
+  }
+  function isAdmin(){
+    return currentRoles().some(function(r){ return r.is_admin === true; });
+  }
+  function onChange(fn){ if (typeof fn === 'function') state.listeners.push(fn); }
+  function notify(){ state.listeners.forEach(function(fn){ try { fn(); } catch(e){ console.error('RoleContext listener error', e); } }); }
+
+  function roleNamesLine(){
+    var roles = currentRoles();
+    if (!roles.length) return 'No role assigned';
+    return roles.map(function(r){ return r.name; }).join(', ');
+  }
+
+  function renderSwitcher(){
+    var el = $('sidebarUserFooter');
+    if (!el) return;
+    var u = currentUser();
+    if (!u){
+      el.innerHTML = '<div style="font-size:11.5px;color:#7E97BD">No users seeded yet — add one from Roles &amp; permissions.</div>';
+      return;
+    }
+    el.style.cursor = 'pointer';
+    el.setAttribute('title', 'Switch who you\'re acting as (test mode — no real login yet)');
+    el.innerHTML = '<div style="width:30px;height:30px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex:0 0 auto">' + esc(initials(u.name)) + '</div>'
+      + '<div style="min-width:0;flex:1 1 0">'
+      + '<div style="color:#E8EEF8;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(u.name) + '</div>'
+      + '<div style="color:#7E97BD;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(roleNamesLine()) + '</div>'
+      + '</div>'
+      + '<div style="margin-left:auto;color:#7E97BD;font-size:11px;flex:0 0 auto">&#9662;</div>';
+  }
+
+  function renderPopover(){
+    var existing = $('rc-popover');
+    if (existing) existing.parentNode.removeChild(existing);
+    if (!state.popoverOpen) return;
+    var footer = $('sidebarUserFooter');
+    if (!footer) return;
+    var rowsHtml = state.users.map(function(u){
+      var active = u.id === state.currentUserId;
+      var uRoleIds = state.userRoles.filter(function(ur){ return ur.user_id === u.id; }).map(function(ur){ return ur.role_id; });
+      var uRoles = state.roles.filter(function(r){ return uRoleIds.indexOf(r.id) !== -1; });
+      var label = uRoles.length ? uRoles.map(function(r){ return r.name; }).join(', ') : 'No role assigned';
+      return '<div class="rc-user-row" data-user-id="' + esc(u.id) + '" style="display:flex;align-items:center;gap:9px;padding:9px 12px;cursor:pointer;border-radius:7px;background:' + (active ? 'rgba(1,62,144,.08)' : 'transparent') + '">'
+        + '<div style="width:24px;height:24px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;flex:0 0 auto">' + esc(initials(u.name)) + '</div>'
+        + '<div style="min-width:0;flex:1 1 0">'
+        + '<div style="font-size:12.5px;font-weight:600;color:#131A26;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(u.name) + '</div>'
+        + '<div style="font-size:11px;color:#8B95A6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(label) + '</div>'
+        + '</div>'
+        + (active ? '<div style="color:#013E90;font-size:12px;flex:0 0 auto">&check;</div>' : '')
+        + '</div>';
+    }).join('');
+    var pop = document.createElement('div');
+    pop.id = 'rc-popover';
+    pop.style.cssText = 'position:absolute;left:12px;right:12px;bottom:70px;background:#fff;border:1px solid #DCE2EC;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.28);z-index:60;overflow:hidden';
+    pop.innerHTML = '<div style="padding:9px 12px;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:10px;font-family:\'IBM Plex Mono\',monospace;letter-spacing:.06em">TEST MODE &mdash; NOT REAL LOGIN. STANDS IN UNTIL SSO IS BUILT.</div>'
+      + '<div style="padding:6px;display:flex;flex-direction:column;gap:2px;max-height:280px;overflow-y:auto">' + (rowsHtml || '<div style="padding:10px;font-size:12px;color:#97A1B2">No users yet.</div>') + '</div>'
+      + '<a href="roles.html" style="display:block;padding:9px 12px;border-top:1px solid #EDF0F6;font-size:12px;color:#013E90;text-decoration:none">Manage users &amp; roles &rarr;</a>';
+    var sidebar = document.getElementById('appSidebar');
+    (sidebar || document.body).appendChild(pop);
+  }
+
+  function togglePopover(open){
+    state.popoverOpen = (open != null) ? open : !state.popoverOpen;
+    renderPopover();
+  }
+
+  function switchTo(userId){
+    state.currentUserId = userId;
+    try { window.localStorage.setItem(STORAGE_KEY, userId); } catch(e){}
+    state.popoverOpen = false;
+    renderPopover();
+    renderSwitcher();
+    notify();
+  }
+
+  function wireEvents(){
+    if (document.__roleContextWired) return;
+    document.__roleContextWired = true;
+    document.addEventListener('click', function(e){
+      var footer = e.target.closest && e.target.closest('#sidebarUserFooter');
+      if (footer){ togglePopover(); return; }
+      var row = e.target.closest && e.target.closest('.rc-user-row');
+      if (row){ switchTo(row.getAttribute('data-user-id')); return; }
+      var pop = $('rc-popover');
+      if (pop && !pop.contains(e.target)) togglePopover(false);
+    });
+  }
+
+  function loadData(){
+    // reload() is exposed for other modules to call after they mutate roles/
+    // capabilities/users data (see roles_module.js) — guard against it firing
+    // before RoleContext itself has ever connected (e.g. Supabase isn't
+    // configured at all), rather than throwing on a null state.db.
+    if (!state.db) return Promise.resolve();
+    return Promise.all([
+      Promise.resolve(state.db.from('app_users').select('*').eq('active', true).order('name')),
+      Promise.resolve(state.db.from('roles').select('*').eq('active', true).order('sort_order')),
+      Promise.resolve(state.db.from('role_capabilities').select('*')),
+      Promise.resolve(state.db.from('user_roles').select('*'))
+    ]).then(function(results){
+      var ur = results[0], rr = results[1], cr = results[2], urr = results[3];
+      if (ur.error) throw ur.error;
+      if (rr.error) throw rr.error;
+      if (cr.error) throw cr.error;
+      if (urr.error) throw urr.error;
+      state.users = ur.data || [];
+      state.roles = rr.data || [];
+      state.roleCapabilities = cr.data || [];
+      state.userRoles = urr.data || [];
+      var saved = null;
+      try { saved = window.localStorage.getItem(STORAGE_KEY); } catch(e){}
+      var stillValid = saved && state.users.some(function(u){ return u.id === saved; });
+      state.currentUserId = stillValid ? saved : (state.users[0] ? state.users[0].id : null);
+      state.loaded = true;
+      renderSwitcher();
+      notify();
+    }).catch(function(e){ console.error('RoleContext: could not load', e); });
+  }
+
+  // Re-entrant the same way every other module's init() is: safe to call
+  // repeatedly (e.g. once per page nav in the merged artifact build), only
+  // (re)connects if it hasn't already, always refreshes data.
+  function init(){
+    wireEvents();
+    if (!state.db){
+      if (!available()) return Promise.resolve();
+      try { state.db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
+      catch(e){ return Promise.resolve(); }
+    }
+    return loadData();
+  }
+
+  window.RoleContext = {
+    init: init,
+    can: can,
+    isAdmin: isAdmin,
+    currentUser: currentUser,
+    currentRoles: currentRoles,
+    onChange: onChange,
+    reload: loadData,
+    MODULE_LABELS: MODULE_LABELS
+  };
+})();
+
+window.RoleContext.init();
+</script>
+<script>
+// Integration Studio (Module 04) — real CRUD, replacing the static design
+// mockup. See MODULE_SPECS.md and the 2026-08-21 design conversation this
+// shape came from: one configurable Task Library (integration_task_templates)
+// feeds two views over the same data — the Standard Offering Library (OOO)
+// and the Custom Configuration Canvas — instead of two disconnected lists.
+// A client's task set freely mixes OOO and Custom items (confirmed
+// 2026-08-21, not a mode the whole client is locked into). The Effort
+// Roll-up compares Standard vs Custom vs Total only — there's no
+// CPQ-assumed-effort figure in this schema yet (no quote carries an
+// implementation-effort estimate to compare against), so that comparison is
+// deliberately left out rather than faked. JIRA Mapping/Export (CSV, opens
+// in Excel, and is exactly the shape JIRA's own CSV importer consumes) is
+// real and works today; "Push to JIRA" is wired to a real API call but
+// checks jira_config (base URL / project / token) before ever attempting
+// one, and explains what's missing instead of silently failing — the same
+// honesty pattern already used for SSO configuration. Studio stays the
+// system of record for intent; nothing here ever reads a value back out of
+// JIRA and rewrites it — see jira_key/jira_pushed_at in schema.sql.
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function esc(s){
+    s = (s == null ? '' : String(s));
+    return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+  function fmtWeeks(n){
+    var v = Number(n);
+    if (n == null || isNaN(v)) return '—';
+    var r = Math.round(v * 10) / 10;
+    return r + ' wk' + (r === 1 ? '' : 's');
+  }
+  function fmtDate(s){
+    if (!s) return '—';
+    var d = new Date(s);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+  // The one gate every mutating control on this page checks — mirrors
+  // CPQ Config's canEditCatalog(). Exporting (CSV / PDF / JIRA push) is
+  // gated separately on can_export, since a role can view+create tasks here
+  // without necessarily being the one who ships the JIRA file or the doc.
+  function canEdit(){ return window.RoleContext ? window.RoleContext.can('studio', 'edit') : true; }
+  function canExport(){ return window.RoleContext ? window.RoleContext.can('studio', 'export') : true; }
+
+  var INPUT_STYLE = 'width:100%;height:38px;border:1px solid #DCE2EC;border-radius:8px;padding:0 11px;font-size:13.5px;font-family:inherit;box-sizing:border-box;outline:none';
+  var TEXTAREA_STYLE = 'width:100%;border:1px solid #DCE2EC;border-radius:8px;padding:9px 11px;font-size:13.5px;font-family:inherit;box-sizing:border-box;outline:none;resize:vertical';
+  var SELECT_STYLE = INPUT_STYLE;
+  var PHASES = ['Discovery', 'Mapping', 'Testing', 'Go-live'];
+
+  var state = {
+    db: null,
+    view: 'clients',           // 'clients' | 'client' | 'library'
+    tab: 'ooo',                 // within 'client': 'ooo' | 'custom' | 'jira' | 'docs'
+    clients: [],
+    clientTaskCounts: {},       // client_id -> { ooo, custom, weeks }
+    clientSearch: '',
+    templates: [],
+    showInactiveTemplates: false,
+    libraryReturnView: 'clients',
+    selectedClientId: null,
+    tasks: [],                  // client_integration_tasks for the selected client
+    docs: [],                   // integration_requirement_docs for the selected client
+    jiraConfig: null
+  };
+
+  function available(){
+    return typeof window.supabase !== 'undefined'
+      && !!window.SUPABASE_CONFIG && !!window.SUPABASE_CONFIG.url && !!window.SUPABASE_CONFIG.anonKey;
+  }
+  function mount(){ return $('studio-app-mount'); }
+
+  function showToast(msg){
+    var existingEl = document.getElementById('studio-toast');
+    if (existingEl) existingEl.parentNode.removeChild(existingEl);
+    var el = document.createElement('div');
+    el.id = 'studio-toast';
+    el.textContent = msg;
+    el.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#131A26;color:#fff;font-size:13px;padding:10px 16px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:999;max-width:90vw;text-align:center';
+    document.body.appendChild(el);
+    setTimeout(function(){ if (el.parentNode) el.parentNode.removeChild(el); }, 4000);
+  }
+
+  // ---------------------------------------------------------------------
+  // Access banner — same visual language as CPQ Config's.
+  // ---------------------------------------------------------------------
+  function renderAccessBanner(){
+    var editable = canEdit();
+    var roles = (window.RoleContext && window.RoleContext.currentRoles) ? window.RoleContext.currentRoles() : [];
+    var roleLine = roles.length ? roles.map(function(r){ return r.name; }).join(', ') : null;
+    var currentUser = window.RoleContext && window.RoleContext.currentUser ? window.RoleContext.currentUser() : null;
+    var whoLine = currentUser ? (esc(currentUser.name) + (roleLine ? ' (' + esc(roleLine) + ')' : '')) : null;
+    if (editable){
+      return '<div style="background:#EAF1FB;border:1px solid #D8E5F5;border-radius:10px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start;margin-bottom:16px">'
+        + '<div style="width:18px;height:18px;border-radius:99px;background:#013E90;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px">i</div>'
+        + '<div style="font-size:13px;line-height:1.55;color:#3E4A5C">' + (whoLine ? ('You have Edit access to Integration Studio as <b>' + whoLine + '</b>.') : 'You have Edit access to Integration Studio.') + '</div>'
+        + '</div>';
+    }
+    return '<div style="background:#FDF3E0;border:1px solid #F1DFBC;border-radius:10px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start;margin-bottom:16px">'
+      + '<div style="width:18px;height:18px;border-radius:99px;background:#8A5A12;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px">!</div>'
+      + '<div style="font-size:13px;line-height:1.55;color:#6E4A11">Read-only.' + (whoLine ? (' <b>' + whoLine + '</b>') : ' Your current role') + " doesn't have Edit access to Integration Studio. Ask a Platform admin to grant it from Roles &amp; permissions." + '</div>'
+      + '</div>';
+  }
+
+  // =======================================================================
+  // Screen 1 — client picker
+  // =======================================================================
+  function renderClientPicker(){
+    var m = mount();
+    if (!m) return;
+    var q = (state.clientSearch || '').toLowerCase();
+    var list = state.clients.filter(function(c){ return !q || c.name.toLowerCase().indexOf(q) !== -1; });
+    var cards = list.map(function(c){
+      var counts = state.clientTaskCounts[c.id] || { ooo: 0, custom: 0, weeks: 0 };
+      var total = counts.ooo + counts.custom;
+      return '<div class="stu-client-card" data-client-id="' + esc(c.id) + '" style="cursor:pointer;border:1px solid #DCE2EC;background:#fff;border-radius:11px;padding:15px 16px;display:flex;flex-direction:column;gap:8px">'
+        + '<div style="font-size:14.5px;font-weight:600">' + esc(c.name) + '</div>'
+        + '<div style="font-size:11.5px;color:#8B95A6">' + esc(c.segment) + '</div>'
+        + '<div style="display:flex;gap:14px;margin-top:4px;padding-top:9px;border-top:1px dashed #E3E8F0;font-size:12px;color:#5A6474">'
+        + '<div><b>' + counts.ooo + '</b> standard</div>'
+        + '<div><b>' + counts.custom + '</b> custom</div>'
+        + '<div><b>' + fmtWeeks(counts.weeks) + '</b> total effort</div>'
+        + '</div>'
+        + (total === 0 ? '<div style="font-size:11.5px;color:#97A1B2">No onboarding tasks started yet</div>' : '')
+        + '</div>';
+    }).join('');
+    m.innerHTML = '<div style="padding:20px 28px 48px;max-width:1400px">'
+      + '<div style="margin-bottom:14px">'
+      + '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">'
+      + '<div><div style="font-size:20px;font-weight:600">Integration Studio</div>'
+      + '<div style="font-size:13px;color:#6B7686;margin-top:2px">Pick a client to select their onboarding path — Standard Offering (OOO), Custom Configuration, or both — and generate the JIRA import file and requirement doc.</div></div>'
+      + '<div class="stu-manage-library-link" style="cursor:pointer;flex:0 0 auto;height:32px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;color:#013E90;font-size:12.5px;font-weight:600;display:flex;align-items:center">Manage task library</div>'
+      + '</div></div>'
+      + renderAccessBanner()
+      + '<input type="text" id="stu-client-search" placeholder="Search clients…" value="' + esc(state.clientSearch) + '" style="' + INPUT_STYLE + ';max-width:360px;margin-bottom:16px">'
+      + (list.length
+          ? '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">' + cards + '</div>'
+          : '<div style="font-size:12.5px;color:#97A1B2;padding:20px 0">' + (state.clients.length ? 'No clients match this search.' : 'No clients yet — clients are created from Demand Management.') + '</div>')
+      + '</div>';
+  }
+
+  // =======================================================================
+  // Screen 2 — client workspace
+  // =======================================================================
+  function effortSummary(tasks){
+    var ooo = tasks.filter(function(t){ return t.offering_type === 'ooo'; });
+    var custom = tasks.filter(function(t){ return t.offering_type === 'custom'; });
+    var sum = function(list){ return list.reduce(function(a, t){ return a + (Number(t.estimated_weeks) || 0); }, 0); };
+    return { ooo: ooo, custom: custom, oooWeeks: sum(ooo), customWeeks: sum(custom), totalWeeks: sum(tasks) };
+  }
+
+  function renderRollup(summary){
+    function kpi(label, value, sub){
+      return '<div style="border:1px solid #EDF0F6;border-radius:9px;padding:12px 14px">'
+        + '<div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase">' + esc(label) + '</div>'
+        + '<div style="margin-top:6px;font-size:20px;font-weight:600">' + esc(value) + '</div>'
+        + '<div style="margin-top:2px;font-size:11.5px;color:#97A1B2">' + esc(sub) + '</div>'
+        + '</div>';
+    }
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:18px 20px;margin-bottom:16px">'
+      + '<div style="font-size:14px;font-weight:600;margin-bottom:2px">Effort roll-up</div>'
+      + '<div style="font-size:12px;color:#97A1B2;margin-bottom:12px">Standard vs. Custom effort for this client\'s onboarding. No comparison against a CPQ-assumed estimate yet — no quote in this system carries an implementation-effort figure to compare against.</div>'
+      + '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">'
+      + kpi('Standard (OOO)', fmtWeeks(summary.oooWeeks), summary.ooo.length + ' task' + (summary.ooo.length === 1 ? '' : 's'))
+      + kpi('Custom', fmtWeeks(summary.customWeeks), summary.custom.length + ' task' + (summary.custom.length === 1 ? '' : 's'))
+      + kpi('Total', fmtWeeks(summary.totalWeeks), (summary.ooo.length + summary.custom.length) + ' task' + ((summary.ooo.length + summary.custom.length) === 1 ? '' : 's') + ' total')
+      + '</div></div>';
+  }
+
+  function renderTabs(){
+    var tabs = [
+      ['ooo', 'Standard Offering (OOO)'],
+      ['custom', 'Custom Configuration'],
+      ['jira', 'JIRA Mapping & Export'],
+      ['docs', 'Requirement Doc']
+    ];
+    return '<div style="display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid #DCE2EC;margin-bottom:16px">'
+      + tabs.map(function(t){
+        var active = state.tab === t[0];
+        return '<div class="stu-tab-btn" data-tab="' + t[0] + '" style="cursor:pointer;padding:9px 12px;font-size:12.5px;font-weight:600;white-space:nowrap;color:' + (active ? '#013E90' : '#8B95A6') + ';border-bottom:2px solid ' + (active ? '#013E90' : 'transparent') + '">' + esc(t[1]) + '</div>';
+      }).join('')
+      + '</div>';
+  }
+
+  // ---- Standard Offering (OOO) tab ----
+  function renderOooTab(client, tasks){
+    var eligible = state.templates.filter(function(t){ return t.eligible_ooo && t.active !== false; })
+      .sort(function(a, b){ return (a.sort_order || 0) - (b.sort_order || 0); });
+    var byTemplate = {};
+    tasks.filter(function(t){ return t.offering_type === 'ooo'; }).forEach(function(t){ if (t.template_id) byTemplate[t.template_id] = t; });
+    var rows = eligible.map(function(tpl){
+      var picked = !!byTemplate[tpl.id];
+      return '<label class="stu-ooo-row" style="display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid #F1F4F9;cursor:' + (canEdit() ? 'pointer' : 'default') + '">'
+        + '<input type="checkbox" class="stu-ooo-check" data-template-id="' + esc(tpl.id) + '" ' + (picked ? 'checked' : '') + ' ' + (canEdit() ? '' : 'disabled') + ' style="width:16px;height:16px;margin-top:2px;flex:0 0 auto">'
+        + '<div style="flex:1 1 0;min-width:0">'
+        + '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
+        + '<div style="font-size:13.5px;font-weight:600">' + esc(tpl.title) + '</div>'
+        + (tpl.phase ? '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.06em;color:#8B95A6;border:1px solid #DCE2EC;border-radius:5px;padding:2px 6px">' + esc(tpl.phase.toUpperCase()) + '</span>' : '')
+        + '</div>'
+        + (tpl.description ? '<div style="margin-top:3px;font-size:12px;color:#6B7686;line-height:1.45">' + esc(tpl.description) + '</div>' : '')
+        + '</div>'
+        + '<div style="flex:0 0 auto;font-size:12.5px;color:#5A6474;white-space:nowrap;margin-top:2px">' + fmtWeeks(tpl.estimated_weeks) + '</div>'
+        + '</label>';
+    }).join('');
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
+      + '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px">'
+      + '<div><div style="font-size:15px;font-weight:600">Standard Offering Library</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686;max-width:600px">The "out of box" onboarding tasks, known effort and times. Check off what applies to this client — unchecking removes it from their task list.</div></div>'
+      + '<div class="stu-manage-library-link" style="cursor:pointer;flex:0 0 auto;font-size:12px;color:#013E90;font-weight:600">Edit this list &rarr;</div>'
+      + '</div>'
+      + (eligible.length ? rows : '<div style="font-size:12.5px;color:#97A1B2;padding:14px 0">No task templates are marked eligible for the Standard offering yet — add some from the task library.</div>')
+      + '</div>';
+  }
+
+  function toggleOoo(templateId, checked){
+    if (!canEdit()){ showToast("You don't have Edit access to Integration Studio."); renderClientWorkspace(); return; }
+    var tpl = state.templates.filter(function(t){ return t.id === templateId; })[0];
+    if (!tpl) return;
+    var existing = state.tasks.filter(function(t){ return t.offering_type === 'ooo' && t.template_id === templateId; })[0];
+    var db = state.db;
+    var req;
+    if (checked){
+      if (existing) return;
+      req = db.from('client_integration_tasks').insert({
+        client_id: state.selectedClientId, template_id: tpl.id, offering_type: 'ooo',
+        title: tpl.title, description: tpl.description, phase: tpl.phase, estimated_weeks: tpl.estimated_weeks,
+        sort_order: tpl.sort_order || 0
+      });
+    } else {
+      if (!existing) return;
+      req = db.from('client_integration_tasks').delete().eq('id', existing.id);
+    }
+    Promise.resolve(req).then(function(r){
+      if (r.error) throw r.error;
+      return loadClientTasks();
+    }).catch(function(e){ showToast('Could not update: ' + (e.message || e)); });
+  }
+
+  // ---- Custom Configuration tab ----
+  var CONFIDENCE_META = {
+    high: { label: 'High confidence', color: '#3C6B1D', bg: '#EDF6E4' },
+    medium: { label: 'Medium confidence', color: '#8A5A12', bg: '#FDF3E0' },
+    low: { label: 'Low confidence', color: '#8A2A12', bg: '#FBEAE6' }
+  };
+  function confidenceBadge(c){
+    var meta = CONFIDENCE_META[c];
+    if (!meta) return '<span style="font-size:11px;color:#97A1B2">Confidence not set</span>';
+    return '<span style="font-size:10.5px;font-weight:600;color:' + meta.color + ';background:' + meta.bg + ';border-radius:5px;padding:2px 7px">' + esc(meta.label) + '</span>';
+  }
+  function renderCustomCard(t){
+    return '<div style="border:1px solid #DCE2EC;background:#F8FBFF;border-radius:11px;padding:14px 15px;display:flex;flex-direction:column;gap:8px">'
+      + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">'
+      + '<div style="min-width:0;flex:1 1 0">'
+      + '<div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">'
+      + '<div style="font-size:14px;font-weight:600">' + esc(t.title) + '</div>'
+      + (t.phase ? '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.06em;color:#8B95A6;border:1px solid #DCE2EC;border-radius:5px;padding:2px 6px">' + esc(t.phase.toUpperCase()) + '</span>' : '')
+      + confidenceBadge(t.confidence)
+      + '</div>'
+      + (t.description ? '<div style="margin-top:4px;font-size:12.5px;color:#6B7686;line-height:1.45">' + esc(t.description) + '</div>' : '')
+      + '</div>'
+      + '<div style="text-align:right;flex:0 0 auto;font-size:12.5px;font-weight:600;white-space:nowrap">' + fmtWeeks(t.estimated_weeks) + '</div>'
+      + '</div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11.5px;color:#5A6474;padding-top:8px;border-top:1px dashed #E3E8F0">'
+      + '<div><b style="color:#8B95A6;font-weight:600">Systems touched</b><br>' + esc(t.systems_touched || '—') + '</div>'
+      + '<div><b style="color:#8B95A6;font-weight:600">Client dependency</b><br>' + esc(t.client_dependency || '—') + '</div>'
+      + '<div style="grid-column:1 / -1"><b style="color:#8B95A6;font-weight:600">Acceptance criteria</b><br>' + esc(t.acceptance_criteria || '—') + '</div>'
+      + '</div>'
+      + (canEdit() ? ('<div style="display:flex;gap:8px;justify-content:flex-end;padding-top:2px">'
+        + '<button type="button" class="stu-custom-edit-btn" data-id="' + esc(t.id) + '" style="height:28px;padding:0 12px;border-radius:7px;border:1px solid #DCE2EC;background:#fff;font-size:12px;font-weight:600;cursor:pointer">Edit</button>'
+        + '<button type="button" class="stu-custom-remove-btn" data-id="' + esc(t.id) + '" style="height:28px;padding:0 12px;border-radius:7px;border:1px solid #F1C4BC;background:#fff;color:#8A2A12;font-size:12px;font-weight:600;cursor:pointer">Remove</button>'
+        + '</div>') : '')
+      + '</div>';
+  }
+  function renderCustomTab(client, tasks){
+    var custom = tasks.filter(function(t){ return t.offering_type === 'custom'; })
+      .sort(function(a, b){ return (a.sort_order || 0) - (b.sort_order || 0); });
+    var body = custom.length
+      ? '<div style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px">' + custom.map(renderCustomCard).join('') + '</div>'
+      : '<div style="font-size:12.5px;color:#97A1B2;padding:14px 0">No custom requirements added yet for this client.</div>';
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
+      + '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">'
+      + '<div><div style="font-size:15px;font-weight:600">Custom Configuration Canvas</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686;max-width:640px">For clients with their own systems and custom mapping needs. Start from the same task library or add a requirement from scratch.</div></div>'
+      + (canEdit() ? '<button type="button" id="stu-add-custom-btn" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">+ Add custom requirement</button>' : '')
+      + '</div>' + body + '</div>';
+  }
+
+  function nextSortOrder(offeringType){
+    var items = state.tasks.filter(function(t){ return t.offering_type === offeringType; });
+    return items.reduce(function(m, t){ return Math.max(m, Number(t.sort_order) || 0); }, 0) + 1;
+  }
+
+  function openCustomCreateModal(){
+    var draft = {
+      title: '', description: '', phase: '', estimated_weeks: '', systems_touched: '',
+      acceptance_criteria: '', confidence: '', client_dependency: '', template_id: null
+    };
+    renderCustomModal('create', null, draft);
+  }
+  function openCustomEditModal(id){
+    var t = state.tasks.filter(function(x){ return x.id === id; })[0];
+    if (!t) return;
+    renderCustomModal('edit', t, Object.assign({}, t));
+  }
+  function templateStartOptions(){
+    var eligible = state.templates.filter(function(t){ return t.eligible_custom && t.active !== false; })
+      .sort(function(a, b){ return (a.sort_order || 0) - (b.sort_order || 0); });
+    return '<option value="">— Start blank —</option>' + eligible.map(function(t){
+      return '<option value="' + esc(t.id) + '">' + esc(t.title) + '</option>';
+    }).join('');
+  }
+  function renderCustomModal(mode, existing, draft){
+    var title = mode === 'create' ? 'Add custom requirement' : ('Edit ' + existing.title);
+    var startFromHtml = mode === 'create'
+      ? '<div style="margin-bottom:2px">' + '<div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Start from the task library (optional)</div>'
+        + '<select id="stu-c-f-template" style="' + SELECT_STYLE + '">' + templateStartOptions() + '</select></div>'
+      : '';
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">' + esc(title) + '</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">Custom requirements only apply to this client — editing the task library later never rewrites this.</div></div>'
+      + '<div style="padding:18px 22px;display:flex;flex-direction:column;gap:14px;max-height:64vh;overflow-y:auto">'
+      + startFromHtml
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Title</div><input id="stu-c-f-title" type="text" value="' + esc(draft.title || '') + '" placeholder="e.g. Custom fee-routing rule" style="' + INPUT_STYLE + '"></div>'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Description</div><textarea id="stu-c-f-description" rows="2" style="' + TEXTAREA_STYLE + '">' + esc(draft.description || '') + '</textarea></div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Phase</div><input id="stu-c-f-phase" list="stu-phase-list" type="text" value="' + esc(draft.phase || '') + '" style="' + INPUT_STYLE + '"><datalist id="stu-phase-list">' + PHASES.map(function(p){ return '<option value="' + esc(p) + '">'; }).join('') + '</datalist></div>'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Estimated effort (weeks)</div><input id="stu-c-f-weeks" type="number" min="0" step="0.5" value="' + esc(draft.estimated_weeks != null ? draft.estimated_weeks : '') + '" style="' + INPUT_STYLE + '"></div>'
+      + '</div>'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Systems touched</div><input id="stu-c-f-systems" type="text" value="' + esc(draft.systems_touched || '') + '" placeholder="e.g. Encompass, internal billing API" style="' + INPUT_STYLE + '"></div>'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Acceptance criteria</div><textarea id="stu-c-f-acceptance" rows="2" style="' + TEXTAREA_STYLE + '">' + esc(draft.acceptance_criteria || '') + '</textarea></div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Confidence</div><select id="stu-c-f-confidence" style="' + SELECT_STYLE + '"><option value="">—</option><option value="high" ' + (draft.confidence === 'high' ? 'selected' : '') + '>High</option><option value="medium" ' + (draft.confidence === 'medium' ? 'selected' : '') + '>Medium</option><option value="low" ' + (draft.confidence === 'low' ? 'selected' : '') + '>Low</option></select></div>'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Client dependency</div><input id="stu-c-f-dependency" type="text" value="' + esc(draft.client_dependency || '') + '" placeholder="What the client needs to supply" style="' + INPUT_STYLE + '"></div>'
+      + '</div>'
+      + '</div>'
+      + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
+      + (mode === 'edit' ? '<button type="button" id="stu-modal-remove" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #F1C4BC;background:#fff;color:#8A2A12;font-size:13px;font-weight:600;cursor:pointer;margin-right:auto">Remove</button>' : '')
+      + '<button type="button" id="stu-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+      + '<button type="button" id="stu-modal-save" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">' + (mode === 'create' ? 'Add' : 'Save changes') + '</button>'
+      + '</div>';
+    $('studio-modal-box').innerHTML = html;
+    $('studio-modal-overlay').style.display = 'flex';
+    if (mode === 'create'){
+      $('stu-c-f-template').addEventListener('change', function(){
+        var tpl = state.templates.filter(function(t){ return t.id === this.value; }.bind(this))[0];
+        if (!tpl) return;
+        $('stu-c-f-title').value = tpl.title || '';
+        $('stu-c-f-description').value = tpl.description || '';
+        $('stu-c-f-phase').value = tpl.phase || '';
+        $('stu-c-f-weeks').value = tpl.estimated_weeks != null ? tpl.estimated_weeks : '';
+      });
+    }
+    $('stu-modal-cancel').addEventListener('click', closeModal);
+    if (mode === 'edit') $('stu-modal-remove').addEventListener('click', function(){ removeCustomTask(existing.id); });
+    $('stu-modal-save').addEventListener('click', function(){ saveCustomModal(mode, existing); });
+  }
+  function closeModal(){
+    var overlay = $('studio-modal-overlay');
+    if (overlay) overlay.style.display = 'none';
+    var box = $('studio-modal-box');
+    if (box) box.innerHTML = '';
+  }
+  function saveCustomModal(mode, existing){
+    if (!canEdit()){ showToast("You don't have Edit access to Integration Studio."); return; }
+    var title = $('stu-c-f-title').value.trim();
+    if (!title){ showToast('Title is required.'); return; }
+    var templateSel = mode === 'create' && $('stu-c-f-template') ? $('stu-c-f-template').value : (existing ? existing.template_id : null);
+    var draft = {
+      title: title,
+      description: $('stu-c-f-description').value.trim() || null,
+      phase: $('stu-c-f-phase').value.trim() || null,
+      estimated_weeks: $('stu-c-f-weeks').value === '' ? null : Number($('stu-c-f-weeks').value),
+      systems_touched: $('stu-c-f-systems').value.trim() || null,
+      acceptance_criteria: $('stu-c-f-acceptance').value.trim() || null,
+      confidence: $('stu-c-f-confidence').value || null,
+      client_dependency: $('stu-c-f-dependency').value.trim() || null
+    };
+    var db = state.db;
+    var req;
+    if (mode === 'create'){
+      draft.client_id = state.selectedClientId;
+      draft.offering_type = 'custom';
+      draft.template_id = templateSel || null;
+      draft.sort_order = nextSortOrder('custom');
+      req = db.from('client_integration_tasks').insert(draft).select().single();
+    } else {
+      req = db.from('client_integration_tasks').update(draft).eq('id', existing.id).select().single();
+    }
+    Promise.resolve(req).then(function(r){
+      if (r.error) throw r.error;
+      closeModal();
+      return loadClientTasks();
+    }).catch(function(e){ showToast('Could not save: ' + (e.message || e)); });
+  }
+  function removeCustomTask(id){
+    if (!canEdit()){ showToast("You don't have Edit access to Integration Studio."); return; }
+    Promise.resolve(state.db.from('client_integration_tasks').delete().eq('id', id)).then(function(r){
+      if (r.error) throw r.error;
+      closeModal();
+      return loadClientTasks();
+    }).catch(function(e){ showToast('Could not remove: ' + (e.message || e)); });
+  }
+
+  // ---- JIRA Mapping & Export tab ----
+  function estWeeksToJiraDuration(weeks){
+    var w = Number(weeks) || 0;
+    var days = Math.max(1, Math.round(w * 5)); // Original Estimate as working days (5 wd/wk)
+    return days + 'd';
+  }
+  function csvEscape(v){
+    var s = (v == null ? '' : String(v));
+    if (/[",\n]/.test(s)) s = '"' + s.replace(/"/g, '""') + '"';
+    return s;
+  }
+  function epicKeyFor(client){
+    return 'INT-' + (client.name || '').toUpperCase().replace(/[^A-Z0-9]+/g, '').slice(0, 18);
+  }
+  function buildJiraCsv(client, tasks){
+    var header = ['Issue Type', 'Summary', 'Description', 'Epic Name', 'Epic Link', 'Parent', 'Original Estimate', 'Labels'];
+    var rows = [header];
+    var epicKey = epicKeyFor(client);
+    rows.push(['Epic', 'Integration: ' + client.name, '', epicKey, '', '', '', 'integration-studio']);
+    tasks.forEach(function(t){
+      var descParts = [t.description || ''];
+      if (t.offering_type === 'custom'){
+        if (t.systems_touched) descParts.push('Systems touched: ' + t.systems_touched);
+        if (t.acceptance_criteria) descParts.push('Acceptance criteria: ' + t.acceptance_criteria);
+        if (t.client_dependency) descParts.push('Client dependency: ' + t.client_dependency);
+        if (t.confidence) descParts.push('Confidence: ' + t.confidence);
+      }
+      rows.push(['Story', t.title, descParts.filter(Boolean).join(' — '), '', epicKey, epicKey, estWeeksToJiraDuration(t.estimated_weeks), 'integration-studio,' + t.offering_type]);
+    });
+    return rows.map(function(r){ return r.map(csvEscape).join(','); }).join('\r\n');
+  }
+  function downloadCsv(filename, csvString){
+    var blob = new Blob(['﻿' + csvString], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function renderJiraTab(client, tasks){
+    var rows = tasks.map(function(t){
+      return '<tr>'
+        + '<td style="padding:8px 10px;border-bottom:1px solid #F1F4F9;font-size:12.5px;font-weight:600">' + esc(t.title) + '</td>'
+        + '<td style="padding:8px 10px;border-bottom:1px solid #F1F4F9;font-size:12px;color:#5A6474;text-transform:uppercase">' + esc(t.offering_type) + '</td>'
+        + '<td style="padding:8px 10px;border-bottom:1px solid #F1F4F9;font-size:12px;color:#5A6474">' + esc(estWeeksToJiraDuration(t.estimated_weeks)) + '</td>'
+        + '<td style="padding:8px 10px;border-bottom:1px solid #F1F4F9;font-size:12px;color:#5A6474">' + (t.jira_key ? ('<span style="font-family:\'IBM Plex Mono\',monospace">' + esc(t.jira_key) + '</span>') : '<span style="color:#97A1B2">Not pushed</span>') + '</td>'
+        + '</tr>';
+    }).join('');
+    var jc = state.jiraConfig || {};
+    var editable = canEdit();
+    var disabledAttr = editable ? '' : 'disabled';
+    var configBox = '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:18px 20px;margin-top:14px">'
+      + '<div style="font-size:14px;font-weight:600">JIRA connection</div>'
+      + '<div style="margin-top:3px;margin-bottom:12px;font-size:12px;color:#6B7686;max-width:640px">Where a Platform admin pastes real JIRA API details when they exist. "Push to JIRA" only ever attempts a live call once this is filled in and enabled — until then, use the CSV export below.</div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
+      + '<div><div style="font-size:11px;font-weight:600;color:#8B95A6;text-transform:uppercase;margin-bottom:5px">Base URL</div><input id="stu-jc-base-url" type="text" value="' + esc(jc.base_url || '') + '" placeholder="https://yourcompany.atlassian.net" ' + disabledAttr + ' style="' + INPUT_STYLE + (editable ? '' : ';background:#F4F6FA;color:#8B95A6') + '"></div>'
+      + '<div><div style="font-size:11px;font-weight:600;color:#8B95A6;text-transform:uppercase;margin-bottom:5px">Project key</div><input id="stu-jc-project-key" type="text" value="' + esc(jc.project_key || '') + '" placeholder="INTOPS" ' + disabledAttr + ' style="' + INPUT_STYLE + (editable ? '' : ';background:#F4F6FA;color:#8B95A6') + '"></div>'
+      + '<div><div style="font-size:11px;font-weight:600;color:#8B95A6;text-transform:uppercase;margin-bottom:5px">API email</div><input id="stu-jc-api-email" type="text" value="' + esc(jc.api_email || '') + '" ' + disabledAttr + ' style="' + INPUT_STYLE + (editable ? '' : ';background:#F4F6FA;color:#8B95A6') + '"></div>'
+      + '<div><div style="font-size:11px;font-weight:600;color:#8B95A6;text-transform:uppercase;margin-bottom:5px">API token</div><input id="stu-jc-api-token" type="password" value="' + esc(jc.api_token || '') + '" ' + disabledAttr + ' style="' + INPUT_STYLE + (editable ? '' : ';background:#F4F6FA;color:#8B95A6') + '"></div>'
+      + '</div>'
+      + '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#3E4A5C;margin-top:12px;cursor:' + (editable ? 'pointer' : 'default') + '"><input type="checkbox" id="stu-jc-enabled" ' + (jc.enabled ? 'checked' : '') + ' ' + disabledAttr + ' style="width:15px;height:15px"> Enable live JIRA push</label>'
+      + (editable ? '<button type="button" id="stu-jc-save" style="margin-top:12px;height:34px;padding:0 14px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:12.5px;font-weight:600;cursor:pointer">Save connection</button>' : '')
+      + '</div>';
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
+      + '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">'
+      + '<div><div style="font-size:15px;font-weight:600">JIRA Mapping &amp; Export</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686;max-width:640px">One Epic per client, one Story per task. Effort maps to JIRA\'s Original Estimate as working days — not story points, since these are already time-based estimates. Studio stays the system of record for intent; nothing pushed back from JIRA is ever written here.</div></div>'
+      + '<div style="display:flex;gap:8px">'
+      + (canExport() ? '<button type="button" id="stu-export-csv-btn" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;color:#013E90;font-size:12.5px;font-weight:600;cursor:pointer">Download JIRA import (.csv)</button>' : '')
+      + (canExport() ? '<button type="button" id="stu-push-jira-btn" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">Push to JIRA</button>' : '')
+      + '</div></div>'
+      + (tasks.length
+          ? '<table style="width:100%;border-collapse:collapse;margin-top:14px"><thead><tr>'
+            + '<th style="text-align:left;padding:6px 10px;font-size:10.5px;letter-spacing:.05em;color:#8B95A6;text-transform:uppercase;border-bottom:1px solid #DCE2EC">Task</th>'
+            + '<th style="text-align:left;padding:6px 10px;font-size:10.5px;letter-spacing:.05em;color:#8B95A6;text-transform:uppercase;border-bottom:1px solid #DCE2EC">Type</th>'
+            + '<th style="text-align:left;padding:6px 10px;font-size:10.5px;letter-spacing:.05em;color:#8B95A6;text-transform:uppercase;border-bottom:1px solid #DCE2EC">Original estimate</th>'
+            + '<th style="text-align:left;padding:6px 10px;font-size:10.5px;letter-spacing:.05em;color:#8B95A6;text-transform:uppercase;border-bottom:1px solid #DCE2EC">JIRA key</th>'
+            + '</tr></thead><tbody>' + rows + '</tbody></table>'
+          : '<div style="font-size:12.5px;color:#97A1B2;padding:14px 0">No tasks selected yet — add some from Standard Offering or Custom Configuration first.</div>')
+      + configBox
+      + '</div>';
+  }
+  function saveJiraConfig(){
+    if (!canEdit()){ showToast("You don't have Edit access to Integration Studio."); return; }
+    var patch = {
+      base_url: $('stu-jc-base-url').value.trim() || null,
+      project_key: $('stu-jc-project-key').value.trim() || null,
+      api_email: $('stu-jc-api-email').value.trim() || null,
+      api_token: $('stu-jc-api-token').value.trim() || null,
+      enabled: $('stu-jc-enabled').checked
+    };
+    Promise.resolve(state.db.from('jira_config').update(patch).eq('id', 1)).then(function(r){
+      if (r.error) throw r.error;
+      state.jiraConfig = Object.assign({}, state.jiraConfig, patch);
+      showToast('JIRA connection saved.');
+      renderClientWorkspace();
+    }).catch(function(e){ showToast('Could not save: ' + (e.message || e)); });
+  }
+  function jiraReady(){
+    var jc = state.jiraConfig;
+    return !!(jc && jc.enabled && jc.base_url && jc.project_key && jc.api_email && jc.api_token);
+  }
+  function openPushJiraModal(client, tasks){
+    if (!tasks.length){ showToast('No tasks to push yet.'); return; }
+    var epicKey = epicKeyFor(client);
+    var notReady = !jiraReady();
+    var preview = '<div style="font-size:12.5px;color:#5A6474;line-height:1.6;max-height:280px;overflow-y:auto;border:1px solid #EDF0F6;border-radius:8px;padding:10px 12px">'
+      + '<div><b>Epic</b> — Integration: ' + esc(client.name) + ' (' + esc(epicKey) + ')</div>'
+      + tasks.map(function(t){ return '<div style="margin-top:4px">&bull; <b>Story</b> — ' + esc(t.title) + ' <span style="color:#97A1B2">(' + esc(estWeeksToJiraDuration(t.estimated_weeks)) + ')</span></div>'; }).join('')
+      + '</div>';
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">Push to JIRA</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">' + (state.jiraConfig && state.jiraConfig.project_key ? ('Target project: <b>' + esc(state.jiraConfig.project_key) + '</b>. ') : '') + 'This creates 1 Epic + ' + tasks.length + ' Stor' + (tasks.length === 1 ? 'y' : 'ies') + '. Already-pushed tasks are skipped.</div></div>'
+      + '<div style="padding:16px 22px">'
+      + (notReady
+          ? '<div style="background:#FDF3E0;border:1px solid #F1DFBC;border-radius:9px;padding:12px 14px;font-size:12.5px;color:#6E4A11;line-height:1.5;margin-bottom:14px">This module doesn\'t have a live JIRA connection yet — Base URL, project key, API email and API token all need to be filled in and "Enable live JIRA push" checked under JIRA connection below. Use the CSV export in the meantime; it\'s the exact format JIRA\'s own CSV importer consumes.</div>'
+          : '')
+      + preview
+      + '</div>'
+      + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
+      + '<button type="button" id="stu-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+      + '<button type="button" id="stu-push-confirm" ' + (notReady ? 'disabled' : '') + ' style="height:36px;padding:0 16px;border-radius:8px;border:none;background:' + (notReady ? '#B9C2D1' : '#013E90') + ';color:#fff;font-size:13.5px;font-weight:600;cursor:' + (notReady ? 'default' : 'pointer') + '">' + (notReady ? 'Connection not configured' : 'Push now') + '</button>'
+      + '</div>';
+    $('studio-modal-box').innerHTML = html;
+    $('studio-modal-overlay').style.display = 'flex';
+    $('stu-modal-cancel').addEventListener('click', closeModal);
+    if (!notReady) $('stu-push-confirm').addEventListener('click', function(){ pushToJira(client, tasks, epicKey); });
+  }
+  // Real call, not a simulation — Basic auth against JIRA's REST API v3, one
+  // request to create the Epic, then one per Story with fields.parent set to
+  // the Epic's returned key. Will simply fail with whatever JIRA/network
+  // error comes back in any environment without a real, reachable JIRA site
+  // and a valid token — that's surfaced via showToast, not swallowed.
+  function pushToJira(client, tasks, epicKey){
+    var jc = state.jiraConfig;
+    var authHeader = 'Basic ' + btoa(jc.api_email + ':' + jc.api_token);
+    var base = jc.base_url.replace(/\/$/, '');
+    function createIssue(fields){
+      return fetch(base + '/rest/api/3/issue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': authHeader },
+        body: JSON.stringify({ fields: fields })
+      }).then(function(r){ return r.json().then(function(body){ return { ok: r.ok, body: body }; }); });
+    }
+    closeModal();
+    showToast('Pushing to JIRA…');
+    createIssue({
+      project: { key: jc.project_key },
+      summary: 'Integration: ' + client.name,
+      issuetype: { name: jc.issue_type_epic || 'Epic' }
+    }).then(function(epicResult){
+      if (!epicResult.ok) throw new Error((epicResult.body && epicResult.body.errorMessages && epicResult.body.errorMessages.join('; ')) || 'Could not create Epic');
+      var epicIssueKey = epicResult.body.key;
+      var toPush = tasks.filter(function(t){ return !t.jira_key; });
+      return toPush.reduce(function(chain, t){
+        return chain.then(function(){
+          return createIssue({
+            project: { key: jc.project_key },
+            summary: t.title,
+            issuetype: { name: jc.issue_type_story || 'Story' },
+            parent: { key: epicIssueKey },
+            timetracking: { originalEstimate: estWeeksToJiraDuration(t.estimated_weeks) }
+          }).then(function(r){
+            if (!r.ok) throw new Error('Could not create Story "' + t.title + '": ' + ((r.body && r.body.errorMessages && r.body.errorMessages.join('; ')) || 'unknown error'));
+            return Promise.resolve(state.db.from('client_integration_tasks').update({ jira_key: r.body.key, jira_pushed_at: new Date().toISOString() }).eq('id', t.id));
+          });
+        });
+      }, Promise.resolve()).then(function(){
+        showToast('Pushed to JIRA — Epic ' + epicIssueKey + ' + ' + toPush.length + ' stor' + (toPush.length === 1 ? 'y' : 'ies') + '.');
+        return loadClientTasks();
+      });
+    }).catch(function(e){ showToast('JIRA push failed: ' + (e.message || e)); });
+  }
+
+  // ---- Requirement Doc tab ----
+  function buildRequirementDocHtml(client, tasks, version, generatedBy, generatedAt){
+    var summary = effortSummary(tasks);
+    function taskRow(t){
+      return '<div style="padding:8px 0;border-bottom:1px solid #E3E8F0">'
+        + '<div style="font-weight:600;font-size:12.5px">' + esc(t.title) + (t.phase ? ' <span style="font-weight:400;color:#6B7686">— ' + esc(t.phase) + '</span>' : '') + '</div>'
+        + (t.description ? '<div style="font-size:11.5px;color:#5A6474;margin-top:2px">' + esc(t.description) + '</div>' : '')
+        + (t.offering_type === 'custom' ? ('<div style="font-size:11px;color:#5A6474;margin-top:3px">'
+            + (t.systems_touched ? ('Systems touched: ' + esc(t.systems_touched) + '<br>') : '')
+            + (t.acceptance_criteria ? ('Acceptance criteria: ' + esc(t.acceptance_criteria) + '<br>') : '')
+            + (t.client_dependency ? ('Client dependency: ' + esc(t.client_dependency)) : '')
+            + '</div>') : '')
+        + '<div style="font-size:11px;color:#97A1B2;margin-top:2px">Effort: ' + esc(fmtWeeks(t.estimated_weeks)) + '</div>'
+        + '</div>';
+    }
+    return '<h1 style="font-size:20px;margin-bottom:2px">Integration Requirements — ' + esc(client.name) + '</h1>'
+      + '<div style="font-size:12px;color:#6B7686;margin-bottom:18px">Version ' + esc(version) + ' &middot; Generated ' + esc(fmtDate(generatedAt)) + (generatedBy ? (' by ' + esc(generatedBy)) : '') + '</div>'
+      + '<h2 style="font-size:14px;border-bottom:1px solid #ccc;padding-bottom:4px">Effort summary</h2>'
+      + '<div style="font-size:12.5px;margin:8px 0 18px">Standard: ' + esc(fmtWeeks(summary.oooWeeks)) + ' (' + summary.ooo.length + ') &middot; Custom: ' + esc(fmtWeeks(summary.customWeeks)) + ' (' + summary.custom.length + ') &middot; Total: ' + esc(fmtWeeks(summary.totalWeeks)) + '</div>'
+      + '<h2 style="font-size:14px;border-bottom:1px solid #ccc;padding-bottom:4px">Standard Offering (OOO)</h2>'
+      + (summary.ooo.length ? summary.ooo.map(taskRow).join('') : '<div style="font-size:12px;color:#97A1B2;padding:8px 0">None selected.</div>')
+      + '<h2 style="font-size:14px;border-bottom:1px solid #ccc;padding-bottom:4px;margin-top:18px">Custom Configuration</h2>'
+      + (summary.custom.length ? summary.custom.map(taskRow).join('') : '<div style="font-size:12px;color:#97A1B2;padding:8px 0">None added.</div>');
+  }
+  // Same reparent-to-<body>-before-print escape hatch as Plan Builder's
+  // printFromArea() — this view sits inside .content-viewport (a
+  // position:relative, overflow-y:auto ancestor), which would otherwise
+  // clip an absolutely-positioned print area to whatever's currently
+  // scrolled into view.
+  function ensurePrintArea(){
+    var el = $('studio-print-area');
+    if (!el){
+      el = document.createElement('div');
+      el.id = 'studio-print-area';
+      document.body.appendChild(el);
+    }
+    return el;
+  }
+  function printFromArea(html){
+    var el = ensurePrintArea();
+    if (el.parentNode !== document.body) document.body.appendChild(el);
+    el.innerHTML = html;
+    window.print();
+  }
+  function generateRequirementDoc(client, tasks){
+    if (!tasks.length){ showToast('Add at least one task before generating a requirement doc.'); return; }
+    var nextVersion = state.docs.reduce(function(m, d){ return Math.max(m, d.version); }, 0) + 1;
+    var currentUser = window.RoleContext && window.RoleContext.currentUser ? window.RoleContext.currentUser() : null;
+    var generatedBy = currentUser ? currentUser.name : null;
+    var snapshot = { tasks: tasks, effort: effortSummary(tasks) };
+    Promise.resolve(state.db.from('integration_requirement_docs').insert({
+      client_id: client.id, version: nextVersion, snapshot: snapshot, generated_by: generatedBy
+    }).select().single()).then(function(r){
+      if (r.error) throw r.error;
+      return loadClientDocs().then(function(){
+        renderClientWorkspace(); // refresh the on-screen version history before print steals focus
+        printFromArea(buildRequirementDocHtml(client, tasks, nextVersion, generatedBy, r.data.created_at));
+      });
+    }).catch(function(e){ showToast('Could not generate: ' + (e.message || e)); });
+  }
+  function reprintDocVersion(docId){
+    var doc = state.docs.filter(function(d){ return d.id === docId; })[0];
+    if (!doc) return;
+    var client = state.clients.filter(function(c){ return c.id === state.selectedClientId; })[0];
+    var tasks = (doc.snapshot && doc.snapshot.tasks) || [];
+    printFromArea(buildRequirementDocHtml(client, tasks, doc.version, doc.generated_by, doc.created_at));
+  }
+  function renderDocsTab(client, tasks){
+    var history = state.docs.slice().sort(function(a, b){ return b.version - a.version; }).map(function(d){
+      return '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #F1F4F9">'
+        + '<div><div style="font-size:13px;font-weight:600">Version ' + esc(d.version) + '</div>'
+        + '<div style="font-size:11.5px;color:#8B95A6">' + esc(fmtDate(d.created_at)) + (d.generated_by ? (' &middot; ' + esc(d.generated_by)) : '') + '</div></div>'
+        + (canExport() ? '<button type="button" class="stu-doc-view-btn" data-id="' + esc(d.id) + '" style="height:28px;padding:0 12px;border-radius:7px;border:1px solid #DCE2EC;background:#fff;font-size:12px;font-weight:600;cursor:pointer">PDF</button>' : '')
+        + '</div>';
+    }).join('');
+    return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
+      + '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">'
+      + '<div><div style="font-size:15px;font-weight:600">Requirement Document</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686;max-width:600px">A frozen snapshot of this client\'s full task list — Standard and Custom — as a PDF you can send. Generating a new version never rewrites an earlier one.</div></div>'
+      + (canExport() ? '<button type="button" id="stu-generate-doc-btn" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">Generate requirement doc (PDF)</button>' : '')
+      + '</div>'
+      + '<div style="margin-top:10px">' + (state.docs.length ? history : '<div style="font-size:12.5px;color:#97A1B2;padding:14px 0">No versions generated yet.</div>') + '</div>'
+      + '</div>';
+  }
+
+  // ---- client workspace root ----
+  function renderClientWorkspace(){
+    var client = state.clients.filter(function(c){ return c.id === state.selectedClientId; })[0];
+    if (!client){ state.view = 'clients'; renderClientPicker(); return; }
+    var m = mount();
+    if (!m) return;
+    var summary = effortSummary(state.tasks);
+    var body;
+    if (state.tab === 'ooo') body = renderOooTab(client, state.tasks);
+    else if (state.tab === 'custom') body = renderCustomTab(client, state.tasks);
+    else if (state.tab === 'jira') body = renderJiraTab(client, state.tasks);
+    else body = renderDocsTab(client, state.tasks);
+    m.innerHTML = '<div style="padding:20px 28px 48px;max-width:1400px">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px">'
+      + '<div class="stu-back-link" style="cursor:pointer;font-size:12.5px;color:#6B7686">&larr; All clients</div>'
+      + '<div class="stu-manage-library-link" style="cursor:pointer;font-size:12px;color:#013E90;font-weight:600">Manage task library</div>'
+      + '</div>'
+      + '<div style="margin-bottom:14px"><div style="font-size:20px;font-weight:600">' + esc(client.name) + '</div>'
+      + '<div style="font-size:13px;color:#6B7686;margin-top:2px">' + esc(client.segment) + '</div></div>'
+      + renderAccessBanner()
+      + renderRollup(summary)
+      + renderTabs()
+      + body
+      + '</div>';
+  }
+
+  // =======================================================================
+  // Screen 3 — task library admin (parallel to CPQ Config's catalog admin)
+  // =======================================================================
+  function visibleTemplates(){ return state.templates.filter(function(t){ return state.showInactiveTemplates || t.active !== false; }); }
+  function renderTemplateCard(t){
+    var inactive = t.active === false;
+    var flags = (t.eligible_ooo ? '<span style="font-size:9.5px;font-weight:600;color:#012E6B;background:#EAF1FB;border-radius:5px;padding:2px 6px">OOO</span>' : '')
+      + (t.eligible_custom ? '<span style="font-size:9.5px;font-weight:600;color:#5A2E8A;background:#F1E8FB;border-radius:5px;padding:2px 6px;margin-left:4px">CUSTOM</span>' : '');
+    return '<div style="border:1px solid ' + (inactive ? '#E3E8F0' : '#DCE2EC') + ';background:' + (inactive ? '#F7F8FA' : '#F8FBFF') + ';border-radius:11px;padding:14px 15px;display:flex;flex-direction:column;gap:8px;opacity:' + (inactive ? '.6' : '1') + '">'
+      + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">'
+      + '<div style="min-width:0;flex:1 1 0">'
+      + '<div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">'
+      + '<div style="font-size:14px;font-weight:600">' + esc(t.title) + '</div>'
+      + (inactive ? '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.08em;color:#8B95A6;border:1px solid #DCE2EC;border-radius:5px;padding:2px 6px">INACTIVE</span>' : '')
+      + flags
+      + '</div>'
+      + (t.description ? '<div style="margin-top:4px;font-size:12px;color:#6B7686;line-height:1.4">' + esc(t.description) + '</div>' : '')
+      + '</div>'
+      + '<div style="text-align:right;flex:0 0 auto;font-size:13px;font-weight:600;white-space:nowrap">' + fmtWeeks(t.estimated_weeks) + '</div>'
+      + '</div>'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:8px;border-top:1px dashed #E3E8F0">'
+      + '<div style="font-size:11px;color:#8B95A6">' + esc(t.phase || 'No phase set') + '</div>'
+      + (canEdit() ? '<button type="button" class="stu-tpl-edit-btn" data-id="' + esc(t.id) + '" style="height:28px;padding:0 12px;border-radius:7px;border:1px solid #DCE2EC;background:#fff;font-size:12px;font-weight:600;cursor:pointer">Edit</button>' : '')
+      + '</div></div>';
+  }
+  function renderTaskLibrary(){
+    var m = mount();
+    if (!m) return;
+    var list = visibleTemplates().sort(function(a, b){ return (a.sort_order || 0) - (b.sort_order || 0); });
+    m.innerHTML = '<div style="padding:20px 28px 48px;max-width:1200px">'
+      + '<div class="stu-lib-back-link" style="cursor:pointer;font-size:12.5px;color:#6B7686;margin-bottom:8px">&larr; Back</div>'
+      + '<div style="margin-bottom:14px"><div style="font-size:20px;font-weight:600">Task library</div>'
+      + '<div style="font-size:13px;color:#6B7686;margin-top:2px">The configurable set of onboarding tasks behind both the Standard Offering Library and Custom Configuration Canvas. Mark each task eligible for OOO, Custom, or both.</div></div>'
+      + renderAccessBanner()
+      + '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#5A6474;margin-bottom:14px;cursor:pointer;width:max-content">'
+      + '<input type="checkbox" id="stu-tpl-show-inactive" ' + (state.showInactiveTemplates ? 'checked' : '') + ' style="width:15px;height:15px"> Show inactive'
+      + '</label>'
+      + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
+      + '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px">'
+      + '<div style="font-size:15px;font-weight:600">Task templates</div>'
+      + (canEdit() ? '<button type="button" id="stu-tpl-add-btn" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">+ Add task</button>' : '')
+      + '</div>'
+      + (list.length ? '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px">' + list.map(renderTemplateCard).join('') + '</div>' : '<div style="font-size:12.5px;color:#97A1B2;padding:14px 0">Nothing here yet.</div>')
+      + '</div></div>';
+  }
+  function nextTemplateSortOrder(){
+    return state.templates.reduce(function(m, t){ return Math.max(m, Number(t.sort_order) || 0); }, 0) + 1;
+  }
+  function openTemplateCreateModal(){
+    renderTemplateModal('create', null, { title: '', description: '', phase: '', estimated_weeks: '', eligible_ooo: true, eligible_custom: true, sort_order: nextTemplateSortOrder(), active: true });
+  }
+  function openTemplateEditModal(id){
+    var t = state.templates.filter(function(x){ return x.id === id; })[0];
+    if (!t) return;
+    renderTemplateModal('edit', t, Object.assign({}, t));
+  }
+  function renderTemplateModal(mode, existing, draft){
+    var title = mode === 'create' ? 'Add task template' : ('Edit ' + existing.title);
+    var deactivateBtn = mode === 'edit'
+      ? '<button type="button" id="stu-tpl-toggle-active" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid ' + (existing.active === false ? '#B8DB92' : '#F1C4BC') + ';background:#fff;color:' + (existing.active === false ? '#3C6B1D' : '#8A2A12') + ';font-size:13px;font-weight:600;cursor:pointer;margin-right:auto">' + (existing.active === false ? 'Reactivate' : 'Deactivate') + '</button>'
+      : '';
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">' + esc(title) + '</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">Changes apply to every client\'s Standard Offering and Custom Configuration picklists immediately — already-selected client tasks are unaffected.</div></div>'
+      + '<div style="padding:18px 22px;display:flex;flex-direction:column;gap:14px">'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Title</div><input id="stu-tpl-f-title" type="text" value="' + esc(draft.title || '') + '" style="' + INPUT_STYLE + '"></div>'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Description</div><textarea id="stu-tpl-f-description" rows="2" style="' + TEXTAREA_STYLE + '">' + esc(draft.description || '') + '</textarea></div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Phase</div><input id="stu-tpl-f-phase" list="stu-phase-list-lib" type="text" value="' + esc(draft.phase || '') + '" style="' + INPUT_STYLE + '"><datalist id="stu-phase-list-lib">' + PHASES.map(function(p){ return '<option value="' + esc(p) + '">'; }).join('') + '</datalist></div>'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Estimated effort (weeks)</div><input id="stu-tpl-f-weeks" type="number" min="0" step="0.5" value="' + esc(draft.estimated_weeks != null ? draft.estimated_weeks : '') + '" style="' + INPUT_STYLE + '"></div>'
+      + '</div>'
+      + '<div style="display:flex;gap:18px">'
+      + '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#3E4A5C;cursor:pointer"><input type="checkbox" id="stu-tpl-f-ooo" ' + (draft.eligible_ooo ? 'checked' : '') + ' style="width:15px;height:15px"> Eligible for Standard (OOO)</label>'
+      + '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#3E4A5C;cursor:pointer"><input type="checkbox" id="stu-tpl-f-custom" ' + (draft.eligible_custom ? 'checked' : '') + ' style="width:15px;height:15px"> Eligible for Custom</label>'
+      + '</div>'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Sort order</div><input id="stu-tpl-f-sort" type="number" step="1" value="' + esc(draft.sort_order != null ? draft.sort_order : 0) + '" style="' + INPUT_STYLE + ';max-width:140px"></div>'
+      + '</div>'
+      + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
+      + deactivateBtn
+      + '<button type="button" id="stu-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+      + '<button type="button" id="stu-tpl-save" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">' + (mode === 'create' ? 'Create' : 'Save changes') + '</button>'
+      + '</div>';
+    $('studio-modal-box').innerHTML = html;
+    $('studio-modal-overlay').style.display = 'flex';
+    $('stu-modal-cancel').addEventListener('click', closeModal);
+    if (mode === 'edit') $('stu-tpl-toggle-active').addEventListener('click', function(){ toggleTemplateActive(existing); });
+    $('stu-tpl-save').addEventListener('click', function(){ saveTemplateModal(mode, existing); });
+  }
+  function saveTemplateModal(mode, existing){
+    if (!canEdit()){ showToast("You don't have Edit access to Integration Studio."); return; }
+    var titleVal = $('stu-tpl-f-title').value.trim();
+    if (!titleVal){ showToast('Title is required.'); return; }
+    var draft = {
+      title: titleVal,
+      description: $('stu-tpl-f-description').value.trim() || null,
+      phase: $('stu-tpl-f-phase').value.trim() || null,
+      estimated_weeks: $('stu-tpl-f-weeks').value === '' ? null : Number($('stu-tpl-f-weeks').value),
+      eligible_ooo: $('stu-tpl-f-ooo').checked,
+      eligible_custom: $('stu-tpl-f-custom').checked,
+      sort_order: Number($('stu-tpl-f-sort').value) || 0
+    };
+    var db = state.db;
+    var req = mode === 'create'
+      ? db.from('integration_task_templates').insert(draft).select().single()
+      : db.from('integration_task_templates').update(draft).eq('id', existing.id).select().single();
+    Promise.resolve(req).then(function(r){
+      if (r.error) throw r.error;
+      closeModal();
+      return loadTemplates();
+    }).catch(function(e){ showToast('Could not save: ' + (e.message || e)); });
+  }
+  function toggleTemplateActive(existing){
+    if (!canEdit()){ showToast("You don't have Edit access to Integration Studio."); return; }
+    Promise.resolve(state.db.from('integration_task_templates').update({ active: existing.active === false }).eq('id', existing.id)).then(function(r){
+      if (r.error) throw r.error;
+      closeModal();
+      return loadTemplates();
+    }).catch(function(e){ showToast('Could not update: ' + (e.message || e)); });
+  }
+
+  // =======================================================================
+  // routing / render dispatch
+  // =======================================================================
+  function renderRoot(){
+    if (state.view === 'library') renderTaskLibrary();
+    else if (state.view === 'client') renderClientWorkspace();
+    else renderClientPicker();
+  }
+  function renderNotConnected(){
+    var m = mount();
+    if (!m) return;
+    m.innerHTML = '<div style="padding:20px 28px 48px;max-width:1200px">'
+      + '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px">'
+      + '<div style="font-size:14px;font-weight:600;margin-bottom:4px">Integration Studio</div>'
+      + '<div style="font-size:12.5px;color:#97A1B2">Connect Supabase (see <code>supabase-config.js</code>) to select onboarding paths here — the same connection every other module uses.</div>'
+      + '</div></div>';
+  }
+
+  // =======================================================================
+  // events + data
+  // =======================================================================
+  function wireEvents(){
+    var m = mount();
+    if (!m || m.__stuWired) return;
+    m.__stuWired = true;
+
+    m.addEventListener('click', function(e){
+      var clientCard = e.target.closest && e.target.closest('.stu-client-card');
+      if (clientCard){ state.selectedClientId = clientCard.getAttribute('data-client-id'); state.view = 'client'; state.tab = 'ooo'; loadClientWorkspace(); return; }
+
+      var backLink = e.target.closest && e.target.closest('.stu-back-link');
+      if (backLink){ state.view = 'clients'; renderClientPicker(); return; }
+
+      var libLink = e.target.closest && e.target.closest('.stu-manage-library-link');
+      if (libLink){ state.libraryReturnView = state.view; state.view = 'library'; renderTaskLibrary(); return; }
+
+      var libBack = e.target.closest && e.target.closest('.stu-lib-back-link');
+      if (libBack){ state.view = state.libraryReturnView || 'clients'; renderRoot(); return; }
+
+      var tabBtn = e.target.closest && e.target.closest('.stu-tab-btn');
+      if (tabBtn){ state.tab = tabBtn.getAttribute('data-tab'); renderClientWorkspace(); return; }
+
+      var addCustomBtn = e.target.closest && e.target.closest('#stu-add-custom-btn');
+      if (addCustomBtn){ openCustomCreateModal(); return; }
+      var editCustomBtn = e.target.closest && e.target.closest('.stu-custom-edit-btn');
+      if (editCustomBtn){ openCustomEditModal(editCustomBtn.getAttribute('data-id')); return; }
+      var removeCustomBtn = e.target.closest && e.target.closest('.stu-custom-remove-btn');
+      if (removeCustomBtn){ removeCustomTask(removeCustomBtn.getAttribute('data-id')); return; }
+
+      var exportCsvBtn = e.target.closest && e.target.closest('#stu-export-csv-btn');
+      if (exportCsvBtn){
+        var client1 = state.clients.filter(function(c){ return c.id === state.selectedClientId; })[0];
+        if (client1) downloadCsv('jira-import-' + client1.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.csv', buildJiraCsv(client1, state.tasks));
+        return;
+      }
+      var pushJiraBtn = e.target.closest && e.target.closest('#stu-push-jira-btn');
+      if (pushJiraBtn){
+        var client2 = state.clients.filter(function(c){ return c.id === state.selectedClientId; })[0];
+        if (client2) openPushJiraModal(client2, state.tasks);
+        return;
+      }
+      var jcSaveBtn = e.target.closest && e.target.closest('#stu-jc-save');
+      if (jcSaveBtn){ saveJiraConfig(); return; }
+
+      var genDocBtn = e.target.closest && e.target.closest('#stu-generate-doc-btn');
+      if (genDocBtn){
+        var client3 = state.clients.filter(function(c){ return c.id === state.selectedClientId; })[0];
+        if (client3) generateRequirementDoc(client3, state.tasks);
+        return;
+      }
+      var docViewBtn = e.target.closest && e.target.closest('.stu-doc-view-btn');
+      if (docViewBtn){ reprintDocVersion(docViewBtn.getAttribute('data-id')); return; }
+
+      var tplAddBtn = e.target.closest && e.target.closest('#stu-tpl-add-btn');
+      if (tplAddBtn){ openTemplateCreateModal(); return; }
+      var tplEditBtn = e.target.closest && e.target.closest('.stu-tpl-edit-btn');
+      if (tplEditBtn){ openTemplateEditModal(tplEditBtn.getAttribute('data-id')); return; }
+    });
+
+    m.addEventListener('change', function(e){
+      if (e.target && e.target.id === 'stu-client-search') return; // handled on input
+      if (e.target && e.target.classList && e.target.classList.contains('stu-ooo-check')){
+        toggleOoo(e.target.getAttribute('data-template-id'), e.target.checked);
+        return;
+      }
+      if (e.target && e.target.id === 'stu-tpl-show-inactive'){ state.showInactiveTemplates = e.target.checked; renderTaskLibrary(); return; }
+    });
+
+    m.addEventListener('input', function(e){
+      if (e.target && e.target.id === 'stu-client-search'){
+        state.clientSearch = e.target.value;
+        renderClientPicker();
+      }
+    });
+
+    var overlay = $('studio-modal-overlay');
+    if (overlay) overlay.addEventListener('click', function(e){ if (e.target.id === 'studio-modal-overlay') closeModal(); });
+  }
+
+  function loadClientTasks(){
+    return Promise.resolve(state.db.from('client_integration_tasks').select('*').eq('client_id', state.selectedClientId).order('sort_order')).then(function(r){
+      if (r.error) throw r.error;
+      state.tasks = r.data || [];
+      renderClientWorkspace();
+    }).catch(function(e){ showToast('Could not load tasks: ' + (e.message || e)); });
+  }
+  function loadClientDocs(){
+    return Promise.resolve(state.db.from('integration_requirement_docs').select('*').eq('client_id', state.selectedClientId).order('version', { ascending: false })).then(function(r){
+      if (r.error) throw r.error;
+      state.docs = r.data || [];
+    }).catch(function(e){ showToast('Could not load requirement docs: ' + (e.message || e)); });
+  }
+  function loadClientWorkspace(){
+    renderClientWorkspace(); // render immediately with stale/empty state, then refresh
+    return Promise.all([loadClientTasks(), loadClientDocs()]);
+  }
+  function loadTemplates(){
+    return Promise.resolve(state.db.from('integration_task_templates').select('*').order('sort_order')).then(function(r){
+      if (r.error) throw r.error;
+      state.templates = r.data || [];
+      renderRoot();
+    }).catch(function(e){ showToast('Could not load task library: ' + (e.message || e)); });
+  }
+  function loadClientPicker(){
+    return Promise.all([
+      Promise.resolve(state.db.from('clients').select('*').order('name')),
+      Promise.resolve(state.db.from('client_integration_tasks').select('client_id, offering_type, estimated_weeks'))
+    ]).then(function(results){
+      var cr = results[0], tr = results[1];
+      if (cr.error) throw cr.error;
+      if (tr.error) throw tr.error;
+      state.clients = cr.data || [];
+      var counts = {};
+      (tr.data || []).forEach(function(t){
+        if (!counts[t.client_id]) counts[t.client_id] = { ooo: 0, custom: 0, weeks: 0 };
+        counts[t.client_id][t.offering_type]++;
+        counts[t.client_id].weeks += Number(t.estimated_weeks) || 0;
+      });
+      state.clientTaskCounts = counts;
+      renderRoot();
+    }).catch(function(e){ console.error('Integration Studio: could not load', e); renderNotConnected(); });
+  }
+
+  function ensurePrintStyle(){
+    if ($('studio-print-style')) return;
+    var style = document.createElement('style');
+    style.id = 'studio-print-style';
+    style.textContent = '@media print{'
+      + 'body *{visibility:hidden}'
+      + '#studio-print-area, #studio-print-area *{visibility:visible}'
+      + '#studio-print-area{position:absolute;left:0;top:0;width:100%;padding:24px;font-family:Barlow,Helvetica,Arial,sans-serif}'
+      + '}';
+    document.head.appendChild(style);
+  }
+
+  var roleContextHooked = false;
+  function hookRoleContext(){
+    if (roleContextHooked || !window.RoleContext || !window.RoleContext.onChange) return;
+    roleContextHooked = true;
+    window.RoleContext.onChange(function(){ if (state.db) renderRoot(); });
+  }
+
+  function loadTemplatesAndJiraConfig(){
+    return Promise.all([
+      Promise.resolve(state.db.from('integration_task_templates').select('*').order('sort_order')),
+      Promise.resolve(state.db.from('jira_config').select('*').eq('id', 1).single())
+    ]).then(function(results){
+      var tr = results[0], jr = results[1];
+      if (tr.error) throw tr.error;
+      state.templates = tr.data || [];
+      state.jiraConfig = (jr && !jr.error && jr.data) ? jr.data : { enabled: false };
+    });
+  }
+
+  function init(){
+    hookRoleContext();
+    ensurePrintStyle();
+    if (!state.db){
+      if (!available()){ renderNotConnected(); return; }
+      try { state.db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
+      catch(e){ renderNotConnected(); return; }
+      wireEvents();
+    }
+    loadTemplatesAndJiraConfig().then(function(){
+      if (state.view === 'client' && state.selectedClientId) loadClientWorkspace();
+      else loadClientPicker();
+    }).catch(function(e){ console.error('Integration Studio: could not load', e); renderNotConnected(); });
+  }
+
+  window.IntegrationStudioModule = { init: init };
+})();
+
+window.IntegrationStudioModule.init();
+</script>
 </body>
 </html>
