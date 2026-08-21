@@ -12,6 +12,14 @@ input,button,select,textarea{font-family:inherit}
 .right-col{display:flex;flex-direction:column;min-width:0;min-height:0;background:#F4F6FA;height:100%;overflow:hidden}
 .content-viewport{flex:1;min-height:0;overflow-y:auto;position:relative}
 .app-shell > div:first-child{min-height:0;overflow:hidden}
+/* Establishes a positioning context for the "acting as" role-switcher
+   popover (#rc-popover in role_context.js) at every width — without this,
+   its position:absolute falls back to the page's initial containing block
+   and the popover stretches across the full viewport instead of sitting
+   inside the sidebar. The mobile media query below already sets
+   position:fixed on this element for the off-canvas drawer, which
+   overrides this at narrow widths as intended. */
+.app-sidebar{ position:relative; }
 .info-icon{ display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px; border-radius:50%; background:#DCE2EC; color:#6B7686; font-size:10px; font-weight:700; font-style:italic; font-family:Georgia,'Times New Roman',serif; cursor:help; position:relative; margin-left:5px; vertical-align:middle; }
 .info-icon:hover, .info-icon:focus{ background:#013E90; color:#fff; outline:none; }
 .info-icon .tooltip{ display:none; position:absolute; left:50%; transform:translateX(-50%); bottom:135%; width:230px; background:#01285E; color:#fff; font-size:11px; font-weight:400; font-style:normal; font-family:'Barlow',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; padding:8px 10px; border-radius:8px; line-height:1.45; z-index:30; box-shadow:0 4px 12px rgba(0,0,0,.18); text-align:left; }
