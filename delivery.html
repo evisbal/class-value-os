@@ -594,35 +594,43 @@ window.RoleContext.init();
 
   // Risk thresholds — deliberately simple and stated plainly so they can be
   // explained to a PM in one sentence, not a black box:
-  //   BLOCKED  — any escalated blocker, OR past the target/implied go-live
-  //              date, OR 3+ combined open blockers/escalations/blocked_at_risk tasks
-  //   AT RISK  — any open blocker or blocked_at_risk task, OR more than 15
-  //              points behind the expected pace
+  //   BLOCKED  — any escalated PROJECT-level blocker, OR past the
+  //              target/implied go-live date, OR 3+ combined open/escalated
+  //              project-level blockers + blocked_at_risk tasks
+  //   AT RISK  — any open project-level blocker or blocked_at_risk task, OR
+  //              more than 15 points behind the expected pace
   //   ON TRACK — none of the above
-  // A plain 'blocked' task is deliberately NOT one of the automatic drivers
-  // above — it's surfaced as blockedTaskCount for display only. A task
-  // explicitly set to 'blocked_at_risk' IS a driver, exactly like an open
-  // blocker — that distinct status is the PM's judgment call that this
-  // particular block threatens the go-live date, made right on the task
-  // rather than through a separate control elsewhere on the screen.
-  // riskScore drives "Sort by risk" — escalated blockers and being overdue
-  // dominate, so BLOCKED clients always sort above AT RISK, which always
-  // sorts above ON TRACK.
+  // Two things are deliberately NOT automatic drivers of this badge: a
+  // plain 'blocked' task, and a TASK-level blocker (see the 'level' field
+  // on delivery_blockers) — both are surfaced for visibility but don't by
+  // themselves put the project on hold, since other tasks can keep moving
+  // around them. A task explicitly set to 'blocked_at_risk', or a blocker
+  // explicitly logged as 'project' level, IS a driver — those are the PM's
+  // judgment call that this particular thing threatens the go-live date,
+  // made explicitly at the point the blocker/task is created or updated
+  // rather than inferred. openCount/escalatedCount below (used for the
+  // list's BLOCK column) still count blockers of both levels — that column
+  // is "how much is there to look at," not "is the project on hold."
+  // riskScore drives "Sort by risk" — escalated project-level blockers and
+  // being overdue dominate, so BLOCKED clients always sort above AT RISK,
+  // which always sorts above ON TRACK.
   function computeRisk(clientId, status){
     var progress = computeProgress(clientId);
     var pace = computePace(status, progress);
     var blockers = clientBlockers(clientId);
     var openBlockers = blockers.filter(function(b){ return b.status === 'open'; });
     var escalated = blockers.filter(function(b){ return b.status === 'escalated'; });
+    var openProjectBlockers = openBlockers.filter(function(b){ return b.level === 'project'; });
+    var escalatedProjectBlockers = escalated.filter(function(b){ return b.level === 'project'; });
     var blockedTasks = clientTasks(clientId).filter(function(t){ return t.status === 'blocked'; });
     var blockedAtRiskTasks = clientTasks(clientId).filter(function(t){ return t.status === 'blocked_at_risk'; });
     var paceDeficit = Math.max(0, pace.basePct - progress.pct);
     var overdue = pace.daysRemaining != null && pace.daysRemaining < 0;
-    var troubleCount = openBlockers.length + escalated.length + blockedAtRiskTasks.length;
+    var troubleCount = openProjectBlockers.length + escalatedProjectBlockers.length + blockedAtRiskTasks.length;
     var riskState = 'on_track';
-    if (escalated.length > 0 || overdue || troubleCount >= 3) riskState = 'blocked';
+    if (escalatedProjectBlockers.length > 0 || overdue || troubleCount >= 3) riskState = 'blocked';
     else if (troubleCount > 0 || paceDeficit > 15) riskState = 'at_risk';
-    var score = escalated.length * 100 + openBlockers.length * 20 + blockedAtRiskTasks.length * 15 + paceDeficit + (overdue ? 50 : 0);
+    var score = escalatedProjectBlockers.length * 100 + openProjectBlockers.length * 20 + blockedAtRiskTasks.length * 15 + paceDeficit + (overdue ? 50 : 0);
     return {
       state: riskState, score: score, progress: progress, pace: pace,
       openCount: openBlockers.length, escalatedCount: escalated.length,
@@ -857,9 +865,18 @@ window.RoleContext.init();
   // actions, history log) except blockers also show an optional linked
   // JIRA key.
   function renderIssueCard(kind, item, events){
-    var sideLabel = item.side === 'client' ? 'CLIENT-SIDE' : 'CLASS-SIDE';
+    var sideLabel = item.side === 'external' ? 'EXTERNAL' : 'INTERNAL';
     var statusMeta = issueStatusMeta(item.status);
     var days = Math.max(0, Math.round((new Date() - new Date(item.opened_at)) / 86400000));
+    // Level badge — blockers only. Project-level is the one that puts the
+    // whole engagement on hold (see computeRisk()); task-level is tracked
+    // but doesn't by itself stop other work.
+    var levelBadge = (kind === 'blocker')
+      ? ('<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.1em;color:' + (item.level === 'project' ? '#A8392B' : '#6B7686') + ';border:1px solid ' + (item.level === 'project' ? '#E3C0B7' : '#E3E8F0') + ';border-radius:4px;padding:2px 5px">' + (item.level === 'project' ? 'PROJECT LEVEL' : 'TASK LEVEL') + '</div>')
+      : '';
+    var mitigationDetail = (kind === 'risk' && item.mitigation)
+      ? ('<div style="margin-top:6px;padding:7px 9px;background:#EAF1FB;border-radius:7px;font-size:11.5px;color:#1F3A5C;line-height:1.45"><strong>Mitigation:</strong> ' + esc(item.mitigation) + '</div>')
+      : '';
     var escalationDetail = '';
     if (item.status === 'escalated' && (item.escalated_to || item.escalation_expected_at || item.escalation_note)){
       var expectedOverdue = item.escalation_expected_at && (new Date(item.escalation_expected_at) < new Date());
@@ -883,12 +900,14 @@ window.RoleContext.init();
       actions = '<div style="margin-top:9px"><button type="button" class="dv-' + kind + '-reopen-btn" data-id="' + esc(item.id) + '" style="height:27px;padding:0 10px;border-radius:6px;border:1px solid #DCE2EC;background:#fff;font-size:11.5px;font-weight:600;cursor:pointer">Reopen</button></div>';
     }
     return '<div style="border:1px solid #E3E8F0;border-radius:10px;padding:11px 13px">'
-      + '<div style="display:flex;align-items:center;gap:8px">'
+      + '<div style="display:flex;align-items:center;gap:6px">'
       + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.1em;color:#6B7686;border:1px solid #E3E8F0;border-radius:4px;padding:2px 5px">' + sideLabel + '</div>'
+      + levelBadge
       + '<div style="margin-left:auto;font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.1em;padding:2px 6px;border-radius:5px;background:' + statusMeta.bg + ';color:' + statusMeta.color + '">' + statusMeta.label + '</div>'
       + '</div>'
       + '<div style="margin-top:7px;font-size:13px;font-weight:600;line-height:1.35">' + esc(item.title) + '</div>'
       + '<div style="margin-top:4px;font-size:12px;color:#8B95A6">' + esc(item.owner_team || 'Unassigned') + ' · open ' + days + 'd' + (kind === 'blocker' && item.linked_jira_key ? (' · <span style="font-family:\'IBM Plex Mono\',monospace">' + esc(item.linked_jira_key) + '</span>') : '') + '</div>'
+      + mitigationDetail
       + escalationDetail
       + resolvedDetail
       + actions
@@ -904,7 +923,7 @@ window.RoleContext.init();
     var active = items.filter(function(i){ return i.status !== 'resolved'; });
     var resolved = items.filter(function(i){ return i.status === 'resolved'; });
     var title = kind === 'blocker' ? 'Blockers' : 'Risks';
-    var subtitle = kind === 'blocker' ? 'CLASS VS CLIENT SIDE' : 'DELIVERY RISK REGISTER';
+    var subtitle = kind === 'blocker' ? 'INTERNAL VS EXTERNAL SIDE' : 'DELIVERY RISK REGISTER';
     var addLabel = kind === 'blocker' ? '+ Add blocker' : '+ Add risk';
     var emptyLabel = kind === 'blocker' ? 'No open blockers.' : 'No open risks.';
     return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:15px 17px">'
@@ -980,13 +999,19 @@ window.RoleContext.init();
     var isBlocker = kind === 'blocker';
     var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">Add a ' + (isBlocker ? 'blocker' : 'risk') + ' — ' + esc(client.name) + '</div>'
       + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">' + (isBlocker
-          ? 'Class-side and client-side blockers both go here — whoever’s looking at this screen should be able to tell at a glance who needs to unstick it.'
+          ? 'Internal and external blockers both go here — whoever’s looking at this screen should be able to tell at a glance who needs to unstick it.'
           : 'Track something that could threaten this go-live before it becomes an active blocker — a pending approval, a dependency, a staffing gap.') + '</div></div>'
       + '<div style="padding:18px 22px;display:flex;flex-direction:column;gap:14px">'
       + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Side</div>'
-      + '<select id="dv-i-f-side" style="' + SELECT_STYLE + '"><option value="client">Client-side</option><option value="class">Class-side</option></select></div>'
+      + '<select id="dv-i-f-side" style="' + SELECT_STYLE + '"><option value="internal">Internal</option><option value="external">External</option></select></div>'
+      + (isBlocker ? ('<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Level</div>'
+          + '<select id="dv-i-f-level" style="' + SELECT_STYLE + '"><option value="task">Task level — other work can keep moving</option><option value="project">Project level — puts the whole engagement on hold</option></select></div>') : '')
       + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">' + (isBlocker ? 'What’s blocking' : 'What’s the risk') + '</div>'
-      + '<input id="dv-i-f-title" type="text" placeholder="' + (isBlocker ? 'e.g. Client has not returned UAT credentials' : 'e.g. Vendor integration dependency not yet confirmed') + '" style="' + INPUT_STYLE + '"></div>'
+      + '<input id="dv-i-f-title" type="text" placeholder="' + (isBlocker ? 'e.g. Client has not returned UAT credentials' : 'e.g. Vendor integration dependency not yet confirmed') + '" style="' + INPUT_STYLE + '">'
+      + (isBlocker ? '<div style="margin-top:5px;font-size:11px;color:#97A1B2">Explain the impact here, especially for a task-level blocker — this is what tells someone else why it isn’t (or is) holding up the whole project.</div>' : '')
+      + '</div>'
+      + (!isBlocker ? ('<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Mitigation</div>'
+          + '<textarea id="dv-i-f-mitigation" rows="3" placeholder="What’s the plan if this risk materializes" style="' + INPUT_STYLE + ';height:auto;padding:8px 10px;resize:vertical"></textarea></div>') : '')
       + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Owner / team</div>'
       + '<input id="dv-i-f-owner" type="text" placeholder="e.g. Client IT, Operations, Engineering" style="' + INPUT_STYLE + '"></div>'
       + (isBlocker ? ('<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Linked JIRA issue (optional)</div>'
@@ -1007,7 +1032,14 @@ window.RoleContext.init();
         title: title,
         owner_team: $('dv-i-f-owner').value.trim() || null
       };
-      if (isBlocker) payload.linked_jira_key = $('dv-i-f-jira').value.trim() || null;
+      if (isBlocker){
+        payload.level = $('dv-i-f-level').value;
+        payload.linked_jira_key = $('dv-i-f-jira').value.trim() || null;
+      } else {
+        var mitigation = $('dv-i-f-mitigation').value.trim();
+        if (!mitigation){ showToast('A risk needs a mitigation plan.'); return; }
+        payload.mitigation = mitigation;
+      }
       addIssue(kind, client, payload);
     });
   }
@@ -1194,8 +1226,10 @@ window.RoleContext.init();
   }
 
   function describeCreated(kind, item){
-    var sideLabel = item.side === 'client' ? 'client-side' : 'class-side';
-    return 'Logged as a ' + sideLabel + ' ' + kind + (item.owner_team ? (', owner: ' + item.owner_team) : '') + '.';
+    var sideLabel = item.side === 'external' ? 'external' : 'internal';
+    var levelNote = (kind === 'blocker') ? (', ' + (item.level === 'project' ? 'project level' : 'task level')) : '';
+    var mitigationNote = (kind === 'risk' && item.mitigation) ? (' Mitigation: ' + item.mitigation) : '';
+    return 'Logged as an ' + sideLabel + ' ' + kind + levelNote + (item.owner_team ? (', owner: ' + item.owner_team) : '') + '.' + mitigationNote;
   }
 
   function addIssue(kind, client, payload){
