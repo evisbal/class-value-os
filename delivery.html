@@ -393,14 +393,14 @@ window.RoleContext.init();
 </script>
 <script>
 // Delivery (Module 05) — real data, replacing the static design mockup.
-// Design context (2026-08-21 conversation): Delivery was originally meant to
-// be a read-mostly cockpit over live JIRA work, but there's no real JIRA
-// connection yet, and even once there is one, JIRA's own scope can drift
-// from what Integration Studio committed at handoff (engineers split
-// stories, add work) — so "% of JIRA done" and "% of the Studio plan done"
-// are two honestly different numbers. Rather than fake a JIRA-shaped stat,
-// everything on this screen is computed from data Class Value OS already
-// has for real:
+// Design context (2026-08-21 conversation, extended 2026-08-24): Delivery
+// was originally meant to be a read-mostly cockpit over live JIRA work, but
+// there's no real JIRA connection yet, and even once there is one, JIRA's
+// own scope can drift from what Integration Studio committed at handoff
+// (engineers split stories, add work) — so "% of JIRA done" and "% of the
+// Studio plan done" are two honestly different numbers. Rather than fake a
+// JIRA-shaped stat, everything on this screen is computed from data Class
+// Value OS already has for real:
 //   - The worklist is exactly the clients Integration Studio has moved to
 //     Delivery (client_integration_status.status = 'in_delivery') — the two
 //     modules share one handoff record, not two disconnected ideas of
@@ -411,14 +411,26 @@ window.RoleContext.init();
 //     Delivery is where a PM now updates each task's status — Studio froze
 //     the *plan*, Delivery is where the *execution* status lives from here.
 //   - Risk (the ON TRACK / AT RISK / BLOCKED badge, and "Sort by risk") is
-//     also computed — from open/escalated blockers, blocked tasks, and pace
-//     vs. a target or implied go-live date — never hand-typed, so it can't
-//     disagree with the blocker list sitting right next to it. See
-//     computeRisk() below for the exact, documented thresholds.
-//   - Blockers and the go-live checklist are the two things that genuinely
-//     need a human either way: "is this stuck on our side or the client's"
-//     and "were the pilot orders actually completed end-to-end" aren't
-//     things a ticket system reliably knows on its own, JIRA or not.
+//     also computed — from open/escalated blockers, tasks explicitly marked
+//     'blocked_at_risk', and pace vs. a target or implied go-live date —
+//     never hand-typed, so it can't disagree with the blocker list sitting
+//     right next to it. See computeRisk() below for the exact thresholds.
+//     A plain 'blocked' task does NOT by itself move the badge — plans
+//     often carry slack, or other tasks can run in parallel — so a PM who
+//     judges a particular block as actually threatening the go-live date
+//     says so explicitly by setting that task's status to 'blocked_at_risk'
+//     (a distinct dropdown option, not a separate checkbox elsewhere).
+//   - Blockers and Risks are both manual, on purpose: a blocker is an
+//     active impediment happening right now; a risk is something that
+//     could threaten the go-live date but hasn't necessarily happened yet
+//     (a pending approval, a vendor dependency, a staffing gap). Same
+//     side/status/escalate/resolve shape and the same historic change log,
+//     but tracked in two separate lists since they answer two different
+//     questions. Risks are NOT wired into computeRisk() — being tracked
+//     isn't the same as being an active problem.
+//   - The go-live checklist is the other thing that genuinely needs a
+//     human: "were the pilot orders actually completed end-to-end" isn't
+//     something a ticket system reliably knows on its own, JIRA or not.
 // "Open in JIRA" / "Open Epic in JIRA" are real deep links once jira_config
 // is enabled (same singleton table Integration Studio's JIRA tab writes to)
 // — until then, clicking explains what's missing instead of pretending to
@@ -445,7 +457,8 @@ window.RoleContext.init();
     if (n == null) return '—';
     return n < 0 ? (Math.abs(n) + 'd overdue') : (n + 'd');
   }
-  // The one gate for the manual controls this screen has (blockers,
+  function todayDateStr(){ return new Date().toISOString().slice(0, 10); }
+  // The one gate for the manual controls this screen has (blockers, risks,
   // checklist checkboxes, task status, target go-live date) — mirrors
   // canEdit() in Studio/CPQ Config. "Mark complete → Engagement" is gated
   // separately on can_approve, since it's the one lifecycle transition this
@@ -457,26 +470,31 @@ window.RoleContext.init();
   var SELECT_STYLE = INPUT_STYLE;
   var PHASE_ORDER = ['Discovery', 'Mapping', 'Testing', 'Go-live'];
   var TASK_STATUS_META = {
-    not_started: { label: 'Not started', color: '#8B95A6', bg: '#F4F6FA' },
-    in_progress: { label: 'In progress', color: '#012E6B', bg: '#EAF1FB' },
-    blocked:     { label: 'Blocked',     color: '#A8392B', bg: '#FDF4F2' },
-    done:        { label: 'Done',        color: '#3C6B1D', bg: '#EDF6E4' }
+    not_started:     { label: 'Not started',       color: '#8B95A6', bg: '#F4F6FA' },
+    in_progress:     { label: 'In progress',       color: '#012E6B', bg: '#EAF1FB' },
+    blocked:         { label: 'Blocked',           color: '#A8392B', bg: '#FDF4F2' },
+    blocked_at_risk: { label: 'Blocker - At Risk', color: '#7A1F14', bg: '#FBDFD7' },
+    done:            { label: 'Done',              color: '#3C6B1D', bg: '#EDF6E4' }
   };
   var RISK_META = {
     on_track: { label: 'ON TRACK', color: '#012E6B', bg: '#EAF1FB' },
     at_risk:  { label: 'AT RISK',  color: '#8A5A12', bg: '#FDF3E0' },
     blocked:  { label: 'BLOCKED',  color: '#A8392B', bg: '#FDF4F2' }
   };
+  var EVENT_LABEL = { created: 'Logged', escalated: 'Escalated', resolved: 'Resolved', reopened: 'Reopened' };
 
   var state = {
     db: null,
-    view: 'list',              // 'list' | 'client'
-    clients: [],                // all clients rows (id -> name/segment lookup)
-    statuses: [],                // client_integration_status rows with status = 'in_delivery' — the Delivery worklist
-    tasksByClient: {},           // client_id -> client_integration_tasks[]
-    blockersByClient: {},        // client_id -> delivery_blockers[]
-    checklistByClient: {},       // client_id -> delivery_checklist_items[] (loaded per-client, lazily seeded)
-    checklistTemplates: [],      // delivery_checklist_templates (active), loaded once
+    view: 'list',                    // 'list' | 'client'
+    clients: [],                     // all clients rows (id -> name/segment lookup)
+    statuses: [],                    // client_integration_status rows with status = 'in_delivery' — the Delivery worklist
+    tasksByClient: {},                // client_id -> client_integration_tasks[]
+    blockersByClient: {},             // client_id -> delivery_blockers[]
+    blockerEventsByClient: {},        // client_id -> delivery_blocker_events[]
+    risksByClient: {},                // client_id -> delivery_risks[]
+    riskEventsByClient: {},           // client_id -> delivery_risk_events[]
+    checklistByClient: {},            // client_id -> delivery_checklist_items[] (loaded per-client, lazily seeded)
+    checklistTemplates: [],           // delivery_checklist_templates (active), loaded once
     jiraConfig: null,
     sortByRisk: false,
     selectedClientId: null
@@ -512,6 +530,17 @@ window.RoleContext.init();
   // ---------------------------------------------------------------------
   function clientTasks(clientId){ return state.tasksByClient[clientId] || []; }
   function clientBlockers(clientId){ return state.blockersByClient[clientId] || []; }
+  function clientRisks(clientId){ return state.risksByClient[clientId] || []; }
+
+  // Blockers and Risks share an identical CRUD/status/history shape, so the
+  // rendering and mutation code below is written once, parameterized by
+  // kind ('blocker' | 'risk'), instead of duplicated twice.
+  function itemsFor(kind, clientId){ return kind === 'blocker' ? clientBlockers(clientId) : clientRisks(clientId); }
+  function eventsFor(kind, clientId){ return kind === 'blocker' ? (state.blockerEventsByClient[clientId] || []) : (state.riskEventsByClient[clientId] || []); }
+  function tableFor(kind){ return kind === 'blocker' ? 'delivery_blockers' : 'delivery_risks'; }
+  function eventsTableFor(kind){ return kind === 'blocker' ? 'delivery_blocker_events' : 'delivery_risk_events'; }
+  function idKeyFor(kind){ return kind === 'blocker' ? 'blocker_id' : 'risk_id'; }
+  function labelFor(kind){ return kind === 'blocker' ? 'Blocker' : 'Risk'; }
 
   function computeProgress(clientId){
     var tasks = clientTasks(clientId);
@@ -566,17 +595,16 @@ window.RoleContext.init();
   // Risk thresholds — deliberately simple and stated plainly so they can be
   // explained to a PM in one sentence, not a black box:
   //   BLOCKED  — any escalated blocker, OR past the target/implied go-live
-  //              date, OR 3+ combined open blockers/escalations
-  //   AT RISK  — any open blocker, OR more than 15 points behind the
-  //              expected pace, OR the PM's own risk_override flag
+  //              date, OR 3+ combined open blockers/escalations/blocked_at_risk tasks
+  //   AT RISK  — any open blocker or blocked_at_risk task, OR more than 15
+  //              points behind the expected pace
   //   ON TRACK — none of the above
-  // A task sitting in 'Blocked' status is deliberately NOT one of the
-  // automatic drivers above (see risk_override note below) — it's surfaced
-  // as blockedTaskCount for display, but plans often carry slack or have
-  // parallel work available, so one blocked task alone shouldn't force the
-  // badge. Blockers (logged in the Blockers box) and pace are already
-  // explicit human judgment calls once entered, so those still drive risk
-  // automatically.
+  // A plain 'blocked' task is deliberately NOT one of the automatic drivers
+  // above — it's surfaced as blockedTaskCount for display only. A task
+  // explicitly set to 'blocked_at_risk' IS a driver, exactly like an open
+  // blocker — that distinct status is the PM's judgment call that this
+  // particular block threatens the go-live date, made right on the task
+  // rather than through a separate control elsewhere on the screen.
   // riskScore drives "Sort by risk" — escalated blockers and being overdue
   // dominate, so BLOCKED clients always sort above AT RISK, which always
   // sorts above ON TRACK.
@@ -584,27 +612,21 @@ window.RoleContext.init();
     var progress = computeProgress(clientId);
     var pace = computePace(status, progress);
     var blockers = clientBlockers(clientId);
-    var openBlockers = blockers.filter(function(b){ return b.status === 'new' || b.status === 'open'; });
+    var openBlockers = blockers.filter(function(b){ return b.status === 'open'; });
     var escalated = blockers.filter(function(b){ return b.status === 'escalated'; });
     var blockedTasks = clientTasks(clientId).filter(function(t){ return t.status === 'blocked'; });
+    var blockedAtRiskTasks = clientTasks(clientId).filter(function(t){ return t.status === 'blocked_at_risk'; });
     var paceDeficit = Math.max(0, pace.basePct - progress.pct);
     var overdue = pace.daysRemaining != null && pace.daysRemaining < 0;
-    var override = !!(status && status.risk_override);
-    var troubleCount = openBlockers.length + escalated.length;
+    var troubleCount = openBlockers.length + escalated.length + blockedAtRiskTasks.length;
     var riskState = 'on_track';
     if (escalated.length > 0 || overdue || troubleCount >= 3) riskState = 'blocked';
     else if (troubleCount > 0 || paceDeficit > 15) riskState = 'at_risk';
-    // risk_override is PM discretion, not a computed signal — it can only
-    // ever push ON TRACK up to AT RISK, never suppress a state the formula
-    // already computed from real blockers or an overdue pace. Same
-    // "computed can't be silently overridden downward" rule as the rest of
-    // this module's honesty design.
-    if (override && riskState === 'on_track') riskState = 'at_risk';
-    var score = escalated.length * 100 + openBlockers.length * 20 + paceDeficit + (overdue ? 50 : 0) + (override ? 10 : 0);
+    var score = escalated.length * 100 + openBlockers.length * 20 + blockedAtRiskTasks.length * 15 + paceDeficit + (overdue ? 50 : 0);
     return {
       state: riskState, score: score, progress: progress, pace: pace,
-      openCount: openBlockers.length, escalatedCount: escalated.length, blockedTaskCount: blockedTasks.length,
-      riskOverride: override
+      openCount: openBlockers.length, escalatedCount: escalated.length,
+      blockedTaskCount: blockedTasks.length, blockedAtRiskTaskCount: blockedAtRiskTasks.length
     };
   }
 
@@ -671,12 +693,17 @@ window.RoleContext.init();
       var client = r.client, risk = r.risk, status = r.status;
       var markerLeft = Math.max(0, Math.min(100, risk.pace.basePct));
       var barColor = risk.state === 'blocked' ? '#A8392B' : (risk.state === 'at_risk' ? '#C58A1C' : '#013E90');
+      // A single element with a background linear-gradient hard-stop, not a
+      // nested clipped fill div — the previous nested-div-plus-overflow:hidden
+      // approach left a hairline seam of the track color at the rounded left
+      // edge in Chromium (a known border-radius/overflow:hidden clipping
+      // artifact). One rounded element with no clip boundary at all has
+      // nothing left to leak a seam from.
       return '<div class="dv-client-row" data-client-id="' + esc(client.id) + '" style="display:grid;grid-template-columns:1.2fr 1fr 1.3fr .5fr .5fr .6fr .7fr;gap:12px;padding:13px 18px;border-top:1px solid #F1F4F9;align-items:center;font-size:13px;cursor:pointer">'
         + '<div style="font-weight:600;font-size:13.5px">' + esc(client.name) + '</div>'
         + '<div style="color:#5A6474">' + esc(currentPhaseFor(client.id)) + '</div>'
         + '<div style="display:flex;align-items:center;gap:9px">'
-        + '<div style="flex:1 1 0;height:7px;border-radius:99px;background:#EDF0F6;position:relative;overflow:hidden">'
-        + '<div style="position:absolute;top:0;bottom:0;left:0;width:' + risk.progress.pct + '%;background:' + barColor + '"></div>'
+        + '<div style="flex:1 1 0;height:7px;border-radius:99px;background:linear-gradient(to right, ' + barColor + ' ' + risk.progress.pct + '%, #EDF0F6 ' + risk.progress.pct + '%);position:relative">'
         + '<div style="position:absolute;top:-2px;bottom:-2px;left:' + markerLeft + '%;width:2px;background:#01285E" title="Expected pace"></div>'
         + '</div>'
         + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:#4E5866;width:32px;text-align:right">' + risk.progress.pct + '%</div>'
@@ -719,7 +746,7 @@ window.RoleContext.init();
       + '<div style="margin-top:1px;font-size:11px;color:#97A1B2">' + esc(t.offering_type === 'custom' ? 'Custom' : 'Standard') + ' · ' + fmtWeeks(t.estimated_weeks) + '</div>'
       + '</div>'
       + (canEdit()
-          ? '<select class="dv-task-status-select" data-task-id="' + esc(t.id) + '" style="' + SELECT_STYLE + ';width:140px;height:32px;font-size:12px">' + opts + '</select>'
+          ? '<select class="dv-task-status-select" data-task-id="' + esc(t.id) + '" style="' + SELECT_STYLE + ';width:150px;height:32px;font-size:12px">' + opts + '</select>'
           : '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.08em;padding:3px 7px;border-radius:5px;background:' + meta.bg + ';color:' + meta.color + '">' + meta.label.toUpperCase() + '</span>')
       + '</div>';
   }
@@ -768,12 +795,6 @@ window.RoleContext.init();
     var paceNote = pace.source === 'target'
       ? 'Pace vs. the target go-live date set below.'
       : 'No target go-live date set — pace is estimated from the plan-implied date below, not confirmed.';
-    var overrideRow = (risk.blockedTaskCount > 0)
-      ? ('<label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;color:#5A6474;' + (canEdit() ? 'cursor:pointer' : '') + '">'
-        + '<input type="checkbox" id="dv-risk-override" ' + (risk.riskOverride ? 'checked' : '') + ' ' + (canEdit() ? '' : 'disabled') + ' style="width:14px;height:14px">'
-        + risk.blockedTaskCount + ' task' + (risk.blockedTaskCount === 1 ? '' : 's') + ' blocked — doesn’t change the badge on its own. Flag as AT RISK (PM discretion)?'
-        + '</label>')
-      : '';
     return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:16px 18px">'
       + '<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">'
       + '<div style="font-size:15.5px;font-weight:600">' + esc(client.name) + '</div>'
@@ -782,14 +803,12 @@ window.RoleContext.init();
           : '<span style="margin-left:auto;font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;color:#97A1B2">JIRA NOT CONNECTED</span>')
       + '</div>'
       + '<div style="margin-top:14px;display:flex;align-items:center;gap:10px">'
-      + '<div style="flex:1 1 0;height:9px;border-radius:99px;background:#EDF0F6;position:relative;overflow:hidden">'
-      + '<div style="position:absolute;top:0;bottom:0;left:0;width:' + progress.pct + '%;background:' + barColor + '"></div>'
+      + '<div style="flex:1 1 0;height:9px;border-radius:99px;background:linear-gradient(to right, ' + barColor + ' ' + progress.pct + '%, #EDF0F6 ' + progress.pct + '%);position:relative">'
       + '<div style="position:absolute;top:-2px;bottom:-2px;left:' + Math.max(0, Math.min(100, pace.basePct)) + '%;width:2px;background:#01285E" title="Expected pace"></div>'
       + '</div>'
       + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;font-weight:600;width:42px;text-align:right">' + progress.pct + '%</div>'
       + '</div>'
       + '<div style="margin-top:6px;font-size:11.5px;color:#97A1B2">Plan completion — computed from committed Studio tasks (' + fmtWeeks(progress.doneWeeks) + ' of ' + fmtWeeks(progress.totalWeeks) + ' done), not synced to JIRA. ' + paceNote + '</div>'
-      + overrideRow
       + '<div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">'
       + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Plan-implied go-live</div>'
       + '<div style="font-size:13px;padding:8px 0;color:#5A6474">' + fmtDate(pace.impliedEndAt) + '</div></div>'
@@ -807,58 +826,98 @@ window.RoleContext.init();
       + '</div>';
   }
 
-  function renderBlockerCard(b){
-    var sideLabel = b.side === 'client' ? 'CLIENT-SIDE' : 'CLASS-SIDE';
-    var statusMeta = {
-      new: { label: 'NEW', color: '#1F5570', bg: '#EAF0F4' },
-      open: { label: 'OPEN', color: '#8A5A12', bg: '#FDF3E0' },
+  function issueStatusMeta(status){
+    return {
+      open:      { label: 'OPEN',      color: '#8A5A12', bg: '#FDF3E0' },
       escalated: { label: 'ESCALATED', color: '#A8392B', bg: '#FDF4F2' },
-      resolved: { label: 'RESOLVED', color: '#3C6B1D', bg: '#EDF6E4' }
-    }[b.status] || { label: b.status.toUpperCase(), color: '#5A6474', bg: '#F4F6FA' };
-    var days = Math.max(0, Math.round((new Date() - new Date(b.opened_at)) / 86400000));
-    var escalationDetail = '';
-    if (b.status === 'escalated' && (b.escalated_to || b.escalation_expected_at || b.escalation_note)){
-      var expectedOverdue = b.escalation_expected_at && (new Date(b.escalation_expected_at) < new Date());
-      escalationDetail = '<div style="margin-top:6px;padding:7px 9px;background:#FDF4F2;border-radius:7px;font-size:11.5px;color:#7A3025;line-height:1.45">'
-        + (b.escalated_to ? ('Escalated to <strong>' + esc(b.escalated_to) + '</strong>') : 'Escalated')
-        + (b.escalation_expected_at ? (' · expecting an answer by <span style="color:' + (expectedOverdue ? '#A8392B' : '#7A3025') + ';font-weight:' + (expectedOverdue ? '700' : '400') + '">' + fmtDate(b.escalation_expected_at) + (expectedOverdue ? ' (overdue)' : '') + '</span>') : '')
-        + (b.escalation_note ? ('<div style="margin-top:3px">' + esc(b.escalation_note) + '</div>') : '')
+      resolved:  { label: 'RESOLVED',  color: '#3C6B1D', bg: '#EDF6E4' }
+    }[status] || { label: String(status).toUpperCase(), color: '#5A6474', bg: '#F4F6FA' };
+  }
+
+  // The historic change log rendered per blocker/risk card — one 'created'
+  // row logged the moment it's added, then 'escalated'/'resolved'/'reopened'
+  // rows for each subsequent action, each carrying a human-readable detail
+  // string and who did it. Newest first, like any activity feed.
+  function renderEventLog(events){
+    if (!events || !events.length) return '';
+    var sorted = events.slice().sort(function(a, b){ return new Date(b.created_at) - new Date(a.created_at); });
+    var rows = sorted.map(function(ev){
+      return '<div style="padding:6px 0;border-top:1px solid #F1F4F9;font-size:11.5px;color:#5A6474;line-height:1.45">'
+        + '<div><strong style="color:#3E4A5C">' + esc(EVENT_LABEL[ev.event_type] || ev.event_type) + '</strong>'
+        + ' · ' + fmtDate(ev.created_at) + (ev.actor ? (' · ' + esc(ev.actor)) : '') + '</div>'
+        + (ev.detail ? ('<div style="margin-top:2px">' + esc(ev.detail) + '</div>') : '')
         + '</div>';
+    }).join('');
+    return '<details style="margin-top:8px"><summary style="cursor:pointer;font-size:11px;color:#8B95A6">History (' + events.length + ')</summary>'
+      + '<div style="margin-top:2px">' + rows + '</div></details>';
+  }
+
+  // Shared card renderer for both Blockers and Risks — identical shape
+  // (side badge, status badge, title, owner, escalation/resolution detail,
+  // actions, history log) except blockers also show an optional linked
+  // JIRA key.
+  function renderIssueCard(kind, item, events){
+    var sideLabel = item.side === 'client' ? 'CLIENT-SIDE' : 'CLASS-SIDE';
+    var statusMeta = issueStatusMeta(item.status);
+    var days = Math.max(0, Math.round((new Date() - new Date(item.opened_at)) / 86400000));
+    var escalationDetail = '';
+    if (item.status === 'escalated' && (item.escalated_to || item.escalation_expected_at || item.escalation_note)){
+      var expectedOverdue = item.escalation_expected_at && (new Date(item.escalation_expected_at) < new Date());
+      escalationDetail = '<div style="margin-top:6px;padding:7px 9px;background:#FDF4F2;border-radius:7px;font-size:11.5px;color:#7A3025;line-height:1.45">'
+        + (item.escalated_to ? ('Escalated to <strong>' + esc(item.escalated_to) + '</strong>') : 'Escalated')
+        + (item.escalation_expected_at ? (' · expecting an answer by <span style="color:' + (expectedOverdue ? '#A8392B' : '#7A3025') + ';font-weight:' + (expectedOverdue ? '700' : '400') + '">' + fmtDate(item.escalation_expected_at) + (expectedOverdue ? ' (overdue)' : '') + '</span>') : '')
+        + (item.escalation_note ? ('<div style="margin-top:3px">' + esc(item.escalation_note) + '</div>') : '')
+        + '</div>';
+    }
+    var resolvedDetail = '';
+    if (item.status === 'resolved' && item.resolution_note){
+      resolvedDetail = '<div style="margin-top:6px;padding:7px 9px;background:#EDF6E4;border-radius:7px;font-size:11.5px;color:#2F5A18;line-height:1.45">Resolved ' + fmtDate(item.resolved_at) + ' — ' + esc(item.resolution_note) + '</div>';
+    }
+    var actions = '';
+    if (canEdit() && item.status !== 'resolved'){
+      actions = '<div style="margin-top:9px;display:flex;gap:7px">'
+        + (item.status !== 'escalated' ? '<button type="button" class="dv-' + kind + '-escalate-btn" data-id="' + esc(item.id) + '" style="height:27px;padding:0 10px;border-radius:6px;border:1px solid #E3C0B7;background:#fff;color:#A8392B;font-size:11.5px;font-weight:600;cursor:pointer">Escalate</button>' : '')
+        + '<button type="button" class="dv-' + kind + '-resolve-btn" data-id="' + esc(item.id) + '" style="height:27px;padding:0 10px;border-radius:6px;border:1px solid #DCE2EC;background:#fff;font-size:11.5px;font-weight:600;cursor:pointer">Resolve</button>'
+        + '</div>';
+    } else if (canEdit() && item.status === 'resolved'){
+      actions = '<div style="margin-top:9px"><button type="button" class="dv-' + kind + '-reopen-btn" data-id="' + esc(item.id) + '" style="height:27px;padding:0 10px;border-radius:6px;border:1px solid #DCE2EC;background:#fff;font-size:11.5px;font-weight:600;cursor:pointer">Reopen</button></div>';
     }
     return '<div style="border:1px solid #E3E8F0;border-radius:10px;padding:11px 13px">'
       + '<div style="display:flex;align-items:center;gap:8px">'
       + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.1em;color:#6B7686;border:1px solid #E3E8F0;border-radius:4px;padding:2px 5px">' + sideLabel + '</div>'
       + '<div style="margin-left:auto;font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.1em;padding:2px 6px;border-radius:5px;background:' + statusMeta.bg + ';color:' + statusMeta.color + '">' + statusMeta.label + '</div>'
       + '</div>'
-      + '<div style="margin-top:7px;font-size:13px;font-weight:600;line-height:1.35">' + esc(b.title) + '</div>'
-      + '<div style="margin-top:4px;font-size:12px;color:#8B95A6">' + esc(b.owner_team || 'Unassigned') + ' · open ' + days + 'd' + (b.linked_jira_key ? (' · <span style="font-family:\'IBM Plex Mono\',monospace">' + esc(b.linked_jira_key) + '</span>') : '') + '</div>'
+      + '<div style="margin-top:7px;font-size:13px;font-weight:600;line-height:1.35">' + esc(item.title) + '</div>'
+      + '<div style="margin-top:4px;font-size:12px;color:#8B95A6">' + esc(item.owner_team || 'Unassigned') + ' · open ' + days + 'd' + (kind === 'blocker' && item.linked_jira_key ? (' · <span style="font-family:\'IBM Plex Mono\',monospace">' + esc(item.linked_jira_key) + '</span>') : '') + '</div>'
       + escalationDetail
-      + (canEdit() && b.status !== 'resolved'
-          ? ('<div style="margin-top:9px;display:flex;gap:7px">'
-            + (b.status !== 'escalated' ? '<button type="button" class="dv-blocker-escalate-btn" data-id="' + esc(b.id) + '" style="height:27px;padding:0 10px;border-radius:6px;border:1px solid #E3C0B7;background:#fff;color:#A8392B;font-size:11.5px;font-weight:600;cursor:pointer">Escalate</button>' : '')
-            + '<button type="button" class="dv-blocker-resolve-btn" data-id="' + esc(b.id) + '" style="height:27px;padding:0 10px;border-radius:6px;border:1px solid #DCE2EC;background:#fff;font-size:11.5px;font-weight:600;cursor:pointer">Resolve</button>'
-            + '</div>')
-          : (canEdit() && b.status === 'resolved'
-            ? ('<div style="margin-top:9px"><button type="button" class="dv-blocker-reopen-btn" data-id="' + esc(b.id) + '" style="height:27px;padding:0 10px;border-radius:6px;border:1px solid #DCE2EC;background:#fff;font-size:11.5px;font-weight:600;cursor:pointer">Reopen</button></div>')
-            : ''))
+      + resolvedDetail
+      + actions
+      + renderEventLog(events)
       + '</div>';
   }
 
-  function renderBlockersBox(clientId){
-    var blockers = clientBlockers(clientId).slice().sort(function(a, b){ return new Date(b.opened_at) - new Date(a.opened_at); });
-    var active = blockers.filter(function(b){ return b.status !== 'resolved'; });
-    var resolved = blockers.filter(function(b){ return b.status === 'resolved'; });
+  function renderIssueBox(kind, clientId){
+    var items = itemsFor(kind, clientId).slice().sort(function(a, b){ return new Date(b.opened_at) - new Date(a.opened_at); });
+    var eventsAll = eventsFor(kind, clientId);
+    var eventsByItem = {};
+    eventsAll.forEach(function(ev){ var k = ev[idKeyFor(kind)]; (eventsByItem[k] = eventsByItem[k] || []).push(ev); });
+    var active = items.filter(function(i){ return i.status !== 'resolved'; });
+    var resolved = items.filter(function(i){ return i.status === 'resolved'; });
+    var title = kind === 'blocker' ? 'Blockers' : 'Risks';
+    var subtitle = kind === 'blocker' ? 'CLASS VS CLIENT SIDE' : 'DELIVERY RISK REGISTER';
+    var addLabel = kind === 'blocker' ? '+ Add blocker' : '+ Add risk';
+    var emptyLabel = kind === 'blocker' ? 'No open blockers.' : 'No open risks.';
     return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:15px 17px">'
       + '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">'
-      + '<div style="font-size:15.5px;font-weight:600">Blockers</div>'
-      + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.1em;color:#8B95A6">CLASS VS CLIENT SIDE</div>'
-      + (canEdit() ? '<button type="button" id="dv-add-blocker-btn" style="margin-left:auto;height:28px;padding:0 12px;border-radius:7px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12px;font-weight:600;cursor:pointer">+ Add blocker</button>' : '')
+      + '<div style="font-size:15.5px;font-weight:600">' + title + '</div>'
+      + '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.1em;color:#8B95A6">' + subtitle + '</div>'
+      + (canEdit() ? '<button type="button" id="dv-add-' + kind + '-btn" style="margin-left:auto;height:28px;padding:0 12px;border-radius:7px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12px;font-weight:600;cursor:pointer">' + addLabel + '</button>' : '')
       + '</div>'
       + '<div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">'
-      + (active.length ? active.map(renderBlockerCard).join('') : '<div style="font-size:12.5px;color:#97A1B2;padding:6px 0">No open blockers.</div>')
+      + (active.length ? active.map(function(i){ return renderIssueCard(kind, i, eventsByItem[i.id]); }).join('') : '<div style="font-size:12.5px;color:#97A1B2;padding:6px 0">' + emptyLabel + '</div>')
       + '</div>'
       + (resolved.length ? ('<details style="margin-top:10px"><summary style="cursor:pointer;font-size:11.5px;color:#8B95A6">Show resolved (' + resolved.length + ')</summary>'
-          + '<div style="margin-top:8px;display:flex;flex-direction:column;gap:8px">' + resolved.map(renderBlockerCard).join('') + '</div></details>') : '')
+          + '<div style="margin-top:8px;display:flex;flex-direction:column;gap:8px">' + resolved.map(function(i){ return renderIssueCard(kind, i, eventsByItem[i.id]); }).join('') + '</div></details>') : '')
       + '</div>';
   }
 
@@ -905,7 +964,8 @@ window.RoleContext.init();
       + '<div style="display:grid;grid-template-columns:1.45fr 1fr;gap:14px;align-items:start">'
       + renderPlanCompletionPanel(client, status, risk)
       + '<div style="display:flex;flex-direction:column;gap:14px">'
-      + renderBlockersBox(client.id)
+      + renderIssueBox('blocker', client.id)
+      + renderIssueBox('risk', client.id)
       + renderJiraNotice()
       + renderChecklistBox(client, status)
       + '</div>'
@@ -916,40 +976,44 @@ window.RoleContext.init();
   // ---------------------------------------------------------------------
   // Modals
   // ---------------------------------------------------------------------
-  function openAddBlockerModal(client){
-    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">Add a blocker — ' + esc(client.name) + '</div>'
-      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">Class-side and client-side blockers both go here — whoever’s looking at this screen should be able to tell at a glance who needs to unstick it.</div></div>'
+  function openAddIssueModal(kind, client){
+    var isBlocker = kind === 'blocker';
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">Add a ' + (isBlocker ? 'blocker' : 'risk') + ' — ' + esc(client.name) + '</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">' + (isBlocker
+          ? 'Class-side and client-side blockers both go here — whoever’s looking at this screen should be able to tell at a glance who needs to unstick it.'
+          : 'Track something that could threaten this go-live before it becomes an active blocker — a pending approval, a dependency, a staffing gap.') + '</div></div>'
       + '<div style="padding:18px 22px;display:flex;flex-direction:column;gap:14px">'
       + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Side</div>'
-      + '<select id="dv-b-f-side" style="' + SELECT_STYLE + '"><option value="client">Client-side</option><option value="class">Class-side</option></select></div>'
-      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">What’s blocking</div>'
-      + '<input id="dv-b-f-title" type="text" placeholder="e.g. Client has not returned UAT credentials" style="' + INPUT_STYLE + '"></div>'
+      + '<select id="dv-i-f-side" style="' + SELECT_STYLE + '"><option value="client">Client-side</option><option value="class">Class-side</option></select></div>'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">' + (isBlocker ? 'What’s blocking' : 'What’s the risk') + '</div>'
+      + '<input id="dv-i-f-title" type="text" placeholder="' + (isBlocker ? 'e.g. Client has not returned UAT credentials' : 'e.g. Vendor integration dependency not yet confirmed') + '" style="' + INPUT_STYLE + '"></div>'
       + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Owner / team</div>'
-      + '<input id="dv-b-f-owner" type="text" placeholder="e.g. Client IT, Operations, Engineering" style="' + INPUT_STYLE + '"></div>'
-      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Linked JIRA issue (optional)</div>'
-      + '<input id="dv-b-f-jira" type="text" placeholder="e.g. INT-123" style="' + INPUT_STYLE + '"></div>'
+      + '<input id="dv-i-f-owner" type="text" placeholder="e.g. Client IT, Operations, Engineering" style="' + INPUT_STYLE + '"></div>'
+      + (isBlocker ? ('<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Linked JIRA issue (optional)</div>'
+          + '<input id="dv-i-f-jira" type="text" placeholder="e.g. INT-123" style="' + INPUT_STYLE + '"></div>') : '')
       + '</div>'
       + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
       + '<button type="button" id="dv-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
-      + '<button type="button" id="dv-modal-save" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Add blocker</button>'
+      + '<button type="button" id="dv-modal-save" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Add ' + (isBlocker ? 'blocker' : 'risk') + '</button>'
       + '</div>';
     $('delivery-modal-box').innerHTML = html;
     $('delivery-modal-overlay').style.display = 'flex';
     $('dv-modal-cancel').addEventListener('click', closeModal);
     $('dv-modal-save').addEventListener('click', function(){
-      var title = $('dv-b-f-title').value.trim();
-      if (!title){ showToast('A blocker needs a description.'); return; }
-      addBlocker(client, {
-        side: $('dv-b-f-side').value,
+      var title = $('dv-i-f-title').value.trim();
+      if (!title){ showToast('A ' + (isBlocker ? 'blocker' : 'risk') + ' needs a description.'); return; }
+      var payload = {
+        side: $('dv-i-f-side').value,
         title: title,
-        owner_team: $('dv-b-f-owner').value.trim() || null,
-        linked_jira_key: $('dv-b-f-jira').value.trim() || null
-      });
+        owner_team: $('dv-i-f-owner').value.trim() || null
+      };
+      if (isBlocker) payload.linked_jira_key = $('dv-i-f-jira').value.trim() || null;
+      addIssue(kind, client, payload);
     });
   }
 
-  function openEscalateBlockerModal(blocker){
-    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">Escalate — ' + esc(blocker.title) + '</div>'
+  function openEscalateIssueModal(kind, item, clientId){
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">Escalate — ' + esc(item.title) + '</div>'
       + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">Record who this went to and what answer you’re waiting on, so anyone checking this later can see it’s actively being chased, not just stuck.</div></div>'
       + '<div style="padding:18px 22px;display:flex;flex-direction:column;gap:14px">'
       + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Escalated to</div>'
@@ -969,7 +1033,7 @@ window.RoleContext.init();
     $('dv-modal-save').addEventListener('click', function(){
       var to = $('dv-e-f-to').value.trim();
       if (!to){ showToast('Who was this escalated to?'); return; }
-      escalateBlocker(state.selectedClientId, blocker.id, {
+      escalateIssue(kind, clientId, item.id, {
         escalated_to: to,
         escalation_note: $('dv-e-f-note').value.trim() || null,
         escalation_expected_at: $('dv-e-f-expected').value || null
@@ -977,9 +1041,32 @@ window.RoleContext.init();
     });
   }
 
+  function openResolveIssueModal(kind, item, clientId){
+    var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">Resolve — ' + esc(item.title) + '</div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">Record what actually fixed this and when, so the history log shows the resolution, not just a status flip.</div></div>'
+      + '<div style="padding:18px 22px;display:flex;flex-direction:column;gap:14px">'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Resolution</div>'
+      + '<textarea id="dv-res-f-note" rows="3" placeholder="What resolved this" style="' + INPUT_STYLE + ';height:auto;padding:8px 10px;resize:vertical"></textarea></div>'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Resolved on</div>'
+      + '<input id="dv-res-f-date" type="date" value="' + todayDateStr() + '" style="' + INPUT_STYLE + '"></div>'
+      + '</div>'
+      + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
+      + '<button type="button" id="dv-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
+      + '<button type="button" id="dv-modal-save" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Resolve</button>'
+      + '</div>';
+    $('delivery-modal-box').innerHTML = html;
+    $('delivery-modal-overlay').style.display = 'flex';
+    $('dv-modal-cancel').addEventListener('click', closeModal);
+    $('dv-modal-save').addEventListener('click', function(){
+      var note = $('dv-res-f-note').value.trim();
+      if (!note){ showToast('What resolved this?'); return; }
+      resolveIssue(kind, clientId, item.id, note, $('dv-res-f-date').value || todayDateStr());
+    });
+  }
+
   function openMarkCompleteModal(client){
     var html = '<div style="padding:20px 22px 8px;border-bottom:1px solid #EDF0F6"><div style="font-size:16px;font-weight:600">Mark ' + esc(client.name) + ' complete → Engagement?</div>'
-      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">This is the one lifecycle transition this screen makes, and it’s one-way from here — the client leaves Delivery’s active list. Everything committed (tasks, blockers, checklist history) stays on record.</div></div>'
+      + '<div style="margin-top:3px;font-size:12.5px;color:#6B7686">This is the one lifecycle transition this screen makes, and it’s one-way from here — the client leaves Delivery’s active list. Everything committed (tasks, blockers, risks, checklist history) stays on record.</div></div>'
       + '<div style="padding:14px 22px 20px;border-top:1px solid #EDF0F6;display:flex;align-items:center;gap:10px">'
       + '<button type="button" id="dv-modal-cancel" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid #DCE2EC;background:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Cancel</button>'
       + '<button type="button" id="dv-mark-complete-confirm" style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#013E90;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer">Mark complete → Engagement</button>'
@@ -999,13 +1086,19 @@ window.RoleContext.init();
       Promise.resolve(state.db.from('client_integration_status').select('*').eq('status', 'in_delivery')),
       Promise.resolve(state.db.from('client_integration_tasks').select('*')),
       Promise.resolve(state.db.from('delivery_blockers').select('*')),
+      Promise.resolve(state.db.from('delivery_blocker_events').select('*')),
+      Promise.resolve(state.db.from('delivery_risks').select('*')),
+      Promise.resolve(state.db.from('delivery_risk_events').select('*')),
       Promise.resolve(state.db.from('jira_config').select('*').eq('id', 1).single())
     ]).then(function(results){
-      var cr = results[0], sr = results[1], tr = results[2], br = results[3], jr = results[4];
+      var cr = results[0], sr = results[1], tr = results[2], br = results[3], ber = results[4], rr = results[5], rer = results[6], jr = results[7];
       if (cr.error) throw cr.error;
       if (sr.error) throw sr.error;
       if (tr.error) throw tr.error;
       if (br.error) throw br.error;
+      if (ber.error) throw ber.error;
+      if (rr.error) throw rr.error;
+      if (rer.error) throw rer.error;
       state.clients = cr.data || [];
       state.statuses = sr.data || [];
       var tasksByClient = {};
@@ -1014,6 +1107,15 @@ window.RoleContext.init();
       var blockersByClient = {};
       (br.data || []).forEach(function(b){ (blockersByClient[b.client_id] = blockersByClient[b.client_id] || []).push(b); });
       state.blockersByClient = blockersByClient;
+      var blockerEventsByClient = {};
+      (ber.data || []).forEach(function(e){ (blockerEventsByClient[e.client_id] = blockerEventsByClient[e.client_id] || []).push(e); });
+      state.blockerEventsByClient = blockerEventsByClient;
+      var risksByClient = {};
+      (rr.data || []).forEach(function(x){ (risksByClient[x.client_id] = risksByClient[x.client_id] || []).push(x); });
+      state.risksByClient = risksByClient;
+      var riskEventsByClient = {};
+      (rer.data || []).forEach(function(e){ (riskEventsByClient[e.client_id] = riskEventsByClient[e.client_id] || []).push(e); });
+      state.riskEventsByClient = riskEventsByClient;
       state.jiraConfig = (jr && !jr.error && jr.data) ? jr.data : { enabled: false };
       renderRoot();
     }).catch(function(e){ console.error('Delivery: could not load', e); renderNotConnected(); });
@@ -1044,16 +1146,31 @@ window.RoleContext.init();
     });
   }
 
-  function reloadClientBlockers(clientId){
-    return Promise.resolve(state.db.from('delivery_blockers').select('*').eq('client_id', clientId)).then(function(r){
-      if (r.error) throw r.error;
-      state.blockersByClient[clientId] = r.data || [];
-    });
-  }
   function reloadClientTasks(clientId){
     return Promise.resolve(state.db.from('client_integration_tasks').select('*').eq('client_id', clientId)).then(function(r){
       if (r.error) throw r.error;
       state.tasksByClient[clientId] = r.data || [];
+    });
+  }
+
+  // Reloads both an item list (blockers or risks) and its event log for one
+  // client — every mutation below (add/escalate/resolve/reopen) ends by
+  // calling this so the card and its history stay in sync.
+  function reloadClientIssues(kind, clientId){
+    return Promise.all([
+      Promise.resolve(state.db.from(tableFor(kind)).select('*').eq('client_id', clientId)),
+      Promise.resolve(state.db.from(eventsTableFor(kind)).select('*').eq('client_id', clientId))
+    ]).then(function(results){
+      var ir = results[0], er = results[1];
+      if (ir.error) throw ir.error;
+      if (er.error) throw er.error;
+      if (kind === 'blocker'){
+        state.blockersByClient[clientId] = ir.data || [];
+        state.blockerEventsByClient[clientId] = er.data || [];
+      } else {
+        state.risksByClient[clientId] = ir.data || [];
+        state.riskEventsByClient[clientId] = er.data || [];
+      }
     });
   }
 
@@ -1065,53 +1182,81 @@ window.RoleContext.init();
       .catch(function(e){ showToast('Could not load checklist: ' + (e.message || e)); });
   }
 
-  function addBlocker(client, payload){
-    Promise.resolve(state.db.from('delivery_blockers').insert(Object.assign({ client_id: client.id }, payload)))
+  // Best-effort history log write — the primary status change has already
+  // succeeded by the time this is called, so a logging failure surfaces in
+  // the console rather than blocking the user's action or its success toast.
+  function logEvent(kind, clientId, itemId, eventType, detail){
+    var payload = { client_id: clientId, event_type: eventType, detail: detail || null, actor: currentActorName() };
+    payload[idKeyFor(kind)] = itemId;
+    return Promise.resolve(state.db.from(eventsTableFor(kind)).insert(payload)).then(function(r){
+      if (r.error) console.error('Delivery: could not log ' + kind + ' event', r.error);
+    });
+  }
+
+  function describeCreated(kind, item){
+    var sideLabel = item.side === 'client' ? 'client-side' : 'class-side';
+    return 'Logged as a ' + sideLabel + ' ' + kind + (item.owner_team ? (', owner: ' + item.owner_team) : '') + '.';
+  }
+
+  function addIssue(kind, client, payload){
+    // status: 'open' is set explicitly here rather than left to the
+    // schema's column default — belt-and-suspenders so a freshly-created
+    // blocker/risk is unambiguously open the instant it's inserted,
+    // regardless of what the underlying table's default happens to be.
+    Promise.resolve(state.db.from(tableFor(kind)).insert(Object.assign({ client_id: client.id, status: 'open' }, payload)).select().single())
       .then(function(r){
         if (r.error) throw r.error;
+        var created = r.data;
         closeModal();
-        return reloadClientBlockers(client.id).then(function(){ renderClientWorkspace(); showToast('Blocker added.'); });
-      }).catch(function(e){ showToast('Could not add blocker: ' + (e.message || e)); });
+        return logEvent(kind, client.id, created.id, 'created', describeCreated(kind, created));
+      }).then(function(){ return reloadClientIssues(kind, client.id); })
+      .then(function(){ renderClientWorkspace(); showToast(labelFor(kind) + ' added.'); })
+      .catch(function(e){ showToast('Could not add ' + kind + ': ' + (e.message || e)); });
   }
-  function escalateBlocker(clientId, id, detail){
+
+  function escalateIssue(kind, clientId, id, detail){
     if (!canEdit()) return;
     var patch = Object.assign({ status: 'escalated', escalated_at: new Date().toISOString() }, detail || {});
-    Promise.resolve(state.db.from('delivery_blockers').update(patch).eq('id', id))
+    Promise.resolve(state.db.from(tableFor(kind)).update(patch).eq('id', id))
       .then(function(r){
         if (r.error) throw r.error;
         closeModal();
-        return reloadClientBlockers(clientId).then(function(){ renderClientWorkspace(); showToast('Blocker escalated.'); });
-      }).catch(function(e){ showToast('Could not escalate: ' + (e.message || e)); });
+        var summary = 'Escalated to ' + detail.escalated_to
+          + (detail.escalation_note ? (' — ' + detail.escalation_note) : '')
+          + (detail.escalation_expected_at ? ('. Expecting an answer by ' + fmtDate(detail.escalation_expected_at) + '.') : '.');
+        return logEvent(kind, clientId, id, 'escalated', summary);
+      }).then(function(){ return reloadClientIssues(kind, clientId); })
+      .then(function(){ renderClientWorkspace(); showToast(labelFor(kind) + ' escalated.'); })
+      .catch(function(e){ showToast('Could not escalate: ' + (e.message || e)); });
   }
-  function resolveBlocker(clientId, id){
+
+  function resolveIssue(kind, clientId, id, resolutionNote, resolvedDateStr){
     if (!canEdit()) return;
-    Promise.resolve(state.db.from('delivery_blockers').update({ status: 'resolved', resolved_at: new Date().toISOString() }).eq('id', id))
-      .then(function(r){ if (r.error) throw r.error; return reloadClientBlockers(clientId).then(function(){ renderClientWorkspace(); }); })
-      .catch(function(e){ showToast('Could not resolve: ' + (e.message || e)); });
-  }
-  // Reopen — resolved was a mistake, or the fix didn't actually hold. Puts
-  // the blocker back to 'open' (not 'new' — it's already been worked, just
-  // not successfully) and clears resolved_at so it no longer counts as
-  // resolved anywhere that reads that field.
-  function reopenBlocker(clientId, id){
-    if (!canEdit()) return;
-    Promise.resolve(state.db.from('delivery_blockers').update({ status: 'open', resolved_at: null }).eq('id', id))
-      .then(function(r){ if (r.error) throw r.error; return reloadClientBlockers(clientId).then(function(){ renderClientWorkspace(); showToast('Blocker reopened.'); }); })
-      .catch(function(e){ showToast('Could not reopen: ' + (e.message || e)); });
-  }
-  // PM discretion flag feeding computeRisk() — see the schema comment on
-  // client_integration_status.risk_override for why this can only ever add
-  // AT RISK, never remove a state the formula already computed.
-  function setRiskOverride(client, checked){
-    if (!canEdit()) return;
-    Promise.resolve(state.db.from('client_integration_status').update({ risk_override: checked }).eq('client_id', client.id))
+    var resolvedIso = resolvedDateStr ? new Date(resolvedDateStr).toISOString() : new Date().toISOString();
+    Promise.resolve(state.db.from(tableFor(kind)).update({ status: 'resolved', resolved_at: resolvedIso, resolution_note: resolutionNote || null }).eq('id', id))
       .then(function(r){
         if (r.error) throw r.error;
-        var row = state.statuses.filter(function(s){ return s.client_id === client.id; })[0];
-        if (row) row.risk_override = checked;
-        renderClientWorkspace();
-      }).catch(function(e){ showToast('Could not update risk flag: ' + (e.message || e)); });
+        closeModal();
+        return logEvent(kind, clientId, id, 'resolved', resolutionNote || null);
+      }).then(function(){ return reloadClientIssues(kind, clientId); })
+      .then(function(){ renderClientWorkspace(); showToast(labelFor(kind) + ' resolved.'); })
+      .catch(function(e){ showToast('Could not resolve: ' + (e.message || e)); });
   }
+
+  // Reopen — resolved was a mistake, or the fix didn't actually hold. Puts
+  // the item back to 'open' and clears resolved_at so it no longer counts
+  // as resolved anywhere that reads that field.
+  function reopenIssue(kind, clientId, id){
+    if (!canEdit()) return;
+    Promise.resolve(state.db.from(tableFor(kind)).update({ status: 'open', resolved_at: null }).eq('id', id))
+      .then(function(r){
+        if (r.error) throw r.error;
+        return logEvent(kind, clientId, id, 'reopened', null);
+      }).then(function(){ return reloadClientIssues(kind, clientId); })
+      .then(function(){ renderClientWorkspace(); showToast(labelFor(kind) + ' reopened.'); })
+      .catch(function(e){ showToast('Could not reopen: ' + (e.message || e)); });
+  }
+
   function toggleChecklistItem(clientId, id, checked){
     if (!canEdit()) return;
     var patch = checked
@@ -1195,20 +1340,41 @@ window.RoleContext.init();
       if (epicBtn){ var c = state.clients.filter(function(x){ return x.id === state.selectedClientId; })[0]; if (c) openInJira(c); return; }
 
       var addBlockerBtn = e.target.closest && e.target.closest('#dv-add-blocker-btn');
-      if (addBlockerBtn){ var c2 = state.clients.filter(function(x){ return x.id === state.selectedClientId; })[0]; if (c2) openAddBlockerModal(c2); return; }
+      if (addBlockerBtn){ var c2 = state.clients.filter(function(x){ return x.id === state.selectedClientId; })[0]; if (c2) openAddIssueModal('blocker', c2); return; }
 
-      var escBtn = e.target.closest && e.target.closest('.dv-blocker-escalate-btn');
-      if (escBtn){
-        var blocker = clientBlockers(state.selectedClientId).filter(function(x){ return x.id === escBtn.getAttribute('data-id'); })[0];
-        if (blocker) openEscalateBlockerModal(blocker);
+      var addRiskBtn = e.target.closest && e.target.closest('#dv-add-risk-btn');
+      if (addRiskBtn){ var c2r = state.clients.filter(function(x){ return x.id === state.selectedClientId; })[0]; if (c2r) openAddIssueModal('risk', c2r); return; }
+
+      var escBlockerBtn = e.target.closest && e.target.closest('.dv-blocker-escalate-btn');
+      if (escBlockerBtn){
+        var blocker = clientBlockers(state.selectedClientId).filter(function(x){ return x.id === escBlockerBtn.getAttribute('data-id'); })[0];
+        if (blocker) openEscalateIssueModal('blocker', blocker, state.selectedClientId);
+        return;
+      }
+      var escRiskBtn = e.target.closest && e.target.closest('.dv-risk-escalate-btn');
+      if (escRiskBtn){
+        var risk1 = clientRisks(state.selectedClientId).filter(function(x){ return x.id === escRiskBtn.getAttribute('data-id'); })[0];
+        if (risk1) openEscalateIssueModal('risk', risk1, state.selectedClientId);
         return;
       }
 
-      var resBtn = e.target.closest && e.target.closest('.dv-blocker-resolve-btn');
-      if (resBtn){ resolveBlocker(state.selectedClientId, resBtn.getAttribute('data-id')); return; }
+      var resBlockerBtn = e.target.closest && e.target.closest('.dv-blocker-resolve-btn');
+      if (resBlockerBtn){
+        var blocker2 = clientBlockers(state.selectedClientId).filter(function(x){ return x.id === resBlockerBtn.getAttribute('data-id'); })[0];
+        if (blocker2) openResolveIssueModal('blocker', blocker2, state.selectedClientId);
+        return;
+      }
+      var resRiskBtn = e.target.closest && e.target.closest('.dv-risk-resolve-btn');
+      if (resRiskBtn){
+        var risk2 = clientRisks(state.selectedClientId).filter(function(x){ return x.id === resRiskBtn.getAttribute('data-id'); })[0];
+        if (risk2) openResolveIssueModal('risk', risk2, state.selectedClientId);
+        return;
+      }
 
-      var reopenBtn = e.target.closest && e.target.closest('.dv-blocker-reopen-btn');
-      if (reopenBtn){ reopenBlocker(state.selectedClientId, reopenBtn.getAttribute('data-id')); return; }
+      var reopenBlockerBtn = e.target.closest && e.target.closest('.dv-blocker-reopen-btn');
+      if (reopenBlockerBtn){ reopenIssue('blocker', state.selectedClientId, reopenBlockerBtn.getAttribute('data-id')); return; }
+      var reopenRiskBtn = e.target.closest && e.target.closest('.dv-risk-reopen-btn');
+      if (reopenRiskBtn){ reopenIssue('risk', state.selectedClientId, reopenRiskBtn.getAttribute('data-id')); return; }
 
       var markBtn = e.target.closest && e.target.closest('#dv-mark-complete-btn');
       if (markBtn && !markBtn.disabled){ var c3 = state.clients.filter(function(x){ return x.id === state.selectedClientId; })[0]; if (c3) openMarkCompleteModal(c3); return; }
@@ -1228,11 +1394,6 @@ window.RoleContext.init();
       if (e.target && e.target.id === 'dv-target-go-live'){
         var c = state.clients.filter(function(x){ return x.id === state.selectedClientId; })[0];
         if (c) setTargetGoLive(c, e.target.value);
-        return;
-      }
-      if (e.target && e.target.id === 'dv-risk-override'){
-        var c4 = state.clients.filter(function(x){ return x.id === state.selectedClientId; })[0];
-        if (c4) setRiskOverride(c4, e.target.checked);
         return;
       }
     });

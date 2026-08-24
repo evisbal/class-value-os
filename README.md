@@ -273,47 +273,56 @@ two disconnected ideas of "who's in delivery." **Plan completion** is computed l
 `client_integration_tasks` (the same frozen plan Move-to-Delivery committed), weighted by each task's
 estimated effort, and labeled "plan completion" rather than "JIRA progress" so it's never mistaken for live
 dev-side data. Delivery is also where a PM now updates each task's status (Not started / In progress /
-Blocked / Done) — Studio froze the *plan*, Delivery is where the *execution* status lives from here on.
+Blocked / **Blocker - At Risk** / Done) — Studio froze the *plan*, Delivery is where the *execution* status
+lives from here on.
 
 **Risk** (the ON TRACK / AT RISK / BLOCKED badge, and "Sort by risk") is computed too, from open/escalated
-blockers and pace against a target or implied go-live date — never hand-typed, so it can't disagree with the
-blocker list sitting next to it. Pace uses a PM-set **target go-live date** when one exists; if not, it falls
-back to a **plan-implied go-live date** — a constant reference point computed the same way regardless of
-whether a target is set, from the plan's own committed effort (5 working days per week, same convention
-Studio's JIRA export already uses) starting from `moved_to_delivery_at`. Both dates render side by side in the
-client workspace, and once a target is set, a caption under it states the deviation plainly ("6d later than the
-plan-implied date," etc.) — an honest read on whether the PM's own estimate agrees with what the plan alone
-implies. The exact risk thresholds (see `computeRisk()` in the module) are deliberately simple: BLOCKED means
-any escalated blocker, being past the target/implied go-live date, or 3+ combined open blockers/escalations; AT
-RISK means any open blocker, being more than 15 points behind the expected pace, or the PM's own
-`risk_override` flag; otherwise ON TRACK. **A task sitting in Blocked status does not by itself drive this
-badge** — plans often carry slack or have parallel work available, so one blocked task shouldn't force AT RISK
-on its own. Instead, the client workspace surfaces the blocked-task count next to a PM discretion checkbox
-("N tasks blocked — flag as AT RISK?") that sets `client_integration_status.risk_override`; it can only ever
-push ON TRACK up to AT RISK, never suppress a state the formula already computed from real blockers or an
-overdue pace, so a PM's judgment call can add risk but never quietly hide it.
+blockers, tasks explicitly marked **Blocker - At Risk**, and pace against a target or implied go-live date —
+never hand-typed, so it can't disagree with the blocker list sitting next to it. Pace uses a PM-set **target
+go-live date** when one exists; if not, it falls back to a **plan-implied go-live date** — a constant reference
+point computed the same way regardless of whether a target is set, from the plan's own committed effort (5
+working days per week, same convention Studio's JIRA export already uses) starting from
+`moved_to_delivery_at`. Both dates render side by side in the client workspace, and once a target is set, a
+caption under it states the deviation plainly ("6d later than the plan-implied date," etc.) — an honest read on
+whether the PM's own estimate agrees with what the plan alone implies. The exact risk thresholds (see
+`computeRisk()` in the module) are deliberately simple: BLOCKED means any escalated blocker, being past the
+target/implied go-live date, or 3+ combined open blockers/escalations/`blocked_at_risk` tasks; AT RISK means any
+open blocker or `blocked_at_risk` task, or being more than 15 points behind the expected pace; otherwise ON
+TRACK. A plain **Blocked** task status is deliberately informational only and never moves this badge on its own
+— plans often carry slack or have parallel work available, so one blocked task shouldn't force AT RISK. The
+distinction lives on the task itself: a PM who judges a particular block as actually threatening the go-live
+date sets that task's status to **Blocker - At Risk** instead — a second, distinct dropdown option immediately
+below Blocked, not a separate checkbox elsewhere on the screen (an earlier version of this shipped as exactly
+that kind of free-floating checkbox and was replaced after feedback that it felt disconnected from the plan).
 
-**Blockers** and the **go-live checklist** are the two things that genuinely need a human either way — "is
-this stuck on our side or the client's" and "were the pilot orders actually completed end-to-end" aren't
-things a ticket system reliably knows on its own, JIRA or not. Blockers (`delivery_blockers`) capture a
-class-side/client-side split, an owner team, a status (new/open/escalated/resolved), and an optional
-`linked_jira_key` for later — resolved blockers collapse into a "Show resolved" disclosure instead of
-disappearing, and can be **reopened** from there if the fix didn't actually hold (status resets to open,
-`resolved_at` clears). **Escalate** opens a modal rather than flipping the status directly: it captures who the
-blocker was escalated to, a description of what was escalated, and the date an answer is expected
-(`escalated_to` / `escalation_note` / `escalation_expected_at` / `escalated_at`), so the blocker card shows
-proof it's actively being chased, not just stuck. The checklist (`delivery_checklist_templates` /
-`delivery_checklist_items`) uses the same template-vs-instance split as Integration Studio's task library: a
-fixed, institution-wide checklist that's copied into independently-checkable items the moment a client's
-Delivery workspace is first opened, so editing a template later never rewrites an already-checked client's
-history.
+**Blockers** and the new **Risks** register are both manual, on purpose, and kept in two separate lists because
+they answer two different questions: a blocker (`delivery_blockers`) is an active impediment happening right
+now — "is this stuck on our side or the client's, and who needs to unstick it." A risk (`delivery_risks`) is
+something that could threaten the go-live date but hasn't necessarily happened yet — a pending approval, a
+vendor dependency, a staffing gap. Both share an identical shape: a class-side/client-side split, an owner
+team, and a status that simplified this round from four values down to three — `open → escalated → resolved`
+(the earlier `new` status was dropped; it never meant anything `open` didn't already cover, and a reopened item
+has nowhere sensible to land but `open` anyway). Resolved items collapse into a "Show resolved" disclosure
+instead of disappearing, and can be **reopened** from there if the fix didn't actually hold. **Escalate** and
+**Resolve** both open a modal rather than flipping status directly: Escalate captures who it went to, what was
+escalated, and the date an answer is expected (`escalated_to` / `escalation_note` / `escalation_expected_at`);
+Resolve captures what actually fixed it and the date it was resolved (`resolution_note` / `resolved_at`, PM-set
+rather than always exactly "now"). Every create/escalate/resolve/reopen action writes a row to a **historic
+change log** (`delivery_blocker_events` / `delivery_risk_events`) rendered as a "History" disclosure right on
+the card — a running audit trail of who did what and when, not just the current status. Risks are deliberately
+**not** wired into `computeRisk()` — being tracked isn't the same as being an active problem, so a logged risk
+never silently moves the badge the way an escalated blocker or a `blocked_at_risk` task does. The go-live
+checklist (`delivery_checklist_templates` / `delivery_checklist_items`) uses the same template-vs-instance
+split as Integration Studio's task library: a fixed, institution-wide checklist that's copied into
+independently-checkable items the moment a client's Delivery workspace is first opened, so editing a template
+later never rewrites an already-checked client's history.
 
 **"Mark complete → Engagement"** is the one lifecycle transition this screen makes, gated on `can_approve`
 (not just `can_edit`) since it's a bigger, one-way action than day-to-day status updates — disabled until every
 checklist item is checked, and confirmed through a modal since there's no "move back" from Engagement the way
 Studio's Planning⇄Delivery move has. Confirming sets `client_integration_status.status = 'in_engagement'` (with
 `moved_to_engagement_at`/`_by`), which is also what drops the client off Delivery's worklist — everything
-committed (tasks, blockers, checklist history) stays on record regardless.
+committed (tasks, blockers, risks, checklist history) stays on record regardless.
 
 **"Open in JIRA" / "Open Epic in JIRA"** are real deep links once `jira_config` (the same singleton table
 Integration Studio's JIRA tab writes to) is enabled with a base URL and project key — the per-client Epic link
