@@ -66,7 +66,7 @@
             <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-delivery">
               <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
               <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Delivery</span>
-              <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9.5px;background:rgba(133,195,65,.16);color:#A8DB6E;padding:2px 6px;border-radius:5px">2</span>
+              
             </div>
           </a>
 <a href="reporting.html" style="text-decoration:none;display:block">
@@ -96,6 +96,13 @@
               
             </div>
           </a>
+<a href="sso-config.html" style="text-decoration:none;display:block">
+            <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-sso">
+              <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
+              <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">SSO configuration</span>
+              
+            </div>
+          </a>
 <a href="states.html" style="text-decoration:none;display:block">
             <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-states">
               <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
@@ -105,13 +112,12 @@
           </a>
         </div>
     </div>
-    <div style="padding:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px">
+    <div style="position:relative;padding:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px" id="sidebarUserFooter">
       <div style="width:30px;height:30px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">DM</div>
       <div style="min-width:0">
         <div style="color:#E8EEF8;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Dana Mercer</div>
         <div style="color:#7E97BD;font-size:11px">Solutions Engineer</div>
       </div>
-      <div title="Sign out" style="margin-left:auto;color:#7E97BD;font-size:15px;cursor:pointer;padding:0 2px">&#9211;</div>
     </div>
   </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -153,18 +159,252 @@
 })();
 </script>
 <script>
+// Role context — a shared, provisional stand-in for real login. There is no
+// authentication anywhere in Class Value OS yet (every module runs on one
+// shared Supabase anon key); real SSO is intentionally sequenced last since
+// it needs a real identity provider to test against, which this project
+// doesn't have. Until then, "who's using the app" is this switcher: pick a
+// seeded user from app_users, and every capability check in the app reads
+// whatever role(s) that user is assigned in Supabase — real data, real
+// gating logic, just not yet tied to a real signed-in identity. Swapping in
+// real SSO later means replacing how currentUserId gets set (JIT-provisioned
+// from the IdP instead of a localStorage pick), not touching the data model
+// or any of the can()/isAdmin() call sites that already depend on it.
+//
+// Loaded on every functional page (cpq.html, cpq-config.html, roles.html)
+// BEFORE that page's own module script, so RoleContext.can()/isAdmin() are
+// available by the time the page module renders. Renders into a
+// #sidebarUserFooter element the page shell already has an id on — see
+// build_mpa.js's buildSidebar().
+(function(){
+  var STORAGE_KEY = 'classValueOs.actingAsUserId';
+  var MODULE_LABELS = {
+    demand: 'Demand Management', cpq: 'Value CPQ', 'cpq-config': 'CPQ Config',
+    plan: 'Plan Builder', studio: 'Integration Studio', delivery: 'Delivery',
+    reporting: 'Status Reporting', engagement: 'Engagement Mgmt',
+    roles: 'Roles & permissions', sso: 'SSO configuration'
+  };
+
+  var state = {
+    db: null,
+    users: [],
+    roles: [],
+    roleCapabilities: [],
+    userRoles: [],
+    currentUserId: null,
+    popoverOpen: false,
+    listeners: [],
+    loaded: false
+  };
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){
+    s = (s == null ? '' : String(s));
+    return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+  function initials(name){
+    if (!name) return '—';
+    var parts = name.trim().split(/\s+/);
+    return ((parts[0] || '')[0] || '') + ((parts[1] || '')[0] || '');
+  }
+
+  function available(){
+    return typeof window.supabase !== 'undefined'
+      && !!window.SUPABASE_CONFIG && !!window.SUPABASE_CONFIG.url && !!window.SUPABASE_CONFIG.anonKey;
+  }
+
+  function currentUser(){
+    return state.users.filter(function(u){ return u.id === state.currentUserId; })[0] || null;
+  }
+  function currentRoleIds(){
+    return state.userRoles.filter(function(ur){ return ur.user_id === state.currentUserId; }).map(function(ur){ return ur.role_id; });
+  }
+  function currentRoles(){
+    var ids = currentRoleIds();
+    return state.roles.filter(function(r){ return ids.indexOf(r.id) !== -1; });
+  }
+  // The one function every other module actually calls: does whoever is
+  // currently "acting as" have this capability on this module? A user with
+  // multiple roles gets the union of what any of their roles grant — same
+  // "most permissive role wins" convention as most RBAC systems.
+  function can(module, action){
+    if (!state.loaded) return true; // fail open before roles data has loaded at all, not mid-render
+    var ids = currentRoleIds();
+    if (!ids.length) return false;
+    var field = 'can_' + action;
+    return state.roleCapabilities.some(function(c){
+      return ids.indexOf(c.role_id) !== -1 && c.module === module && c[field] === true;
+    });
+  }
+  function isAdmin(){
+    return currentRoles().some(function(r){ return r.is_admin === true; });
+  }
+  function onChange(fn){ if (typeof fn === 'function') state.listeners.push(fn); }
+  function notify(){ state.listeners.forEach(function(fn){ try { fn(); } catch(e){ console.error('RoleContext listener error', e); } }); }
+
+  function roleNamesLine(){
+    var roles = currentRoles();
+    if (!roles.length) return 'No role assigned';
+    return roles.map(function(r){ return r.name; }).join(', ');
+  }
+
+  function renderSwitcher(){
+    var el = $('sidebarUserFooter');
+    if (!el) return;
+    var u = currentUser();
+    if (!u){
+      el.innerHTML = '<div style="font-size:11.5px;color:#7E97BD">No users seeded yet — add one from Roles &amp; permissions.</div>';
+      return;
+    }
+    el.style.cursor = 'pointer';
+    el.setAttribute('title', 'Switch who you\'re acting as (test mode — no real login yet)');
+    el.innerHTML = '<div style="width:30px;height:30px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex:0 0 auto">' + esc(initials(u.name)) + '</div>'
+      + '<div style="min-width:0;flex:1 1 0">'
+      + '<div style="color:#E8EEF8;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(u.name) + '</div>'
+      + '<div style="color:#7E97BD;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(roleNamesLine()) + '</div>'
+      + '</div>'
+      + '<div style="margin-left:auto;color:#7E97BD;font-size:11px;flex:0 0 auto">&#9662;</div>';
+  }
+
+  function renderPopover(){
+    var existing = $('rc-popover');
+    if (existing) existing.parentNode.removeChild(existing);
+    if (!state.popoverOpen) return;
+    var footer = $('sidebarUserFooter');
+    if (!footer) return;
+    var rowsHtml = state.users.map(function(u){
+      var active = u.id === state.currentUserId;
+      var uRoleIds = state.userRoles.filter(function(ur){ return ur.user_id === u.id; }).map(function(ur){ return ur.role_id; });
+      var uRoles = state.roles.filter(function(r){ return uRoleIds.indexOf(r.id) !== -1; });
+      var label = uRoles.length ? uRoles.map(function(r){ return r.name; }).join(', ') : 'No role assigned';
+      return '<div class="rc-user-row" data-user-id="' + esc(u.id) + '" style="display:flex;align-items:center;gap:9px;padding:9px 12px;cursor:pointer;border-radius:7px;background:' + (active ? 'rgba(1,62,144,.08)' : 'transparent') + '">'
+        + '<div style="width:24px;height:24px;border-radius:99px;background:#013E90;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;flex:0 0 auto">' + esc(initials(u.name)) + '</div>'
+        + '<div style="min-width:0;flex:1 1 0">'
+        + '<div style="font-size:12.5px;font-weight:600;color:#131A26;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(u.name) + '</div>'
+        + '<div style="font-size:11px;color:#8B95A6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(label) + '</div>'
+        + '</div>'
+        + (active ? '<div style="color:#013E90;font-size:12px;flex:0 0 auto">&check;</div>' : '')
+        + '</div>';
+    }).join('');
+    var pop = document.createElement('div');
+    pop.id = 'rc-popover';
+    // Shrink-to-content width (not a left+right stretch) — capped so a long
+    // name/role combo still wraps sensibly instead of overflowing the
+    // sidebar. #appSidebar carries position:relative (see shared.css /
+    // assemble_final.js's inline shell CSS) specifically so this anchors to
+    // the sidebar's own bounds — without that, position:absolute here falls
+    // back to the page's initial containing block and the popover stretches
+    // across the full viewport width instead of sitting inside the sidebar.
+    // max-width:212px = the sidebar's 236px width minus the 12px this sits
+    // in from both edges — the same footprint the old left:12px;right:12px
+    // stretch produced, just shrink-to-fit instead of always stretching to it.
+    pop.style.cssText = 'position:absolute;left:12px;width:max-content;max-width:212px;min-width:180px;bottom:70px;background:#fff;border:1px solid #DCE2EC;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.28);z-index:60;overflow:hidden';
+    pop.innerHTML = '<div style="padding:9px 12px;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:10px;font-family:\'IBM Plex Mono\',monospace;letter-spacing:.06em">TEST MODE &mdash; NOT REAL LOGIN. STANDS IN UNTIL SSO IS BUILT.</div>'
+      + '<div style="padding:6px;display:flex;flex-direction:column;gap:2px;max-height:280px;overflow-y:auto">' + (rowsHtml || '<div style="padding:10px;font-size:12px;color:#97A1B2">No users yet.</div>') + '</div>'
+      + '<a href="roles.html" style="display:block;padding:9px 12px;border-top:1px solid #EDF0F6;font-size:12px;color:#013E90;text-decoration:none">Manage users &amp; roles &rarr;</a>';
+    var sidebar = document.getElementById('appSidebar');
+    (sidebar || document.body).appendChild(pop);
+  }
+
+  function togglePopover(open){
+    state.popoverOpen = (open != null) ? open : !state.popoverOpen;
+    renderPopover();
+  }
+
+  function switchTo(userId){
+    state.currentUserId = userId;
+    try { window.localStorage.setItem(STORAGE_KEY, userId); } catch(e){}
+    state.popoverOpen = false;
+    renderPopover();
+    renderSwitcher();
+    notify();
+  }
+
+  function wireEvents(){
+    if (document.__roleContextWired) return;
+    document.__roleContextWired = true;
+    document.addEventListener('click', function(e){
+      var footer = e.target.closest && e.target.closest('#sidebarUserFooter');
+      if (footer){ togglePopover(); return; }
+      var row = e.target.closest && e.target.closest('.rc-user-row');
+      if (row){ switchTo(row.getAttribute('data-user-id')); return; }
+      var pop = $('rc-popover');
+      if (pop && !pop.contains(e.target)) togglePopover(false);
+    });
+  }
+
+  function loadData(){
+    // reload() is exposed for other modules to call after they mutate roles/
+    // capabilities/users data (see roles_module.js) — guard against it firing
+    // before RoleContext itself has ever connected (e.g. Supabase isn't
+    // configured at all), rather than throwing on a null state.db.
+    if (!state.db) return Promise.resolve();
+    return Promise.all([
+      Promise.resolve(state.db.from('app_users').select('*').eq('active', true).order('name')),
+      Promise.resolve(state.db.from('roles').select('*').eq('active', true).order('sort_order')),
+      Promise.resolve(state.db.from('role_capabilities').select('*')),
+      Promise.resolve(state.db.from('user_roles').select('*'))
+    ]).then(function(results){
+      var ur = results[0], rr = results[1], cr = results[2], urr = results[3];
+      if (ur.error) throw ur.error;
+      if (rr.error) throw rr.error;
+      if (cr.error) throw cr.error;
+      if (urr.error) throw urr.error;
+      state.users = ur.data || [];
+      state.roles = rr.data || [];
+      state.roleCapabilities = cr.data || [];
+      state.userRoles = urr.data || [];
+      var saved = null;
+      try { saved = window.localStorage.getItem(STORAGE_KEY); } catch(e){}
+      var stillValid = saved && state.users.some(function(u){ return u.id === saved; });
+      state.currentUserId = stillValid ? saved : (state.users[0] ? state.users[0].id : null);
+      state.loaded = true;
+      renderSwitcher();
+      notify();
+    }).catch(function(e){ console.error('RoleContext: could not load', e); });
+  }
+
+  // Re-entrant the same way every other module's init() is: safe to call
+  // repeatedly (e.g. once per page nav in the merged artifact build), only
+  // (re)connects if it hasn't already, always refreshes data.
+  function init(){
+    wireEvents();
+    if (!state.db){
+      if (!available()) return Promise.resolve();
+      try { state.db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
+      catch(e){ return Promise.resolve(); }
+    }
+    return loadData();
+  }
+
+  window.RoleContext = {
+    init: init,
+    can: can,
+    isAdmin: isAdmin,
+    currentUser: currentUser,
+    currentRoles: currentRoles,
+    onChange: onChange,
+    reload: loadData,
+    MODULE_LABELS: MODULE_LABELS
+  };
+})();
+
+window.RoleContext.init();
+</script>
+<script>
 // CPQ Config — the admin catalog page behind Value CPQ's Configure step.
 // Full CRUD over cpq_products: every card here is exactly what a rep sees
 // (and can select) on Configure. There is no separate "publish" step —
 // saving here changes what Configure shows immediately, since both screens
 // read the same table.
 //
-// Access: open to every role for now. Roles & permissions doesn't exist yet
-// (see roles.html) — once it does, this page should be gated (Sales VP /
-// Pricing & Finance, most likely), same "permissive until a real role
-// exists" pattern already used for RLS across this whole app. The banner at
-// the top of the page says so explicitly rather than pretending this is a
-// permanent design decision.
+// Access: now gated on a real capability — Edit on the cpq-config module
+// (see fragments/role_context.js + Roles & permissions). Whoever is "acting
+// as" without that capability gets a read-only view: no Add/Edit/Rate card
+// buttons, pricing policy fields shown but disabled. canEditCatalog() fails
+// open (true) if RoleContext isn't available/loaded at all — same
+// "permissive when disconnected" convention used everywhere else in this
+// app — so this only actually restricts once roles data is really loaded.
 (function(){
   function $(id){ return document.getElementById(id); }
   function esc(s){
@@ -208,6 +448,8 @@
   // preview on product cards — the actual floor check and approval trigger
   // live in Pricing & terms (cpq_module.js), which reads the same table.
   function marginFloor(){ return state.pricingPolicy ? Number(state.pricingPolicy.margin_floor_pct) : 42; }
+  // The one gate every mutating control on this page checks. See file header.
+  function canEditCatalog(){ return window.RoleContext ? window.RoleContext.can('cpq-config', 'edit') : true; }
 
   var INPUT_STYLE = 'width:100%;height:38px;border:1px solid #DCE2EC;border-radius:8px;padding:0 11px;font-size:13.5px;font-family:inherit;box-sizing:border-box;outline:none';
   var TEXTAREA_STYLE = 'width:100%;border:1px solid #DCE2EC;border-radius:8px;padding:9px 11px;font-size:13.5px;font-family:inherit;box-sizing:border-box;outline:none;resize:vertical';
@@ -277,7 +519,7 @@
       + '</div>'
       + '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:9px;border-top:1px dashed #E3E8F0">'
       + '<div style="min-width:0;font-size:11.5px;color:#8B95A6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(segmentsLine(p)) + (p.requires_note ? ' &middot; ' + esc(p.requires_note) : '') + '</div>'
-      + '<button type="button" class="cfg-edit-btn" data-id="' + esc(p.id) + '" style="flex:0 0 auto;height:28px;padding:0 12px;border-radius:7px;border:1px solid #DCE2EC;background:#fff;font-size:12px;font-weight:600;cursor:pointer">Edit</button>'
+      + (canEditCatalog() ? '<button type="button" class="cfg-edit-btn" data-id="' + esc(p.id) + '" style="flex:0 0 auto;height:28px;padding:0 12px;border-radius:7px;border:1px solid #DCE2EC;background:#fff;font-size:12px;font-weight:600;cursor:pointer">Edit</button>' : '')
       + '</div></div>';
   }
 
@@ -302,10 +544,11 @@
       + '</div>'
       + '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:9px;border-top:1px dashed #E3E8F0">'
       + '<div style="font-size:11.5px;color:#8B95A6">' + rateCount + ' rate-card override' + (rateCount === 1 ? '' : 's') + '</div>'
-      + '<div style="display:flex;gap:8px">'
+      + (canEditCatalog() ? ('<div style="display:flex;gap:8px">'
       + '<button type="button" class="cfg-tier-rates-btn" data-id="' + esc(t.id) + '" style="height:28px;padding:0 12px;border-radius:7px;border:1px solid #DCE2EC;background:#fff;font-size:12px;font-weight:600;cursor:pointer">Rate card</button>'
       + '<button type="button" class="cfg-tier-edit-btn" data-id="' + esc(t.id) + '" style="height:28px;padding:0 12px;border-radius:7px;border:1px solid #DCE2EC;background:#fff;font-size:12px;font-weight:600;cursor:pointer">Edit</button>'
-      + '</div></div></div>';
+      + '</div>') : '')
+      + '</div></div>';
   }
 
   // Pricing policy — the discount auto-approve cap and margin floor that
@@ -318,6 +561,8 @@
   // own terms fields in cpq_module.js.
   function renderPricingPolicySection(){
     var pp = state.pricingPolicy || { discount_auto_approve_cap_pct: 0, margin_floor_pct: 42 };
+    var editable = canEditCatalog();
+    var disabledAttr = editable ? '' : 'disabled';
     return '<div style="background:#fff;border:1px solid #DCE2EC;border-radius:12px;padding:20px 22px">'
       + '<div><div style="font-size:16px;font-weight:600">Pricing policy</div>'
       + '<div style="margin-top:4px;font-size:13px;color:#6B7686;max-width:640px">The thresholds Pricing &amp; terms checks every quote against — cross either one and the quote flags for Pricing &amp; finance approval. Not the same as Pricing tiers (rate cards by volume band) or a product’s Unit cost above — those set the price itself; these set when a rep needs sign-off on top of it.</div></div>'
@@ -325,7 +570,7 @@
       + '<div style="border:1px solid #EDF0F6;border-radius:9px;padding:12px 14px">'
       + '<div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase">Discount auto-approve cap</div>'
       + '<div style="margin-top:8px;display:flex;align-items:center;gap:6px">'
-      + '<input type="number" min="0" max="100" step="0.5" id="cfg-policy-discount-cap" class="cfg-policy-field" data-field="discount_auto_approve_cap_pct" value="' + esc(pp.discount_auto_approve_cap_pct) + '" style="width:90px;height:36px;border:1px solid #DCE2EC;border-radius:7px;padding:0 10px;font-size:14px;font-family:inherit;box-sizing:border-box">'
+      + '<input type="number" min="0" max="100" step="0.5" id="cfg-policy-discount-cap" class="cfg-policy-field" data-field="discount_auto_approve_cap_pct" value="' + esc(pp.discount_auto_approve_cap_pct) + '" ' + disabledAttr + ' style="width:90px;height:36px;border:1px solid #DCE2EC;border-radius:7px;padding:0 10px;font-size:14px;font-family:inherit;box-sizing:border-box' + (editable ? '' : ';background:#F4F6FA;color:#8B95A6') + '">'
       + '<span style="font-size:14px;color:#5A6474">%</span>'
       + '</div>'
       + '<div style="margin-top:6px;font-size:11.5px;color:#97A1B2;line-height:1.4">Ad hoc discount reps can apply on Pricing &amp; terms without approval. 0 means any discount at all needs sign-off.</div>'
@@ -333,7 +578,7 @@
       + '<div style="border:1px solid #EDF0F6;border-radius:9px;padding:12px 14px">'
       + '<div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase">Margin floor</div>'
       + '<div style="margin-top:8px;display:flex;align-items:center;gap:6px">'
-      + '<input type="number" min="0" max="100" step="0.5" id="cfg-policy-margin-floor" class="cfg-policy-field" data-field="margin_floor_pct" value="' + esc(pp.margin_floor_pct) + '" style="width:90px;height:36px;border:1px solid #DCE2EC;border-radius:7px;padding:0 10px;font-size:14px;font-family:inherit;box-sizing:border-box">'
+      + '<input type="number" min="0" max="100" step="0.5" id="cfg-policy-margin-floor" class="cfg-policy-field" data-field="margin_floor_pct" value="' + esc(pp.margin_floor_pct) + '" ' + disabledAttr + ' style="width:90px;height:36px;border:1px solid #DCE2EC;border-radius:7px;padding:0 10px;font-size:14px;font-family:inherit;box-sizing:border-box' + (editable ? '' : ';background:#F4F6FA;color:#8B95A6') + '">'
       + '<span style="font-size:14px;color:#5A6474">%</span>'
       + '</div>'
       + '<div style="margin-top:6px;font-size:11.5px;color:#97A1B2;line-height:1.4">Minimum blended gross margin (from unit cost above) before a quote needs sign-off, regardless of discount.</div>'
@@ -350,7 +595,7 @@
       + '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">'
       + '<div><div style="font-size:16px;font-weight:600">Pricing tiers</div>'
       + '<div style="margin-top:4px;font-size:13px;color:#6B7686">Volume-based rate cards — not connected to invoicing. Applying a tier to a client (from Value CPQ’s Client &amp; demand tab) is a client-level rule: it overrides per-product pricing wherever a rate exists below, and everything else falls back to the catalog price.</div></div>'
-      + '<button type="button" class="cfg-tier-add-btn" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">+ Add tier</button>'
+      + (canEditCatalog() ? '<button type="button" class="cfg-tier-add-btn" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">+ Add tier</button>' : '')
       + '</div>' + body + '</div>';
   }
 
@@ -370,7 +615,7 @@
       + '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">'
       + '<div><div style="font-size:16px;font-weight:600">Products &amp; services</div>'
       + '<div style="margin-top:4px;font-size:13px;color:#6B7686">Appraisal offerings and alternative valuations — pricing and eligibility set per card. This is exactly what Configure (step 2) offers.</div></div>'
-      + '<button type="button" class="cfg-add-btn" data-family="appraisal_offering" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">+ Add product</button>'
+      + (canEditCatalog() ? '<button type="button" class="cfg-add-btn" data-family="appraisal_offering" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">+ Add product</button>' : '')
       + '</div>'
       + (anyVisible ? groupsHtml : '<div style="margin-top:14px;font-size:12.5px;color:#97A1B2">Nothing here yet.</div>')
       + '</div>';
@@ -386,8 +631,30 @@
       + '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">'
       + '<div><div style="font-size:16px;font-weight:600">Add-ons &amp; service levels</div>'
       + '<div style="margin-top:4px;font-size:13px;color:#6B7686">Flat or custom-priced extras — this is Configure’s add-on list, in the same order.</div></div>'
-      + '<button type="button" class="cfg-add-btn" data-family="addon_solution" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">+ Add add-on</button>'
+      + (canEditCatalog() ? '<button type="button" class="cfg-add-btn" data-family="addon_solution" style="height:32px;padding:0 14px;border-radius:8px;border:1px solid #013E90;background:#EAF1FB;color:#012E6B;font-size:12.5px;font-weight:600;cursor:pointer">+ Add add-on</button>' : '')
       + '</div>' + body + '</div>';
+  }
+
+  // Real capability-driven banner now that roles exist (see Platform / Roles
+  // & permissions) — replaces the old "open to every role for now" notice.
+  // Blue when the current "acting as" user can edit; amber, read-only
+  // framing when they can't, pointing at who to ask rather than just saying no.
+  function renderAccessBanner(){
+    var editable = canEditCatalog();
+    var roles = (window.RoleContext && window.RoleContext.currentRoles) ? window.RoleContext.currentRoles() : [];
+    var roleLine = roles.length ? roles.map(function(r){ return r.name; }).join(', ') : null;
+    var currentUser = window.RoleContext && window.RoleContext.currentUser ? window.RoleContext.currentUser() : null;
+    var whoLine = currentUser ? (esc(currentUser.name) + (roleLine ? ' (' + esc(roleLine) + ')' : '')) : null;
+    if (editable){
+      return '<div style="background:#EAF1FB;border:1px solid #D8E5F5;border-radius:10px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start;margin-bottom:16px">'
+        + '<div style="width:18px;height:18px;border-radius:99px;background:#013E90;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px">i</div>'
+        + '<div style="font-size:13px;line-height:1.55;color:#3E4A5C">' + (whoLine ? ('You have Edit access to CPQ Config as <b>' + whoLine + '</b>.') : 'You have Edit access to CPQ Config.') + ' Changes here take effect on Configure immediately.</div>'
+        + '</div>';
+    }
+    return '<div style="background:#FDF3E0;border:1px solid #F1DFBC;border-radius:10px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start;margin-bottom:16px">'
+      + '<div style="width:18px;height:18px;border-radius:99px;background:#8A5A12;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px">!</div>'
+      + '<div style="font-size:13px;line-height:1.55;color:#6E4A11">Read-only.' + (whoLine ? (' <b>' + whoLine + '</b>') : ' Your current role') + " doesn't have Edit access to CPQ Config. Ask a Platform admin to grant it from Roles &amp; permissions." + '</div>'
+      + '</div>';
   }
 
   function renderRoot(){
@@ -399,10 +666,7 @@
       + '<div style="font-size:20px;font-weight:600">CPQ Config</div>'
       + '<div style="font-size:13px;color:#6B7686;margin-top:2px">The product, pricing and add-on catalog Value CPQ’s Configure step reads from. Edits here take effect immediately.</div>'
       + '</div>'
-      + '<div style="background:#EAF1FB;border:1px solid #D8E5F5;border-radius:10px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start;margin-bottom:16px">'
-      + '<div style="width:18px;height:18px;border-radius:99px;background:#013E90;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px">i</div>'
-      + '<div style="font-size:13px;line-height:1.55;color:#3E4A5C">Open to every role for now — Roles &amp; permissions (see Platform / Roles &amp; permissions) doesn’t exist yet. Once it does, this page should be gated to whoever owns pricing (e.g. Sales VP / Pricing &amp; Finance), not left open like this.</div>'
-      + '</div>'
+      + renderAccessBanner()
       + '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#5A6474;margin-bottom:14px;cursor:pointer;width:max-content">'
       + '<input type="checkbox" id="cfg-show-inactive" ' + (state.showInactive ? 'checked' : '') + ' style="width:15px;height:15px"> Show inactive'
       + '</label>'
@@ -551,6 +815,7 @@
   }
 
   function saveModal(mode, existing){
+    if (!canEditCatalog()){ showToast('You don\'t have Edit access to CPQ Config.'); return; }
     var draft = readFormDraft();
     if (!draft.name){ showToast('Name is required.'); return; }
     var db = state.db;
@@ -565,6 +830,7 @@
   }
 
   function toggleActive(existing){
+    if (!canEditCatalog()){ showToast('You don\'t have Edit access to CPQ Config.'); return; }
     Promise.resolve(state.db.from('cpq_products').update({ active: existing.active === false }).eq('id', existing.id)).then(function(r){
       if (r.error) throw r.error;
       closeModal();
@@ -627,6 +893,7 @@
   }
 
   function saveTierModal(mode, existing){
+    if (!canEditCatalog()){ showToast('You don\'t have Edit access to CPQ Config.'); return; }
     var name = $('cfg-tier-f-name').value.trim();
     if (!name){ showToast('Name is required.'); return; }
     var minVol = Number($('cfg-tier-f-min').value) || 0;
@@ -646,6 +913,7 @@
   }
 
   function toggleTierActive(existing){
+    if (!canEditCatalog()){ showToast('You don\'t have Edit access to CPQ Config.'); return; }
     Promise.resolve(state.db.from('pricing_tiers').update({ active: existing.active === false }).eq('id', existing.id)).then(function(r){
       if (r.error) throw r.error;
       closeModal();
@@ -659,6 +927,7 @@
   // create/edit modal) picks up the new floor immediately, not just the two
   // fields that changed.
   function savePricingPolicy(inputEl){
+    if (!canEditCatalog()){ showToast('You don\'t have Edit access to CPQ Config.'); renderRoot(); return; }
     var field = inputEl.getAttribute('data-field');
     var raw = inputEl.value;
     var val = raw === '' ? 0 : Number(raw);
@@ -754,6 +1023,7 @@
   }
 
   function saveRateCard(tierId){
+    if (!canEditCatalog()){ showToast('You don\'t have Edit access to CPQ Config.'); return; }
     var inputs = Array.prototype.slice.call(document.querySelectorAll('.cfg-rate-input'));
     var db = state.db;
     var ops = inputs.map(function(input){
@@ -862,11 +1132,23 @@
     }).catch(function(e){ console.error('CPQ Config: could not load', e); renderNotConnected(); });
   }
 
+  // Re-renders the whole page whenever the sidebar's "acting as" picker
+  // switches users — otherwise Edit access wouldn't visibly change until the
+  // next full page load. Registered once; RoleContext.onChange has no
+  // unsubscribe, but this module only ever exists on this one page.
+  var roleContextHooked = false;
+  function hookRoleContext(){
+    if (roleContextHooked || !window.RoleContext || !window.RoleContext.onChange) return;
+    roleContextHooked = true;
+    window.RoleContext.onChange(function(){ if (state.db) renderRoot(); });
+  }
+
   // Same re-entry pattern as CpqModule.init(): templates aren't a thing here,
   // but connecting to Supabase is retried on every call until it succeeds,
   // and re-entering the view (nav or "Manage catalog" link) always refreshes
   // the list so a change made elsewhere isn't stale.
   function init(){
+    hookRoleContext();
     if (!state.db){
       if (!available()){ renderNotConnected(); return; }
       try { state.db = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey); }
@@ -880,8 +1162,6 @@
 
   window.CpqConfigModule = { init: init };
 })();
-
-
 
 window.CpqConfigModule.init();
 </script>

@@ -35,13 +35,6 @@
   .project-bar-label{ font-size:11px; font-weight:700; color:var(--teal); text-transform:uppercase; letter-spacing:.05em; }
   .project-bar select{ padding:7px 10px; border-radius:8px; border:1px solid var(--border); font-size:13.5px; min-width:200px; background:#fff; color:var(--text); }
 
-  details.quickref{ margin:16px 32px 0; background:#fff; border:1px solid var(--border); border-radius:10px; }
-  details.quickref summary{ padding:12px 16px; font-weight:600; cursor:pointer; color:var(--teal); font-size:14px; }
-  .quickref-body{ padding:0 16px 16px; font-size:13px; color:var(--muted); line-height:1.6; }
-  .quickref-body b{ color:var(--text); }
-  .phase-chain{ display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 14px; }
-  .phase-chip{ background:#EAF1FB; border:1px solid var(--border); border-radius:16px; padding:4px 10px; font-size:12px; }
-
   .tabs{ display:flex; gap:6px; padding:20px 32px 0; }
   .tab-btn{ padding:10px 18px; border-radius:8px 8px 0 0; border:1px solid var(--border); border-bottom:none; background:#EDF0F6; cursor:pointer; font-weight:600; color:var(--muted); font-size:14px; }
   .tab-btn.active{ background:var(--card); color:var(--teal); }
@@ -50,7 +43,13 @@
 
   .columns{ display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start; }
   @media(max-width:920px){ .columns{grid-template-columns:1fr;} }
-  .panel{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; }
+  /* Log a Change: the left panel's height swings a lot as levers/groups are
+     checked and the collapsible Presentation/Governance/Risk section opens —
+     pin the right-hand result panel so it doesn't get shoved down and left
+     dangling. Desktop only — stacks to one column below 920px. */
+  #tab-change .columns > .panel:last-child{ position:sticky; top:0; align-self:start; }
+  @media(max-width:920px){ #tab-change .columns > .panel:last-child{ position:static; } }
+  .panel{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; min-width:0; }
   .panel h2{ margin-top:0; font-size:15px; color:var(--teal); }
   .panel .hint{ font-size:12px; color:var(--muted); margin:-6px 0 12px; }
 
@@ -97,6 +96,7 @@
   .plan-group{ margin-bottom:14px; }
   .plan-group h3{ font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--accent-2); border-bottom:1px solid var(--border); padding-bottom:5px; margin:0 0 6px; }
   .plan-row{ display:grid; grid-template-columns:190px 1fr; gap:10px; padding:3px 4px; font-size:13px; border-radius:6px; }
+  .plan-value{ min-width:0; }
   .plan-row.changed{ background:#FDF3E0; }
   .plan-label{ color:var(--muted); font-weight:600; }
   .old{ text-decoration:line-through; color:#A8392B; margin-right:4px; }
@@ -243,7 +243,7 @@
   @media (max-width:640px){
     header{ padding:16px 18px; }
     header .actions{ width:100%; }
-    .project-bar, details.quickref, .tabs, .tab-content{ padding-left:16px; padding-right:16px; }
+    .project-bar, .tabs, .tab-content{ padding-left:16px; padding-right:16px; }
     .tabs{ overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch; }
     .tab-btn{ flex:0 0 auto; }
     .grid, .plan-row, .gantt-row, .risk-row, .stakeholder-row, .comms-row-grid{ grid-template-columns:1fr !important; }
@@ -288,22 +288,6 @@
   <button class="mini-btn" id="deleteProjectBtn">Delete plan</button>
 </div>
 
-<details class="quickref">
-  <summary>Quick reference — phases &amp; change method</summary>
-  <div class="quickref-body">
-    <b>Client engagement lifecycle:</b>
-    <div class="phase-chain">
-      <span class="phase-chip">0–1 Intake &amp; Design</span>
-      <span class="phase-chip">2 Onboarding</span>
-      <span class="phase-chip">3 Go-Live</span>
-      <span class="phase-chip">4 CVUE Enablement</span>
-      <span class="phase-chip">5 Verify &amp; Report</span>
-      <span class="phase-chip">6 Sustain &amp; Scale</span>
-    </div>
-    <b>When something changes:</b> name it → assess impact (scope / schedule / budget / quality / risk) → reprioritize around outcome KPIs → re-baseline with options → communicate → document.
-  </div>
-</details>
-
 <div class="tabs">
   <div class="tab-btn active" data-tab="baseline">1 · Build Baseline Plan</div>
   <div class="tab-btn" data-tab="change">2 · Log a Change</div>
@@ -345,7 +329,6 @@
       </div>
       <div class="btn-row">
         <button class="primary" id="generateBtn">Generate / update plan</button>
-        <button class="secondary" id="exportBaselineBtn">Export plan (.md)</button>
         <button class="secondary" id="exportBaselinePdfBtn">Export plan (PDF)</button>
       </div>
     </div>
@@ -376,7 +359,6 @@
       <div id="resultImpactSummary"></div>
       <div id="resultPlanView"><p class="empty-plan">Generate your baseline plan first (tab 1).</p></div>
       <div class="btn-row">
-        <button class="secondary" id="exportResultBtn" disabled>Export this version (.md)</button>
         <button class="secondary" id="exportResultPdfBtn" disabled>Export this version (PDF)</button>
       </div>
     </div>
@@ -391,16 +373,12 @@
       <p class="hint">Plan: <b id="historyProjectName">—</b>. Switch, rename, or delete plans from the bar at the top. Click a version name below to view it.</p>
       <div id="originatorSection"></div>
       <div id="versionPills"><p class="empty-plan">No versions yet.</p></div>
-      <div class="btn-row">
-        <button class="secondary" id="exportAllBtn" disabled>Export full history (.md)</button>
-      </div>
     </div>
     <div class="panel">
       <h2 id="historyHeading">—</h2>
       <div id="historyImpactSummary"></div>
       <div id="historyPlanView"><p class="empty-plan">Select a version.</p></div>
       <div class="btn-row">
-        <button class="secondary" id="exportHistoryBtn" disabled>Export this version (.md)</button>
         <button class="secondary" id="exportHistoryPdfBtn" disabled>Export this version (PDF)</button>
       </div>
     </div>
@@ -2340,10 +2318,16 @@
     return html;
   }
 
+  function printFromArea(html){
+    var el = document.getElementById('printArea');
+    if (el.parentNode !== document.body) document.body.appendChild(el);
+    el.innerHTML = html;
+    window.print();
+  }
+
   function exportPDF(version, projectName){
     if (!version) return;
-    document.getElementById('printArea').innerHTML = buildPrintHTML(version, projectName);
-    window.print();
+    printFromArea(buildPrintHTML(version, projectName));
   }
 
   // ---- Tab 4: Present to Stakeholders — a curated one-pager, not the full field-by-field plan ----
@@ -2455,8 +2439,7 @@
 
   function exportPresentationPDF(version, projectName){
     if (!version) return;
-    document.getElementById('printArea').innerHTML = renderPresentationHTML(version, projectName);
-    window.print();
+    printFromArea(renderPresentationHTML(version, projectName));
   }
 
   function download(filename, text){
@@ -2728,11 +2711,6 @@
     persist();
   });
 
-  document.getElementById('exportBaselineBtn').addEventListener('click', function(){
-    var p = proj();
-    if (p.versions.length === 0){ customAlert('Generate the plan first.'); return; }
-    download('class-plan-'+slug(p.name)+'-v1-baseline.md', planToMarkdown(p.versions[0], p.name));
-  });
   document.getElementById('exportBaselinePdfBtn').addEventListener('click', function(){
     var p = proj();
     if (p.versions.length === 0){ customAlert('Generate the plan first.'); return; }
@@ -2933,7 +2911,6 @@
       document.getElementById('resultHeading').textContent = 'Current active plan';
       document.getElementById('resultPlanView').innerHTML = '<p class="empty-plan">Generate your baseline plan first (tab 1).</p>';
       document.getElementById('resultImpactSummary').innerHTML = '';
-      document.getElementById('exportResultBtn').disabled = true;
       document.getElementById('exportResultPdfBtn').disabled = true;
       return;
     }
@@ -2941,10 +2918,6 @@
     document.getElementById('resultHeading').textContent = 'Active plan — '+latest.label;
     document.getElementById('resultPlanView').innerHTML = renderGanttHTML(latest.snapshot, []) + renderPlanHTML(latest.snapshot, []);
     document.getElementById('resultImpactSummary').innerHTML = '';
-    document.getElementById('exportResultBtn').disabled = false;
-    document.getElementById('exportResultBtn').onclick = function(){
-      download('class-plan-'+slug(p.name)+'-'+latest.label.split(' ')[0]+'.md', planToMarkdown(latest, p.name));
-    };
     document.getElementById('exportResultPdfBtn').disabled = false;
     document.getElementById('exportResultPdfBtn').onclick = function(){ exportPDF(latest, p.name); };
     document.getElementById('applyChangeBtn').disabled = false;
@@ -3008,10 +2981,6 @@
     document.getElementById('resultHeading').textContent = 'New version created — '+version.label;
     document.getElementById('resultImpactSummary').innerHTML = impactSummaryHTML(version.impact);
     document.getElementById('resultPlanView').innerHTML = renderGanttHTML(version.snapshot, version.diffs) + renderPlanHTML(version.snapshot, version.diffs);
-    document.getElementById('exportResultBtn').disabled = false;
-    document.getElementById('exportResultBtn').onclick = function(){
-      download('class-plan-'+slug(p.name)+'-'+version.label.split(' ')[0]+'.md', planToMarkdown(version, p.name));
-    };
     document.getElementById('exportResultPdfBtn').disabled = false;
     document.getElementById('exportResultPdfBtn').onclick = function(){ exportPDF(version, p.name); };
 
@@ -3041,35 +3010,23 @@
     var container = document.getElementById('versionPills');
     if (p.versions.length === 0){
       container.innerHTML = '<p class="empty-plan">No versions yet.</p>';
-      document.getElementById('exportAllBtn').disabled = true;
       activeHistoryId = null;
       document.getElementById('historyHeading').textContent = '—';
       document.getElementById('historyImpactSummary').innerHTML = '';
       document.getElementById('historyPlanView').innerHTML = '<p class="empty-plan">Select a version.</p>';
-      document.getElementById('exportHistoryBtn').disabled = true;
-      document.getElementById('exportHistoryBtn').onclick = null;
       document.getElementById('exportHistoryPdfBtn').disabled = true;
       document.getElementById('exportHistoryPdfBtn').onclick = null;
       return;
     }
-    document.getElementById('exportAllBtn').disabled = false;
     container.innerHTML = p.versions.map(function(v){
       return '<div class="version-row">'+
         '<span class="version-pill" data-vid="'+v.id+'">'+v.label+'</span>'+
-        '<button class="mini-btn" data-vid-md="'+v.id+'" title="Export Markdown">MD</button>'+
         '<button class="mini-btn" data-vid-pdf="'+v.id+'" title="Export PDF">PDF</button>'+
       '</div>';
     }).join('');
     container.querySelectorAll('.version-pill').forEach(function(pl){
       pl.addEventListener('click', function(){
         showHistoryVersion(parseInt(pl.getAttribute('data-vid'), 10));
-      });
-    });
-    container.querySelectorAll('[data-vid-md]').forEach(function(btn){
-      btn.addEventListener('click', function(e){
-        var vid = parseInt(e.target.getAttribute('data-vid-md'), 10);
-        var v = proj().versions.filter(function(x){ return x.id === vid; })[0];
-        if (v) download('class-plan-'+slug(proj().name)+'-'+v.label.split(' ')[0]+'.md', planToMarkdown(v, proj().name));
       });
     });
     container.querySelectorAll('[data-vid-pdf]').forEach(function(btn){
@@ -3098,20 +3055,9 @@
     var descHtml = version.description ? '<p class="hint" style="margin-top:0;">'+escapeHtml(version.description)+'</p>' : '';
     document.getElementById('historyImpactSummary').innerHTML = descHtml + impactSummaryHTML(version.impact);
     document.getElementById('historyPlanView').innerHTML = renderGanttHTML(version.snapshot, version.diffs) + renderPlanHTML(version.snapshot, version.diffs);
-    document.getElementById('exportHistoryBtn').disabled = false;
-    document.getElementById('exportHistoryBtn').onclick = function(){
-      download('class-plan-'+slug(p.name)+'-'+version.label.split(' ')[0]+'.md', planToMarkdown(version, p.name));
-    };
     document.getElementById('exportHistoryPdfBtn').disabled = false;
     document.getElementById('exportHistoryPdfBtn').onclick = function(){ exportPDF(version, p.name); };
   }
-
-  document.getElementById('exportAllBtn').addEventListener('click', function(){
-    var p = proj();
-    if (p.versions.length === 0) return;
-    var md = p.versions.map(function(v){ return planToMarkdown(v, p.name); }).join('\n\n---\n\n');
-    download('class-plan-'+slug(p.name)+'-full-history.md', md);
-  });
 
   // ---- Reset current plan ----
   document.getElementById('resetAllBtn').addEventListener('click', function(){

@@ -66,7 +66,7 @@
             <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-delivery">
               <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
               <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Delivery</span>
-              <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9.5px;background:rgba(133,195,65,.16);color:#A8DB6E;padding:2px 6px;border-radius:5px">2</span>
+              
             </div>
           </a>
 <a href="reporting.html" style="text-decoration:none;display:block">
@@ -287,7 +287,17 @@
     }).join('');
     var pop = document.createElement('div');
     pop.id = 'rc-popover';
-    pop.style.cssText = 'position:absolute;left:12px;right:12px;bottom:70px;background:#fff;border:1px solid #DCE2EC;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.28);z-index:60;overflow:hidden';
+    // Shrink-to-content width (not a left+right stretch) — capped so a long
+    // name/role combo still wraps sensibly instead of overflowing the
+    // sidebar. #appSidebar carries position:relative (see shared.css /
+    // assemble_final.js's inline shell CSS) specifically so this anchors to
+    // the sidebar's own bounds — without that, position:absolute here falls
+    // back to the page's initial containing block and the popover stretches
+    // across the full viewport width instead of sitting inside the sidebar.
+    // max-width:212px = the sidebar's 236px width minus the 12px this sits
+    // in from both edges — the same footprint the old left:12px;right:12px
+    // stretch produced, just shrink-to-fit instead of always stretching to it.
+    pop.style.cssText = 'position:absolute;left:12px;width:max-content;max-width:212px;min-width:180px;bottom:70px;background:#fff;border:1px solid #DCE2EC;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.28);z-index:60;overflow:hidden';
     pop.innerHTML = '<div style="padding:9px 12px;background:#FDF3E0;border-bottom:1px solid #F1DFBC;color:#8A5A12;font-size:10px;font-family:\'IBM Plex Mono\',monospace;letter-spacing:.06em">TEST MODE &mdash; NOT REAL LOGIN. STANDS IN UNTIL SSO IS BUILT.</div>'
       + '<div style="padding:6px;display:flex;flex-direction:column;gap:2px;max-height:280px;overflow-y:auto">' + (rowsHtml || '<div style="padding:10px;font-size:12px;color:#97A1B2">No users yet.</div>') + '</div>'
       + '<a href="roles.html" style="display:block;padding:9px 12px;border-top:1px solid #EDF0F6;font-size:12px;color:#013E90;text-decoration:none">Manage users &amp; roles &rarr;</a>';
