@@ -877,6 +877,9 @@ window.RoleContext.init();
     var levelBadge = (kind === 'blocker')
       ? ('<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.1em;color:' + (item.level === 'project' ? '#A8392B' : '#6B7686') + ';border:1px solid ' + (item.level === 'project' ? '#E3C0B7' : '#E3E8F0') + ';border-radius:4px;padding:2px 5px">' + (item.level === 'project' ? 'PROJECT LEVEL' : 'TASK LEVEL') + '</div>')
       : '';
+    var descriptionDetail = (kind === 'risk' && item.description)
+      ? ('<div style="margin-top:6px;font-size:12px;color:#4A5568;line-height:1.45">' + esc(item.description) + '</div>')
+      : '';
     var mitigationDetail = (kind === 'risk' && item.mitigation)
       ? ('<div style="margin-top:6px;padding:7px 9px;background:#EAF1FB;border-radius:7px;font-size:11.5px;color:#1F3A5C;line-height:1.45"><strong>Mitigation:</strong> ' + esc(item.mitigation) + '</div>')
       : '';
@@ -910,6 +913,7 @@ window.RoleContext.init();
       + '</div>'
       + '<div style="margin-top:7px;font-size:13px;font-weight:600;line-height:1.35">' + esc(item.title) + '</div>'
       + '<div style="margin-top:4px;font-size:12px;color:#8B95A6">' + esc(item.owner_team || 'Unassigned') + ' · open ' + days + 'd' + (kind === 'blocker' && item.linked_jira_key ? (' · <span style="font-family:\'IBM Plex Mono\',monospace">' + esc(item.linked_jira_key) + '</span>') : '') + '</div>'
+      + descriptionDetail
       + mitigationDetail
       + escalationDetail
       + resolvedDetail
@@ -1009,10 +1013,12 @@ window.RoleContext.init();
       + '<select id="dv-i-f-side" style="' + SELECT_STYLE + '"><option value="internal">Internal</option><option value="external">External</option></select></div>'
       + (isBlocker ? ('<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Level</div>'
           + '<select id="dv-i-f-level" style="' + SELECT_STYLE + '"><option value="task">Task level — other work can keep moving</option><option value="project">Project level — puts the whole engagement on hold</option></select></div>') : '')
-      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">' + (isBlocker ? 'What’s blocking' : 'What’s the risk') + '</div>'
-      + '<input id="dv-i-f-title" type="text" placeholder="' + (isBlocker ? 'e.g. Client has not returned UAT credentials' : 'e.g. Vendor integration dependency not yet confirmed') + '" style="' + INPUT_STYLE + '">'
+      + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">' + (isBlocker ? 'What’s blocking' : 'Risk') + '</div>'
+      + '<input id="dv-i-f-title" type="text" placeholder="' + (isBlocker ? 'e.g. Client has not returned UAT credentials' : 'e.g. Vendor integration dependency') + '" style="' + INPUT_STYLE + '">'
       + (isBlocker ? '<div style="margin-top:5px;font-size:11px;color:#97A1B2">Explain the impact here, especially for a task-level blocker — this is what tells someone else why it isn’t (or is) holding up the whole project.</div>' : '')
       + '</div>'
+      + (!isBlocker ? ('<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Description</div>'
+          + '<textarea id="dv-i-f-description" rows="3" placeholder="What this risk is about and any pertinent details" style="' + INPUT_STYLE + ';height:auto;padding:8px 10px;resize:vertical"></textarea></div>') : '')
       + (!isBlocker ? ('<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Mitigation</div>'
           + '<textarea id="dv-i-f-mitigation" rows="3" placeholder="What’s the plan if this risk materializes" style="' + INPUT_STYLE + ';height:auto;padding:8px 10px;resize:vertical"></textarea></div>') : '')
       + '<div><div style="font-size:11px;font-weight:600;letter-spacing:.02em;color:#8B95A6;text-transform:uppercase;margin-bottom:6px">Owner / team</div>'
@@ -1041,6 +1047,7 @@ window.RoleContext.init();
       } else {
         var mitigation = $('dv-i-f-mitigation').value.trim();
         if (!mitigation){ showToast('A risk needs a mitigation plan.'); return; }
+        payload.description = $('dv-i-f-description').value.trim() || null;
         payload.mitigation = mitigation;
       }
       addIssue(kind, client, payload);
@@ -1231,8 +1238,9 @@ window.RoleContext.init();
   function describeCreated(kind, item){
     var sideLabel = item.side === 'external' ? 'external' : 'internal';
     var levelNote = (kind === 'blocker') ? (', ' + (item.level === 'project' ? 'project level' : 'task level')) : '';
+    var descriptionNote = (kind === 'risk' && item.description) ? (' Description: ' + item.description) : '';
     var mitigationNote = (kind === 'risk' && item.mitigation) ? (' Mitigation: ' + item.mitigation) : '';
-    return 'Logged as an ' + sideLabel + ' ' + kind + levelNote + (item.owner_team ? (', owner: ' + item.owner_team) : '') + '.' + mitigationNote;
+    return 'Logged as an ' + sideLabel + ' ' + kind + levelNote + (item.owner_team ? (', owner: ' + item.owner_team) : '') + '.' + descriptionNote + mitigationNote;
   }
 
   function addIssue(kind, client, payload){
