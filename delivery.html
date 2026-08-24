@@ -626,11 +626,14 @@ window.RoleContext.init();
     var blockedAtRiskTasks = clientTasks(clientId).filter(function(t){ return t.status === 'blocked_at_risk'; });
     var paceDeficit = Math.max(0, pace.basePct - progress.pct);
     var overdue = pace.daysRemaining != null && pace.daysRemaining < 0;
-    var troubleCount = openProjectBlockers.length + escalatedProjectBlockers.length + blockedAtRiskTasks.length;
+    var projectBlockerCount = openProjectBlockers.length + escalatedProjectBlockers.length;
     var riskState = 'on_track';
-    if (escalatedProjectBlockers.length > 0 || overdue || troubleCount >= 3) riskState = 'blocked';
-    else if (troubleCount > 0 || paceDeficit > 15) riskState = 'at_risk';
-    var score = escalatedProjectBlockers.length * 100 + openProjectBlockers.length * 20 + blockedAtRiskTasks.length * 15 + paceDeficit + (overdue ? 50 : 0);
+    // A project-level blocker halts the project the moment it's logged — it
+    // doesn't wait for Escalate to mean it. Escalate is about who's chasing
+    // it, not whether the project is blocked.
+    if (projectBlockerCount > 0 || overdue) riskState = 'blocked';
+    else if (blockedAtRiskTasks.length > 0 || paceDeficit > 15) riskState = 'at_risk';
+    var score = escalatedProjectBlockers.length * 100 + openProjectBlockers.length * 90 + blockedAtRiskTasks.length * 15 + paceDeficit + (overdue ? 50 : 0);
     return {
       state: riskState, score: score, progress: progress, pace: pace,
       openCount: openBlockers.length, escalatedCount: escalated.length,
