@@ -66,7 +66,7 @@
             <div style="position:relative;display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;margin-bottom:2px;background:transparent;color:#9AACC6" class="nav-item" id="nav-delivery">
               <span style="width:5px;height:5px;border-radius:99px;flex:0 0 auto;background:#123E77" class="nav-dot"></span>
               <span style="font-size:13.5px;font-weight:500;letter-spacing:-.005em" class="nav-label">Delivery</span>
-              <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9.5px;background:rgba(133,195,65,.16);color:#A8DB6E;padding:2px 6px;border-radius:5px">2</span>
+              
             </div>
           </a>
 <a href="reporting.html" style="text-decoration:none;display:block">
@@ -1474,7 +1474,16 @@ window.RoleContext.init();
     if ($('studio-print-style')) return;
     var style = document.createElement('style');
     style.id = 'studio-print-style';
-    style.textContent = '@media print{'
+    // Bug fix (2026-08-24): #studio-print-area previously had no on-screen
+    // styling at all, only rules scoped to @media print — so between being
+    // populated and window.print() actually opening, the populated doc sat
+    // as a plain, fully visible block at the bottom of <body>. Same
+    // off-screen-but-in-layout trick as Plan Builder's .print-only class
+    // (position:absolute;left:-9999px — not display:none, which would keep
+    // it out of the print engine's layout too and break pagination) keeps it
+    // invisible on screen while still being paginatable during print.
+    style.textContent = '#studio-print-area{position:absolute;left:-9999px;top:0;width:800px}'
+      + '@media print{'
       + 'body *{visibility:hidden}'
       + '#studio-print-area, #studio-print-area *{visibility:visible}'
       + '#studio-print-area{position:absolute;left:0;top:0;width:100%;padding:24px;font-family:Barlow,Helvetica,Arial,sans-serif}'
